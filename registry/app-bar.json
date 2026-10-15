@@ -1,0 +1,342 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-bar",
+  "type": "registry:block",
+  "title": "App Bar",
+  "description": "Responsive caller-owned workbench items, launcher, and actions.",
+  "dependencies": [
+    "@base-ui/react",
+    "@fungi.computer/stipe",
+    "animejs",
+    "lucide-react",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/blocks/app-bar.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/app-bar.tsx",
+      "content": "import {\n  useOverlayRoot,\n  useOverlayDismiss,\n} from \"@/components/ui/overlay-root\";\nimport { Popover as BasePopover } from \"@base-ui/react/popover\";\nimport { animate, stagger, type JSAnimation } from \"animejs\";\nimport { motionDefaults, readMotion, useReducedMotion } from \"@/lib/motion\";\nimport { themedEase, themedSpring } from \"@/lib/motion-spring\";\nimport { PanelsTopLeft, X } from \"lucide-react\";\nimport {\n  useEffect,\n  useId,\n  useLayoutEffect,\n  useRef,\n  useState,\n  type CSSProperties,\n  type ReactNode,\n} from \"react\";\n\ntype AppBarStyle = CSSProperties & {\n  \"--caps-app-bar-notch-left\": string;\n};\n\n/** A caller-owned running App window or available App launcher. */\nexport type AppBarItem = {\n  id: string;\n  label: string;\n  icon?: ReactNode;\n  active?: boolean;\n  /** Request focusing a running window or opening an available App. */\n  onSelect: () => void;\n  /** Request closing; the caller owns disposal and removal. */\n  onClose?: () => void;\n};\n\n/** Caller-owned apps and actions; AppBar owns only presentation and disclosure. */\nexport type AppBarProps = {\n  /** Portal container for the App dial; defaults to the document body. */\n  container?: HTMLElement | null;\n  windows: readonly AppBarItem[];\n  /** Team Apps available to launch from the speed dial. */\n  launchers: readonly AppBarItem[];\n  /** Recent Sessions supplied by the shell's session owner. */\n  sessions?: readonly AppBarItem[];\n  /** Keep long launcher names readable instead of truncating them. */\n  launcherLabels?: \"truncate\" | \"wrap\";\n  alwaysExpanded?: boolean;\n  /** Control the compact App dial from the surrounding shell. */\n  isOpen?: boolean;\n  /** Report requests to open or dismiss the compact App dial. */\n  onOpenChange?: (open: boolean) => void;\n  emptyLabel?: ReactNode;\n  launcher: { label: string; icon?: ReactNode };\n  /** A primary action revealed above the launcher, such as starting a chat. */\n  primaryAction?: {\n    label: string;\n    icon: ReactNode;\n    /** Invoke the caller-owned primary action. */\n    onSelect: () => void;\n  };\n};\n\nfunction AppBarItemView({\n  item,\n  available,\n  expanded,\n  onSelect,\n  onClose,\n  session = false,\n  launcherLabels = \"truncate\",\n}: {\n  item: AppBarItem;\n  available: boolean;\n  expanded: boolean;\n  onSelect: () => void;\n  onClose: () => void;\n  session?: boolean;\n  launcherLabels?: \"truncate\" | \"wrap\";\n}) {\n  const icon = useRef<HTMLSpanElement>(null);\n  const motion = useRef<JSAnimation>();\n  const reduced = useReducedMotion();\n  useEffect(() => {\n    if (reduced && icon.current) {\n      motion.current?.cancel();\n      motion.current = animate(icon.current, { y: 0, scale: 1, duration: 0 });\n    }\n  }, [reduced]);\n  useEffect(\n    () => () => {\n      motion.current?.cancel();\n    },\n    [],\n  );\n  const lift = (raised: boolean) => {\n    if (!icon.current) return;\n    motion.current?.cancel();\n    const feel = readMotion(icon.current);\n    motion.current = animate(icon.current, {\n      y: raised && !reduced ? -feel.distance : 0,\n      scale: raised && !reduced ? 1.12 : 1,\n      ...themedSpring(feel, { bounce: 0.4, duration: 320 }),\n    });\n  };\n  const tabIndex = !expanded ? -1 : 0;\n  return (\n    <div\n      className=\"caps-app-bar-item\"\n      data-app-bar-item-id={item.id}\n      data-launcher-labels={available ? launcherLabels : undefined}\n      data-session={session ? \"true\" : undefined}\n    >\n      <button\n        type=\"button\"\n        className=\"caps-app-bar-button\"\n        aria-label={item.label}\n        title={item.label}\n        aria-pressed={available ? undefined : item.active === true}\n        data-active={item.active === true ? \"true\" : undefined}\n        data-running={available ? undefined : \"true\"}\n        tabIndex={tabIndex}\n        onClick={onSelect}\n        onPointerEnter={() => {\n          lift(true);\n        }}\n        onPointerLeave={() => {\n          lift(false);\n        }}\n        onFocus={() => {\n          lift(true);\n        }}\n        onBlur={() => {\n          lift(false);\n        }}\n      >\n        <span ref={icon} className=\"caps-app-bar-icon\" aria-hidden=\"true\">\n          {item.icon ?? <PanelsTopLeft />}\n        </span>\n        {available ? (\n          <span className=\"caps-app-bar-item-label\">{item.label}</span>\n        ) : null}\n      </button>\n      {item.onClose ? (\n        <button\n          type=\"button\"\n          className=\"caps-app-bar-close\"\n          aria-label={`Close ${item.label}`}\n          tabIndex={tabIndex}\n          onClick={onClose}\n        >\n          <X aria-hidden=\"true\" />\n        </button>\n      ) : null}\n    </div>\n  );\n}\n\n/** An anchored launcher between persistent running apps and a spring-out app tray. */\nexport function AppBar({\n  container,\n  windows,\n  launchers,\n  sessions = [],\n  launcherLabels = \"truncate\",\n  alwaysExpanded = false,\n  isOpen,\n  onOpenChange,\n  emptyLabel,\n  launcher,\n  primaryAction,\n}: AppBarProps) {\n  const popoverRoot = useOverlayRoot(\"popover\");\n  const portalContainer = container ?? popoverRoot;\n  const [internalOpen, setInternalOpen] = useState(false);\n  const [notchLeft, setNotchLeft] = useState(0);\n  const open = isOpen ?? internalOpen;\n  useOverlayDismiss(() => {\n    setOpen(false);\n  });\n  const setOpen = (next: boolean) => {\n    setInternalOpen(next);\n    onOpenChange?.(next);\n  };\n  const expanded = alwaysExpanded || open;\n  const root = useRef<HTMLElement>(null);\n  const runningRef = useRef<HTMLDivElement>(null);\n  const launcherRef = useRef<HTMLButtonElement>(null);\n  const availableRef = useRef<HTMLDivElement>(null);\n  const actionRef = useRef<HTMLButtonElement>(null);\n  const previous = useRef(expanded);\n  const previousAction = useRef(open);\n  const reduced = useReducedMotion();\n  const id = useId();\n  const availableId = `caps-apps-${id}`;\n  const actionId = `caps-app-action-${id}`;\n  const activeId = windows.find((item) => item.active)?.id;\n  const hasPrimaryAction = primaryAction !== undefined;\n\n  useLayoutEffect(() => {\n    const revealActive = () => {\n      const region = runningRef.current;\n      const selected = region?.querySelector<HTMLElement>(\n        '[data-active=\"true\"]',\n      );\n      if (!region || !selected) return;\n      const tray = region.getBoundingClientRect();\n      const item = selected.getBoundingClientRect();\n      region.scrollLeft +=\n        Math.max(0, item.right - tray.right) +\n        Math.min(0, item.left - tray.left);\n      region.scrollTop +=\n        Math.max(0, item.bottom - tray.bottom) +\n        Math.min(0, item.top - tray.top);\n    };\n    revealActive();\n    window.addEventListener(\"resize\", revealActive);\n    return () => {\n      window.removeEventListener(\"resize\", revealActive);\n    };\n  }, [activeId, windows.length]);\n\n  useLayoutEffect(() => {\n    const updateNotch = () => {\n      const nav = root.current;\n      const button = launcherRef.current;\n      if (nav && button) {\n        const navBounds = nav.getBoundingClientRect();\n        const buttonBounds = button.getBoundingClientRect();\n        setNotchLeft(\n          buttonBounds.left - navBounds.left + buttonBounds.width / 2,\n        );\n      }\n    };\n    updateNotch();\n    window.addEventListener(\"resize\", updateNotch);\n    return () => {\n      window.removeEventListener(\"resize\", updateNotch);\n    };\n  }, [windows.length]);\n\n  useLayoutEffect(() => {\n    const immediate = reduced || previous.current === expanded;\n    previous.current = expanded;\n    if (!availableRef.current) return;\n    const feel = readMotion(availableRef.current);\n    const { duration, ease } = immediate\n      ? { duration: reduced ? feel.fast : 0, ease: \"linear\" }\n      : expanded\n        ? themedSpring(feel, { bounce: 0.4, duration: 420 })\n        : themedEase(feel, { ease: \"inOutQuad\", duration: 150 });\n    const motions: JSAnimation[] = [];\n    if (immediate)\n      motions.push(\n        animate(availableRef.current.querySelectorAll(\".caps-app-bar-item\"), {\n          y: 0,\n          scale: 1,\n          duration: 0,\n        }),\n      );\n    if (reduced)\n      motions.push(\n        animate(availableRef.current, { x: 0, scale: 1, duration: 0 }),\n      );\n    motions.push(\n      animate(availableRef.current, {\n        opacity: expanded ? 1 : 0,\n        x: reduced || expanded ? 0 : -feel.distance * 3,\n        scale: reduced || expanded ? 1 : 0.88,\n        duration,\n        ease,\n      }),\n    );\n    if (expanded && !immediate)\n      motions.push(\n        animate(availableRef.current.querySelectorAll(\".caps-app-bar-item\"), {\n          y: [8, 0],\n          scale: [0.9, 1],\n          delay: stagger(feel.stagger * (28 / motionDefaults.stagger)),\n          ...themedSpring(feel, { bounce: 0.35, duration: 360 }),\n        }),\n      );\n\n    return () => {\n      motions.forEach((motion) => {\n        motion.cancel();\n      });\n    };\n  }, [expanded, reduced]);\n\n  useLayoutEffect(() => {\n    const immediate = reduced || previousAction.current === open;\n    previousAction.current = open;\n    const target = actionRef.current ?? launcherRef.current;\n    if (!target) return;\n    const feel = readMotion(target);\n    const settle = immediate\n      ? { duration: reduced ? feel.fast : 0, ease: \"linear\" }\n      : themedSpring(feel, { bounce: 0.35, duration: 320 });\n    const motions: JSAnimation[] = [];\n    if (actionRef.current && reduced)\n      motions.push(animate(actionRef.current, { y: 0, scale: 1, duration: 0 }));\n    if (actionRef.current)\n      motions.push(\n        animate(actionRef.current, {\n          opacity: open ? 1 : 0,\n          y: reduced || open ? 0 : feel.distance * 3.5,\n          scale: reduced || open ? 1 : 0.88,\n          ...settle,\n        }),\n      );\n    if (launcherRef.current && !immediate) {\n      const squash = themedEase(feel, { ease: \"outQuad\", duration: 65 });\n      const release = themedSpring(feel, { bounce: 0.45, duration: 360 });\n      motions.push(\n        animate(launcherRef.current, {\n          scaleX: [\n            { to: 1.07, duration: squash.duration },\n            { to: 1, ...release },\n          ],\n          scaleY: [\n            { to: 0.91, duration: squash.duration },\n            { to: 1, ...release },\n          ],\n          y: [\n            { to: 2, duration: squash.duration },\n            { to: 0, ...release },\n          ],\n        }),\n      );\n    }\n    if (launcherRef.current && immediate)\n      motions.push(\n        animate(launcherRef.current, {\n          scaleX: 1,\n          scaleY: 1,\n          y: 0,\n          duration: 0,\n        }),\n      );\n    return () => {\n      motions.forEach((motion) => {\n        motion.cancel();\n      });\n    };\n  }, [open, reduced, hasPrimaryAction]);\n\n  const close = () => {\n    setOpen(false);\n    launcherRef.current?.focus();\n  };\n  const select = (onSelect: () => void) => {\n    // Restore disclosure focus first, so the host may deliberately focus its app.\n    if (expanded) close();\n    onSelect();\n  };\n  const renderItem = (\n    item: AppBarItem,\n    available: boolean,\n    session = false,\n  ) => (\n    <AppBarItemView\n      key={item.id}\n      item={item}\n      available={available}\n      expanded={available ? expanded : true}\n      onSelect={() => {\n        select(item.onSelect);\n      }}\n      onClose={() => {\n        launcherRef.current?.focus();\n        item.onClose?.();\n      }}\n      launcherLabels={launcherLabels}\n      session={session}\n    />\n  );\n  const appBarStyle: AppBarStyle = {\n    \"--caps-app-bar-notch-left\": `${String(notchLeft)}px`,\n  };\n\n  const changeOpen = (\n    next: boolean,\n    details: BasePopover.Root.ChangeEventDetails,\n  ) => {\n    const target = details.event.target;\n    if (\n      !next &&\n      details.reason === \"outside-press\" &&\n      target instanceof Node &&\n      (root.current?.contains(target) ||\n        availableRef.current?.contains(target) ||\n        actionRef.current?.contains(target))\n    ) {\n      details.cancel();\n      return;\n    }\n    if (!next && details.reason === \"escape-key\") close();\n    else setOpen(next);\n  };\n\n  return (\n    <BasePopover.Root open={expanded} onOpenChange={changeOpen} modal={false}>\n      <nav\n        ref={root}\n        style={appBarStyle}\n        className=\"caps-app-bar\"\n        aria-label=\"Team Apps and Sessions launcher\"\n        data-open={expanded ? \"true\" : \"false\"}\n      >\n        <div\n          ref={runningRef}\n          className=\"caps-app-bar-region caps-app-bar-items\"\n          role=\"group\"\n          aria-label=\"Running apps\"\n          aria-hidden=\"false\"\n        >\n          {windows.map((item) => renderItem(item, false))}\n        </div>\n        <div className=\"caps-app-bar-launcher\">\n          <button\n            ref={launcherRef}\n            type=\"button\"\n            className=\"caps-app-bar-launcher-button\"\n            aria-label={launcher.label}\n            title={launcher.label}\n            aria-expanded={expanded}\n            aria-controls={primaryAction ? actionId : availableId}\n            onClick={() => {\n              setOpen(!open);\n            }}\n          >\n            <span className=\"caps-app-bar-mascot\" aria-hidden=\"true\">\n              {launcher.icon ?? <PanelsTopLeft />}\n            </span>\n          </button>\n        </div>\n        {portalContainer ? (\n          <BasePopover.Portal container={portalContainer} keepMounted>\n            <BasePopover.Positioner\n              anchor={root}\n              side=\"bottom\"\n              align=\"start\"\n              sideOffset={4}\n              collisionPadding={8}\n              collisionBoundary={\n                portalContainer === document.body ? undefined : portalContainer\n              }\n              className=\"caps-app-bar-positioner\"\n            >\n              <BasePopover.Popup\n                initialFocus={false}\n                finalFocus={false}\n                style={appBarStyle}\n                ref={availableRef}\n                id={availableId}\n                className=\"caps-app-bar-region caps-app-bar-launchers\"\n                role=\"group\"\n                aria-label=\"Speed dial\"\n                aria-hidden={!expanded}\n              >\n                {launchers.length > 0 ? (\n                  <div\n                    className=\"caps-app-bar-section\"\n                    role=\"group\"\n                    aria-label=\"Team Apps\"\n                  >\n                    <span className=\"caps-app-bar-section-label\">\n                      Team Apps\n                    </span>\n                    <div className=\"caps-app-bar-app-list\">\n                      {launchers.map((item) => renderItem(item, true))}\n                    </div>\n                  </div>\n                ) : null}\n                {sessions.length > 0 ? (\n                  <div\n                    className=\"caps-app-bar-section caps-app-bar-sessions\"\n                    role=\"group\"\n                    aria-label=\"Recent Sessions\"\n                  >\n                    <span className=\"caps-app-bar-section-label\">\n                      Recent Sessions\n                    </span>\n                    <div className=\"caps-app-bar-session-list\">\n                      {sessions.map((item) => renderItem(item, true, true))}\n                    </div>\n                  </div>\n                ) : null}\n                {launchers.length === 0 &&\n                sessions.length === 0 &&\n                emptyLabel ? (\n                  <span className=\"caps-app-bar-empty\" role=\"status\">\n                    {emptyLabel}\n                  </span>\n                ) : null}\n              </BasePopover.Popup>\n            </BasePopover.Positioner>\n          </BasePopover.Portal>\n        ) : null}\n        {primaryAction && portalContainer ? (\n          <BasePopover.Root open={open} onOpenChange={changeOpen} modal={false}>\n            <BasePopover.Portal container={portalContainer} keepMounted>\n              <BasePopover.Positioner\n                anchor={launcherRef}\n                side=\"bottom\"\n                align=\"end\"\n                sideOffset={8}\n                collisionPadding={8}\n                collisionBoundary={\n                  portalContainer === document.body\n                    ? undefined\n                    : portalContainer\n                }\n                className=\"caps-app-bar-positioner\"\n              >\n                <BasePopover.Popup initialFocus={false} finalFocus={false}>\n                  <button\n                    ref={actionRef}\n                    id={actionId}\n                    type=\"button\"\n                    className=\"caps-app-bar-primary\"\n                    aria-hidden={!open}\n                    tabIndex={open ? 0 : -1}\n                    onClick={() => {\n                      select(primaryAction.onSelect);\n                    }}\n                  >\n                    <span aria-hidden=\"true\">{primaryAction.icon}</span>\n                    {primaryAction.label}\n                  </button>\n                </BasePopover.Popup>\n              </BasePopover.Positioner>\n            </BasePopover.Portal>\n          </BasePopover.Root>\n        ) : null}\n      </nav>\n    </BasePopover.Root>\n  );\n}\n"
+    },
+    {
+      "path": "../src/components/gooey.tsx",
+      "type": "registry:ui",
+      "target": "@ui/gooey.tsx",
+      "content": "import { STIPE_GOOEY_FILTER } from \"@fungi.computer/stipe\";\nimport { forwardRef } from \"react\";\n\n/** @internal The eight-unit bead's material, positioned with an SVG transform. */\nexport const GooeySurfaceDefinition = forwardRef<\n  SVGRadialGradientElement,\n  { id: string; transform: string }\n>(function GooeySurfaceDefinition({ id, transform }, ref) {\n  return (\n    <radialGradient\n      ref={ref}\n      id={id}\n      gradientUnits=\"userSpaceOnUse\"\n      cx=\"-1.2\"\n      cy=\"-1.6\"\n      r=\"5.6\"\n      gradientTransform={transform}\n    >\n      <stop\n        offset=\"0\"\n        stopColor=\"color-mix(in oklab, var(--color-white) calc(var(--depth) * 50%), currentColor)\"\n      />\n      <stop offset=\"1\" stopColor=\"currentColor\" />\n    </radialGradient>\n  );\n});\n\n/** @internal Cast one themed shadow from the finished silhouette. */\nexport function GooeyShadowDefinition({ id }: { id: string }) {\n  return (\n    <filter id={id} x=\"-50%\" y=\"-50%\" width=\"200%\" height=\"200%\">\n      <feDropShadow\n        dx=\"0\"\n        dy=\"1.5\"\n        stdDeviation=\"1\"\n        floodColor=\"currentColor\"\n        style={{ floodOpacity: \"calc(var(--depth) * 0.6)\" }}\n      />\n    </filter>\n  );\n}\n\n/** @internal Opposing inner shadows shared by recessed control wells. */\nexport function GooeyInsetDefinition({ id }: { id: string }) {\n  return (\n    <filter\n      id={id}\n      x=\"-10%\"\n      y=\"-10%\"\n      width=\"120%\"\n      height=\"120%\"\n      colorInterpolationFilters=\"sRGB\"\n    >\n      <feGaussianBlur in=\"SourceAlpha\" stdDeviation=\"0.3\" result=\"soft-edge\" />\n      <feOffset in=\"soft-edge\" dx=\"0.25\" dy=\"0.45\" result=\"lower-edge\" />\n      <feComposite\n        in=\"SourceAlpha\"\n        in2=\"lower-edge\"\n        operator=\"out\"\n        result=\"inner-shadow\"\n      />\n      <feFlood\n        floodColor=\"var(--color-black)\"\n        floodOpacity=\"calc(var(--depth) * 0.28)\"\n      />\n      <feComposite in2=\"inner-shadow\" operator=\"in\" result=\"shade\" />\n      <feOffset in=\"soft-edge\" dx=\"-0.2\" dy=\"-0.35\" result=\"upper-edge\" />\n      <feComposite\n        in=\"SourceAlpha\"\n        in2=\"upper-edge\"\n        operator=\"out\"\n        result=\"inner-highlight\"\n      />\n      <feFlood\n        floodColor=\"var(--color-white)\"\n        floodOpacity=\"calc(var(--depth) * 0.7)\"\n      />\n      <feComposite in2=\"inner-highlight\" operator=\"in\" result=\"highlight\" />\n      <feMerge>\n        <feMergeNode in=\"SourceGraphic\" />\n        <feMergeNode in=\"shade\" />\n        <feMergeNode in=\"highlight\" />\n      </feMerge>\n    </filter>\n  );\n}\n\n/** @internal Props shared by Caps' private gooey filter definitions. */\nexport type GooeyFilterDefinitionProps = {\n  values?: GooeyFilterValues;\n  id: string;\n};\n\n/** @internal Numeric values for one SVG gooey filter profile. */\nexport type GooeyFilterValues = Readonly<{\n  alphaIntercept: number;\n  alphaSlope: number;\n  blurStdDeviation: number;\n}>;\n\n/** @internal Filter calibrated for Status's eight-unit bead. */\nexport const STATUS_GOOEY_FILTER = Object.freeze({\n  alphaIntercept: -8,\n  alphaSlope: 18,\n  blurStdDeviation: 2,\n});\n\n/** @internal The single SVG filter definition shared by Caps' gooey family. */\nexport function GooeyFilterDefinition({\n  id,\n  values = STIPE_GOOEY_FILTER,\n}: GooeyFilterDefinitionProps) {\n  return (\n    <filter id={id} x=\"-50%\" y=\"-50%\" width=\"200%\" height=\"200%\">\n      <feGaussianBlur\n        in=\"SourceGraphic\"\n        stdDeviation={values.blurStdDeviation}\n        result=\"blur\"\n      />\n      <feColorMatrix\n        in=\"blur\"\n        values={`1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 ${String(values.alphaSlope)} ${String(values.alphaIntercept)}`}\n        result=\"gooey\"\n      />\n      <feComposite in=\"SourceGraphic\" in2=\"gooey\" operator=\"atop\" />\n    </filter>\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/motion.ts",
+      "type": "registry:lib",
+      "target": "@lib/motion.ts",
+      "content": "import {\n  useLayoutEffect,\n  useState,\n  useSyncExternalStore,\n  type RefObject,\n} from \"react\";\n\n/** Resolved, element-scoped motion. Times are milliseconds and distances pixels. */\nexport type Motion = Readonly<{\n  reduced: boolean;\n  squish: number;\n  fast: number;\n  normal: number;\n  slow: number;\n  springDuration: number;\n  bounce: number;\n  stretch: number;\n  distance: number;\n  stagger: number;\n  blur: number;\n  shake: number;\n  steps: number;\n  fuse: number;\n  pressDepth: number;\n  pressScale: number;\n  ease: string;\n  easeExit: string;\n}>;\n\nconst defaults: Motion = Object.freeze({\n  reduced: false,\n  squish: 90,\n  fast: 120,\n  normal: 180,\n  slow: 280,\n  springDuration: 320,\n  bounce: 0.3,\n  stretch: 0.28,\n  distance: 4,\n  stagger: 24,\n  blur: 0,\n  shake: 3,\n  steps: 0,\n  fuse: 1,\n  pressDepth: 0.5,\n  pressScale: 1,\n  ease: \"cubic-bezier(0.2, 0, 0, 1)\",\n  easeExit: \"cubic-bezier(0.4, 0, 1, 1)\",\n});\n\nconst preference = \"(prefers-reduced-motion: reduce)\";\n\n/** Read at an event boundary; no root-theme lookup, so nested tokens win. */\nexport function readMotion(element: Element): Motion {\n  const view = element.ownerDocument.defaultView;\n  if (!view) return defaults;\n  const style = view.getComputedStyle(element);\n  const number = (name: string, fallback: number) => {\n    const value = style.getPropertyValue(name).trim();\n    const parsed = Number.parseFloat(value);\n    return Number.isFinite(parsed) ? Math.max(0, parsed) : fallback;\n  };\n  const time = (name: string, fallback: number) => {\n    const value = style.getPropertyValue(name).trim();\n    return (\n      number(name, fallback) *\n      (value.endsWith(\"s\") && !value.endsWith(\"ms\") ? 1000 : 1)\n    );\n  };\n  const browser: Partial<Pick<Window, \"matchMedia\">> = view;\n  const reduced = browser.matchMedia?.(preference).matches ?? false;\n  const duration = (name: string, fallback: number) =>\n    reduced ? 120 : time(`--stipe-motion-${name}`, fallback);\n  const amount = (name: string, fallback: number) =>\n    reduced ? 0 : number(`--stipe-motion-${name}`, fallback);\n  return {\n    reduced,\n    squish: duration(\"squish\", defaults.squish),\n    fast: duration(\"fast\", defaults.fast),\n    normal: duration(\"normal\", defaults.normal),\n    slow: duration(\"slow\", defaults.slow),\n    springDuration: duration(\"spring-duration\", defaults.springDuration),\n    bounce: Math.min(1, amount(\"bounce\", defaults.bounce)),\n    stretch: amount(\"stretch\", defaults.stretch),\n    distance: amount(\"distance\", defaults.distance),\n    stagger: reduced ? 0 : time(\"--stipe-motion-stagger\", defaults.stagger),\n    blur: amount(\"blur\", defaults.blur),\n    shake: amount(\"shake\", defaults.shake),\n    steps: Math.floor(amount(\"steps\", defaults.steps)),\n    fuse: number(\"--stipe-motion-fuse\", defaults.fuse),\n    pressDepth: reduced\n      ? 0\n      : number(\"--stipe-press-depth\", defaults.pressDepth),\n    pressScale: reduced\n      ? 1\n      : number(\"--stipe-press-scale\", defaults.pressScale),\n    ease: style.getPropertyValue(\"--stipe-motion-ease\").trim() || defaults.ease,\n    easeExit:\n      style.getPropertyValue(\"--stipe-motion-ease-exit\").trim() ||\n      defaults.easeExit,\n  };\n}\n\n/** Live motion tokens for a mounted ref, including nested theme and OS changes. */\nexport function useMotion(ref: RefObject<Element | null>): Motion {\n  const [motion, setMotion] = useState<Motion>(() => ({\n    ...defaults,\n    reduced: true,\n  }));\n  useLayoutEffect(() => {\n    const element = ref.current;\n    const view = element?.ownerDocument.defaultView;\n    if (!element || !view) return;\n    const update = () => {\n      const next = readMotion(element);\n      setMotion((previous) =>\n        JSON.stringify(previous) === JSON.stringify(next) ? previous : next,\n      );\n    };\n    update();\n    const observer = new view.MutationObserver(update);\n    // Observe ancestors only: animation writes to descendants must not trigger reads.\n    for (\n      let parent: Element | null = element;\n      parent;\n      parent = parent.parentElement\n    ) {\n      observer.observe(parent, {\n        attributes: true,\n        attributeFilter: [\"data-theme\", \"class\", \"style\"],\n      });\n    }\n    const browser: Partial<Pick<Window, \"matchMedia\">> = view;\n    const media = browser.matchMedia?.(preference);\n    media?.addEventListener(\"change\", update);\n    return () => {\n      observer.disconnect();\n      media?.removeEventListener(\"change\", update);\n    };\n  }, [ref]);\n  return motion;\n}\n\n/** Today's feel: the defaults that components' authored timings are written against. */\nexport const motionDefaults: Motion = defaults;\n\n/**\n * Scale one of a component's authored durations by the theme's tempo\n * (`--stipe-motion-normal` against its 180ms default). Today's themes return\n * the authored value unchanged; reduced motion returns 0 (nothing travels).\n */\nexport function motionTime(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  return Math.round((authored * motion.normal) / defaults.normal);\n}\n\n/**\n * Scale one of a component's authored spring bounces by the theme's bounce\n * (`--stipe-motion-bounce` against its 0.3 default), so a lively control stays\n * livelier than a calm one inside every theme. A 0 theme is critically damped.\n */\nexport function motionBounce(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  const scaled = (authored * motion.bounce) / defaults.bounce;\n  return Math.min(0.9, Math.max(0, scaled));\n}\n\n/** Scale an authored spring settle time by `--stipe-motion-spring-duration`. */\nexport function motionSpringTime(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  return Math.round(\n    (authored * motion.springDuration) / defaults.springDuration,\n  );\n}\n\n/** A CSS easing for a Web Animation, stepped when the theme asks for it. */\nexport function motionEasing(motion: Motion, ease: string): string {\n  return motion.steps > 0 ? `steps(${String(motion.steps)}, end)` : ease;\n}\n\n/** Whether the element can run Web Animations (not in jsdom or old engines). */\nexport function canAnimate(element: Element): boolean {\n  return \"animate\" in element;\n}\n\nconst globalWindow: Partial<Pick<Window, \"matchMedia\">> = globalThis;\n\nfunction prefersReducedMotion(): boolean {\n  return globalWindow.matchMedia?.(preference).matches ?? false;\n}\n\nfunction subscribeReducedMotion(update: () => void) {\n  const media = globalWindow.matchMedia?.(preference);\n  media?.addEventListener(\"change\", update);\n  return () => {\n    media?.removeEventListener(\"change\", update);\n  };\n}\n\n/** Server renders assume reduced motion, so hydration never starts mid-move. */\nfunction serverReducedMotion() {\n  return true;\n}\n\n/**\n * The live reduced-motion preference alone, for controls that only need to\n * know whether to move (their timing comes from `readMotion` when they do).\n */\nexport function useReducedMotion(): boolean {\n  return useSyncExternalStore(\n    subscribeReducedMotion,\n    prefersReducedMotion,\n    serverReducedMotion,\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/motion-spring.ts",
+      "type": "registry:lib",
+      "target": "@lib/motion-spring.ts",
+      "content": "import { spring, steps, type EasingParam } from \"animejs\";\n\nimport {\n  motionBounce,\n  motionSpringTime,\n  motionTime,\n  type Motion,\n} from \"./motion.js\";\n\n/** Anime.js timing for one tween or segment. */\nexport type MotionTiming = Readonly<{ ease: EasingParam; duration: number }>;\n\n/** Timing for a change that must land at once. */\nexport const immediateTiming: MotionTiming = Object.freeze({\n  ease: \"linear\",\n  duration: 0,\n});\n\n/** A component's own spring, as authored for today's default feel. */\nexport type AuthoredSpring = Readonly<{ bounce: number; duration: number }>;\n\n/**\n * Anime.js timing for an authored spring, in the theme's feel: bounce and\n * settle time scale with `--stipe-motion-bounce` and\n * `--stipe-motion-spring-duration`, and a stepped theme moves in\n * `--stipe-motion-steps` discrete steps instead. Today's themes reproduce the\n * authored spring exactly.\n */\nexport function themedSpring(\n  motion: Motion,\n  authored: AuthoredSpring,\n): MotionTiming {\n  const duration = motionSpringTime(motion, authored.duration);\n  if (duration <= 0) return immediateTiming;\n  if (motion.steps > 0) return { ease: steps(motion.steps), duration };\n  return {\n    ease: spring({ bounce: motionBounce(motion, authored.bounce), duration }),\n    duration,\n  };\n}\n\n/**\n * Anime.js timing for an authored eased segment: the duration scales with the\n * theme's tempo, and a stepped theme replaces the curve with steps.\n */\nexport function themedEase(\n  motion: Motion,\n  authored: MotionTiming,\n): MotionTiming {\n  const duration = motionTime(motion, authored.duration);\n  return {\n    ease: motion.steps > 0 ? steps(motion.steps) : authored.ease,\n    duration,\n  };\n}\n"
+    },
+    {
+      "path": "../src/components/overlay-root.tsx",
+      "type": "registry:ui",
+      "target": "@ui/overlay-root.tsx",
+      "content": "import {\n  createContext,\n  useContext,\n  useEffect,\n  useRef,\n  type ReactNode,\n} from \"react\";\n\n/** Semantic destinations; the host owns their paint order and positioning. */\nexport type OverlayLayer = \"popover\" | \"dialog\" | \"toast\" | \"tooltip\";\n/** Host portal roots; null keeps an overlay waiting until its layer mounts. */\nexport type OverlayContainers = Readonly<\n  Record<OverlayLayer, HTMLElement | null>\n>;\n\nconst DismissContext = createContext<\n  ((listener: () => void) => () => void) | undefined\n>(undefined);\n\nconst Context = createContext<OverlayContainers | null>(null);\n\n/** Supply shell portal roots without teaching Caps about the shell's layout. */\nexport function OverlayRoot({\n  containers,\n  children,\n  subscribeDismiss,\n}: {\n  containers: OverlayContainers;\n  children?: ReactNode;\n  /** Subscribe to the host losing focus to a child surface or another window. */\n  subscribeDismiss?: (listener: () => void) => () => void;\n}) {\n  return (\n    <Context.Provider value={containers}>\n      <DismissContext.Provider value={subscribeDismiss}>\n        {children}\n      </DismissContext.Provider>\n    </Context.Provider>\n  );\n}\n\n/** Wait for a provided root; standalone overlays use the current document body. */\nexport function useOverlayRoot(layer: OverlayLayer): HTMLElement | null {\n  const containers = useContext(Context);\n  if (containers !== null) return containers[layer];\n  return Object.hasOwn(globalThis, \"document\") ? document.body : null;\n}\n\n/** Retire a transient overlay when its owning host requests light dismissal. */\nexport function useOverlayDismiss(dismiss: () => void): void {\n  const subscribe = useContext(DismissContext);\n  const callback = useRef(dismiss);\n  callback.current = dismiss;\n  useEffect(\n    () =>\n      subscribe?.(() => {\n        callback.current();\n      }),\n    [subscribe],\n  );\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer caps-app-bar": {
+      ".caps-app-bar": {
+        "position": "relative",
+        "zIndex": "auto",
+        "display": "flex",
+        "alignItems": "center",
+        "flex": "0 1 auto",
+        "gap": "var(--spacing-sm)",
+        "width": "auto",
+        "height": "100%",
+        "minWidth": "0",
+        "maxWidth": "100%",
+        "pointerEvents": "none"
+      },
+      ".caps-app-bar-region": {
+        "display": "flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-xs)",
+        "minWidth": "0",
+        "maxWidth": "100%",
+        "padding": "0",
+        "overflow": "visible",
+        "border": "0",
+        "borderRadius": "0",
+        "background": "transparent",
+        "boxShadow": "none",
+        "pointerEvents": "auto"
+      },
+      ".caps-app-bar-items": {
+        "flex": "0 1 auto",
+        "justifySelf": "auto",
+        "minWidth": "0",
+        "maxWidth": "100%",
+        "overflowX": "auto",
+        "scrollbarWidth": "thin"
+      },
+      ".caps-app-bar-positioner": { "pointerEvents": "auto" },
+      ".caps-app-bar-launchers": {
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "stretch",
+        "width": "min(24rem, calc(100vw - 2 * var(--spacing-xl)))",
+        "maxWidth": "min(\n      24rem,\n      calc(100vw - 2 * var(--spacing-xl)),\n      var(--available-width)\n    )",
+        "maxHeight": "min(60vh, 28rem, var(--available-height))",
+        "overflow": "auto",
+        "padding": "var(--spacing-sm)",
+        "border": "var(--border) solid\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(14% + (1 - var(--depth)) * 86%),\n        transparent\n      )",
+        "borderRadius": "var(--radius-box)",
+        "background": "var(--color-base-100)",
+        "boxShadow": "0 calc(var(--depth) * 8px) calc(var(--depth) * 24px)\n      color-mix(\n        in srgb,\n        var(--color-base-content) calc(var(--depth) * 14%),\n        transparent\n      )",
+        "transformOrigin": "top left",
+        "opacity": 1,
+        "pointerEvents": "auto"
+      },
+      ".caps-app-bar-section": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "var(--spacing-xs)"
+      },
+      ".caps-app-bar-section + .caps-app-bar-section": {
+        "paddingTop": "var(--spacing-sm)",
+        "borderTop": "var(--border) solid\n      color-mix(in oklab, var(--color-base-content) 14%, transparent)"
+      },
+      ".caps-app-bar-section-label": {
+        "paddingInline": "var(--spacing-xs)",
+        "color": "var(--stipe-fg-muted)",
+        "fontSize": "var(--text-xs)",
+        "fontWeight": 600,
+        "letterSpacing": "0.04em"
+      },
+      ".caps-app-bar-app-list": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "gap": "var(--spacing-xs)"
+      },
+      ".caps-app-bar-session-list": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "var(--spacing-2xs)"
+      },
+      ".caps-app-bar-items[aria-hidden=\"true\"],.caps-app-bar-launchers[aria-hidden=\"true\"],.caps-app-bar-primary[aria-hidden=\"true\"]": {
+        "visibility": "hidden",
+        "pointerEvents": "none",
+        "transition": "visibility 0s var(--stipe-motion-fast)"
+      },
+      ".caps-app-bar-launchers[aria-hidden=\"true\"]": {
+        "display": "none",
+        "transition": "visibility 0s var(--stipe-motion-fast),\n      display 0s var(--stipe-motion-fast) allow-discrete"
+      },
+      ".caps-app-bar-launcher": {
+        "position": "relative",
+        "display": "grid",
+        "placeItems": "center",
+        "flex": "0 0 auto",
+        "pointerEvents": "auto"
+      },
+      ".caps-app-bar-item": {
+        "position": "relative",
+        "display": "flex",
+        "flex": "0 0 auto"
+      },
+      ".caps-app-bar-button,.caps-app-bar-launcher-button,.caps-app-bar-primary,.caps-app-bar-close": {
+        "display": "inline-flex",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "border": "var(--border) solid transparent",
+        "borderRadius": "var(--radius-field)",
+        "color": "var(--color-base-content)",
+        "cursor": "pointer"
+      },
+      ".caps-app-bar-button": {
+        "position": "relative",
+        "width": "40px",
+        "height": "40px",
+        "padding": "var(--spacing-sm)",
+        "background": "transparent"
+      },
+      ".caps-app-bar-button:hover,.caps-app-bar-button:focus-visible": {
+        "background": "color-mix(in oklab, var(--color-base-content) 6%, transparent)"
+      },
+      ".caps-app-bar-launchers .caps-app-bar-button": {
+        "flexDirection": "column",
+        "gap": "var(--spacing-xs)",
+        "width": "80px",
+        "height": "64px",
+        "padding": "var(--spacing-xs)"
+      },
+      ".caps-app-bar-item[data-launcher-labels=\"wrap\"] .caps-app-bar-button": {
+        "height": "auto",
+        "minHeight": "64px"
+      },
+      ".caps-app-bar-item[data-launcher-labels=\"wrap\"] .caps-app-bar-item-label": {
+        "overflow": "visible",
+        "textAlign": "center",
+        "textOverflow": "clip",
+        "textWrap": "balance",
+        "whiteSpace": "normal",
+        "overflowWrap": "anywhere"
+      },
+      ".caps-app-bar-session-list .caps-app-bar-button": {
+        "justifyContent": "flex-start",
+        "flexDirection": "row",
+        "gap": "var(--spacing-sm)",
+        "width": "100%",
+        "minHeight": "40px",
+        "height": "auto",
+        "padding": "var(--spacing-xs) var(--spacing-sm)",
+        "borderRadius": "var(--radius-field)",
+        "textAlign": "left"
+      },
+      ".caps-app-bar-session-list .caps-app-bar-item-label": {
+        "minWidth": "0",
+        "flex": 1,
+        "fontSize": "var(--text-sm)"
+      },
+      ".caps-app-bar-item-label": {
+        "overflow": "hidden",
+        "maxWidth": "100%",
+        "fontSize": "var(--text-xs)",
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap"
+      },
+      ".caps-app-bar-button[data-running=\"true\"]::after": {
+        "content": "\"\"",
+        "position": "absolute",
+        "bottom": "3px",
+        "width": "10px",
+        "height": "2px",
+        "borderRadius": "var(--radius-full)",
+        "background": "color-mix(in oklab, var(--color-base-content) 35%, transparent)"
+      },
+      ".caps-app-bar-button[data-active=\"true\"]": {
+        "background": "var(--color-base-200)"
+      },
+      ".caps-app-bar-button[data-active=\"true\"]::after": {
+        "width": "16px",
+        "background": "var(--color-base-content)"
+      },
+      ".caps-app-bar-icon": {
+        "display": "grid",
+        "placeItems": "center",
+        "width": "24px",
+        "height": "24px",
+        "pointerEvents": "none"
+      },
+      ".caps-app-bar-icon :is(svg, .caps-monogram)": {
+        "width": "100%",
+        "height": "100%"
+      },
+      ".caps-app-bar .caps-app-bar-launcher-button": {
+        "width": "calc(var(--spacing-2xl) + var(--spacing-sm))",
+        "height": "calc(var(--spacing-2xl) + var(--spacing-sm))",
+        "padding": "var(--spacing-2xs)",
+        "borderColor": "color-mix(\n      in oklab,\n      var(--color-base-content) 20%,\n      transparent\n    )",
+        "background": "var(--color-base-100)",
+        "boxShadow": "inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.1)),\n      inset 0 -2px 0 rgb(0 0 0 / calc(var(--depth) * 0.16)),\n      0 3px 7px -4px rgb(0 0 0 / calc(var(--depth) * 0.35))",
+        "transformOrigin": "center bottom"
+      },
+      ".caps-app-bar-mascot,.caps-app-bar-mascot canvas": {
+        "display": "block",
+        "width": "100%",
+        "height": "100%",
+        "pointerEvents": "none"
+      },
+      ".caps-app-bar-launcher-button .caps-app-bar-mascot": {
+        "display": "grid",
+        "placeItems": "center",
+        "flex": 1,
+        "minWidth": "0",
+        "width": "100%",
+        "height": "100%"
+      },
+      ".caps-app-bar-launcher-button .caps-app-bar-mascot > svg": {
+        "width": "100%",
+        "height": "100%"
+      },
+      ".caps-app-bar-launchers::before": {
+        "content": "\"\"",
+        "position": "absolute",
+        "top": "6px",
+        "left": "var(--caps-app-bar-notch-left, 24px)",
+        "width": "9px",
+        "height": "9px",
+        "borderTop": "var(--border) solid\n      color-mix(in oklab, var(--color-base-content) 14%, transparent)",
+        "borderLeft": "var(--border) solid\n      color-mix(in oklab, var(--color-base-content) 14%, transparent)",
+        "background": "var(--color-base-100)",
+        "transform": "rotate(45deg)"
+      },
+      ".caps-app-bar-primary": {
+        "minHeight": "40px",
+        "gap": "var(--spacing-sm)",
+        "padding": "var(--spacing-sm) var(--spacing-md)",
+        "whiteSpace": "nowrap",
+        "background": "var(--color-secondary)",
+        "color": "var(--color-secondary-content)",
+        "borderColor": "color-mix(in oklab, var(--color-secondary) 80%, black)",
+        "fontSize": "var(--text-sm)",
+        "fontWeight": 600,
+        "opacity": 0,
+        "transformOrigin": "center bottom"
+      },
+      ".caps-app-bar-primary svg": { "width": "18px", "height": "18px" },
+      ".caps-app-bar-close": {
+        "position": "absolute",
+        "top": "-8px",
+        "right": "-8px",
+        "width": "18px",
+        "height": "18px",
+        "padding": "var(--spacing-xs)",
+        "opacity": 0,
+        "background": "var(--color-base-200)"
+      },
+      ".caps-app-bar-close svg": { "width": "12px", "height": "12px" },
+      ".caps-app-bar-item:hover .caps-app-bar-close,.caps-app-bar-item:focus-within .caps-app-bar-close": {
+        "opacity": 1
+      },
+      ".caps-app-bar-close:hover": { "color": "var(--color-error)" },
+      ".caps-app-bar button:focus-visible": {
+        "outline": "2px solid var(--color-info)",
+        "outlineOffset": "2px"
+      },
+      ".caps-app-bar-empty": {
+        "maxWidth": "16rem",
+        "padding": "var(--spacing-sm) var(--spacing-md)",
+        "fontSize": "var(--text-xs)",
+        "color": "var(--stipe-fg-muted)"
+      },
+      "@media (hover: none), (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-app-bar-close": {
+          "position": "static",
+          "alignSelf": "center",
+          "opacity": 1
+        }
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        ".caps-app-bar [aria-hidden=\"true\"]": { "transition": "none" }
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-app-bar-button,.caps-app-bar-primary,.caps-app-bar-close": {
+          "minWidth": "var(--caps-touch-target)",
+          "minHeight": "var(--caps-touch-target)"
+        }
+      }
+    }
+  }
+}

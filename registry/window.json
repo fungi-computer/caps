@@ -1,0 +1,199 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "window",
+  "type": "registry:ui",
+  "title": "Window",
+  "description": "Window frame, title handle, host-owned actions and scrolling body.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "lucide-react",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": ["@shiit/icon-button"],
+  "files": [
+    {
+      "path": "../src/components/window.tsx",
+      "type": "registry:ui",
+      "target": "@ui/window.tsx",
+      "content": "import {\n  ArrowLeft,\n  ArrowUpRight,\n  Columns2,\n  Maximize2,\n  Minimize2,\n  Minus,\n  PanelsTopLeft,\n  X,\n} from \"lucide-react\";\nimport {\n  forwardRef,\n  type ButtonHTMLAttributes,\n  type HTMLAttributes,\n  type ReactNode,\n} from \"react\";\nimport { cn } from \"@/lib/cn\";\nimport { IconButton } from \"./icon-button.js\";\n\n/** Window presentation only. The host owns geometry, focus order and lifecycle. */\nexport type WindowFrameProps = HTMLAttributes<HTMLElement> & {\n  active?: boolean;\n  floating?: boolean;\n  /** Shrink a floating panel to its contents, up to the host's max-height. */\n  fitContent?: boolean;\n};\n\n/** A clipped, rounded shell for either a tiled or floating application. */\nexport const WindowFrame = forwardRef<HTMLElement, WindowFrameProps>(\n  function WindowFrame(\n    {\n      active = false,\n      floating = false,\n      fitContent = false,\n      className,\n      ...props\n    },\n    ref,\n  ) {\n    return (\n      <section\n        {...props}\n        ref={ref}\n        className={cn(\"caps-window\", className)}\n        data-active={active}\n        data-floating={floating}\n        data-fit-content={fitContent}\n      />\n    );\n  },\n);\n\n/** Decorative snap destination. Geometry and visibility belong to the layout owner. */\nexport function WindowSnapPreview({\n  className,\n  ...props\n}: HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div\n      {...props}\n      aria-hidden=\"true\"\n      className={cn(\"caps-window-snap-preview\", className)}\n    />\n  );\n}\n\n/** A host-owned request to go back inside the window's content. */\nexport type WindowBackAction = {\n  /** Accessible name, e.g. \"Back in Games\". */\n  label: string;\n  /** Request going back; the host owns the history and the outcome. */\n  onBack: () => void;\n  /** Tooltip text, e.g. the keyboard route to the same action. */\n  hint?: string;\n};\n\n/** Supply handleProps only when the title is an interactive layout handle. */\nexport type WindowHeaderProps = Omit<\n  HTMLAttributes<HTMLElement>,\n  \"title\" | \"children\"\n> & {\n  title: string;\n  /** Where the content is now, shown after the title and truncated first. */\n  subtitle?: string;\n  icon?: ReactNode;\n  actions?: ReactNode;\n  /** Present only while there is somewhere to go back to. */\n  back?: WindowBackAction;\n  /** `compact` is a slim bar for tiled layouts; touch targets keep 44px. */\n  density?: \"regular\" | \"compact\";\n  handleProps?: Omit<\n    ButtonHTMLAttributes<HTMLButtonElement>,\n    \"children\" | \"type\"\n  >;\n};\n\n/** The handle, Back and actions are siblings, so presses never start a drag. */\nexport function WindowHeader({\n  title,\n  subtitle,\n  icon,\n  actions,\n  back,\n  density = \"regular\",\n  handleProps,\n  className,\n  ...props\n}: WindowHeaderProps) {\n  const label = subtitle ? `${title} · ${subtitle}` : title;\n  const content = (\n    <>\n      {icon && (\n        <span className=\"caps-window-icon\" aria-hidden=\"true\">\n          {icon}\n        </span>\n      )}\n      <span className=\"caps-window-name\">{title}</span>\n      {subtitle && (\n        <span className=\"caps-window-subtitle\">\n          <span aria-hidden=\"true\">·</span> {subtitle}\n        </span>\n      )}\n    </>\n  );\n  return (\n    <header\n      {...props}\n      className={cn(\"caps-window-header\", className)}\n      data-density={density}\n    >\n      {back && (\n        <IconButton\n          className=\"caps-window-back\"\n          aria-label={back.label}\n          title={back.hint ?? back.label}\n          icon={<ArrowLeft />}\n          onClick={back.onBack}\n        />\n      )}\n      {handleProps ? (\n        <button\n          {...handleProps}\n          type=\"button\"\n          data-caps-window-handle\n          className={cn(\"caps-window-title\", handleProps.className)}\n          title={label}\n        >\n          {content}\n        </button>\n      ) : (\n        <div className=\"caps-window-title\" title={label}>\n          {content}\n        </div>\n      )}\n      {actions}\n    </header>\n  );\n}\n\n/** Available callbacks determine available controls; no inert placeholder actions. */\nexport type WindowActionsProps = {\n  title: string;\n  floating?: boolean;\n  maximized?: boolean;\n  /** Request making this window the main tiled window. */\n  onPromote?: () => void;\n  /** Request switching between floating and tiled placement. */\n  onToggleFloating?: () => void;\n  /** Request toggling maximized presentation. */\n  onToggleMaximize?: () => void;\n  /** Request minimizing; the caller owns window visibility. */\n  onMinimize?: () => void;\n  /** Request closing; the caller owns disposal and removal. */\n  onClose?: () => void;\n  /** Select a compact game panel for reading on a narrow screen. */\n  onSelect?: () => void;\n};\n\n/** Consistent icons, ordering and accessible names for host-owned commands. */\nexport function WindowActions({\n  title,\n  floating = false,\n  maximized = false,\n  onPromote,\n  onToggleFloating,\n  onToggleMaximize,\n  onMinimize,\n  onClose,\n  onSelect,\n}: WindowActionsProps) {\n  return (\n    <div\n      className=\"caps-window-actions\"\n      role=\"group\"\n      aria-label={`${title} window actions`}\n    >\n      {onSelect && (\n        <IconButton\n          aria-label={`Show ${title}`}\n          title={`Show ${title}`}\n          icon={<Maximize2 />}\n          onClick={onSelect}\n        />\n      )}\n      {onPromote && (\n        <IconButton\n          aria-label={`Make ${title} main`}\n          title=\"Make main\"\n          icon={<ArrowUpRight />}\n          onClick={onPromote}\n        />\n      )}\n      {onToggleFloating && (\n        <IconButton\n          aria-label={`${floating ? \"Tile\" : \"Float\"} ${title}`}\n          title={floating ? \"Tile\" : \"Float\"}\n          icon={floating ? <Columns2 /> : <PanelsTopLeft />}\n          onClick={onToggleFloating}\n        />\n      )}\n      {onToggleMaximize && (\n        <IconButton\n          aria-label={`${maximized ? \"Restore\" : \"Zoom\"} ${title}`}\n          title={maximized ? \"Restore\" : \"Zoom\"}\n          icon={maximized ? <Minimize2 /> : <Maximize2 />}\n          onClick={onToggleMaximize}\n        />\n      )}\n      {onMinimize && (\n        <IconButton\n          aria-label={`Minimize ${title}`}\n          title=\"Minimize\"\n          icon={<Minus />}\n          onClick={onMinimize}\n        />\n      )}\n      {onClose && (\n        <IconButton\n          aria-label={`Close ${title}`}\n          title=\"Close\"\n          tone=\"destructive\"\n          icon={<X />}\n          onClick={onClose}\n        />\n      )}\n    </div>\n  );\n}\n\n/** The scrolling region stays inside the shell, beneath a stationary title bar. */\nexport const WindowBody = forwardRef<\n  HTMLDivElement,\n  HTMLAttributes<HTMLDivElement>\n>(function WindowBody({ className, ...props }, ref) {\n  return (\n    <div {...props} ref={ref} className={cn(\"caps-window-body\", className)} />\n  );\n});\n\n/** Reading rhythm for compact game-window blocks and action keys. */\nexport const GameWindowContent = forwardRef<\n  HTMLDivElement,\n  HTMLAttributes<HTMLDivElement>\n>(function GameWindowContent({ className, ...props }, ref) {\n  return (\n    <div\n      {...props}\n      ref={ref}\n      className={cn(\"caps-game-window-content\", className)}\n    />\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer caps-window": {
+      ".caps-window": {
+        "display": "flex",
+        "flexDirection": "column",
+        "minWidth": "0",
+        "minHeight": "0",
+        "overflow": "hidden",
+        "isolation": "isolate",
+        "color": "var(--color-base-content)",
+        "background": "var(--caps-window-face, var(--color-base-100))",
+        "backgroundImage": "var(--caps-window-image, none)",
+        "backgroundSize": "var(--caps-print-texture-size, auto)",
+        "border": "var(\n      --caps-window-border,\n      var(--border) solid var(--stipe-linework)\n    )",
+        "borderRadius": "var(--radius-box)",
+        "boxShadow": "var(\n      --caps-window-shadow,\n      var(\n        --stipe-shadow-raised,\n        0 calc(var(--depth) * 2px) calc(var(--depth) * 6px)\n          color-mix(\n            in srgb,\n            var(--color-base-content) calc(var(--depth) * 4%),\n            transparent\n          )\n      )\n    )"
+      },
+      ".caps-window[hidden]": { "display": "none" },
+      ".caps-window[data-fit-content=\"true\"] .caps-window-body": {
+        "flex": "0 1 auto",
+        "scrollbarWidth": "thin"
+      },
+      ".caps-window[data-active=\"true\"]": {
+        "borderColor": "var(\n      --caps-window-border-active,\n      color-mix(in srgb, var(--color-primary) 50%, var(--color-base-300))\n    )",
+        "boxShadow": "var(\n      --caps-window-shadow,\n      var(\n        --stipe-shadow-raised,\n        0 0 0 calc(var(--depth) * 1px)\n          color-mix(\n            in srgb,\n            var(--color-primary) calc(var(--depth) * 10%),\n            transparent\n          ),\n        0 calc(var(--depth) * 4px) calc(var(--depth) * 12px)\n          color-mix(\n            in srgb,\n            var(--color-base-content) calc(var(--depth) * 6%),\n            transparent\n          )\n      )\n    )"
+      },
+      ".caps-window[data-active=\"true\"] .caps-window-header": {
+        "background": "color-mix(\n      in oklab,\n      var(--color-primary)\n        var(\n          --caps-window-header-active-tint,\n          var(--caps-window-header-tint, 0%)\n        ),\n      var(--caps-window-header-face, var(--color-base-200))\n    )"
+      },
+      ".caps-window[data-floating=\"true\"]": {
+        "boxShadow": "var(\n      --caps-window-shadow,\n      var(\n        --stipe-shadow-raised,\n        0 calc(var(--depth) * 2px) calc(var(--depth) * 4px)\n          color-mix(\n            in srgb,\n            var(--color-base-300) calc(var(--depth) * 30%),\n            transparent\n          ),\n        0 calc(var(--depth) * 12px) calc(var(--depth) * 28px)\n          calc(var(--depth) * -8px)\n          color-mix(\n            in srgb,\n            var(--color-base-300) calc(var(--depth) * 55%),\n            transparent\n          )\n      )\n    )"
+      },
+      ".caps-window-header": {
+        "display": "flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-2xs)",
+        "minHeight": "32px",
+        "flexShrink": 0,
+        "paddingRight": "var(--spacing-xs)",
+        "background": "color-mix(\n      in oklab,\n      var(--color-primary) var(--caps-window-header-tint, 0%),\n      var(--caps-window-header-face, var(--color-base-200))\n    )",
+        "borderBottom": "var(\n      --caps-window-header-border,\n      var(--border) solid var(--stipe-linework)\n    )",
+        "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.045))\n    )"
+      },
+      ".caps-window-title": {
+        "fontFamily": "var(--caps-label-font, inherit)",
+        "display": "flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-sm)",
+        "minWidth": "0",
+        "flex": 1,
+        "alignSelf": "stretch",
+        "minHeight": "32px",
+        "textAlign": "left",
+        "padding": "var(--spacing-xs) var(--spacing-md)",
+        "fontSize": "11px",
+        "fontWeight": 600,
+        "color": "inherit",
+        "background": "transparent",
+        "border": "0"
+      },
+      ".caps-window-snap-preview": {
+        "position": "absolute",
+        "pointerEvents": "none",
+        "borderRadius": "var(--radius-box)",
+        "border": "var(--border) solid var(--color-info)",
+        "background": "color-mix(in oklab, var(--color-info) 14%, transparent)",
+        "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 calc(var(--depth) * 1px) 0\n        color-mix(in oklab, white calc(var(--depth) * 40%), transparent),\n      inset 0 calc(var(--depth) * -2px) 0\n        color-mix(\n          in oklab,\n          var(--color-info) calc(var(--depth) * 25%),\n          transparent\n        )\n    )"
+      },
+      ".caps-window-title[data-caps-window-handle]": { "touchAction": "none" },
+      ".caps-window[data-floating=\"true\"] [data-caps-window-handle]": {
+        "cursor": "grab"
+      },
+      ".caps-window[data-floating=\"true\"] [data-caps-window-handle]:active": {
+        "cursor": "grabbing"
+      },
+      ".caps-window-title:focus-visible": {
+        "outline": "2px solid var(--color-info)",
+        "outlineOffset": "-3px",
+        "borderRadius": "var(--radius-selector)"
+      },
+      ".caps-window-name": {
+        "overflow": "hidden",
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap",
+        "flexShrink": 0,
+        "maxWidth": "100%",
+        "fontFamily": "var(--caps-window-title-font, inherit)",
+        "fontSize": "var(--caps-window-title-size, inherit)",
+        "fontWeight": "var(--caps-window-title-weight, inherit)"
+      },
+      ".caps-window-subtitle": {
+        "minWidth": "0",
+        "overflow": "hidden",
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap",
+        "fontWeight": 500,
+        "color": "color-mix(in srgb, currentColor 65%, transparent)"
+      },
+      ".caps-window-back": {
+        "flexShrink": 0,
+        "marginLeft": "var(--spacing-2xs)"
+      },
+      ".caps-window-back + .caps-window-title": {
+        "paddingLeft": "var(--spacing-2xs)"
+      },
+      ".caps-window-header[data-density=\"compact\"]": { "minHeight": "28px" },
+      ".caps-window-header[data-density=\"compact\"] .caps-window-title": {
+        "minHeight": "28px",
+        "paddingBlock": "var(--spacing-2xs)"
+      },
+      ".caps-window-icon": {
+        "display": "flex",
+        "flexShrink": 0,
+        "opacity": 0.85
+      },
+      ".caps-window-icon > :is(svg, .caps-monogram)": {
+        "width": "14px",
+        "height": "14px"
+      },
+      ".caps-window-actions": {
+        "display": "flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-2xs)",
+        "flexShrink": 0
+      },
+      ".caps-window-actions .caps-button": {
+        "minWidth": "var(--size)",
+        "flexShrink": 0
+      },
+      ".caps-window-actions .caps-button:focus-visible": {
+        "outlineOffset": "-2px"
+      },
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-window-header .caps-button": {
+          "minWidth": "44px",
+          "minHeight": "44px",
+          "flexShrink": 0
+        },
+        ".caps-window-title[data-caps-window-handle]": { "minHeight": "44px" }
+      },
+      ".caps-window-body": {
+        "flex": 1,
+        "minHeight": "0",
+        "minWidth": "0",
+        "overflow": "auto"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    },
+    "@layer caps-game": {
+      ".caps-window": {
+        "--caps-keycap-hover-face": "var(--color-base-300)",
+        "--caps-keycap-hover-image": "none",
+        "--caps-keycap-focus-ink": "var(--color-info)",
+        "--caps-keycap-label-line-height": "1.25",
+        "--caps-keycap-label-min-width": "0",
+        "--caps-keycap-shortcut-flex": "none",
+        "--caps-keycap-shortcut-size": "1.75rem",
+        "--caps-keycap-shortcut-border": "var(--border) solid var(--stipe-linework)",
+        "--caps-keycap-shortcut-face": "var(--color-base-100)",
+        "--caps-keycap-shortcut-font-size": "0.75rem",
+        "--caps-keycap-shortcut-weight": "700"
+      }
+    }
+  }
+}

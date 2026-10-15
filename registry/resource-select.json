@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "resource-select",
+  "type": "registry:block",
+  "title": "Resource Select",
+  "description": "Generic searchable selector for supplied resources and callbacks.",
+  "dependencies": ["@fungi.computer/stipe", "react"],
+  "registryDependencies": ["@shiit/combobox"],
+  "files": [
+    {
+      "path": "../src/blocks/resource-select.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/resource-select.tsx",
+      "content": "import { forwardRef, type ButtonHTMLAttributes, type JSX } from \"react\";\n\nimport { Combobox } from \"@/components/ui/combobox\";\n\n/** Caller-provided resource option data. */\nexport type ResourceOption = {\n  disabled?: boolean;\n  id: string;\n  label: string;\n  searchText?: string;\n};\n\n/** Props accepted by ResourceSelect. */\nexport type ResourceSelectProps = {\n  /** Called after an option is selected. */\n  onSelect: (option: ResourceOption) => void;\n  options: readonly ResourceOption[];\n  placeholder?: string;\n  /** Native caller metadata, including data-* attributes. */\n  triggerProps?: ButtonHTMLAttributes<HTMLButtonElement> & DataAttributes;\n  value?: string;\n};\n\n/** Native `data-*` attribute map accepted alongside typed props. */\nexport type DataAttributes = Record<\n  `data-${string}`,\n  boolean | number | string | undefined\n>;\n\n/** A resource-selection block with caller-owned options and selected value. */\nexport const ResourceSelect = forwardRef<\n  HTMLButtonElement,\n  ResourceSelectProps\n>(function ResourceSelect(\n  {\n    onSelect,\n    options,\n    placeholder = \"Select an option\",\n    triggerProps,\n    value,\n  }: ResourceSelectProps,\n  ref,\n): JSX.Element {\n  const { className, ...nativeTriggerProps } = triggerProps ?? {};\n  return (\n    <Combobox\n      triggerRef={ref}\n      getKey={(item) => item.id}\n      getLabel={(item) => item.label}\n      getSearchText={(item) => item.searchText ?? item.label}\n      isDisabled={(item) => item.disabled === true}\n      items={options}\n      onValueChange={(_next, item) => {\n        if (item) onSelect(item);\n      }}\n      placeholder={placeholder}\n      renderItem={(item) => <span>{item.label}</span>}\n      value={value ?? null}\n      trigger={\n        <button\n          {...nativeTriggerProps}\n          className={[\n            \"btn btn-xs btn-ghost w-full justify-between text-left font-normal\",\n            className,\n          ]\n            .filter(Boolean)\n            .join(\" \")}\n          type=\"button\"\n        >\n          {options.find((item) => item.id === value)?.label ?? placeholder}\n        </button>\n      }\n    />\n  );\n});\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

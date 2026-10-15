@@ -1,0 +1,59 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "activity-line",
+  "type": "registry:ui",
+  "title": "Activity line",
+  "description": "A live clock for agent work that settles into its duration and folds its trace.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "cn",
+    "class-variance-authority",
+    "lucide-react",
+    "react"
+  ],
+  "registryDependencies": ["@shiit/loader", "@shiit/presence", "@shiit/status"],
+  "files": [
+    {
+      "path": "../src/components/activity-line.tsx",
+      "type": "registry:ui",
+      "target": "@ui/activity-line.tsx",
+      "content": "import { ChevronRight } from \"lucide-react\";\nimport {\n  useEffect,\n  useId,\n  useLayoutEffect,\n  useState,\n  type ReactNode,\n} from \"react\";\n\nimport { cn } from \"@/lib/cn\";\nimport { Loader } from \"./loader.js\";\nimport { Collapse, Swap } from \"./presence.js\";\nimport { Status } from \"./status.js\";\n\n/** Where a piece of agent work stands. */\nexport type ActivityState = \"running\" | \"done\" | \"failed\";\n\n/** Short elapsed time: `0.4s`, `4.2s`, `42s`, `3m 05s`. */\nexport function formatElapsed(milliseconds: number): string {\n  const ms = Math.max(0, milliseconds);\n  if (ms < 10_000) return `${(ms / 1_000).toFixed(1)}s`;\n  if (ms < 60_000) return `${String(Math.floor(ms / 1_000))}s`;\n  const minutes = Math.floor(ms / 60_000);\n  const seconds = Math.floor((ms % 60_000) / 1_000);\n  return `${String(minutes)}m ${String(seconds).padStart(2, \"0\")}s`;\n}\n\n/**\n * A clock that ticks while `running` and holds still otherwise. Times are\n * epoch milliseconds (`Date.now()`), owned by the caller.\n */\nexport function useElapsed(\n  startedAt: number,\n  finishedAt: number | undefined,\n  running: boolean,\n): number {\n  const [now, setNow] = useState(() => Date.now());\n  useEffect(() => {\n    if (!running) return;\n    setNow(Date.now());\n    const tick = setInterval(() => {\n      setNow(Date.now());\n    }, 100);\n    return () => {\n      clearInterval(tick);\n    };\n  }, [running]);\n  return (finishedAt ?? now) - startedAt;\n}\n\n/** A finished mark that closes its arc and draws itself once it appears. */\nfunction SettledMark({ outcome }: { outcome: \"check\" | \"cross\" }) {\n  const [drawn, setDrawn] = useState(false);\n  useLayoutEffect(() => {\n    setDrawn(true);\n  }, []);\n  return (\n    <Status\n      glyph={drawn ? outcome : \"arc\"}\n      progress={1}\n      size=\"compact\"\n      tone={outcome === \"check\" ? \"neutral\" : \"error\"}\n    />\n  );\n}\n\n/** Props accepted by ActivityLine. */\nexport type ActivityLineProps = Readonly<{\n  state: ActivityState;\n  /** When the work started (epoch ms). */\n  startedAt: number;\n  /** When it ended (epoch ms); otherwise the moment it stopped running. */\n  finishedAt?: number | undefined;\n  /** What is happening, such as \"Thinking\". */\n  label: string;\n  /** How finished work reads before its time, such as \"Thought for\". */\n  doneLabel: string;\n  /** How stopped work reads before its time, such as \"Stopped after\". */\n  failedLabel?: string;\n  /** The trace: shown while running, folded away once done. */\n  children?: ReactNode;\n  className?: string;\n}>;\n\n/**\n * One line of agent activity. While running it says what is happening with\n * a live clock and shows its trace; when done it settles into \"Thought for\n * 4.2s\" and folds the trace away, one click from reopening.\n */\nexport function ActivityLine({\n  state,\n  startedAt,\n  finishedAt,\n  label,\n  doneLabel,\n  failedLabel = \"Stopped after\",\n  children,\n  className,\n}: ActivityLineProps) {\n  const running = state === \"running\";\n  const elapsed = useElapsed(startedAt, finishedAt, running);\n  // Open while running; fold when it settles, unless the reader chose.\n  const [chosen, setChosen] = useState<boolean | null>(null);\n  const [settledState, setSettledState] = useState(state);\n  if (settledState !== state) {\n    setSettledState(state);\n    setChosen(null);\n  }\n  const open = chosen ?? running;\n  const panel = useId();\n  const summary = running\n    ? `${label}…`\n    : `${state === \"done\" ? doneLabel : failedLabel} ${formatElapsed(elapsed)}`;\n  return (\n    <div\n      className={cn(\n        \"caps-disclosure caps-disclosure-row caps-activity-line\",\n        state === \"failed\" && \"caps-disclosure-error\",\n        className,\n      )}\n      data-open={open ? \"\" : undefined}\n      data-state={state}\n    >\n      <button\n        type=\"button\"\n        className=\"caps-disclosure-trigger\"\n        aria-expanded={open}\n        aria-controls={children === undefined ? undefined : panel}\n        onClick={() => {\n          setChosen(!open);\n        }}\n      >\n        <span className=\"caps-disclosure-leading caps-activity-line-leading\">\n          <Swap swapKey={state}>\n            {running ? (\n              <Loader decorative size=\"sm\" variant=\"line\" />\n            ) : (\n              <SettledMark outcome={state === \"done\" ? \"check\" : \"cross\"} />\n            )}\n          </Swap>\n        </span>\n        <span className=\"caps-disclosure-summary\">\n          <Swap swapKey={running ? \"running\" : \"settled\"}>{summary}</Swap>\n        </span>\n        {running ? (\n          <span className=\"caps-disclosure-trailing\" aria-hidden=\"true\">\n            {formatElapsed(elapsed)}\n          </span>\n        ) : null}\n        {children === undefined ? null : (\n          <ChevronRight\n            aria-hidden=\"true\"\n            className=\"caps-disclosure-chevron\"\n            size={12}\n          />\n        )}\n      </button>\n      {children === undefined ? null : (\n        <Collapse open={open} id={panel}>\n          <div className=\"caps-disclosure-panel\">{children}</div>\n        </Collapse>\n      )}\n    </div>\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer components": {
+      ".caps-activity-line-leading": {
+        "width": "var(--stipe-icon-size-lg)",
+        "justifyContent": "center"
+      },
+      ".caps-activity-line-leading .caps-loader": { "transform": "scale(0.7)" },
+      ".caps-activity-line-leading > .caps-swap": {
+        "width": "100%",
+        "justifyItems": "center"
+      },
+      ".caps-activity-line-leading .caps-swap-layer": {
+        "display": "grid",
+        "placeItems": "center"
+      },
+      ".caps-activity-line-leading .caps-swap-layer[data-swap-leaving]": {
+        "inset": "0"
+      },
+      ".caps-activity-line-leading .caps-swap-layer[data-swap-leaving] .caps-loader": {
+        "visibility": "hidden"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

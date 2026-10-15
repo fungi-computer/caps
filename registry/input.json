@@ -1,0 +1,137 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input",
+  "type": "registry:ui",
+  "title": "Input",
+  "description": "Native text input with invalid-state styling.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/input.tsx",
+      "type": "registry:ui",
+      "target": "@ui/input.tsx",
+      "content": "import { forwardRef, type ReactNode, type InputHTMLAttributes } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by Input. */\nexport type InputProps = {\n  invalid?: boolean;\n} & InputHTMLAttributes<HTMLInputElement>;\n\n/** A styled native text input that preserves caller-owned value and event behavior. */\nexport const Input = forwardRef<HTMLInputElement, InputProps>(function Input(\n  { className, invalid, ...props },\n  ref,\n) {\n  return (\n    <input\n      {...props}\n      aria-invalid={\n        invalid\n          ? true\n          : props[\"aria-invalid\"] === false\n            ? undefined\n            : props[\"aria-invalid\"]\n      }\n      className={cn(\"input caps-input w-full\", className)}\n      ref={ref}\n    />\n  );\n});\n\n/** A native search input with an optional decorative leading icon. */\nexport const SearchInput = forwardRef<\n  HTMLInputElement,\n  InputProps & { leading?: ReactNode }\n>(function SearchInput({ leading, className, ...props }, ref) {\n  return (\n    <span\n      className=\"caps-search-input\"\n      data-leading={leading ? \"true\" : undefined}\n    >\n      {leading ? (\n        <span className=\"caps-search-leading\" aria-hidden=\"true\">\n          {leading}\n        </span>\n      ) : null}\n      <Input {...props} type=\"search\" className={className} ref={ref} />\n    </span>\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-search-input": {
+        "position": "relative",
+        "display": "block",
+        "width": "100%"
+      },
+      ".caps-search-leading": {
+        "position": "absolute",
+        "insetBlock": "0",
+        "insetInlineStart": "var(--spacing-md)",
+        "display": "flex",
+        "alignItems": "center",
+        "pointerEvents": "none",
+        "zIndex": 1
+      },
+      ".caps-search-input[data-leading=\"true\"] .caps-input": {
+        "paddingInlineStart": "var(--spacing-3xl)"
+      },
+      ".caps-input.caps-copy-field-control": {
+        "minWidth": "0",
+        "fontSize": "var(--text-xs)"
+      },
+      "@media (max-width: 480px)": {
+        ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+          "flexDirection": "column",
+          "alignItems": "stretch",
+          "gap": "var(--spacing-xs)",
+          "--caps-field-control-width": "100%"
+        }
+      },
+      ".caps-number-field-input.caps-input": {
+        "--caps-input-floor": "var(\n      --caps-control-number-face,\n      color-mix(\n        in oklab,\n        var(--color-base-200) calc(100% - var(--depth) * 4%),\n        var(--color-base-content) calc(var(--depth) * 4%)\n      )\n    )",
+        "borderColor": "var(\n      --caps-control-number-line,\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      )\n    )"
+      },
+      ".caps-input,.caps-input:disabled": {
+        "--caps-input-floor": "color-mix(\n      in oklab,\n      var(--color-base-200) calc(100% - var(--depth) * 4%),\n      var(--color-base-content) calc(var(--depth) * 4%)\n    )",
+        "--caps-input-edge": "color-mix(\n      in oklab,\n      var(--color-base-content) 75%,\n      var(--color-base-200)\n    )",
+        "--caps-input-edge-width": "0px",
+        "background": "var(--caps-input-floor)",
+        "color": "var(--color-base-content)",
+        "border": "var(--border) solid\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      )",
+        "paddingInline": "var(--spacing-lg)",
+        "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n      inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
+        "transition": "border-color var(--stipe-motion-fast) ease,\n      box-shadow var(--stipe-motion-fast) ease"
+      },
+      ".caps-input.caps-input-group-control": {
+        "borderColor": "color-mix(\n      in oklab,\n      var(--color-base-content) 22%,\n      transparent\n    )"
+      },
+      ".caps-input::placeholder": {
+        "color": "color-mix(\n      in oklab,\n      var(--color-base-content) 85%,\n      var(--color-base-100)\n    )",
+        "opacity": 1
+      },
+      ".caps-input:focus": {
+        "--caps-input-edge": "var(--color-info)",
+        "--caps-input-edge-width": "2px",
+        "outline": "none"
+      },
+      ".caps-input[aria-invalid]:not([aria-invalid=\"false\"])": {
+        "--caps-input-edge": "var(--color-error)",
+        "--caps-input-edge-width": "1px"
+      },
+      ".caps-input[aria-invalid]:not([aria-invalid=\"false\"]):focus": {
+        "--caps-input-edge-width": "2px"
+      },
+      ".caps-input:read-only": { "cursor": "default" },
+      ".caps-input:disabled": {
+        "color": "var(--color-base-content)",
+        "opacity": 0.45,
+        "cursor": "not-allowed"
+      },
+      "@media (forced-colors: active)": {
+        ".caps-input:focus": {
+          "outline": "2px solid Highlight",
+          "outlineOffset": "2px"
+        }
+      },
+      ".caps-button-filled.caps-input-group-control": {
+        "translate": "none",
+        "scale": "none",
+        "boxShadow": "inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))"
+      },
+      ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n      [aria-disabled=\"true\"]\n    ):is(:active, .btn-active)": {
+        "boxShadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".caps-input": {
+        "animation": "none !important",
+        "transitionProperty": "opacity !important",
+        "transitionDuration": "var(--stipe-motion-fast) !important"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-input": {
+          "minWidth": "var(--caps-touch-target)",
+          "minHeight": "var(--caps-touch-target)"
+        }
+      }
+    }
+  }
+}

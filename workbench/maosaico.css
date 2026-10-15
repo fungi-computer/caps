@@ -1,0 +1,289 @@
+.maosaico-demo {
+  background: var(--color-base-200);
+  color: var(--color-base-content);
+  padding: var(--spacing-xl);
+  font: 14px/1.6 var(--font-sans, sans-serif);
+  min-width: 0;
+}
+.maosaico-demo * {
+  box-sizing: border-box;
+}
+.maosaico-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+}
+.maosaico-eyebrow {
+  color: var(--color-base-content);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+.maosaico-heading h1 {
+  margin: var(--spacing-xs) 0 0;
+  font-size: 24px;
+  font-weight: 550;
+  letter-spacing: -0.04em;
+}
+.maosaico-workspace {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-field);
+  overflow: hidden;
+  box-shadow: 0 16px 40px
+    color-mix(in srgb, var(--color-base-content) 7%, transparent);
+}
+.maosaico-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-sm);
+  background: var(--color-base-100);
+  min-height: 48px;
+}
+.maosaico-modes {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+.maosaico-count {
+  flex: 1;
+  text-align: right;
+  font-size: 12px;
+  opacity: 0.85;
+}
+.maosaico-tabs {
+  display: flex;
+  min-height: 40px;
+  overflow-x: auto;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-base-100);
+  border-bottom: 1px solid var(--color-base-300);
+}
+.maosaico-tabs > button {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 0 var(--spacing-md);
+  border-radius: var(--radius-selector);
+  min-height: 32px;
+  color: color-mix(in srgb, var(--color-base-content) 85%, transparent);
+  font-size: 12px;
+}
+.maosaico-tabs > button[aria-pressed="true"] {
+  color: var(--color-base-content);
+  background: var(--color-base-200);
+}
+.maosaico-canvas {
+  position: relative;
+  height: clamp(480px, 68dvh, 720px);
+  margin: var(--spacing-sm);
+}
+.maosaico-divider {
+  position: absolute;
+  left: attr(data-position px);
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  cursor: col-resize;
+  touch-action: none;
+  border-radius: var(--radius-selector);
+}
+.maosaico-divider:hover,
+.maosaico-divider:focus-visible {
+  background: color-mix(in srgb, var(--color-primary) 40%, transparent);
+}
+.maosaico-demo button:focus-visible,
+.maosaico-demo textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+.maosaico-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  min-height: 32px;
+  font-size: 10px;
+  opacity: 0.85;
+}
+.maosaico-footer kbd {
+  font: inherit;
+  margin-left: var(--spacing-sm);
+}
+.maosaico-chat {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: var(--spacing-lg);
+  gap: var(--spacing-lg);
+}
+.maosaico-messages {
+  flex: 1;
+}
+.maosaico-messages p {
+  margin: var(--spacing-lg) 0;
+  max-width: 64ch;
+}
+.maosaico-user {
+  padding: var(--spacing-md);
+  background: var(--color-base-200);
+  border-radius: var(--radius-selector);
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+.maosaico-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: var(--color-error);
+}
+.maosaico-dot.success {
+  background: var(--color-success);
+}
+.maosaico-muted {
+  color: color-mix(in srgb, var(--color-base-content) 85%, transparent);
+  font-size: 12px;
+}
+.maosaico-tool {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 11px;
+  padding: var(--spacing-sm) 0;
+}
+.maosaico-tool > span:last-child {
+  margin-left: auto;
+  opacity: 0.85;
+}
+.maosaico-composer {
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box);
+  background: var(--color-base-200);
+  overflow: hidden;
+}
+.maosaico-composer textarea {
+  width: 100%;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  padding: var(--spacing-md);
+  resize: vertical;
+  outline: 0;
+}
+.maosaico-composer > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
+  font-size: 10px;
+  color: color-mix(in srgb, var(--color-base-content) 85%, transparent);
+}
+.maosaico-files {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.maosaico-file-path {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 11px;
+  color: var(--color-base-content);
+  border-bottom: 1px solid var(--color-base-300);
+}
+.maosaico-files textarea,
+.maosaico-notes {
+  flex: 1;
+  width: 100%;
+  min-height: 120px;
+  padding: var(--spacing-lg);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: 12px/1.8 monospace;
+  resize: none;
+}
+.maosaico-notes {
+  height: 100%;
+}
+.maosaico-preview {
+  padding: var(--spacing-xl);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.maosaico-preview h2 {
+  font-size: 19px;
+  font-weight: 550;
+  letter-spacing: -0.035em;
+  margin: 0;
+}
+.maosaico-preview p {
+  font-size: 12px;
+  opacity: 0.85;
+  margin: 0 0 var(--spacing-md);
+}
+.maosaico-preview progress {
+  max-width: 160px;
+}
+.maosaico-garden {
+  color: var(--color-success);
+  font-size: 64px;
+  line-height: 1.2;
+  text-shadow: 0 4px 16px
+    color-mix(in srgb, var(--color-success) 20%, transparent);
+}
+.maosaico-terminal {
+  font: 12px/1.8 monospace;
+  padding: var(--spacing-lg);
+  white-space: pre-wrap;
+}
+.maosaico-terminal span {
+  color: var(--color-base-content);
+}
+.maosaico-empty {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--spacing-lg);
+  height: 100%;
+  opacity: 0.65;
+}
+@media (max-width: 600px) {
+  .maosaico-demo {
+    padding: var(--spacing-sm);
+  }
+  .maosaico-heading {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+  }
+  .maosaico-heading h1 {
+    font-size: 20px;
+  }
+  .maosaico-count,
+  .maosaico-footer > span:last-child {
+    display: none;
+  }
+  .maosaico-toolbar {
+    justify-content: space-between;
+    gap: var(--spacing-xs);
+  }
+  .maosaico-canvas {
+    height: 64dvh;
+    min-height: 400px;
+  }
+  .maosaico-chat {
+    padding: var(--spacing-md);
+  }
+}

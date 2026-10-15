@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "skeleton",
+  "type": "registry:ui",
+  "title": "Skeleton",
+  "description": "Arbitrary-shape loading placeholder styled by Daisy/Stipe tokens.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/skeleton.tsx",
+      "type": "registry:ui",
+      "target": "@ui/skeleton.tsx",
+      "content": "import { forwardRef, type HTMLAttributes } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by Skeleton. */\nexport type SkeletonProps = HTMLAttributes<HTMLSpanElement>;\n\n/** A loading placeholder that preserves caller-provided native span props. */\nexport const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(\n  function Skeleton({ className, ...props }, ref) {\n    return (\n      <span\n        {...props}\n        aria-hidden={props[\"aria-hidden\"] ?? true}\n        className={cn(\"skeleton\", className)}\n        ref={ref}\n      />\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

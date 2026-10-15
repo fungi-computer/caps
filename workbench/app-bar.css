@@ -1,0 +1,43 @@
+.app-bar-study {
+  max-width: 68rem;
+  margin-inline: auto;
+}
+.app-bar-study-stage {
+  /* Give the real fixed dock a local viewport, without repainting it. */
+  transform: translateZ(0);
+  min-height: 640px;
+  align-items: start;
+  padding: var(--spacing-2xl) var(--spacing-xl);
+}
+.app-bar-study-stage > .caps-app-bar {
+  align-self: start;
+  height: auto;
+}
+.app-bar-study-mascot {
+  width: 100%;
+  height: 100%;
+}
+.app-bar-study-copy {
+  text-align: center;
+}
+.app-bar-study-copy h2 {
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--text-xl);
+  font-weight: 800;
+}
+.app-bar-study-copy p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--stipe-fg-muted);
+}
+.app-bar-study-copy output {
+  display: block;
+  margin-top: var(--spacing-xl);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+.app-bar-study-instructions {
+  margin: var(--spacing-lg) 0 0;
+  font-size: var(--text-sm);
+  color: var(--stipe-fg-muted);
+}

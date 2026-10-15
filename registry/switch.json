@@ -1,0 +1,123 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "switch",
+  "type": "registry:ui",
+  "title": "Switch",
+  "description": "Native checkbox-backed switch with a gooey thumb and controlled change callback.",
+  "dependencies": [
+    "animejs",
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/switch.tsx",
+      "type": "registry:ui",
+      "target": "@ui/switch.tsx",
+      "content": "import {\n  forwardRef,\n  useEffect,\n  useImperativeHandle,\n  useRef,\n  useState,\n  type InputHTMLAttributes,\n} from \"react\";\n\nimport { cn } from \"@/lib/cn\";\nimport { SwitchBead } from \"./switch-bead.js\";\n\n/** Props accepted by Switch. */\nexport type SwitchProps = {\n  /** Called after the checked state changes. */\n  onCheckedChange?: (checked: boolean) => void;\n} & Omit<InputHTMLAttributes<HTMLInputElement>, \"defaultValue\" | \"type\">;\n\n/** A switch primitive with caller-owned checked state. */\nexport const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(\n  {\n    className,\n    checked,\n    defaultChecked = false,\n    onChange,\n    onCheckedChange,\n    ...props\n  },\n  ref,\n) {\n  const input = useRef<HTMLInputElement>(null);\n  const [localChecked, setLocalChecked] = useState(defaultChecked);\n  const selected = checked ?? localChecked;\n  useImperativeHandle(ref, () => {\n    if (!input.current) throw new Error(\"Switch input is not mounted\");\n    return input.current;\n  }, []);\n  useEffect(() => {\n    const form = input.current?.form;\n    if (!form || checked !== undefined) return;\n    const reset = (event: Event) => {\n      queueMicrotask(() => {\n        if (!event.defaultPrevented && input.current)\n          setLocalChecked(defaultChecked);\n      });\n    };\n    form.addEventListener(\"reset\", reset);\n    return () => {\n      form.removeEventListener(\"reset\", reset);\n    };\n  }, [checked, defaultChecked, props.form]);\n  return (\n    <span className=\"caps-switch\" data-checked={selected}>\n      <input\n        {...props}\n        checked={selected}\n        className={cn(\"caps-switch-input\", className)}\n        onChange={(event) => {\n          if (checked === undefined) setLocalChecked(event.target.checked);\n          onChange?.(event);\n          onCheckedChange?.(event.target.checked);\n        }}\n        ref={input}\n        role=\"switch\"\n        type=\"checkbox\"\n      />\n      <SwitchBead checked={selected} />\n    </span>\n  );\n});\n"
+    },
+    {
+      "path": "../src/components/switch-bead.tsx",
+      "type": "registry:ui",
+      "target": "@ui/switch-bead.tsx",
+      "content": "import { animate } from \"animejs\";\nimport { readMotion, useReducedMotion } from \"@/lib/motion\";\nimport { themedEase, themedSpring } from \"@/lib/motion-spring\";\nimport { useId, useLayoutEffect, useRef } from \"react\";\nimport {\n  GooeySurfaceDefinition,\n  GooeyShadowDefinition,\n  GooeyInsetDefinition,\n} from \"./gooey.js\";\n\n/** @internal A bead that compresses before filling or emptying its track. */\nexport function SwitchBead({ checked }: { checked: boolean }) {\n  const id = `caps-switch-${useId().replaceAll(\":\", \"\")}`;\n  const body = useRef<SVGRectElement>(null);\n  const surface = useRef<SVGRadialGradientElement>(null);\n  const initial = useRef(checked).current;\n  const previous = useRef(checked);\n  const reduced = useReducedMotion();\n\n  useLayoutEffect(() => {\n    if (!body.current || !surface.current) return;\n    const immediate = reduced || previous.current === checked;\n    previous.current = checked;\n    const width = checked ? 16 : 8;\n    const motion = readMotion(body.current);\n    const settle = themedSpring(motion, { bounce: 0.25, duration: 440 });\n    const squeeze = themedEase(motion, { ease: \"inOutSine\", duration: 100 });\n    const fill = animate(\n      body.current,\n      immediate\n        ? {\n            x: 2,\n            y: 2,\n            width,\n            height: 8,\n            duration: 0,\n          }\n        : {\n            x: [\n              { to: checked ? 2.5 : 1.5, ...squeeze },\n              { to: 2, ...settle },\n            ],\n            y: [\n              { to: 1.5, ...squeeze },\n              { to: 2, ...settle },\n            ],\n            height: [\n              { to: 9, ...squeeze },\n              { to: 8, ...settle },\n            ],\n            width: [\n              { to: checked ? 7 : 16.5, ...squeeze },\n              { to: width, ...settle },\n            ],\n          },\n    );\n    const light = animate(surface.current, {\n      gradientTransform: checked\n        ? \"matrix(2 0 0 1 10 6)\"\n        : \"matrix(1 0 0 1 6 6)\",\n      ...(immediate ? { duration: 0 } : { delay: squeeze.duration, ...settle }),\n    });\n    return () => {\n      fill.cancel();\n      light.cancel();\n    };\n  }, [checked, reduced]);\n\n  return (\n    <svg\n      className=\"caps-switch-visual\"\n      width=\"40\"\n      height=\"24\"\n      viewBox=\"0 0 20 12\"\n      aria-hidden=\"true\"\n      focusable=\"false\"\n    >\n      <defs>\n        <GooeySurfaceDefinition\n          ref={surface}\n          id={`${id}-surface`}\n          transform={initial ? \"matrix(2 0 0 1 10 6)\" : \"matrix(1 0 0 1 6 6)\"}\n        />\n        <GooeyShadowDefinition id={`${id}-shadow`} />\n        <GooeyInsetDefinition id={`${id}-inset`} />\n        <clipPath id={`${id}-track`}>\n          <rect x=\"1\" y=\"1\" width=\"18\" height=\"10\" rx=\"5\" />\n        </clipPath>\n      </defs>\n      <rect\n        className=\"caps-switch-track\"\n        filter={`url(#${id}-inset)`}\n        x=\"0.5\"\n        y=\"0.5\"\n        width=\"19\"\n        height=\"11\"\n        rx=\"5.5\"\n      />\n      <g clipPath={`url(#${id}-track)`}>\n        <rect\n          ref={body}\n          x=\"2\"\n          y=\"2\"\n          width={initial ? 16 : 8}\n          height=\"8\"\n          rx=\"4\"\n          fill={`url(#${id}-surface)`}\n          filter={`url(#${id}-shadow)`}\n        />\n      </g>\n    </svg>\n  );\n}\n"
+    },
+    {
+      "path": "../src/components/gooey.tsx",
+      "type": "registry:ui",
+      "target": "@ui/gooey.tsx",
+      "content": "import { STIPE_GOOEY_FILTER } from \"@fungi.computer/stipe\";\nimport { forwardRef } from \"react\";\n\n/** @internal The eight-unit bead's material, positioned with an SVG transform. */\nexport const GooeySurfaceDefinition = forwardRef<\n  SVGRadialGradientElement,\n  { id: string; transform: string }\n>(function GooeySurfaceDefinition({ id, transform }, ref) {\n  return (\n    <radialGradient\n      ref={ref}\n      id={id}\n      gradientUnits=\"userSpaceOnUse\"\n      cx=\"-1.2\"\n      cy=\"-1.6\"\n      r=\"5.6\"\n      gradientTransform={transform}\n    >\n      <stop\n        offset=\"0\"\n        stopColor=\"color-mix(in oklab, var(--color-white) calc(var(--depth) * 50%), currentColor)\"\n      />\n      <stop offset=\"1\" stopColor=\"currentColor\" />\n    </radialGradient>\n  );\n});\n\n/** @internal Cast one themed shadow from the finished silhouette. */\nexport function GooeyShadowDefinition({ id }: { id: string }) {\n  return (\n    <filter id={id} x=\"-50%\" y=\"-50%\" width=\"200%\" height=\"200%\">\n      <feDropShadow\n        dx=\"0\"\n        dy=\"1.5\"\n        stdDeviation=\"1\"\n        floodColor=\"currentColor\"\n        style={{ floodOpacity: \"calc(var(--depth) * 0.6)\" }}\n      />\n    </filter>\n  );\n}\n\n/** @internal Opposing inner shadows shared by recessed control wells. */\nexport function GooeyInsetDefinition({ id }: { id: string }) {\n  return (\n    <filter\n      id={id}\n      x=\"-10%\"\n      y=\"-10%\"\n      width=\"120%\"\n      height=\"120%\"\n      colorInterpolationFilters=\"sRGB\"\n    >\n      <feGaussianBlur in=\"SourceAlpha\" stdDeviation=\"0.3\" result=\"soft-edge\" />\n      <feOffset in=\"soft-edge\" dx=\"0.25\" dy=\"0.45\" result=\"lower-edge\" />\n      <feComposite\n        in=\"SourceAlpha\"\n        in2=\"lower-edge\"\n        operator=\"out\"\n        result=\"inner-shadow\"\n      />\n      <feFlood\n        floodColor=\"var(--color-black)\"\n        floodOpacity=\"calc(var(--depth) * 0.28)\"\n      />\n      <feComposite in2=\"inner-shadow\" operator=\"in\" result=\"shade\" />\n      <feOffset in=\"soft-edge\" dx=\"-0.2\" dy=\"-0.35\" result=\"upper-edge\" />\n      <feComposite\n        in=\"SourceAlpha\"\n        in2=\"upper-edge\"\n        operator=\"out\"\n        result=\"inner-highlight\"\n      />\n      <feFlood\n        floodColor=\"var(--color-white)\"\n        floodOpacity=\"calc(var(--depth) * 0.7)\"\n      />\n      <feComposite in2=\"inner-highlight\" operator=\"in\" result=\"highlight\" />\n      <feMerge>\n        <feMergeNode in=\"SourceGraphic\" />\n        <feMergeNode in=\"shade\" />\n        <feMergeNode in=\"highlight\" />\n      </feMerge>\n    </filter>\n  );\n}\n\n/** @internal Props shared by Caps' private gooey filter definitions. */\nexport type GooeyFilterDefinitionProps = {\n  values?: GooeyFilterValues;\n  id: string;\n};\n\n/** @internal Numeric values for one SVG gooey filter profile. */\nexport type GooeyFilterValues = Readonly<{\n  alphaIntercept: number;\n  alphaSlope: number;\n  blurStdDeviation: number;\n}>;\n\n/** @internal Filter calibrated for Status's eight-unit bead. */\nexport const STATUS_GOOEY_FILTER = Object.freeze({\n  alphaIntercept: -8,\n  alphaSlope: 18,\n  blurStdDeviation: 2,\n});\n\n/** @internal The single SVG filter definition shared by Caps' gooey family. */\nexport function GooeyFilterDefinition({\n  id,\n  values = STIPE_GOOEY_FILTER,\n}: GooeyFilterDefinitionProps) {\n  return (\n    <filter id={id} x=\"-50%\" y=\"-50%\" width=\"200%\" height=\"200%\">\n      <feGaussianBlur\n        in=\"SourceGraphic\"\n        stdDeviation={values.blurStdDeviation}\n        result=\"blur\"\n      />\n      <feColorMatrix\n        in=\"blur\"\n        values={`1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 ${String(values.alphaSlope)} ${String(values.alphaIntercept)}`}\n        result=\"gooey\"\n      />\n      <feComposite in=\"SourceGraphic\" in2=\"gooey\" operator=\"atop\" />\n    </filter>\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    },
+    {
+      "path": "../src/lib/motion.ts",
+      "type": "registry:lib",
+      "target": "@lib/motion.ts",
+      "content": "import {\n  useLayoutEffect,\n  useState,\n  useSyncExternalStore,\n  type RefObject,\n} from \"react\";\n\n/** Resolved, element-scoped motion. Times are milliseconds and distances pixels. */\nexport type Motion = Readonly<{\n  reduced: boolean;\n  squish: number;\n  fast: number;\n  normal: number;\n  slow: number;\n  springDuration: number;\n  bounce: number;\n  stretch: number;\n  distance: number;\n  stagger: number;\n  blur: number;\n  shake: number;\n  steps: number;\n  fuse: number;\n  pressDepth: number;\n  pressScale: number;\n  ease: string;\n  easeExit: string;\n}>;\n\nconst defaults: Motion = Object.freeze({\n  reduced: false,\n  squish: 90,\n  fast: 120,\n  normal: 180,\n  slow: 280,\n  springDuration: 320,\n  bounce: 0.3,\n  stretch: 0.28,\n  distance: 4,\n  stagger: 24,\n  blur: 0,\n  shake: 3,\n  steps: 0,\n  fuse: 1,\n  pressDepth: 0.5,\n  pressScale: 1,\n  ease: \"cubic-bezier(0.2, 0, 0, 1)\",\n  easeExit: \"cubic-bezier(0.4, 0, 1, 1)\",\n});\n\nconst preference = \"(prefers-reduced-motion: reduce)\";\n\n/** Read at an event boundary; no root-theme lookup, so nested tokens win. */\nexport function readMotion(element: Element): Motion {\n  const view = element.ownerDocument.defaultView;\n  if (!view) return defaults;\n  const style = view.getComputedStyle(element);\n  const number = (name: string, fallback: number) => {\n    const value = style.getPropertyValue(name).trim();\n    const parsed = Number.parseFloat(value);\n    return Number.isFinite(parsed) ? Math.max(0, parsed) : fallback;\n  };\n  const time = (name: string, fallback: number) => {\n    const value = style.getPropertyValue(name).trim();\n    return (\n      number(name, fallback) *\n      (value.endsWith(\"s\") && !value.endsWith(\"ms\") ? 1000 : 1)\n    );\n  };\n  const browser: Partial<Pick<Window, \"matchMedia\">> = view;\n  const reduced = browser.matchMedia?.(preference).matches ?? false;\n  const duration = (name: string, fallback: number) =>\n    reduced ? 120 : time(`--stipe-motion-${name}`, fallback);\n  const amount = (name: string, fallback: number) =>\n    reduced ? 0 : number(`--stipe-motion-${name}`, fallback);\n  return {\n    reduced,\n    squish: duration(\"squish\", defaults.squish),\n    fast: duration(\"fast\", defaults.fast),\n    normal: duration(\"normal\", defaults.normal),\n    slow: duration(\"slow\", defaults.slow),\n    springDuration: duration(\"spring-duration\", defaults.springDuration),\n    bounce: Math.min(1, amount(\"bounce\", defaults.bounce)),\n    stretch: amount(\"stretch\", defaults.stretch),\n    distance: amount(\"distance\", defaults.distance),\n    stagger: reduced ? 0 : time(\"--stipe-motion-stagger\", defaults.stagger),\n    blur: amount(\"blur\", defaults.blur),\n    shake: amount(\"shake\", defaults.shake),\n    steps: Math.floor(amount(\"steps\", defaults.steps)),\n    fuse: number(\"--stipe-motion-fuse\", defaults.fuse),\n    pressDepth: reduced\n      ? 0\n      : number(\"--stipe-press-depth\", defaults.pressDepth),\n    pressScale: reduced\n      ? 1\n      : number(\"--stipe-press-scale\", defaults.pressScale),\n    ease: style.getPropertyValue(\"--stipe-motion-ease\").trim() || defaults.ease,\n    easeExit:\n      style.getPropertyValue(\"--stipe-motion-ease-exit\").trim() ||\n      defaults.easeExit,\n  };\n}\n\n/** Live motion tokens for a mounted ref, including nested theme and OS changes. */\nexport function useMotion(ref: RefObject<Element | null>): Motion {\n  const [motion, setMotion] = useState<Motion>(() => ({\n    ...defaults,\n    reduced: true,\n  }));\n  useLayoutEffect(() => {\n    const element = ref.current;\n    const view = element?.ownerDocument.defaultView;\n    if (!element || !view) return;\n    const update = () => {\n      const next = readMotion(element);\n      setMotion((previous) =>\n        JSON.stringify(previous) === JSON.stringify(next) ? previous : next,\n      );\n    };\n    update();\n    const observer = new view.MutationObserver(update);\n    // Observe ancestors only: animation writes to descendants must not trigger reads.\n    for (\n      let parent: Element | null = element;\n      parent;\n      parent = parent.parentElement\n    ) {\n      observer.observe(parent, {\n        attributes: true,\n        attributeFilter: [\"data-theme\", \"class\", \"style\"],\n      });\n    }\n    const browser: Partial<Pick<Window, \"matchMedia\">> = view;\n    const media = browser.matchMedia?.(preference);\n    media?.addEventListener(\"change\", update);\n    return () => {\n      observer.disconnect();\n      media?.removeEventListener(\"change\", update);\n    };\n  }, [ref]);\n  return motion;\n}\n\n/** Today's feel: the defaults that components' authored timings are written against. */\nexport const motionDefaults: Motion = defaults;\n\n/**\n * Scale one of a component's authored durations by the theme's tempo\n * (`--stipe-motion-normal` against its 180ms default). Today's themes return\n * the authored value unchanged; reduced motion returns 0 (nothing travels).\n */\nexport function motionTime(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  return Math.round((authored * motion.normal) / defaults.normal);\n}\n\n/**\n * Scale one of a component's authored spring bounces by the theme's bounce\n * (`--stipe-motion-bounce` against its 0.3 default), so a lively control stays\n * livelier than a calm one inside every theme. A 0 theme is critically damped.\n */\nexport function motionBounce(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  const scaled = (authored * motion.bounce) / defaults.bounce;\n  return Math.min(0.9, Math.max(0, scaled));\n}\n\n/** Scale an authored spring settle time by `--stipe-motion-spring-duration`. */\nexport function motionSpringTime(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  return Math.round(\n    (authored * motion.springDuration) / defaults.springDuration,\n  );\n}\n\n/** A CSS easing for a Web Animation, stepped when the theme asks for it. */\nexport function motionEasing(motion: Motion, ease: string): string {\n  return motion.steps > 0 ? `steps(${String(motion.steps)}, end)` : ease;\n}\n\n/** Whether the element can run Web Animations (not in jsdom or old engines). */\nexport function canAnimate(element: Element): boolean {\n  return \"animate\" in element;\n}\n\nconst globalWindow: Partial<Pick<Window, \"matchMedia\">> = globalThis;\n\nfunction prefersReducedMotion(): boolean {\n  return globalWindow.matchMedia?.(preference).matches ?? false;\n}\n\nfunction subscribeReducedMotion(update: () => void) {\n  const media = globalWindow.matchMedia?.(preference);\n  media?.addEventListener(\"change\", update);\n  return () => {\n    media?.removeEventListener(\"change\", update);\n  };\n}\n\n/** Server renders assume reduced motion, so hydration never starts mid-move. */\nfunction serverReducedMotion() {\n  return true;\n}\n\n/**\n * The live reduced-motion preference alone, for controls that only need to\n * know whether to move (their timing comes from `readMotion` when they do).\n */\nexport function useReducedMotion(): boolean {\n  return useSyncExternalStore(\n    subscribeReducedMotion,\n    prefersReducedMotion,\n    serverReducedMotion,\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/motion-spring.ts",
+      "type": "registry:lib",
+      "target": "@lib/motion-spring.ts",
+      "content": "import { spring, steps, type EasingParam } from \"animejs\";\n\nimport {\n  motionBounce,\n  motionSpringTime,\n  motionTime,\n  type Motion,\n} from \"./motion.js\";\n\n/** Anime.js timing for one tween or segment. */\nexport type MotionTiming = Readonly<{ ease: EasingParam; duration: number }>;\n\n/** Timing for a change that must land at once. */\nexport const immediateTiming: MotionTiming = Object.freeze({\n  ease: \"linear\",\n  duration: 0,\n});\n\n/** A component's own spring, as authored for today's default feel. */\nexport type AuthoredSpring = Readonly<{ bounce: number; duration: number }>;\n\n/**\n * Anime.js timing for an authored spring, in the theme's feel: bounce and\n * settle time scale with `--stipe-motion-bounce` and\n * `--stipe-motion-spring-duration`, and a stepped theme moves in\n * `--stipe-motion-steps` discrete steps instead. Today's themes reproduce the\n * authored spring exactly.\n */\nexport function themedSpring(\n  motion: Motion,\n  authored: AuthoredSpring,\n): MotionTiming {\n  const duration = motionSpringTime(motion, authored.duration);\n  if (duration <= 0) return immediateTiming;\n  if (motion.steps > 0) return { ease: steps(motion.steps), duration };\n  return {\n    ease: spring({ bounce: motionBounce(motion, authored.bounce), duration }),\n    duration,\n  };\n}\n\n/**\n * Anime.js timing for an authored eased segment: the duration scales with the\n * theme's tempo, and a stepped theme replaces the curve with steps.\n */\nexport function themedEase(\n  motion: Motion,\n  authored: MotionTiming,\n): MotionTiming {\n  const duration = motionTime(motion, authored.duration);\n  return {\n    ease: motion.steps > 0 ? steps(motion.steps) : authored.ease,\n    duration,\n  };\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer components": {
+      ".caps-gooey-motion": {
+        "--caps-gooey-duration": "var(--stipe-motion-spring-duration)",
+        "--caps-gooey-ease": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "transitionTimingFunction": "var(--caps-gooey-ease)"
+      },
+      ".caps-switch": {
+        "display": "inline-grid",
+        "gridTemplateAreas": "\"control\"",
+        "width": "40px",
+        "height": "24px",
+        "flex": "none",
+        "verticalAlign": "middle",
+        "color": "var(\n      --caps-control-dim,\n      color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n    )",
+        "borderRadius": "var(--radius-full)",
+        "transition": "color var(--stipe-motion-normal) ease",
+        "--caps-switch-depth": "var(--depth)"
+      },
+      ".caps-switch[data-checked=\"true\"]": {
+        "color": "var(--caps-control-ink, var(--color-success))"
+      },
+      ".caps-switch-input,.caps-switch-visual": {
+        "gridArea": "control",
+        "width": "100%",
+        "height": "100%",
+        "minWidth": "0",
+        "margin": "0"
+      },
+      ".caps-switch-input": { "opacity": 0, "zIndex": 1, "cursor": "pointer" },
+      ".caps-switch-visual": {
+        "overflow": "visible",
+        "pointerEvents": "none",
+        "--depth": "var(--caps-control-depth, var(--caps-switch-depth))"
+      },
+      ".caps-switch-track": {
+        "fill": "var(--caps-control-face, var(--color-base-200))",
+        "stroke": "var(--caps-control-dim, var(--color-base-300))",
+        "strokeWidth": 1
+      },
+      ".caps-switch:has(input:focus-visible)": {
+        "outline": "2px solid var(--caps-focus-ring)",
+        "outlineOffset": "3px"
+      },
+      ".caps-switch:has(input:disabled)": { "opacity": 0.4 },
+      ".caps-switch-input:disabled": { "cursor": "not-allowed" }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".caps-gooey-motion,.caps-gooey-motion::before,.caps-switch": {
+        "animation": "none !important",
+        "transitionProperty": "opacity !important",
+        "transitionDuration": "var(--stipe-motion-fast) !important"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-switch-input": {
+          "placeSelf": "center stretch",
+          "height": "max(100%, var(--caps-touch-target))"
+        }
+      }
+    }
+  }
+}

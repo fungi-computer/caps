@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "count-badge",
+  "type": "registry:ui",
+  "title": "Count Badge",
+  "description": "Count and optional label with no positioning or product semantics.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/count-badge.tsx",
+      "type": "registry:ui",
+      "target": "@ui/count-badge.tsx",
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by CountBadge. */\nexport type CountBadgeProps = {\n  count: ReactNode;\n  /** Semantic count emphasis; warnings call attention to items needing action. */\n  tone?: \"neutral\" | \"warning\";\n  label?: ReactNode;\n} & HTMLAttributes<HTMLSpanElement>;\n\n/** A badge displaying a caller-provided count and label. */\nexport const CountBadge = forwardRef<HTMLSpanElement, CountBadgeProps>(\n  function CountBadge(\n    { className, count, label, tone = \"neutral\", ...props },\n    ref,\n  ) {\n    return (\n      <span\n        {...props}\n        className={cn(\"inline-flex items-center gap-xs\", className)}\n        ref={ref}\n      >\n        <span\n          className={\n            tone === \"warning\"\n              ? \"badge badge-warning badge-sm tabular-nums caps-numeric\"\n              : \"badge badge-neutral badge-sm tabular-nums caps-numeric\"\n          }\n        >\n          {count}\n        </span>\n        {label !== undefined ? (\n          <span className=\"text-sm text-base-content\">{label}</span>\n        ) : null}\n      </span>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

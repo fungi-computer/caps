@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    ".ladle/**/*.ts",
+    ".ladle/**/*.tsx",
+    "workbench/**/*.ts",
+    "workbench/**/*.tsx"
+  ]
+}

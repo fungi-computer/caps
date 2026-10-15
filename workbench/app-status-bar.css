@@ -1,0 +1,14 @@
+/* A window-sized frame so the bar sits at a window's bottom edge. */
+.caps-status-bar-story {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: min(45rem, 100%);
+  height: 15rem;
+  container-type: inline-size;
+  background: var(--color-base-100);
+}
+
+.caps-status-bar-story[data-width="phone"] {
+  width: min(24.375rem, 100%);
+}

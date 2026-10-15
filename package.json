@@ -1,0 +1,600 @@
+{
+  "name": "@fungi.computer/caps",
+  "version": "0.0.1",
+  "author": "Levi <levi@technomancy.dev>",
+  "description": "Product-neutral React primitives and blocks for Fungi interfaces",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./components/copy-field": {
+      "types": "./dist/components/copy-field.d.ts",
+      "import": "./dist/components/copy-field.js"
+    },
+    "./components/technonomicon": {
+      "types": "./dist/components/technonomicon.d.ts",
+      "import": "./dist/components/technonomicon.js"
+    },
+    "./components/field-guide": {
+      "types": "./dist/components/field-guide.d.ts",
+      "import": "./dist/components/field-guide.js"
+    },
+    "./enhance/sketch": {
+      "types": "./dist/enhance/sketch.d.ts",
+      "import": "./dist/enhance/sketch.js"
+    },
+    "./enhance/cigarette-card": {
+      "types": "./dist/enhance/cigarette-card.d.ts",
+      "import": "./dist/enhance/cigarette-card.js"
+    },
+    "./components/wizard": {
+      "types": "./dist/components/wizard.d.ts",
+      "import": "./dist/components/wizard.js"
+    },
+    "./components/surface": {
+      "types": "./dist/components/surface.d.ts",
+      "import": "./dist/components/surface.js"
+    },
+    "./components/rough": {
+      "types": "./dist/components/rough.d.ts",
+      "import": "./dist/components/rough.js"
+    },
+    "./components/rough-drawing": {
+      "types": "./dist/components/rough-drawing.d.ts",
+      "import": "./dist/components/rough-drawing.js"
+    },
+    "./components/resize-handle": {
+      "types": "./dist/components/resize-handle.d.ts",
+      "import": "./dist/components/resize-handle.js"
+    },
+    "./components/code-input": {
+      "types": "./dist/components/code-input.d.ts",
+      "import": "./dist/components/code-input.js"
+    },
+    "./components/presence": {
+      "types": "./dist/components/presence.d.ts",
+      "import": "./dist/components/presence.js"
+    },
+    "./components/generation-frame": {
+      "types": "./dist/components/generation-frame.d.ts",
+      "import": "./dist/components/generation-frame.js"
+    },
+    "./components/send-action": {
+      "types": "./dist/components/send-action.d.ts",
+      "import": "./dist/components/send-action.js"
+    },
+    "./components/toaster": {
+      "types": "./dist/components/toaster.d.ts",
+      "import": "./dist/components/toaster.js"
+    },
+    "./components/scroll-area": {
+      "types": "./dist/components/scroll-area.d.ts",
+      "import": "./dist/components/scroll-area.js"
+    },
+    "./tailwind.css": "./src/styles.css",
+    "./styles.css": "./dist/styles.css",
+    "./lib/cn": {
+      "types": "./dist/lib/cn.d.ts",
+      "import": "./dist/lib/cn.js"
+    },
+    "./lib/format-money": {
+      "types": "./dist/lib/format-money.d.ts",
+      "import": "./dist/lib/format-money.js"
+    },
+    "./lib/seed-hash": {
+      "types": "./dist/lib/seed-hash.d.ts",
+      "import": "./dist/lib/seed-hash.js"
+    },
+    "./lib/reorder-motion": {
+      "types": "./dist/lib/reorder-motion.d.ts",
+      "import": "./dist/lib/reorder-motion.js"
+    },
+    "./components/button": {
+      "types": "./dist/components/button.d.ts",
+      "import": "./dist/components/button.js"
+    },
+    "./components/action-row": {
+      "types": "./dist/components/action-row.d.ts",
+      "import": "./dist/components/action-row.js"
+    },
+    "./components/cover-pattern": {
+      "types": "./dist/components/cover-pattern.d.ts",
+      "import": "./dist/components/cover-pattern.js"
+    },
+    "./components/chat-bubble": {
+      "types": "./dist/components/chat-bubble.d.ts",
+      "import": "./dist/components/chat-bubble.js"
+    },
+    "./components/icon-button": {
+      "types": "./dist/components/icon-button.d.ts",
+      "import": "./dist/components/icon-button.js"
+    },
+    "./components/window": {
+      "types": "./dist/components/window.d.ts",
+      "import": "./dist/components/window.js"
+    },
+    "./components/keycap": {
+      "types": "./dist/components/keycap.d.ts",
+      "import": "./dist/components/keycap.js"
+    },
+    "./components/pixel-number": {
+      "types": "./dist/components/pixel-number.d.ts",
+      "import": "./dist/components/pixel-number.js"
+    },
+    "./components/item-grid": {
+      "types": "./dist/components/item-grid.d.ts",
+      "import": "./dist/components/item-grid.js"
+    },
+    "./components/game-feedback": {
+      "types": "./dist/components/game-feedback.d.ts",
+      "import": "./dist/components/game-feedback.js"
+    },
+    "./molecules/store-card": {
+      "types": "./dist/components/store-card.d.ts",
+      "import": "./dist/components/store-card.js"
+    },
+    "./molecules/price-tag": {
+      "types": "./dist/components/price-tag.d.ts",
+      "import": "./dist/components/price-tag.js"
+    },
+    "./components/game-hud": {
+      "types": "./dist/components/game-hud.d.ts",
+      "import": "./dist/components/game-hud.js"
+    },
+    "./components/input": {
+      "types": "./dist/components/input.d.ts",
+      "import": "./dist/components/input.js"
+    },
+    "./components/textarea": {
+      "types": "./dist/components/textarea.d.ts",
+      "import": "./dist/components/textarea.js"
+    },
+    "./components/label": {
+      "types": "./dist/components/label.d.ts",
+      "import": "./dist/components/label.js"
+    },
+    "./components/field": {
+      "types": "./dist/components/field.d.ts",
+      "import": "./dist/components/field.js"
+    },
+    "./components/dialog": {
+      "types": "./dist/components/dialog.d.ts",
+      "import": "./dist/components/dialog.js"
+    },
+    "./components/combobox": {
+      "types": "./dist/components/combobox.d.ts",
+      "import": "./dist/components/combobox.js"
+    },
+    "./components/tabs": {
+      "types": "./dist/components/tabs.d.ts",
+      "import": "./dist/components/tabs.js"
+    },
+    "./components/listbox": {
+      "types": "./dist/components/listbox.d.ts",
+      "import": "./dist/components/listbox.js"
+    },
+    "./components/dropdown-menu": {
+      "types": "./dist/components/dropdown-menu.d.ts",
+      "import": "./dist/components/dropdown-menu.js"
+    },
+    "./components/popover": {
+      "types": "./dist/components/popover.d.ts",
+      "import": "./dist/components/popover.js"
+    },
+    "./components/tooltip": {
+      "types": "./dist/components/tooltip.d.ts",
+      "import": "./dist/components/tooltip.js"
+    },
+    "./components/input-group": {
+      "types": "./dist/components/input-group.d.ts",
+      "import": "./dist/components/input-group.js"
+    },
+    "./components/select": {
+      "types": "./dist/components/select.d.ts",
+      "import": "./dist/components/select.js"
+    },
+    "./components/slider": {
+      "types": "./dist/components/slider.d.ts",
+      "import": "./dist/components/slider.js"
+    },
+    "./components/checkbox": {
+      "types": "./dist/components/checkbox.d.ts",
+      "import": "./dist/components/checkbox.js"
+    },
+    "./components/radio-group": {
+      "types": "./dist/components/radio-group.d.ts",
+      "import": "./dist/components/radio-group.js"
+    },
+    "./components/switch": {
+      "types": "./dist/components/switch.d.ts",
+      "import": "./dist/components/switch.js"
+    },
+    "./components/card": {
+      "types": "./dist/components/card.d.ts",
+      "import": "./dist/components/card.js"
+    },
+    "./components/trading-card": {
+      "types": "./dist/components/trading-card.d.ts",
+      "import": "./dist/components/trading-card.js"
+    },
+    "./components/separator": {
+      "types": "./dist/components/separator.d.ts",
+      "import": "./dist/components/separator.js"
+    },
+    "./components/visually-hidden": {
+      "types": "./dist/components/visually-hidden.d.ts",
+      "import": "./dist/components/visually-hidden.js"
+    },
+    "./components/prose": {
+      "types": "./dist/components/prose.d.ts",
+      "import": "./dist/components/prose.js"
+    },
+    "./components/markdown": {
+      "types": "./dist/components/markdown.d.ts",
+      "import": "./dist/components/markdown.js"
+    },
+    "./components/badge": {
+      "types": "./dist/components/badge.d.ts",
+      "import": "./dist/components/badge.js"
+    },
+    "./components/alert": {
+      "types": "./dist/components/alert.d.ts",
+      "import": "./dist/components/alert.js"
+    },
+    "./components/status": {
+      "types": "./dist/components/status.d.ts",
+      "import": "./dist/components/status.js"
+    },
+    "./components/inline-code": {
+      "types": "./dist/components/inline-code.d.ts",
+      "import": "./dist/components/inline-code.js"
+    },
+    "./components/navigation-rail": {
+      "types": "./dist/components/navigation-rail.d.ts",
+      "import": "./dist/components/navigation-rail.js"
+    },
+    "./components/disclosure": {
+      "types": "./dist/components/disclosure.d.ts",
+      "import": "./dist/components/disclosure.js"
+    },
+    "./components/diff-view": {
+      "types": "./dist/components/diff-view.d.ts",
+      "import": "./dist/components/diff-view.js"
+    },
+    "./components/scroll-to-bottom-blob": {
+      "types": "./dist/components/scroll-to-bottom-blob.d.ts",
+      "import": "./dist/components/scroll-to-bottom-blob.js"
+    },
+    "./components/count-badge": {
+      "types": "./dist/components/count-badge.d.ts",
+      "import": "./dist/components/count-badge.js"
+    },
+    "./components/monogram": {
+      "types": "./dist/components/monogram.d.ts",
+      "import": "./dist/components/monogram.js"
+    },
+    "./components/progress": {
+      "types": "./dist/components/progress.d.ts",
+      "import": "./dist/components/progress.js"
+    },
+    "./components/stat": {
+      "types": "./dist/components/stat.d.ts",
+      "import": "./dist/components/stat.js"
+    },
+    "./components/quota-meter": {
+      "types": "./dist/components/quota-meter.d.ts",
+      "import": "./dist/components/quota-meter.js"
+    },
+    "./components/data-list": {
+      "types": "./dist/components/data-list.d.ts",
+      "import": "./dist/components/data-list.js"
+    },
+    "./components/loader": {
+      "types": "./dist/components/loader.d.ts",
+      "import": "./dist/components/loader.js"
+    },
+    "./components/skeleton": {
+      "types": "./dist/components/skeleton.d.ts",
+      "import": "./dist/components/skeleton.js"
+    },
+    "./blocks/mosaic": {
+      "types": "./dist/blocks/mosaic.d.ts",
+      "import": "./dist/blocks/mosaic.js"
+    },
+    "./blocks/app-bar": {
+      "types": "./dist/blocks/app-bar.d.ts",
+      "import": "./dist/blocks/app-bar.js"
+    },
+    "./blocks/spec-sheet": {
+      "types": "./dist/blocks/spec-sheet.d.ts",
+      "import": "./dist/blocks/spec-sheet.js"
+    },
+    "./blocks/faq-chat": {
+      "types": "./dist/blocks/faq-chat.d.ts",
+      "import": "./dist/blocks/faq-chat.js"
+    },
+    "./blocks/composer": {
+      "types": "./dist/blocks/composer.d.ts",
+      "import": "./dist/blocks/composer.js"
+    },
+    "./blocks/permission-grid": {
+      "types": "./dist/blocks/permission-grid.d.ts",
+      "import": "./dist/blocks/permission-grid.js"
+    },
+    "./blocks/upload-queue": {
+      "types": "./dist/blocks/upload-queue.d.ts",
+      "import": "./dist/blocks/upload-queue.js"
+    },
+    "./blocks/command-menu": {
+      "types": "./dist/blocks/command-menu.d.ts",
+      "import": "./dist/blocks/command-menu.js"
+    },
+    "./blocks/resource-select": {
+      "types": "./dist/blocks/resource-select.d.ts",
+      "import": "./dist/blocks/resource-select.js"
+    },
+    "./blocks/async-state": {
+      "types": "./dist/blocks/async-state.d.ts",
+      "import": "./dist/blocks/async-state.js"
+    },
+    "./blocks/loading-state": {
+      "types": "./dist/blocks/loading-state.d.ts",
+      "import": "./dist/blocks/loading-state.js"
+    },
+    "./blocks/empty-state": {
+      "types": "./dist/blocks/empty-state.d.ts",
+      "import": "./dist/blocks/empty-state.js"
+    },
+    "./blocks/release-tag": {
+      "types": "./dist/blocks/release-tag.d.ts",
+      "import": "./dist/blocks/release-tag.js"
+    },
+    "./blocks/result-state": {
+      "types": "./dist/blocks/result-state.d.ts",
+      "import": "./dist/blocks/result-state.js"
+    },
+    "./blocks/section-card": {
+      "types": "./dist/blocks/section-card.d.ts",
+      "import": "./dist/blocks/section-card.js"
+    },
+    "./blocks/launcher-grid": {
+      "types": "./dist/blocks/launcher-grid.d.ts",
+      "import": "./dist/blocks/launcher-grid.js"
+    },
+    "./blocks/pricing-card": {
+      "types": "./dist/blocks/pricing-card.d.ts",
+      "import": "./dist/blocks/pricing-card.js"
+    },
+    "./blocks/card-grid": {
+      "types": "./dist/blocks/card-grid.d.ts",
+      "import": "./dist/blocks/card-grid.js"
+    },
+    "./fonts.css": "./src/fonts.css",
+    "./blocks/section-heading": {
+      "types": "./dist/blocks/section-heading.d.ts",
+      "import": "./dist/blocks/section-heading.js"
+    },
+    "./blocks/listing-detail": {
+      "types": "./dist/blocks/listing-detail.d.ts",
+      "import": "./dist/blocks/listing-detail.js"
+    },
+    "./lib/ime": {
+      "types": "./dist/lib/ime.d.ts",
+      "import": "./dist/lib/ime.js"
+    },
+    "./blocks/app-status-bar": {
+      "types": "./dist/blocks/app-status-bar.d.ts",
+      "import": "./dist/blocks/app-status-bar.js"
+    },
+    "./blocks/status-tray": {
+      "types": "./dist/blocks/status-tray.d.ts",
+      "import": "./dist/blocks/status-tray.js"
+    },
+    "./lib/motion": {
+      "types": "./dist/lib/motion.d.ts",
+      "import": "./dist/lib/motion.js"
+    },
+    "./components/icon-checkbox": {
+      "types": "./dist/components/icon-checkbox.d.ts",
+      "import": "./dist/components/icon-checkbox.js"
+    },
+    "./components/icon-lamp": {
+      "types": "./dist/components/icon-lamp.d.ts",
+      "import": "./dist/components/icon-lamp.js"
+    },
+    "./components/icon-radio": {
+      "types": "./dist/components/icon-radio.d.ts",
+      "import": "./dist/components/icon-radio.js"
+    },
+    "./lib/motion-spring": {
+      "types": "./dist/lib/motion-spring.d.ts",
+      "import": "./dist/lib/motion-spring.js"
+    },
+    "./form": {
+      "types": "./dist/form.d.ts",
+      "import": "./dist/form.js"
+    },
+    "./components/overlay-root": {
+      "types": "./dist/components/overlay-root.d.ts",
+      "import": "./dist/components/overlay-root.js"
+    },
+    "./blocks/game-share-card": {
+      "types": "./dist/blocks/game-share-card.d.ts",
+      "import": "./dist/blocks/game-share-card.js"
+    },
+    "./components/activity-line": {
+      "types": "./dist/components/activity-line.d.ts",
+      "import": "./dist/components/activity-line.js"
+    },
+    "./components/tool-call-chip": {
+      "types": "./dist/components/tool-call-chip.d.ts",
+      "import": "./dist/components/tool-call-chip.js"
+    },
+    "./components/hold-button": {
+      "types": "./dist/components/hold-button.d.ts",
+      "import": "./dist/components/hold-button.js"
+    },
+    "./components/undo-action": {
+      "types": "./dist/components/undo-action.d.ts",
+      "import": "./dist/components/undo-action.js"
+    },
+    "./components/undo-toast": {
+      "types": "./dist/components/undo-toast.d.ts",
+      "import": "./dist/components/undo-toast.js"
+    },
+    "./lib/tanstack-highlight": {
+      "types": "./dist/lib/tanstack-highlight.d.ts",
+      "import": "./dist/lib/tanstack-highlight.js"
+    },
+    "./components/confirm-action": {
+      "types": "./dist/components/confirm-action.d.ts",
+      "import": "./dist/components/confirm-action.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src/styles.css",
+    "docs/api",
+    "README.md",
+    "src/fonts.css",
+    "src/status-tray.css",
+    "src/app-status-bar.css"
+  ],
+  "scripts": {
+    "clean": "node --input-type=module --eval \"import { rm } from 'node:fs/promises'; await rm('dist', { recursive: true, force: true });\"",
+    "build:css": "tailwindcss -i src/styles.css -o dist/styles.css",
+    "lint": "eslint src scripts test .ladle workbench vitest.config.ts --max-warnings=0 && ../../node_modules/.bin/oxlint --config ../../oxlint.config.ts --deny-warnings src scripts test .ladle workbench vitest.config.ts && pnpm lint:css && pnpm lint:motion && pnpm lint:theme",
+    "lint:css": "stylelint 'src/**/*.css' '.ladle/**/*.css' 'workbench/**/*.css' --config stylelint.config.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "pnpm run clean && tsc -p tsconfig.build.json && pnpm run build:css",
+    "test": "vitest run --config vitest.config.ts && node --test scripts/fs-probe.test.mjs scripts/workbench-coverage.test.mjs scripts/workbench-process.test.mjs && pnpm test:design",
+    "test:design": "node --test test/design-lint.test.mjs",
+    "test:combobox": "node test/combobox.browser.mjs",
+    "test:material-themes": "node test/material-themes.browser.mjs",
+    "test:contrast": "node test/contrast.browser.mjs",
+    "test:disabled-filled": "node test/disabled-filled.browser.mjs",
+    "test:chat-bubble": "node test/chat-bubble.browser.mjs",
+    "test:store-card": "node test/store-card.browser.mjs",
+    "test:scroll-area": "node test/scroll-area-lifecycle.browser.mjs",
+    "test:motion-visibility": "node test/motion-visibility.browser.mjs",
+    "test:workbench-smoke": "node test/workbench-smoke.browser.mjs",
+    "test:display-density": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-workbench --origin-env CAPS_WORKBENCH_URL test/display-density.browser.mjs",
+    "registry:generate": "node scripts/registry.mjs",
+    "registry:check": "node scripts/registry.mjs check",
+    "registry:stranger": "node scripts/registry-stranger.mjs",
+    "workbench:serve": "node scripts/workbench-serve.mjs",
+    "workbench:build": "node scripts/workbench-build.mjs",
+    "workbench:contract": "node scripts/workbench-contract.mjs",
+    "docs": "tsx ../../tooling/repository/src/docs/cli.ts check --root ../..",
+    "docs:write": "tsx ../../tooling/repository/src/docs/cli.ts write --root ../..",
+    "pack": "mkdir -p ../../.botanical/caps-pack && pnpm pack --pack-destination ../../.botanical/caps-pack",
+    "smoke": "node --input-type=module -e \"Promise.all([import('./dist/lib/cn.js'), import('./dist/components/button.js'), import('./dist/blocks/mosaic.js'), import('./dist/blocks/app-bar.js')]).then(([lib, component, block, appBar]) => { if (typeof lib.cn !== 'function' || !component.Button || !block.Mosaic || !appBar.AppBar) process.exit(1); })\"",
+    "stranger": "tsx ../../tooling/repository/src/artifacts/cli.ts --repo-root ../.. .",
+    "format:check": "node ../../tooling/repository/scripts/format-package-check.mjs",
+    "lint:anti-slop": "node ../../tooling/repository/scripts/lint-package-anti-slop.mjs",
+    "build:workbench": "node scripts/workbench-build.mjs --prepared",
+    "test:nightly": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-workbench --origin-env CAPS_WORKBENCH_URL test/screen-theme.browser.mjs test/scroll-area.browser.mjs test/display-density.browser.mjs && node test/scroll-gutter.browser.mjs",
+    "test:code-input": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-code-input --origin-env CAPS_WORKBENCH_URL test/code-input.browser.mjs",
+    "test:icon-choice": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-icon-choice --origin-env CAPS_WORKBENCH_URL test/icon-choice.browser.mjs",
+    "test:choice-label-alignment": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-choice-alignment --origin-env CAPS_WORKBENCH_URL test/choice-label-alignment.browser.mjs",
+    "lint:motion": "node --test scripts/motion-token-guard.test.mjs && node scripts/motion-token-guard.mjs",
+    "test:card-theme": "node test/card-theme.browser.mjs",
+    "test:window-theme": "node test/window-theme.browser.mjs",
+    "test:game-theme": "node test/game-theme.browser.mjs",
+    "lint:theme": "node --test scripts/theme-guard.test.mjs && node scripts/theme-guard.mjs",
+    "test:app-bar-edge": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-workbench --origin-env CAPS_WORKBENCH_URL test/app-bar-edge.browser.mjs",
+    "test:overlay-layers": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-workbench --origin-env CAPS_WORKBENCH_URL test/overlay-layers.browser.mjs"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0",
+    "@tanstack/react-form": "^1.33.2",
+    "effect": "4.0.2"
+  },
+  "devDependencies": {
+    "@fungi.computer/maosaico": "workspace:*",
+    "@fungi.computer/sprite": "workspace:*",
+    "@fungi.computer/sprite-zdog": "workspace:*",
+    "@ladle/react": "5.1.1",
+    "@tailwindcss/cli": "4.2.1",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "ajv": "8.20.0",
+    "jsdom": "29.0.1",
+    "playwright": "1.62.1",
+    "postcss": "8.5.26",
+    "postcss-js": "5.1.0",
+    "prettier": "3.9.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "typescript": "5.9.3",
+    "vite": "8.2.2",
+    "vitest": "4.1.11",
+    "@fungi.computer/sigils": "workspace:*",
+    "postcss-value-parser": "4.2.0",
+    "@tanstack/react-form": "1.33.2",
+    "effect": "4.0.2",
+    "postcss-selector-parser": "7.1.6",
+    "@csstools/selector-resolve-nested": "4.0.1"
+  },
+  "dependencies": {
+    "@base-ui/react": "1.9.0",
+    "@fungi.computer/stipe": "workspace:*",
+    "@radix-ui/react-slot": "1.3.0",
+    "@tailwindcss/typography": "0.5.19",
+    "@tanstack/highlight": "0.0.9",
+    "@tanstack/markdown": "0.0.12",
+    "animejs": "4.5.0",
+    "class-variance-authority": "0.7.1",
+    "cn": "0.2.6",
+    "gsap": "3.15.0",
+    "lucide-react": "0.460.0",
+    "roughjs": "4.6.6",
+    "sonner": "2.0.8",
+    "tailwindcss": "4.2.1",
+    "zod": "4.4.3"
+  },
+  "botanical": {
+    "role": "package",
+    "operations": {
+      "lint": "required",
+      "typecheck": "required",
+      "build": "required",
+      "test": "required",
+      "docs": "required",
+      "pack": "required",
+      "smoke": "required",
+      "stranger": "required"
+    }
+  },
+  "license": "MIT",
+  "keywords": [
+    "ui",
+    "primitives",
+    "components",
+    "theme",
+    "react"
+  ],
+  "peerDependenciesMeta": {
+    "@tanstack/react-form": {
+      "optional": true
+    },
+    "effect": {
+      "optional": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fungi-computer/caps.git"
+  },
+  "fungi": {
+    "build": {
+      "stylesheet": {
+        "input": "src/styles.css",
+        "output": "dist/styles.css"
+      }
+    }
+  }
+}

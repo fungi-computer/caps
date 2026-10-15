@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "mosaic",
+  "type": "registry:block",
+  "title": "Mosaic",
+  "description": "Supplied visual tiles with caller-owned labels and opening behavior.",
+  "dependencies": ["@fungi.computer/stipe", "react"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/blocks/mosaic.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/mosaic.tsx",
+      "content": "import {\n  forwardRef,\n  useId,\n  type HTMLAttributes,\n  type ReactElement,\n  type ReactNode,\n} from \"react\";\n\n/** A caller-resolved visual tile. */\nexport type MosaicItem = {\n  alt?: string;\n  height?: number;\n  id: string;\n  disabled?: boolean;\n  state?: \"loading\" | \"ready\" | \"error\";\n  url?: string;\n  width?: number;\n};\n\n/** Props accepted by Mosaic. */\nexport type MosaicProps = HTMLAttributes<HTMLDivElement> & {\n  empty?: ReactNode;\n  items: readonly MosaicItem[];\n  /** Caller-owned accessible copy for the list. */\n  label?: ReactNode;\n  /** When absent, tiles are deliberately non-interactive. */\n  onOpen?: (item: MosaicItem) => void;\n};\n\n/** Renders supplied tiles only; callers resolve data, policy, and navigation. */\nexport const Mosaic = forwardRef<HTMLDivElement, MosaicProps>(function Mosaic(\n  { className, empty, items, label, onOpen, ...rootProps },\n  ref,\n) {\n  const labelId = useId();\n  if (items.length === 0) return <>{empty ?? null}</>;\n  return (\n    <div\n      {...rootProps}\n      ref={ref}\n      aria-labelledby={label ? labelId : undefined}\n      className={[\n        \"grid grid-cols-2 gap-xs md:grid-cols-3 xl:grid-cols-4\",\n        className,\n      ]\n        .filter(Boolean)\n        .join(\" \")}\n      role=\"list\"\n    >\n      {label ? (\n        <span className=\"sr-only\" id={labelId}>\n          {label}\n        </span>\n      ) : null}\n      {items.map((item) => (\n        <div key={item.id} role=\"listitem\">\n          {onOpen ? (\n            <button\n              aria-busy={item.state === \"loading\" || undefined}\n              aria-label={item.alt ?? item.id}\n              className=\"relative aspect-square w-full overflow-hidden rounded-box border border-base-300 bg-base-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 caps-focus-color\"\n              data-mosaic-item={item.id}\n              disabled={item.disabled}\n              onClick={() => {\n                onOpen(item);\n              }}\n              type=\"button\"\n            >\n              <Tile item={item} />\n            </button>\n          ) : (\n            <div\n              aria-busy={item.state === \"loading\" || undefined}\n              className=\"relative aspect-square overflow-hidden rounded-box border border-base-300 bg-base-200\"\n              data-mosaic-item={item.id}\n            >\n              <Tile item={item} />\n            </div>\n          )}\n        </div>\n      ))}\n    </div>\n  );\n});\n\nfunction Tile({ item }: { item: MosaicItem }): ReactElement {\n  return (\n    <>\n      {item.url ? (\n        <img\n          alt={item.alt ?? \"\"}\n          className=\"h-full w-full object-cover\"\n          height={item.height}\n          src={item.url}\n          width={item.width}\n        />\n      ) : null}\n      {item.state === \"loading\" ? (\n        <span\n          aria-hidden=\"true\"\n          className=\"loading loading-spinner loading-sm absolute inset-0 m-auto\"\n        />\n      ) : null}\n    </>\n  );\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

@@ -1,0 +1,185 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "card",
+  "type": "registry:ui",
+  "title": "Card",
+  "description": "Surface composition with header, content, footer, and interactive variants.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/card.tsx",
+      "type": "registry:ui",
+      "target": "@ui/card.tsx",
+      "content": "import { forwardRef, type HTMLAttributes } from \"react\";\n\nimport { cn, cva } from \"@/lib/cn\";\n\nconst cardVariants = cva(\"card caps-card\", {\n  variants: {\n    variant: {\n      surface: \"caps-card-surface\",\n      outline: \"caps-card-outline\",\n      interactive: \"caps-card-interactive\",\n      game: \"caps-card-game caps-card-interactive\",\n      fit: \"caps-card-fit\",\n    },\n    density: {\n      regular: \"\",\n      compact: \"caps-card-compact\",\n    },\n  },\n  defaultVariants: { variant: \"surface\", density: \"regular\" },\n});\n\n/** Props accepted by Card. */\nexport type CardProps = {\n  variant?: \"surface\" | \"outline\" | \"interactive\" | \"game\" | \"fit\";\n  /** Emphasize a featured item without changing its interaction. */\n  featured?: boolean;\n  /** Present the absence of content within the same card shell. */\n  state?: \"empty\";\n  /** Reduce card section padding when several related details share a page. */\n  density?: \"regular\" | \"compact\";\n} & HTMLAttributes<HTMLDivElement>;\n\n/** Props accepted by CenteredCard. */\nexport type CenteredCardProps = CardProps & {\n  width?: \"default\" | \"wide\";\n};\n\n/** A presentational card shell. */\nexport const Card = forwardRef<HTMLDivElement, CardProps>(function Card(\n  { className, density, featured = false, state, variant, ...props },\n  ref,\n) {\n  return (\n    <div\n      {...props}\n      className={cn(\n        cardVariants({ density, variant }),\n        featured && \"caps-card-featured\",\n        className,\n      )}\n      data-state={state}\n      ref={ref}\n    />\n  );\n});\n\n/** Center one primary card in a welcoming, viewport-filling page stage. */\nexport const CenteredCard = forwardRef<HTMLDivElement, CenteredCardProps>(\n  function CenteredCard(\n    { className, density, variant, width = \"default\", ...props },\n    ref,\n  ) {\n    return (\n      <main className=\"caps-centered-card-stage\">\n        <Card\n          {...props}\n          className={cn(\n            \"caps-centered-card\",\n            width === \"wide\" && \"caps-centered-card-wide\",\n            className,\n          )}\n          ref={ref}\n          variant={variant ?? \"surface\"}\n          {...(density ? { density } : {})}\n        />\n      </main>\n    );\n  },\n);\n\n/** A card header layout with optional centered alignment. */\nexport type CardHeaderProps = {\n  alignment?: \"start\" | \"center\";\n} & HTMLAttributes<HTMLDivElement>;\n\n/** Render a Caps card header with the requested alignment. */\nexport const CardHeader = forwardRef<HTMLDivElement, CardHeaderProps>(\n  function CardHeader({ alignment = \"start\", className, ...props }, ref) {\n    return (\n      <div\n        {...props}\n        className={cn(\n          \"caps-card-header\",\n          alignment === \"center\" && \"caps-card-header-centered\",\n          className,\n        )}\n        ref={ref}\n      />\n    );\n  },\n);\n\n/** Props accepted by CardTitle. */\nexport type CardTitleProps = HTMLAttributes<HTMLHeadingElement> & {\n  /** Heading level; the host keeps its document outline. Defaults to 3. */\n  level?: 2 | 3;\n};\n\n/** A card title element. */\nexport const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(\n  function CardTitle({ className, level = 3, ...props }, ref) {\n    const Heading = level === 2 ? \"h2\" : \"h3\";\n    return (\n      <Heading\n        {...props}\n        className={cn(\"caps-card-title\", className)}\n        ref={ref}\n      />\n    );\n  },\n);\n\n/** A card supporting-description element. */\nexport const CardDescription = forwardRef<\n  HTMLParagraphElement,\n  HTMLAttributes<HTMLParagraphElement>\n>(function CardDescription({ className, ...props }, ref) {\n  return (\n    <p\n      {...props}\n      className={cn(\"caps-card-description\", className)}\n      ref={ref}\n    />\n  );\n});\n\n/** A card body layout. */\nexport const CardContent = forwardRef<\n  HTMLDivElement,\n  HTMLAttributes<HTMLDivElement>\n>(function CardContent({ className, ...props }, ref) {\n  return (\n    <div {...props} className={cn(\"caps-card-content\", className)} ref={ref} />\n  );\n});\n\n/** A card footer layout. */\nexport const CardFooter = forwardRef<\n  HTMLDivElement,\n  HTMLAttributes<HTMLDivElement>\n>(function CardFooter({ className, ...props }, ref) {\n  return (\n    <div {...props} className={cn(\"caps-card-footer\", className)} ref={ref} />\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-card": {
+        "--caps-card-edge": "color-mix(\n      in oklab,\n      var(--color-base-content) calc(13% + (1 - var(--depth)) * 87%),\n      transparent\n    )",
+        "--caps-card-resting-face": "color-mix(\n      in oklab,\n      var(--color-base-100) calc(100% - var(--depth) * 3%),\n      var(--color-base-content) calc(var(--depth) * 3%)\n    )",
+        "background": "var(--caps-card-resting-face)",
+        "backgroundImage": "var(--caps-card-image, none)",
+        "backgroundSize": "var(--caps-print-texture-size, auto)",
+        "color": "var(--color-base-content)",
+        "border": "var(--border) solid var(--caps-card-edge)",
+        "borderRadius": "var(--radius-box)",
+        "--caps-card-resting-shadow": "var(\n      --stipe-shadow-raised,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.14)),\n      inset 0 -1px 0 rgb(0 0 0 / calc(var(--depth) * 0.06)),\n      0 2px 3px rgb(0 0 0 / calc(var(--depth) * 0.06)),\n      0 14px 28px -18px rgb(0 0 0 / calc(var(--depth) * 0.28))\n    )",
+        "boxShadow": "var(--caps-card-resting-shadow)"
+      },
+      ".caps-card-grid": {
+        "display": "grid",
+        "gridTemplateColumns": "repeat(\n      auto-fit,\n      minmax(min(100%, var(--caps-card-grid-min-column, 20rem)), 1fr)\n    )",
+        "alignItems": "stretch",
+        "gap": "var(--spacing-md)"
+      },
+      ".caps-card-grid > .caps-pricing-card": { "height": "100%" },
+      ".caps-card-outline": {
+        "--caps-card-edge": "var(\n      --caps-card-outline-edge,\n      color-mix(in oklab, var(--color-base-content) 22%, transparent)\n    )",
+        "borderWidth": "var(--caps-card-outline-width, var(--border))",
+        "backgroundColor": "var(\n      --caps-card-outline-face,\n      var(--caps-card-resting-face)\n    )",
+        "backgroundImage": "var(\n      --caps-card-outline-image,\n      var(--caps-card-image, none)\n    )",
+        "boxShadow": "var(\n      --caps-card-outline-shadow,\n      var(--caps-card-resting-shadow)\n    )"
+      },
+      ".caps-card-fit": { "alignSelf": "start" },
+      ".caps-card-interactive": {
+        "transition": "border-color var(--stipe-motion-fast) ease,\n      transform var(--stipe-motion-normal) var(--stipe-motion-ease),\n      box-shadow var(--stipe-motion-normal) ease",
+        "--caps-card-edge": "var(\n      --caps-card-interactive-edge,\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(13% + (1 - var(--depth)) * 87%),\n        transparent\n      )\n    )",
+        "backgroundColor": "var(\n      --caps-card-interactive-face,\n      var(--caps-card-resting-face)\n    )",
+        "backgroundImage": "var(\n      --caps-card-interactive-image,\n      var(--caps-card-image, none)\n    )",
+        "backgroundSize": "var(\n      --caps-card-interactive-image-size,\n      var(--caps-print-texture-size, auto)\n    )",
+        "boxShadow": "var(\n      --caps-card-interactive-shadow,\n      var(--caps-card-resting-shadow)\n    )"
+      },
+      ".caps-card-interactive:is(:hover, :has(:focus-visible))": {
+        "borderColor": "var(--color-primary)",
+        "transform": "translateY(-1px)",
+        "boxShadow": "var(--stipe-shadow-raised),\n      0 8px 20px -12px var(--color-primary)"
+      },
+      ".caps-card-interactive:active": {
+        "transform": "scale(var(--stipe-press-scale))",
+        "transitionDuration": "var(--stipe-motion-squish)"
+      },
+      ".caps-card[data-state=\"empty\"]:is(:hover, :focus-within)": {
+        "borderColor": "var(--caps-card-hover-edge, var(--caps-card-edge))"
+      },
+      ".caps-card-featured": {
+        "--caps-card-edge": "var(--caps-card-featured-edge, var(--color-base-content))",
+        "borderWidth": "var(--caps-card-featured-width, var(--border))",
+        "boxShadow": "var(\n      --caps-card-featured-shadow,\n      var(--caps-card-resting-shadow)\n    )"
+      },
+      ".caps-card[data-state=\"empty\"]": {
+        "--caps-card-edge": "var(--caps-card-empty-edge, var(--color-base-300))",
+        "borderWidth": "var(--caps-card-empty-width, var(--border))",
+        "borderStyle": "dashed",
+        "background": "var(--caps-card-empty-face, var(--caps-card-resting-face))",
+        "boxShadow": "var(--caps-card-empty-shadow, var(--caps-card-resting-shadow))"
+      },
+      "@media (prefers-reduced-motion: no-preference) and (hover: hover)": {
+        ".caps-card-interactive:not([data-state=\"empty\"]):hover": {
+          "animation": "var(--caps-card-hover-animation, none)"
+        }
+      },
+      "@keyframes caps-card-wiggle": {
+        "0%,\n    100%": { "rotate": "0deg" },
+        "30%": { "rotate": "-0.7deg" },
+        "70%": { "rotate": "0.7deg" }
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        ".caps-card-interactive,.caps-card-interactive:is(:hover, :has(:focus-visible), :active)": {
+          "transform": "none",
+          "transition": "none"
+        }
+      },
+      ".caps-card-game": {
+        "overflow": "hidden",
+        "display": "flex",
+        "flexDirection": "column"
+      }
+    },
+    "@layer components": {
+      ".caps-card-header": {
+        "display": "grid",
+        "gap": "var(--spacing-xs)",
+        "padding": "var(--spacing-xl)"
+      },
+      ".caps-card-header-centered": {
+        "justifyItems": "center",
+        "textAlign": "center"
+      },
+      ".caps-card-title": {
+        "minWidth": "0",
+        "margin": "0",
+        "overflowWrap": "anywhere",
+        "fontSize": "var(--text-lg)",
+        "fontWeight": 800,
+        "lineHeight": 1.3
+      },
+      ".caps-card-description": {
+        "margin": "0",
+        "color": "var(--stipe-fg-muted)",
+        "fontSize": "var(--text-sm)",
+        "fontWeight": 400,
+        "lineHeight": 1.5
+      },
+      ".caps-card-content": {
+        "display": "flex",
+        "minWidth": "0",
+        "flex": 1,
+        "flexDirection": "column",
+        "gap": "var(--spacing-xl)",
+        "padding": "var(--spacing-xl)",
+        "overflowWrap": "anywhere"
+      },
+      ".caps-card-compact > .caps-card-header": {
+        "gap": "var(--spacing-2xs)",
+        "padding": "var(--spacing-lg)"
+      },
+      ".caps-card-compact > .caps-card-content": {
+        "gap": "var(--spacing-md)",
+        "padding": "var(--spacing-lg)"
+      },
+      ".caps-card-compact > .caps-card-header + .caps-card-content": {
+        "paddingTop": "0"
+      },
+      ".caps-card-compact > .caps-card-footer": {
+        "gap": "var(--spacing-sm)",
+        "padding": "var(--spacing-md) var(--spacing-lg)"
+      },
+      ".caps-card-header + .caps-card-content": { "paddingTop": "0" },
+      ".caps-card-footer": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "center",
+        "justifyContent": "space-between",
+        "gap": "var(--spacing-md)",
+        "padding": "var(--spacing-lg) var(--spacing-xl)",
+        "borderTop": "var(--border) solid var(--caps-card-edge)",
+        "borderEndStartRadius": "inherit",
+        "borderEndEndRadius": "inherit",
+        "background": "color-mix(in oklab, var(--color-base-200) 45%, transparent)",
+        "color": "var(--stipe-fg-muted)",
+        "fontSize": "var(--text-xs)",
+        "lineHeight": 1.5
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

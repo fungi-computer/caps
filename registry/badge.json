@@ -1,0 +1,59 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "badge",
+  "type": "registry:ui",
+  "title": "Badge",
+  "description": "Compact semantic label with Daisy tone and size variants.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/badge.tsx",
+      "type": "registry:ui",
+      "target": "@ui/badge.tsx",
+      "content": "import { forwardRef, type HTMLAttributes } from \"react\";\n\nimport { cn, cva } from \"@/lib/cn\";\n\n/** Supported BadgeTone values. */\nexport type BadgeTone =\n  | \"neutral\"\n  | \"primary\"\n  | \"secondary\"\n  | \"accent\"\n  | \"success\"\n  | \"info\"\n  | \"warning\"\n  | \"error\";\n/** Supported BadgeSize values. */\nexport type BadgeSize = \"sm\" | \"default\" | \"lg\";\n/** `quiet` is a soft tint with no outline, for labels that sit beside keys. */\nexport type BadgeVariant = \"solid\" | \"quiet\";\n\nconst badgeVariants = cva(\"badge caps-badge\", {\n  variants: {\n    tone: {\n      neutral: \"badge-neutral\",\n      primary: \"badge-primary\",\n      secondary: \"badge-secondary\",\n      accent: \"badge-accent\",\n      success: \"badge-success\",\n      info: \"badge-info\",\n      warning: \"badge-warning\",\n      error: \"badge-error\",\n    },\n    size: { sm: \"badge-sm\", default: \"badge-md\", lg: \"badge-lg\" },\n    variant: { solid: \"\", quiet: \"caps-badge-quiet\" },\n  },\n  defaultVariants: { tone: \"neutral\", size: \"default\" },\n});\n\n/** Props accepted by Badge. */\nexport type BadgeProps = {\n  size?: BadgeSize;\n  variant?: BadgeVariant;\n  tone?: BadgeTone;\n} & HTMLAttributes<HTMLSpanElement>;\n\n/** A compact status or category label. */\nexport const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(\n  { className, size, tone, variant, ...props },\n  ref,\n) {\n  return (\n    <span\n      {...props}\n      className={cn(badgeVariants({ size, tone, variant }), className)}\n      ref={ref}\n    />\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-badge.caps-badge-quiet": {
+        "height": "auto",
+        "minHeight": "1.5rem",
+        "color": "var(--color-base-content)",
+        "backgroundColor": "color-mix(\n      in oklab,\n      var(--badge-color, var(--color-base-content)) 12%,\n      var(--color-base-100)\n    )",
+        "backgroundImage": "none",
+        "borderColor": "transparent",
+        "boxShadow": "none",
+        "lineHeight": 1.25
+      },
+      ".caps-badge": {
+        "height": "auto",
+        "minHeight": "var(--size)",
+        "lineHeight": 1.4,
+        "paddingBlock": "var(--spacing-xs)",
+        "flexShrink": 0,
+        "backgroundImage": "linear-gradient(\n      to bottom,\n      rgb(255 255 255 / calc(var(--depth) * 0.14)),\n      transparent 65%\n    )",
+        "borderColor": "color-mix(in oklab, var(--badge-color) 82%, black)",
+        "boxShadow": "var(\n      --stipe-shadow-edge,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.35)),\n      inset 0 -1px 0 rgb(0 0 0 / calc(var(--depth) * 0.1))\n    )"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

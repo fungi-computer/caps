@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "async-state",
+  "type": "registry:block",
+  "title": "Async State",
+  "description": "Explicit loading, empty, error, and content state presenter.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/blocks/async-state.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/async-state.tsx",
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Supported AsyncStateValue values. */\nexport type AsyncStateValue = \"loading\" | \"empty\" | \"error\" | \"content\";\n\n/** Props accepted by AsyncState. */\nexport type AsyncStateProps = Omit<\n  HTMLAttributes<HTMLDivElement>,\n  \"content\"\n> & {\n  /** The host's explicit state; this block does not infer it from its slots. */\n  state: AsyncStateValue;\n  loading: ReactNode;\n  empty: ReactNode;\n  error: ReactNode;\n  content: ReactNode;\n};\n\n/** Selects a caller-rendered state region without fetching or inventing copy. */\nexport const AsyncState = forwardRef<HTMLDivElement, AsyncStateProps>(\n  function AsyncState(\n    { className, content, empty, error, loading, state, ...props },\n    ref,\n  ) {\n    const regions = { content, empty, error, loading };\n    return (\n      <div {...props} className={cn(\"async-state\", className)} ref={ref}>\n        {regions[state]}\n      </div>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

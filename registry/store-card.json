@@ -1,0 +1,191 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "store-card",
+  "type": "registry:ui",
+  "title": "Store card",
+  "description": "A catalogue card with title, cover, badges, and a price tag.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "react",
+    "class-variance-authority",
+    "cn"
+  ],
+  "registryDependencies": ["@shiit/badge", "@shiit/card", "@shiit/price-tag"],
+  "files": [
+    {
+      "path": "../src/components/store-card.tsx",
+      "type": "registry:ui",
+      "target": "@ui/store-card.tsx",
+      "content": "import type { HTMLAttributes, ReactNode } from \"react\";\nimport { Badge } from \"./badge.js\";\nimport { Card } from \"./card.js\";\nimport { PriceTag, type PriceTagProps } from \"./price-tag.js\";\nimport { cn } from \"@/lib/cn\";\n\n/** A shelf entry with independent opening and acquisition controls. */\nexport type StoreCardProps = Omit<HTMLAttributes<HTMLDivElement>, \"title\"> &\n  Readonly<{\n    title: string;\n    tagline: string;\n    variant?: \"listing\" | \"cartridge\" | \"server\";\n    /** Split wide feature cards into cover and copy columns. */\n    layout?: \"stack\" | \"split\";\n    cover?: ReactNode;\n    icon?: ReactNode;\n    seller?: ReactNode;\n    price?: PriceTagProps[\"price\"];\n    badges?: readonly string[];\n    action?: ReactNode;\n    href?: string;\n    /** Open the listing independently of its footer action. */\n    onSelect?: () => void;\n  }>;\n\n/** Caps owns the cover, copy, metadata and independent interaction states. */\nexport function StoreCard({\n  title,\n  tagline,\n  variant = \"listing\",\n  layout = \"stack\",\n  cover,\n  icon,\n  seller,\n  price,\n  badges = [],\n  action,\n  href,\n  onSelect,\n  className,\n  ...props\n}: StoreCardProps) {\n  const content = (\n    <>\n      {cover ? <span className=\"caps-store-cover\">{cover}</span> : null}\n      <span className=\"caps-store-heading\">\n        {icon ? <span className=\"caps-store-icon\">{icon}</span> : null}\n        <span className=\"caps-store-copy\">\n          <strong className=\"caps-store-title\">{title}</strong>\n          <span className=\"caps-store-tagline\">{tagline}</span>\n        </span>\n      </span>\n    </>\n  );\n  return (\n    <Card\n      {...props}\n      role=\"article\"\n      aria-label={title}\n      variant=\"interactive\"\n      className={cn(\"caps-store-card\", className)}\n      data-variant={variant}\n      data-layout={layout}\n    >\n      <div className=\"caps-store-body\">\n        {href ? (\n          <a className=\"caps-store-open\" href={href}>\n            {content}\n          </a>\n        ) : onSelect ? (\n          <button className=\"caps-store-open\" type=\"button\" onClick={onSelect}>\n            {content}\n          </button>\n        ) : (\n          <div className=\"caps-store-open\">{content}</div>\n        )}\n        <footer className=\"caps-store-footer\">\n          <div className=\"caps-store-meta\">\n            {seller}\n            {badges.map((badge) => (\n              <Badge key={badge} tone=\"secondary\" variant=\"quiet\" size=\"sm\">\n                {badge.replaceAll(\"-\", \" \")}\n              </Badge>\n            ))}\n            {price ? <PriceTag price={price} /> : null}\n          </div>\n          {action ? <div className=\"caps-store-action\">{action}</div> : null}\n        </footer>\n      </div>\n    </Card>\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-store-card": {
+        "containerType": "inline-size",
+        "display": "flex",
+        "flexDirection": "column",
+        "minWidth": "0",
+        "width": "100%",
+        "height": "100%",
+        "overflow": "hidden",
+        "fontFamily": "var(--font-sans)"
+      },
+      ".caps-store-body": {
+        "display": "flex",
+        "flex": 1,
+        "flexDirection": "column",
+        "minWidth": "0"
+      },
+      "@container (min-width: 40rem)": {
+        ".caps-store-card[data-layout=\"split\"] .caps-store-body": {
+          "display": "grid",
+          "gridTemplateColumns": "minmax(0, 1fr) minmax(0, 1fr)",
+          "gridTemplateRows": "1fr auto"
+        },
+        ".caps-store-card[data-layout=\"split\"] .caps-store-open": {
+          "display": "grid",
+          "gridArea": "1 / 1 / 3 / 3",
+          "gridTemplateColumns": "subgrid",
+          "gridTemplateRows": "subgrid"
+        },
+        ".caps-store-card[data-layout=\"split\"] .caps-store-cover": {
+          "gridArea": "1 / 1 / 3 / 2",
+          "alignSelf": "center"
+        },
+        ".caps-store-card[data-layout=\"split\"] .caps-store-heading": {
+          "gridArea": "1 / 2",
+          "alignSelf": "center",
+          "padding": "var(--spacing-xl)"
+        },
+        ".caps-store-card[data-layout=\"split\"] .caps-store-copy": {
+          "gap": "var(--spacing-md)"
+        },
+        ".caps-store-card[data-layout=\"split\"] .caps-store-title": {
+          "fontSize": "var(--text-3xl)"
+        },
+        ".caps-store-card[data-layout=\"split\"] .caps-store-tagline": {
+          "fontSize": "var(--text-base)"
+        },
+        ".caps-store-card[data-layout=\"split\"] .caps-store-footer": {
+          "gridArea": "2 / 2",
+          "zIndex": 1,
+          "height": "auto",
+          "minHeight": "5rem",
+          "padding": "var(--spacing-md) var(--spacing-xl)"
+        }
+      },
+      ".caps-store-open": {
+        "display": "flex",
+        "flex": 1,
+        "flexDirection": "column",
+        "width": "100%",
+        "minWidth": "0",
+        "padding": "0",
+        "border": "0",
+        "background": "none",
+        "color": "inherit",
+        "font": "inherit",
+        "textAlign": "start",
+        "textDecoration": "none"
+      },
+      ":is(button, a).caps-store-open": { "cursor": "pointer" },
+      ".caps-store-open:focus-visible": {
+        "outline": "3px solid var(--caps-focus-ring)",
+        "outlineOffset": "-3px"
+      },
+      ".caps-store-cover": {
+        "display": "block",
+        "overflow": "hidden",
+        "aspectRatio": "16 / 10",
+        "background": "var(--color-base-200)"
+      },
+      ".caps-store-cover img": {
+        "display": "block",
+        "width": "100%",
+        "height": "100%",
+        "objectFit": "cover",
+        "transition": "transform var(--stipe-motion-normal) var(--stipe-motion-spring)"
+      },
+      ".caps-store-card[data-variant=\"cartridge\"] .caps-store-cover": {
+        "aspectRatio": "16 / 9"
+      },
+      ".caps-store-card[data-variant=\"cartridge\"] .caps-store-cover img": {
+        "imageRendering": "pixelated"
+      },
+      ".caps-store-card[data-variant=\"server\"] .caps-store-cover": {
+        "aspectRatio": "3 / 1"
+      },
+      ".caps-store-card:is(:hover, :has(:focus-visible)) .caps-store-cover img": {
+        "transform": "scale(1.03)"
+      },
+      ".caps-store-heading": {
+        "display": "flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-md)",
+        "padding": "var(--spacing-lg)"
+      },
+      ".caps-store-icon": { "flex": "none" },
+      ".caps-store-copy": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "var(--spacing-xs)",
+        "minWidth": "0"
+      },
+      ".caps-store-title": {
+        "fontSize": "var(--text-lg)",
+        "fontWeight": 800,
+        "lineHeight": 1.25
+      },
+      ".caps-store-tagline": {
+        "fontSize": "var(--text-sm)",
+        "color": "var(--color-base-content)",
+        "lineHeight": 1.5
+      },
+      ".caps-store-footer": {
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "space-between",
+        "gap": "var(--spacing-sm)",
+        "height": "5rem",
+        "flex": "none",
+        "padding": "var(--spacing-sm) var(--spacing-lg)",
+        "borderTop": "1px solid var(--color-base-300)"
+      },
+      ".caps-store-meta": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "center",
+        "gap": "var(--spacing-xs)",
+        "minWidth": "0",
+        "fontSize": "var(--text-sm)"
+      },
+      ".caps-store-action": { "flex": "none", "maxWidth": "65%" },
+      ".caps-store-action .badge": {
+        "whiteSpace": "normal",
+        "height": "auto",
+        "minHeight": "2rem",
+        "textAlign": "center"
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        ".caps-store-card:is(:hover, :has(:focus-visible)) .caps-store-cover img": {
+          "transform": "none",
+          "transition": "none"
+        }
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

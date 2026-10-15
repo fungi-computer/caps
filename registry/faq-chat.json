@@ -1,0 +1,121 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "faq-chat",
+  "type": "registry:block",
+  "title": "FAQ Chat",
+  "description": "A chat-shaped FAQ that answers only from caller-reviewed entries, with caller-owned next steps.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": ["@shiit/button", "@shiit/input", "@shiit/composer"],
+  "files": [
+    {
+      "path": "../src/blocks/faq-chat.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/faq-chat.tsx",
+      "content": "import {\n  forwardRef,\n  useEffect,\n  useId,\n  useRef,\n  useState,\n  type FormEvent,\n  type HTMLAttributes,\n  type ReactNode,\n} from \"react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Input } from \"@/components/ui/input\";\nimport { cn } from \"@/lib/cn\";\nimport { Composer } from \"./composer.js\";\n\n/** One reviewed question and its fixed answer. */\nexport type FaqChatEntry = {\n  /** Stable identity for the entry. */\n  id: string;\n  /** The question as a visitor would ask it. Also shown as a suggestion. */\n  question: string;\n  /** The reviewed answer. The chat never generates text of its own. */\n  answer: ReactNode;\n  /** Lowercase words or phrases that route a typed question here. */\n  keywords?: readonly string[];\n  /** Caller-owned next steps shown under the answer, such as links. */\n  actions?: ReactNode;\n};\n\n/** The reply for a typed question that matches no entry. */\nexport type FaqChatFallback = {\n  answer: ReactNode;\n  actions?: ReactNode;\n};\n\n/** Props accepted by FaqChat. */\nexport type FaqChatProps = Omit<HTMLAttributes<HTMLElement>, \"title\"> & {\n  entries: readonly FaqChatEntry[];\n  /** The first agent message, shown before any question. */\n  greeting: ReactNode;\n  fallback: FaqChatFallback;\n  /** Visible heading and accessible name of the chat. */\n  title: ReactNode;\n  /** A short honest note about where answers come from. */\n  note?: ReactNode;\n  /** Optional mark shown beside the title, such as a logo. */\n  avatar?: ReactNode;\n  /** Accessible label of the typed-question field. */\n  inputLabel?: string;\n  placeholder?: string;\n  submitLabel?: string;\n};\n\ntype Turn =\n  | { key: number; speaker: \"user\"; text: string }\n  | { key: number; speaker: \"agent\"; answer: ReactNode; actions?: ReactNode };\n\nfunction words(text: string): string[] {\n  return text.toLowerCase().match(/[a-z0-9$]+/g) ?? [];\n}\n\n/**\n * Routes a typed question to the entry whose keywords it mentions most.\n * Returns undefined when nothing matches, so the caller can answer honestly.\n */\nexport function matchFaqEntry(\n  entries: readonly FaqChatEntry[],\n  text: string,\n): FaqChatEntry | undefined {\n  const asked = ` ${words(text).join(\" \")} `;\n  if (asked.trim().length === 0) return undefined;\n  let best: FaqChatEntry | undefined;\n  let bestScore = 0;\n  for (const entry of entries) {\n    const score = (entry.keywords ?? []).reduce((total, keyword) => {\n      const phrase = words(keyword).join(\" \");\n      return phrase.length > 0 && asked.includes(` ${phrase} `)\n        ? total + 1\n        : total;\n    }, 0);\n    if (score > bestScore) {\n      best = entry;\n      bestScore = score;\n    }\n  }\n  return best;\n}\n\n/**\n * A chat-shaped FAQ. Visitors pick or type a question and get the caller's\n * reviewed answer with its next steps. Message rows follow Parakeet: the\n * visitor's turn sits on the surface with a primary rule, the answer is plain.\n */\nexport const FaqChat = forwardRef<HTMLElement, FaqChatProps>(function FaqChat(\n  {\n    avatar,\n    className,\n    entries,\n    fallback,\n    greeting,\n    inputLabel = \"Ask a question\",\n    note,\n    placeholder = \"Ask about the plans\",\n    submitLabel = \"Ask\",\n    title,\n    ...rootProps\n  },\n  ref,\n) {\n  const titleId = useId();\n  const logRef = useRef<HTMLDivElement>(null);\n  const nextKey = useRef(0);\n  const [turns, setTurns] = useState<Turn[]>([]);\n  const [draft, setDraft] = useState(\"\");\n\n  useEffect(() => {\n    const log = logRef.current;\n    if (log) log.scrollTop = log.scrollHeight;\n  }, [turns]);\n\n  function ask(text: string, reply: FaqChatEntry | FaqChatFallback) {\n    const userKey = nextKey.current++;\n    const agentKey = nextKey.current++;\n    setTurns((previous) => [\n      ...previous,\n      { key: userKey, speaker: \"user\", text },\n      {\n        actions: reply.actions,\n        answer: reply.answer,\n        key: agentKey,\n        speaker: \"agent\",\n      },\n    ]);\n  }\n\n  function submit(event: FormEvent<HTMLFormElement>) {\n    event.preventDefault();\n    const text = draft.trim();\n    if (text.length === 0) return;\n    ask(text, matchFaqEntry(entries, text) ?? fallback);\n    setDraft(\"\");\n  }\n\n  return (\n    <section\n      {...rootProps}\n      aria-labelledby={titleId}\n      className={cn(\"caps-faq-chat\", className)}\n      ref={ref}\n    >\n      <header className=\"caps-faq-chat-header\">\n        {avatar}\n        <div className=\"caps-faq-chat-heading\">\n          <p className=\"caps-faq-chat-title\" id={titleId}>\n            {title}\n          </p>\n          {note ? <p className=\"caps-faq-chat-note\">{note}</p> : null}\n        </div>\n      </header>\n      <div\n        aria-live=\"polite\"\n        className=\"caps-faq-chat-log\"\n        ref={logRef}\n        role=\"log\"\n      >\n        <div className=\"caps-faq-chat-agent\">{greeting}</div>\n        {turns.map((turn) =>\n          turn.speaker === \"user\" ? (\n            <p className=\"caps-faq-chat-user\" key={turn.key}>\n              {turn.text}\n            </p>\n          ) : (\n            <div className=\"caps-faq-chat-agent\" key={turn.key}>\n              {turn.answer}\n              {turn.actions ? (\n                <div className=\"caps-faq-chat-actions\">{turn.actions}</div>\n              ) : null}\n            </div>\n          ),\n        )}\n      </div>\n      <ul\n        aria-label=\"Suggested questions\"\n        className=\"caps-faq-chat-suggestions\"\n      >\n        {entries.map((entry) => (\n          <li key={entry.id}>\n            <Button\n              onClick={() => {\n                ask(entry.question, entry);\n              }}\n              size=\"xs\"\n              type=\"button\"\n              variant=\"outline\"\n            >\n              {entry.question}\n            </Button>\n          </li>\n        ))}\n      </ul>\n      <form className=\"caps-faq-chat-form\" onSubmit={submit}>\n        <Composer\n          action={\n            <Button className=\"join-item\" type=\"submit\">\n              {submitLabel}\n            </Button>\n          }\n          input={\n            <Input\n              aria-label={inputLabel}\n              className=\"join-item\"\n              onChange={(event) => {\n                setDraft(event.target.value);\n              }}\n              placeholder={placeholder}\n              value={draft}\n            />\n          }\n        />\n      </form>\n    </section>\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-faq-chat": {
+        "display": "flex",
+        "flexDirection": "column",
+        "minWidth": "0",
+        "minHeight": "0",
+        "background": "var(--color-base-100)",
+        "color": "var(--color-base-content)"
+      },
+      ".caps-faq-chat-header": {
+        "display": "flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-sm)",
+        "padding": "var(--spacing-sm) var(--spacing-md)",
+        "borderBottom": "var(--border) solid var(--stipe-linework)"
+      },
+      ".caps-faq-chat-heading": {
+        "display": "grid",
+        "gap": "var(--spacing-2xs)",
+        "minWidth": "0"
+      },
+      ".caps-faq-chat-title": {
+        "margin": "0",
+        "fontSize": "var(--text-sm)",
+        "fontWeight": 700,
+        "lineHeight": 1.3,
+        "letterSpacing": "0"
+      },
+      ".caps-faq-chat-note": {
+        "margin": "0",
+        "color": "var(--stipe-fg-muted)",
+        "fontSize": "var(--text-xs)",
+        "lineHeight": 1.4
+      },
+      ".caps-faq-chat-log": {
+        "display": "flex",
+        "flex": 1,
+        "flexDirection": "column",
+        "gap": "var(--spacing-md)",
+        "minHeight": "0",
+        "overflowY": "auto",
+        "padding": "var(--spacing-md)",
+        "fontSize": "var(--text-sm)",
+        "lineHeight": 1.55
+      },
+      ".caps-faq-chat-user": {
+        "alignSelf": "stretch",
+        "margin": "0",
+        "padding": "var(--spacing-sm) var(--spacing-md)",
+        "borderLeft": "calc(var(--border) * 3) solid var(--color-primary)",
+        "background": "var(--stipe-surface)"
+      },
+      ".caps-faq-chat-agent": {
+        "display": "grid",
+        "gap": "var(--spacing-sm)",
+        "paddingInline": "var(--spacing-xs)"
+      },
+      ".caps-faq-chat-agent p": { "margin": "0" },
+      ".caps-faq-chat-actions": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "gap": "var(--spacing-xs)"
+      },
+      ".caps-faq-chat-suggestions": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "gap": "var(--spacing-xs)",
+        "margin": "0",
+        "padding": "var(--spacing-sm) var(--spacing-md)",
+        "borderTop": "var(--border) solid var(--stipe-linework)",
+        "listStyle": "none"
+      },
+      ".caps-faq-chat-suggestions > li": { "maxWidth": "100%" },
+      ".caps-faq-chat-suggestions > li > *": {
+        "maxWidth": "100%",
+        "height": "auto",
+        "whiteSpace": "normal",
+        "textAlign": "start"
+      },
+      ".caps-faq-chat-form": {
+        "display": "flex",
+        "padding": "var(--spacing-xs) var(--spacing-md) var(--spacing-md)"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

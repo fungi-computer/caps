@@ -1,0 +1,301 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "name": "price-tag",
+      "storyId": "blocks--price-tag"
+    },
+    {
+      "name": "store-card",
+      "storyId": "blocks--store-card"
+    },
+    {
+      "name": "toaster",
+      "storyId": "feedback--toaster"
+    },
+    {
+      "name": "scroll-area",
+      "storyId": "navigation--scrollbar"
+    },
+    {
+      "name": "button",
+      "storyId": "buttons--button"
+    },
+    {
+      "name": "icon-button",
+      "storyId": "buttons--icon-button"
+    },
+    {
+      "name": "window",
+      "storyId": "layouts--window"
+    },
+    {
+      "name": "input",
+      "storyId": "forms--input"
+    },
+    {
+      "name": "textarea",
+      "storyId": "forms--textarea"
+    },
+    {
+      "name": "label",
+      "storyId": "forms--label"
+    },
+    {
+      "name": "field",
+      "storyId": "forms--field"
+    },
+    {
+      "name": "dialog",
+      "storyId": "overlays--dialog"
+    },
+    {
+      "name": "mosaic",
+      "storyId": "blocks--mosaic"
+    },
+    {
+      "name": "app-bar",
+      "storyId": "layouts--workbench-navigation"
+    },
+    {
+      "name": "composer",
+      "storyId": "blocks--composer"
+    },
+    {
+      "name": "faq-chat",
+      "storyId": "blocks--faq-chat"
+    },
+    {
+      "name": "spec-sheet",
+      "storyId": "blocks--spec-sheet"
+    },
+    {
+      "name": "command-menu",
+      "storyId": "blocks--command-menu"
+    },
+    {
+      "name": "resource-select",
+      "storyId": "blocks--resource-select"
+    },
+    {
+      "name": "combobox",
+      "storyId": "forms--combobox"
+    },
+    {
+      "name": "async-state",
+      "storyId": "blocks--async-state"
+    },
+    {
+      "name": "empty-state",
+      "storyId": "blocks--empty-state"
+    },
+    {
+      "name": "result-state",
+      "storyId": "blocks--result-state"
+    },
+    {
+      "name": "section-card",
+      "storyId": "blocks--section-card"
+    },
+    {
+      "name": "pricing-card",
+      "storyId": "blocks--pricing-card"
+    },
+    {
+      "name": "upload-queue",
+      "storyId": "blocks--upload-queue"
+    },
+    {
+      "name": "permission-grid",
+      "storyId": "blocks--permission-grid"
+    },
+    {
+      "name": "input-group",
+      "storyId": "forms--input-group"
+    },
+    {
+      "name": "select",
+      "storyId": "forms--select"
+    },
+    {
+      "name": "checkbox",
+      "storyId": "forms--checkbox"
+    },
+    {
+      "name": "radio-group",
+      "storyId": "forms--radio-group"
+    },
+    {
+      "name": "switch",
+      "storyId": "forms--switch"
+    },
+    {
+      "name": "slider",
+      "storyId": "forms--slider"
+    },
+    {
+      "name": "card",
+      "storyId": "blocks--card"
+    },
+    {
+      "name": "separator",
+      "storyId": "foundations--separator"
+    },
+    {
+      "name": "visually-hidden",
+      "storyId": "foundations--visually-hidden"
+    },
+    {
+      "name": "prose",
+      "storyId": "foundations--prose"
+    },
+    {
+      "name": "markdown",
+      "storyId": "markdown--readme"
+    },
+    {
+      "name": "badge",
+      "storyId": "feedback--badge"
+    },
+    {
+      "name": "alert",
+      "storyId": "feedback--alert"
+    },
+    {
+      "name": "status",
+      "storyId": "feedback--status"
+    },
+    {
+      "name": "scroll-to-bottom-blob",
+      "storyId": "feedback--scroll-to-bottom-blob"
+    },
+    {
+      "name": "count-badge",
+      "storyId": "feedback--count-badge"
+    },
+    {
+      "name": "progress",
+      "storyId": "feedback--progress"
+    },
+    {
+      "name": "loader",
+      "storyId": "feedback--loader"
+    },
+    {
+      "name": "skeleton",
+      "storyId": "feedback--skeleton"
+    },
+    {
+      "name": "stat",
+      "storyId": "feedback--stat"
+    },
+    {
+      "name": "quota-meter",
+      "storyId": "feedback--quota-meter"
+    },
+    {
+      "name": "data-list",
+      "storyId": "blocks--data-list"
+    },
+    {
+      "name": "tabs",
+      "storyId": "navigation--tabs"
+    },
+    {
+      "name": "listbox",
+      "storyId": "forms--listbox"
+    },
+    {
+      "name": "dropdown-menu",
+      "storyId": "overlays--dropdown-menu"
+    },
+    {
+      "name": "tooltip",
+      "storyId": "overlays--tooltip"
+    },
+    {
+      "name": "technonomicon",
+      "storyId": "editorial--technonomicon--field-guide-themes"
+    },
+    {
+      "name": "release-tag",
+      "storyId": "blocks--release-tag"
+    },
+    {
+      "name": "rough",
+      "storyId": "blocks--rough"
+    },
+    {
+      "name": "trading-card",
+      "storyId": "blocks--trading-card"
+    },
+    {
+      "name": "keycap",
+      "storyId": "game-pieces--keycaps"
+    },
+    {
+      "name": "pixel-number",
+      "storyId": "game-pieces--pixel-numbers"
+    },
+    {
+      "name": "item-grid",
+      "storyId": "game-pieces--item-grids"
+    },
+    {
+      "name": "game-feedback",
+      "storyId": "game-pieces--feedback"
+    },
+    {
+      "name": "game-hud",
+      "storyId": "game-pieces--game-hud-kit"
+    },
+    {
+      "name": "icon-checkbox",
+      "storyId": "forms--icon-checkboxes"
+    },
+    {
+      "name": "icon-lamp",
+      "storyId": "forms--icon-lamps"
+    },
+    {
+      "name": "icon-radio",
+      "storyId": "forms--icon-radios"
+    },
+    {
+      "name": "presence",
+      "storyId": "feedback--presence-collapse-swap"
+    },
+    {
+      "name": "activity-line",
+      "storyId": "feedback--activity-lines"
+    },
+    {
+      "name": "tool-call-chip",
+      "storyId": "feedback--tool-calls"
+    },
+    {
+      "name": "generation-frame",
+      "storyId": "feedback--generation-run"
+    },
+    {
+      "name": "send-action",
+      "storyId": "buttons--send-states"
+    },
+    {
+      "name": "undo-action",
+      "storyId": "feedback--undo-and-hold"
+    },
+    {
+      "name": "code-input",
+      "storyId": "forms--code-input"
+    },
+    {
+      "name": "game-share-card",
+      "storyId": "game-share--published-game"
+    },
+    {
+      "name": "confirm-action",
+      "storyId": "forms--confirm-actions"
+    }
+  ]
+}

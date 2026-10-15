@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "price-tag",
+  "type": "registry:ui",
+  "title": "Price tag",
+  "description": "Theme-backed price label for store entries.",
+  "dependencies": ["@fungi.computer/stipe"],
+  "registryDependencies": ["@shiit/badge"],
+  "files": [
+    {
+      "path": "../src/components/price-tag.tsx",
+      "type": "registry:ui",
+      "target": "@ui/price-tag.tsx",
+      "content": "import { Badge } from \"./badge.js\";\n\n/** The caller-provided price shown on a store entry. */\nexport type PriceTagProps = Readonly<{\n  price: { kind: \"free\" } | { kind: \"one-time\"; label: string };\n}>;\n\n/** A compact, theme-backed price label for store entries. */\nexport function PriceTag({ price }: PriceTagProps) {\n  return (\n    <Badge tone=\"success\" variant=\"quiet\">\n      {price.kind === \"free\" ? (\n        \"Free\"\n      ) : (\n        <span className=\"caps-numeric\">{price.label}</span>\n      )}\n    </Badge>\n  );\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

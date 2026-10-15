@@ -1,0 +1,192 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "field",
+  "type": "registry:ui",
+  "title": "Field",
+  "description": "Labelled form control composition with description and error regions.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "lucide-react",
+    "react"
+  ],
+  "registryDependencies": [
+    "@shiit/input-group",
+    "@shiit/button",
+    "@shiit/presence"
+  ],
+  "files": [
+    {
+      "path": "../src/components/field.tsx",
+      "type": "registry:ui",
+      "target": "@ui/field.tsx",
+      "content": "import {\n  Children,\n  cloneElement,\n  forwardRef,\n  isValidElement,\n  useId,\n  useRef,\n  useState,\n  type AriaAttributes,\n  type FieldsetHTMLAttributes,\n  type FormHTMLAttributes,\n  type HTMLAttributes,\n  type InputHTMLAttributes,\n  type PointerEvent,\n  type ReactElement,\n  type ReactNode,\n} from \"react\";\nimport { Minus, Plus } from \"lucide-react\";\n\nimport { cn } from \"@/lib/cn\";\nimport { Button } from \"./button.js\";\nimport { Label } from \"./label.js\";\nimport { InputGroup, InputGroupAddon } from \"./input-group.js\";\nimport { Collapse } from \"./presence.js\";\n\n/** An announced error that takes no space when absent and collapses smoothly. */\nexport function FieldError({\n  children,\n  ...props\n}: HTMLAttributes<HTMLDivElement>) {\n  const [lastError, setLastError] = useState(children);\n  // Retain the closing content so its intrinsic height can animate to zero.\n  if (children && children !== lastError) setLastError(children);\n  return (\n    <Collapse\n      {...props}\n      className={cn(\"caps-field-error-reveal\", props.className)}\n      open={Boolean(children)}\n    >\n      <div className=\"caps-field-error\" role=\"alert\" aria-hidden={!children}>\n        {lastError}\n      </div>\n    </Collapse>\n  );\n}\n\n/** Props accepted by FormFooter. */\nexport type FormFooterProps = {\n  /** The submit-time error, announced above the actions. */\n  error?: ReactNode;\n  /** `end` right-aligns actions; `stretch` stacks full-width actions for single-column cards. */\n  layout?: \"end\" | \"stretch\";\n  /** Quiet state opposite the actions (role=\"status\"), such as a Status LED reading \"Saved\". */\n  status?: ReactNode;\n  /** Draws the rule above the footer; short inline forms leave it off. */\n  divider?: boolean;\n} & HTMLAttributes<HTMLElement>;\n\n/**\n * A form's stationary action area. Put exactly one primary Button last;\n * every other action is `ghost` or `outline`.\n */\nexport function FormFooter({\n  children,\n  divider = true,\n  error,\n  layout = \"end\",\n  status,\n  ...props\n}: FormFooterProps) {\n  return (\n    <footer\n      {...props}\n      className={cn(\"caps-form-footer\", props.className)}\n      data-divider={divider}\n      data-layout={layout}\n    >\n      <FieldError>{error}</FieldError>\n      <div className=\"caps-form-footer-row\">\n        {status ? (\n          <div className=\"caps-form-footer-status\" role=\"status\">\n            {status}\n          </div>\n        ) : null}\n        <div className=\"caps-form-footer-actions\">{children}</div>\n      </div>\n    </footer>\n  );\n}\n\n/** Props accepted by Form. */\nexport type FormProps = {\n  /** Disables every control while a submission is in flight. */\n  busy?: boolean;\n} & FormHTMLAttributes<HTMLFormElement>;\n\n/**\n * A form with Caps' field rhythm. While `busy`, its fieldset disables every\n * control and the form reports `aria-busy`; validation stays with the caller.\n */\nexport const Form = forwardRef<HTMLFormElement, FormProps>(function Form(\n  { busy = false, children, className, ...props },\n  ref,\n) {\n  return (\n    <form\n      {...props}\n      aria-busy={busy || undefined}\n      className={cn(\"caps-form\", className)}\n      ref={ref}\n    >\n      <fieldset className=\"caps-form-body\" disabled={busy}>\n        {children}\n      </fieldset>\n    </form>\n  );\n});\n\n/** Props accepted by FormSection. */\nexport type FormSectionProps = {\n  title: ReactNode;\n  description?: ReactNode;\n  /** Heading level inside the page outline. */\n  level?: 2 | 3 | 4;\n  children: ReactNode;\n} & Omit<HTMLAttributes<HTMLElement>, \"title\">;\n\nconst sectionHeadings = { 2: \"h2\", 3: \"h3\", 4: \"h4\" } as const;\n\n/** A titled group of fields; consecutive sections share one quiet rule. */\nexport const FormSection = forwardRef<HTMLElement, FormSectionProps>(\n  function FormSection(\n    { children, className, description, level = 3, title, ...props },\n    ref,\n  ) {\n    const id = useId();\n    const Heading = sectionHeadings[level];\n    return (\n      <section\n        {...props}\n        aria-labelledby={`${id}-title`}\n        className={cn(\"caps-form-section\", className)}\n        ref={ref}\n      >\n        <header className=\"caps-form-section-copy\">\n          <Heading className=\"caps-form-section-title\" id={`${id}-title`}>\n            {title}\n          </Heading>\n          {description ? (\n            <p className=\"caps-form-section-description\">{description}</p>\n          ) : null}\n        </header>\n        <div className=\"caps-form-section-fields\">{children}</div>\n      </section>\n    );\n  },\n);\n\n/** Props accepted by FieldSet. */\nexport type FieldSetProps = {\n  legend: ReactNode;\n  description?: ReactNode;\n  /** The group's announced error, such as \"Choose at least one right\". */\n  error?: ReactNode;\n  children: ReactNode;\n} & FieldsetHTMLAttributes<HTMLFieldSetElement>;\n\n/**\n * A legend-named group of related choices, such as a list of inline\n * checkbox Fields. `disabled` disables every control inside.\n */\nexport const FieldSet = forwardRef<HTMLFieldSetElement, FieldSetProps>(\n  function FieldSet(\n    { children, className, description, error, legend, ...props },\n    ref,\n  ) {\n    const id = useId();\n    const describedBy =\n      [\n        description ? `${id}-description` : props[\"aria-describedby\"],\n        error ? `${id}-error` : null,\n      ]\n        .filter(Boolean)\n        .join(\" \") || undefined;\n    return (\n      <fieldset\n        {...props}\n        aria-describedby={describedBy}\n        aria-invalid={error ? true : props[\"aria-invalid\"]}\n        className={cn(\"caps-fieldset\", className)}\n        ref={ref}\n      >\n        <legend className=\"caps-fieldset-legend\">{legend}</legend>\n        {description ? (\n          <p className=\"caps-fieldset-description\" id={`${id}-description`}>\n            {description}\n          </p>\n        ) : null}\n        <div className=\"caps-fieldset-fields\">{children}</div>\n        {/* Present only for groups that can fail, so other groups keep their DOM. */}\n        {error === undefined ? null : (\n          <FieldError id={`${id}-error`}>{error}</FieldError>\n        )}\n      </fieldset>\n    );\n  },\n);\n\n/** Props accepted by Field. */\nexport type FieldProps = {\n  children: ReactNode;\n  description?: ReactNode;\n  error?: ReactNode;\n  /**\n   * A decorative marker, such as a Sigil or App icon, before the label. It is\n   * hidden from assistive tech; the label stays the control's name.\n   */\n  icon?: ReactNode;\n  label?: ReactNode;\n  /**\n   * `vertical` stacks label, control and error; `horizontal` puts the control\n   * opposite its copy (settings rows); `inline` puts a checkbox or switch\n   * before its copy.\n   */\n  orientation?: \"horizontal\" | \"inline\" | \"vertical\";\n  /** Marks an optional field in a mostly required form. */\n  optional?: boolean;\n  /**\n   * The child is a read-only readout, such as a Status, not a control: the\n   * label names the row and nothing is wired to the child.\n   */\n  readout?: boolean;\n  required?: boolean;\n} & HTMLAttributes<HTMLDivElement>;\n\ntype FieldControlProps = {\n  \"aria-describedby\"?: AriaAttributes[\"aria-describedby\"];\n  \"aria-invalid\"?: AriaAttributes[\"aria-invalid\"];\n  \"aria-required\"?: AriaAttributes[\"aria-required\"];\n  id?: string;\n  required?: boolean;\n  children?: ReactNode;\n};\n\n/** The labelled control inside an InputGroup: its first non-addon element. */\nfunction groupControl(\n  group: ReactElement<FieldControlProps>,\n): ReactElement<FieldControlProps> | null {\n  const controls: ReactElement<FieldControlProps>[] = [];\n  Children.forEach(group.props.children, (part) => {\n    if (\n      isValidElement<FieldControlProps>(part) &&\n      part.type !== InputGroupAddon\n    )\n      controls.push(part);\n  });\n  return controls[0] ?? null;\n}\n\n/** A labelled form-field layout that renders caller-provided control and supporting content. */\nexport const Field = forwardRef<HTMLDivElement, FieldProps>(function Field(\n  {\n    children,\n    className,\n    description,\n    error,\n    icon,\n    label,\n    optional,\n    orientation = \"vertical\",\n    readout = false,\n    required,\n    ...props\n  },\n  ref,\n) {\n  const generatedId = useId();\n  const child = isValidElement<FieldControlProps>(children) ? children : null;\n  // An InputGroup is layout: the labelled control is the input inside it.\n  const group = child?.type === InputGroup;\n  const controlElement = group ? groupControl(child) : child;\n  const id = controlElement?.props.id;\n  const controlId = id ?? generatedId;\n  const descriptionId = `${controlId}-description`;\n  const errorId = `${controlId}-error`;\n  // Keep any description the caller already wired to the control.\n  const describedBy =\n    [\n      controlElement?.props[\"aria-describedby\"],\n      description ? descriptionId : null,\n      error ? errorId : null,\n    ]\n      .filter(Boolean)\n      .join(\" \") || undefined;\n  const requiredValue =\n    required === true ? true : controlElement?.props.required;\n  const invalidValue = error ? true : controlElement?.props[\"aria-invalid\"];\n  const ariaRequiredValue =\n    required === true ? true : controlElement?.props[\"aria-required\"];\n  const clonedProps: FieldControlProps = { id: controlId };\n  if (requiredValue !== undefined) clonedProps.required = requiredValue;\n  if (describedBy !== undefined) clonedProps[\"aria-describedby\"] = describedBy;\n  if (invalidValue !== undefined) clonedProps[\"aria-invalid\"] = invalidValue;\n  if (ariaRequiredValue !== undefined)\n    clonedProps[\"aria-required\"] = ariaRequiredValue;\n  const control =\n    child && controlElement && !readout\n      ? group\n        ? cloneElement(\n            child,\n            undefined,\n            Children.map(child.props.children, (part) =>\n              part === controlElement\n                ? cloneElement(controlElement, clonedProps)\n                : part,\n            ),\n          )\n        : cloneElement(child, clonedProps)\n      : children;\n  const labelContent = label ? (\n    <Label\n      htmlFor={readout ? undefined : controlId}\n      // A choice's own label reads as body text; the group's legend carries weight.\n      className={orientation === \"inline\" ? \"font-normal\" : undefined}\n      {...(required === undefined ? {} : { required })}\n      {...(optional === undefined ? {} : { optional })}\n    >\n      {label}\n    </Label>\n  ) : null;\n  const copy =\n    label || description ? (\n      <div className=\"caps-field-copy\">\n        {labelContent}\n        {description ? (\n          <p className=\"caps-field-description\" id={descriptionId}>\n            {description}\n          </p>\n        ) : null}\n      </div>\n    ) : null;\n  const heading = icon ? (\n    <div className=\"caps-field-lead\">\n      <span className=\"caps-field-icon\" aria-hidden=\"true\">\n        {icon}\n      </span>\n      {copy}\n    </div>\n  ) : (\n    copy\n  );\n  return (\n    <div\n      {...props}\n      className={cn(\"caps-field\", className)}\n      data-orientation={orientation}\n      ref={ref}\n    >\n      {orientation === \"horizontal\" ? (\n        <div className=\"caps-field-row\">\n          {heading}\n          {control}\n        </div>\n      ) : orientation === \"inline\" ? (\n        <div className=\"caps-field-row\">\n          {control}\n          {heading}\n        </div>\n      ) : (\n        <>\n          {heading}\n          {control}\n        </>\n      )}\n      <FieldError id={errorId}>{error}</FieldError>\n    </div>\n  );\n});\n\n/** Props accepted by NumberField. */\nexport type NumberFieldProps = {\n  /** Controlled value; `null` is empty. */\n  value?: number | null;\n  defaultValue?: number | null;\n  /** Called with each committed value, already clamped to min/max. */\n  onValueChange?: (value: number | null) => void;\n  min?: number;\n  max?: number;\n  /** Arrow keys and the − / + keys move by `step`; Page Up/Down by ten steps. */\n  step?: number;\n  /** A short unit readout after the value, such as \"min\" or \"GB\". */\n  unit?: ReactNode;\n  /** Cycle from max back to min (and back) instead of stopping at the ends. */\n  wrap?: boolean;\n  invalid?: boolean;\n  /** Accessible names for the − / + keys. */\n  decrementLabel?: string;\n  incrementLabel?: string;\n} & Omit<\n  InputHTMLAttributes<HTMLInputElement>,\n  \"defaultValue\" | \"max\" | \"min\" | \"onChange\" | \"step\" | \"type\" | \"value\"\n>;\n\nfunction stepPrecision(step: number): number {\n  const text = String(step);\n  const dot = text.indexOf(\".\");\n  return dot === -1 ? 0 : text.length - dot - 1;\n}\n\n/** A 270° encoder arc from 7:30 to 4:30, measured as 100 path units. */\nconst DIAL_ARC = \"M 9.86 38.14 A 20 20 0 1 1 38.14 38.14\";\n/** Pixels of vertical drag per step on the dial. */\nconst DIAL_TRAVEL = 6;\n\nconst keySteps = new Map([\n  [\"ArrowUp\", 1],\n  [\"ArrowDown\", -1],\n  [\"PageUp\", 10],\n  [\"PageDown\", -10],\n]);\n\n/**\n * A number spinbutton: a native `input type=\"number\"` between − and + keys,\n * with the value as a mono readout. Field wires its label, description and\n * error to the input. The `caps-number-field-*` parts are stable so a context\n * such as a Screen can redraw them; the semantics stay here.\n */\nexport const NumberField = forwardRef<HTMLInputElement, NumberFieldProps>(\n  function NumberField(\n    {\n      className,\n      decrementLabel = \"Decrease\",\n      defaultValue = null,\n      disabled,\n      incrementLabel = \"Increase\",\n      invalid,\n      max,\n      min,\n      onBlur,\n      onKeyDown,\n      onValueChange,\n      step = 1,\n      unit,\n      value,\n      wrap = false,\n      ...props\n    },\n    ref,\n  ) {\n    const [inner, setInner] = useState<number | null>(defaultValue);\n    const [draft, setDraft] = useState<string | null>(null);\n    const current = value === undefined ? inner : value;\n    const precision = stepPrecision(step);\n    const clamp = (next: number) => {\n      const rounded = Number(next.toFixed(precision));\n      if (min !== undefined && rounded < min) return min;\n      if (max !== undefined && rounded > max) return max;\n      return rounded;\n    };\n    const commit = (next: number | null) => {\n      const settled = next === null ? null : clamp(next);\n      setInner(settled);\n      setDraft(null);\n      if (settled !== current) onValueChange?.(settled);\n    };\n    const commitDraft = () => {\n      if (draft === null) return;\n      const parsed = Number(draft);\n      commit(draft.trim() === \"\" || !Number.isFinite(parsed) ? null : parsed);\n    };\n    const stepBy = (steps: number) => {\n      const next = (current ?? min ?? 0) + steps * step;\n      if (wrap && min !== undefined && max !== undefined) {\n        if (next > max) {\n          commit(min);\n          return;\n        }\n        if (next < min) {\n          commit(max);\n          return;\n        }\n      }\n      commit(next);\n    };\n    const atMin = min !== undefined && current !== null && current <= min;\n    const atMax = max !== undefined && current !== null && current >= max;\n    const isDisabled = disabled === true;\n    const drag = useRef<{ y: number; value: number } | null>(null);\n    // The dial is drawn only where a context (a Screen) asks for it, and only\n    // for a bounded value; the input stays the spinbutton either way.\n    const fraction =\n      min !== undefined && max !== undefined && max > min\n        ? ((current ?? min) - min) / (max - min)\n        : null;\n    const onDialDown = (event: PointerEvent<SVGSVGElement>) => {\n      if (isDisabled) return;\n      event.currentTarget.setPointerCapture(event.pointerId);\n      drag.current = { y: event.clientY, value: current ?? min ?? 0 };\n    };\n    const onDialMove = (event: PointerEvent<SVGSVGElement>) => {\n      if (!drag.current) return;\n      const steps = Math.trunc((drag.current.y - event.clientY) / DIAL_TRAVEL);\n      const next = clamp(drag.current.value + steps * step);\n      if (next !== current) commit(next);\n    };\n    const endDial = () => {\n      drag.current = null;\n    };\n    return (\n      <span\n        className={cn(\"caps-number-field\", className)}\n        data-at-max={atMax || undefined}\n        data-at-min={atMin || undefined}\n        data-disabled={isDisabled || undefined}\n        data-wrap={wrap || undefined}\n      >\n        {fraction === null ? null : (\n          <svg\n            className=\"caps-number-field-dial\"\n            viewBox=\"0 0 48 48\"\n            aria-hidden=\"true\"\n            focusable=\"false\"\n            onPointerDown={onDialDown}\n            onPointerMove={onDialMove}\n            onPointerUp={endDial}\n            onPointerCancel={endDial}\n          >\n            <path\n              className=\"caps-number-field-dial-track\"\n              d={DIAL_ARC}\n              pathLength={100}\n            />\n            <path\n              className=\"caps-number-field-dial-level\"\n              d={DIAL_ARC}\n              pathLength={100}\n              strokeDasharray={`${String(Math.max(0.5, fraction * 100))} 100`}\n            />\n          </svg>\n        )}\n        <Button\n          type=\"button\"\n          variant=\"outline\"\n          size=\"icon\"\n          className=\"caps-number-field-decrement\"\n          aria-label={decrementLabel}\n          aria-controls={props.id}\n          tabIndex={-1}\n          disabled={isDisabled || (atMin && !wrap)}\n          onClick={() => {\n            stepBy(-1);\n          }}\n        >\n          <Minus aria-hidden=\"true\" />\n        </Button>\n        <span className=\"caps-number-field-readout\">\n          <input\n            {...props}\n            aria-invalid={\n              invalid\n                ? true\n                : props[\"aria-invalid\"] === false\n                  ? undefined\n                  : props[\"aria-invalid\"]\n            }\n            className=\"input caps-input caps-number-field-input\"\n            disabled={disabled}\n            inputMode={\n              props.inputMode ?? (precision > 0 ? \"decimal\" : \"numeric\")\n            }\n            max={max}\n            min={min}\n            onBlur={(event) => {\n              commitDraft();\n              onBlur?.(event);\n            }}\n            onChange={(event) => {\n              setDraft(event.target.value);\n            }}\n            onKeyDown={(event) => {\n              onKeyDown?.(event);\n              if (event.defaultPrevented) return;\n              const steps = keySteps.get(event.key);\n              if (steps !== undefined) {\n                event.preventDefault();\n                stepBy(steps);\n              } else if (event.key === \"Home\" && min !== undefined) {\n                event.preventDefault();\n                commit(min);\n              } else if (event.key === \"End\" && max !== undefined) {\n                event.preventDefault();\n                commit(max);\n              } else if (event.key === \"Enter\") {\n                commitDraft();\n              }\n            }}\n            ref={ref}\n            step={step}\n            type=\"number\"\n            value={draft ?? (current === null ? \"\" : String(current))}\n          />\n          {unit ? (\n            <span className=\"caps-number-field-unit\" aria-hidden=\"true\">\n              {unit}\n            </span>\n          ) : null}\n        </span>\n        <Button\n          type=\"button\"\n          variant=\"outline\"\n          size=\"icon\"\n          className=\"caps-number-field-increment\"\n          aria-label={incrementLabel}\n          aria-controls={props.id}\n          tabIndex={-1}\n          disabled={isDisabled || (atMax && !wrap)}\n          onClick={() => {\n            stepBy(1);\n          }}\n        >\n          <Plus aria-hidden=\"true\" />\n        </Button>\n      </span>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/components/label.tsx",
+      "type": "registry:ui",
+      "target": "@ui/label.tsx",
+      "content": "import { forwardRef, type LabelHTMLAttributes } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by Label. */\nexport type LabelProps = {\n  /** Adds a quiet \"Optional\" readout after the text. */\n  optional?: boolean;\n  required?: boolean;\n} & LabelHTMLAttributes<HTMLLabelElement>;\n\n/** A label primitive that associates caller-provided text with a form control. */\nexport const Label = forwardRef<HTMLLabelElement, LabelProps>(function Label(\n  { children, className, optional, required, ...props },\n  ref,\n) {\n  return (\n    <label\n      {...props}\n      className={cn(\n        \"label caps-label cursor-pointer justify-start gap-sm text-sm font-semibold text-base-content\",\n        className,\n      )}\n      ref={ref}\n    >\n      {children}\n      {required ? (\n        <span aria-hidden=\"true\" className=\"text-error\">\n          *\n        </span>\n      ) : null}\n      {optional && !required ? (\n        <span className=\"caps-label-optional\">Optional</span>\n      ) : null}\n    </label>\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-field,.caps-field-copy": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "var(--spacing-xs)",
+        "minWidth": "0"
+      },
+      ".caps-field-compact": {
+        "flex": "1 1 var(--container-xs)",
+        "minWidth": "min(100%, var(--container-xs))",
+        "maxWidth": "var(--container-md)"
+      },
+      ".caps-field-row": {
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "space-between",
+        "gap": "var(--spacing-lg)"
+      },
+      ".caps-field-description,.caps-field-error": {
+        "margin": "0",
+        "fontSize": "var(--text-xs)",
+        "lineHeight": 1.5
+      },
+      ".caps-field-description": { "color": "var(--stipe-fg-muted)" },
+      ".caps-field-error": {
+        "color": "var(--color-error)",
+        "minWidth": "0",
+        "overflowWrap": "anywhere"
+      },
+      ".caps-field": {
+        "gap": "0",
+        "--caps-field-control-width": "100%",
+        "--caps-field-icon-size": "1.75rem"
+      },
+      ".caps-field > .caps-field-copy,.caps-field > .caps-field-lead": {
+        "marginBottom": "var(--spacing-xs)"
+      },
+      ".caps-field-lead": {
+        "display": "flex",
+        "flex": 1,
+        "alignItems": "center",
+        "gap": "var(--spacing-sm)",
+        "minWidth": "0"
+      },
+      ".caps-field-icon": {
+        "display": "inline-flex",
+        "flex": "none",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "width": "var(--caps-field-icon-size)",
+        "height": "var(--caps-field-icon-size)"
+      },
+      ".caps-field-icon > :is(svg, img, .caps-monogram)": {
+        "width": "100%",
+        "height": "100%"
+      },
+      ".caps-field-icon-choices": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "gap": "var(--spacing-xs)"
+      },
+      ".caps-field-secret,.caps-field-amount": {
+        "fontFamily": "var(--font-numeric, var(--font-mono))",
+        "fontVariantNumeric": "tabular-nums"
+      },
+      ".caps-field-currency": { "fontFamily": "var(--font-mono)" },
+      ".caps-field[data-orientation=\"horizontal\"] > .caps-field-row": {
+        "--caps-field-control-width": "16rem"
+      },
+      ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-copy": {
+        "minWidth": "6rem"
+      },
+      ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-lead": {
+        "minWidth": "calc(6rem + var(--caps-field-icon-size) + var(--spacing-sm))"
+      },
+      "@media (max-width: 480px)": {
+        ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+          "flexDirection": "column",
+          "alignItems": "stretch",
+          "gap": "var(--spacing-xs)",
+          "--caps-field-control-width": "100%"
+        }
+      },
+      ".list-row > .caps-field": { "gridColumn": "1 / -1" },
+      ".caps-field:has(> .caps-field-row > .caps-field-lead)\n    > .caps-field-error-reveal": {
+        "paddingInlineStart": "calc(var(--caps-field-icon-size) + var(--spacing-sm))"
+      },
+      ".caps-field > .caps-field-error-reveal .caps-field-error": {
+        "paddingTop": "var(--spacing-xs)"
+      },
+      ".caps-field[data-orientation=\"inline\"] > .caps-field-row": {
+        "alignItems": "flex-start",
+        "justifyContent": "flex-start",
+        "gap": "var(--spacing-sm)"
+      },
+      ".caps-field[data-orientation=\"inline\"] > .caps-field-row > .caps-field-copy": {
+        "fontSize": "var(--caps-control-label-size, var(--text-sm))",
+        "lineHeight": 1.5,
+        "--caps-field-label-inset": "max(0px, calc((24px - 1lh) / 2))",
+        "paddingBlockStart": "var(--caps-field-label-inset)"
+      },
+      ".caps-fieldset": {
+        "minWidth": "0",
+        "margin": "0",
+        "padding": "0",
+        "border": "0"
+      },
+      ".caps-fieldset-legend": {
+        "padding": "0",
+        "marginBottom": "var(--spacing-xs)",
+        "fontFamily": "var(--caps-control-label-font, inherit)",
+        "fontSize": "var(--caps-control-label-size, var(--text-sm))",
+        "letterSpacing": "var(--caps-control-label-tracking, inherit)",
+        "textTransform": "var(--caps-control-label-case, inherit)",
+        "fontWeight": 600,
+        "lineHeight": 1.5,
+        "color": "var(--color-base-content)"
+      },
+      ".caps-fieldset-description": {
+        "margin": "0",
+        "fontSize": "var(--text-xs)",
+        "lineHeight": 1.5,
+        "color": "var(--stipe-fg-muted)"
+      },
+      ".caps-fieldset-fields": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "var(--spacing-sm)",
+        "marginTop": "var(--spacing-sm)",
+        "minWidth": "0"
+      },
+      ".caps-field[data-orientation=\"inline\"] > .caps-field-error-reveal": {
+        "paddingInlineStart": "calc(var(--spacing-xl) + var(--spacing-sm))"
+      },
+      ".caps-form-footer .caps-field-error": {
+        "paddingBottom": "var(--spacing-sm)"
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        ".caps-field-error-reveal,.caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n      > .caps-collapse-clip": {
+          "transition": "none !important"
+        }
+      },
+      ".caps-field-copy": { "flex": 1 }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

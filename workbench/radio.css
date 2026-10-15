@@ -1,0 +1,26 @@
+.radio-study-magnified {
+  gap: var(--spacing-2xl);
+}
+.radio-study-magnified label {
+  display: grid;
+  justify-items: center;
+  gap: var(--spacing-lg);
+  font-size: 12px;
+  cursor: pointer;
+}
+.radio-study-magnified .caps-radio {
+  width: 96px;
+  height: 96px;
+}
+.radio-study .status-study-code {
+  margin-top: var(--spacing-xl);
+}
+@media (max-width: 600px) {
+  .radio-study-magnified {
+    gap: var(--spacing-lg);
+  }
+  .radio-study-magnified .caps-radio {
+    width: 72px;
+    height: 72px;
+  }
+}

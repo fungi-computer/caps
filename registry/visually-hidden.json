@@ -1,0 +1,30 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "visually-hidden",
+  "type": "registry:ui",
+  "title": "Visually Hidden",
+  "description": "Visually hides content while retaining it for assistive technology.",
+  "dependencies": [
+    "@radix-ui/react-slot",
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/visually-hidden.tsx",
+      "type": "registry:ui",
+      "target": "@ui/visually-hidden.tsx",
+      "content": "import { Slot } from \"@radix-ui/react-slot\";\nimport { forwardRef, type HTMLAttributes } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by VisuallyHidden. */\nexport type VisuallyHiddenProps = {\n  asChild?: boolean;\n} & HTMLAttributes<HTMLElement>;\n\n/** Content visually hidden while remaining available to assistive technology. */\nexport const VisuallyHidden = forwardRef<HTMLElement, VisuallyHiddenProps>(\n  function VisuallyHidden({ asChild = false, className, ...props }, ref) {\n    const classes = cn(\n      \"absolute h-px w-px overflow-hidden whitespace-nowrap border-0 p-0 [clip:rect(0,0,0,0)]\",\n      className,\n    );\n    if (asChild) return <Slot {...props} className={classes} ref={ref} />;\n    return <span {...props} className={classes} ref={ref} />;\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

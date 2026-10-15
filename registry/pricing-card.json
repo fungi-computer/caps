@@ -1,0 +1,134 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pricing-card",
+  "type": "registry:block",
+  "title": "Pricing Card",
+  "description": "Plan data and caller-owned feature, status, and action slots.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": ["@shiit/card"],
+  "files": [
+    {
+      "path": "../src/blocks/pricing-card.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/pricing-card.tsx",
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n  type CardProps,\n} from \"@/components/ui/card\";\nimport { cn } from \"@/lib/cn\";\n\n/** Caller-provided pricing plan data. */\nexport type PricingPlan = {\n  name: ReactNode;\n  description?: ReactNode;\n  price?: ReactNode;\n  interval?: ReactNode;\n};\n\n/** Supported PricingCard layouts. */\nexport type PricingCardLayout = \"stacked\" | \"banded\";\n\n/** Props accepted by PricingCard. */\nexport type PricingCardProps = HTMLAttributes<HTMLDivElement> & {\n  plan: PricingPlan;\n  /** Caller-owned feature rows. */\n  features?: ReactNode;\n  /** Caller-owned action control; this block never invokes or configures it. */\n  action?: ReactNode;\n  /** Caller-owned status content, such as a badge. */\n  status?: ReactNode;\n  /** Caller-owned illustration, such as an `img` with its own alt text. */\n  art?: ReactNode;\n  /**\n   * `stacked` groups the title and price in the header. `banded` places the\n   * name above the illustration and keeps the price on one line.\n   */\n  layout?: PricingCardLayout;\n  /** Marks the one plan a page recommends with a heavier shadow. */\n  featured?: boolean;\n  /** Use tighter section spacing for dense plan comparisons. */\n  density?: CardProps[\"density\"];\n};\n\n/** Displays supplied plan data and slots; checkout and policy stay with the host. */\nexport const PricingCard = forwardRef<HTMLDivElement, PricingCardProps>(\n  function PricingCard(\n    {\n      action,\n      art,\n      className,\n      density,\n      featured = false,\n      features,\n      plan,\n      status,\n      layout = \"stacked\",\n      ...rootProps\n    },\n    ref,\n  ) {\n    const banded = layout === \"banded\";\n    const title = (\n      <div\n        className={\n          banded\n            ? \"caps-pricing-card-band\"\n            : \"flex w-full items-start justify-between gap-lg\"\n        }\n      >\n        <CardTitle className=\"caps-pricing-card-name\">{plan.name}</CardTitle>\n        {status}\n      </div>\n    );\n    return (\n      <Card\n        {...rootProps}\n        className={cn(\n          \"caps-pricing-card\",\n          banded && \"caps-pricing-card-banded\",\n          className,\n        )}\n        data-featured={featured ? \"true\" : undefined}\n        ref={ref}\n        variant=\"outline\"\n        {...(density ? { density } : {})}\n      >\n        {banded ? title : null}\n        {art !== undefined ? (\n          <figure className=\"caps-pricing-card-art\">{art}</figure>\n        ) : null}\n        {banded ? (\n          <CardHeader>\n            <div className=\"caps-pricing-card-price\">\n              {plan.price !== undefined ? <strong>{plan.price}</strong> : null}\n              {plan.interval !== undefined ? (\n                <span>{plan.interval}</span>\n              ) : null}\n            </div>\n            {plan.description ? (\n              <CardDescription className=\"caps-pricing-card-description\">\n                {plan.description}\n              </CardDescription>\n            ) : null}\n          </CardHeader>\n        ) : (\n          <CardHeader>\n            {title}\n            {plan.description ? (\n              <CardDescription className=\"caps-pricing-card-description\">\n                {plan.description}\n              </CardDescription>\n            ) : null}\n            {plan.price !== undefined ? (\n              <div className=\"text-3xl font-semibold\">{plan.price}</div>\n            ) : null}\n            {plan.interval !== undefined ? (\n              <div className=\"text-sm text-base-content\">{plan.interval}</div>\n            ) : null}\n          </CardHeader>\n        )}\n        {features !== undefined ? (\n          <CardContent className=\"caps-pricing-card-features\">\n            {features}\n          </CardContent>\n        ) : null}\n        {action !== undefined ? (\n          <CardFooter className=\"caps-pricing-card-action\">{action}</CardFooter>\n        ) : null}\n      </Card>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-card-grid > .caps-pricing-card": { "height": "100%" },
+      ".caps-pricing-card-banded": {
+        "--caps-pricing-card-offset": "var(--spacing-xs)",
+        "display": "flex",
+        "flexDirection": "column",
+        "border": "calc(var(--border) * 2) solid var(--color-base-content)",
+        "background": "var(--color-base-100)",
+        "boxShadow": "var(\n      --caps-pricing-shadow,\n      calc(var(--caps-pricing-card-offset) * 1.5)\n        calc(var(--caps-pricing-card-offset) * 1.5) 0\n        color-mix(in oklab, var(--color-base-content) 30%, transparent)\n    )"
+      },
+      ".caps-pricing-card-banded[data-featured=\"true\"]": {
+        "boxShadow": "var(\n      --caps-pricing-shadow-featured,\n      calc(var(--caps-pricing-card-offset) * 2)\n        calc(var(--caps-pricing-card-offset) * 2) 0 var(--color-base-content)\n    )"
+      },
+      ".caps-pricing-card-band": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "baseline",
+        "justifyContent": "space-between",
+        "gap": "var(--spacing-sm)",
+        "padding": "var(--spacing-sm) var(--spacing-lg)",
+        "background": "var(--caps-pricing-band, var(--color-base-content))",
+        "color": "var(--caps-pricing-band-ink, var(--color-base-100))",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "var(--text-xs)",
+        "letterSpacing": "0.06em",
+        "textTransform": "uppercase"
+      },
+      ".caps-pricing-card-band .caps-pricing-card-name": {
+        "fontFamily": "inherit",
+        "fontSize": "inherit",
+        "fontWeight": "inherit",
+        "letterSpacing": "inherit"
+      },
+      ".caps-pricing-card-art": {
+        "margin": "0",
+        "borderBottom": "calc(var(--border) * 2) solid var(--color-base-content)",
+        "background": "var(--color-base-100)",
+        "lineHeight": 0
+      },
+      ".caps-pricing-card-art img": {
+        "display": "block",
+        "width": "100%",
+        "height": "auto",
+        "aspectRatio": "4 / 3",
+        "objectFit": "cover",
+        "imageRendering": "pixelated",
+        "filter": "var(--caps-print-filter, none)"
+      },
+      ".caps-pricing-card-price": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "baseline",
+        "gap": "var(--spacing-xs)"
+      },
+      ".caps-pricing-card-price strong": {
+        "fontSize": "var(--text-4xl)",
+        "fontWeight": 400,
+        "lineHeight": 1
+      },
+      ".caps-pricing-card-price span": { "fontSize": "var(--text-sm)" },
+      ".caps-pricing-card-banded .caps-pricing-card-price": {
+        "fontFamily": "var(--font-mono)"
+      },
+      ".caps-pricing-card-banded .caps-pricing-card-description": {
+        "paddingBottom": "var(--spacing-md)",
+        "borderBottom": "var(--border) solid var(--stipe-hairline)",
+        "color": "var(--color-base-content)",
+        "fontSize": "var(--text-base)"
+      },
+      ".caps-pricing-card-banded .caps-pricing-card-features ul": {
+        "display": "grid",
+        "alignContent": "start",
+        "gap": "var(--spacing-sm)",
+        "margin": "0",
+        "padding": "0",
+        "listStyle": "none",
+        "fontSize": "var(--text-sm)"
+      },
+      ".caps-pricing-card-banded .caps-pricing-card-features li": {
+        "display": "grid",
+        "gridTemplateColumns": "1.1em 1fr",
+        "gap": "var(--spacing-xs)",
+        "lineHeight": 1.5
+      },
+      ".caps-pricing-card-banded .caps-pricing-card-features li::before": {
+        "content": "\"■\"",
+        "fontSize": "0.7em",
+        "lineHeight": 2.1
+      },
+      ".caps-pricing-card-banded .caps-pricing-card-action": {
+        "marginTop": "auto",
+        "borderTop": "0",
+        "background": "none",
+        "paddingTop": "0"
+      },
+      ".caps-pricing-card-banded .caps-pricing-card-action > *": { "flex": 1 }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

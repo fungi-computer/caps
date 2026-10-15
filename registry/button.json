@@ -1,0 +1,261 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button",
+  "type": "registry:ui",
+  "title": "Button",
+  "description": "Daisy-backed action button with variants, sizes, refs, and native props.",
+  "dependencies": [
+    "@radix-ui/react-slot",
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": ["@shiit/loader"],
+  "files": [
+    {
+      "path": "../src/components/button.tsx",
+      "type": "registry:ui",
+      "target": "@ui/button.tsx",
+      "content": "import { Slot } from \"@radix-ui/react-slot\";\nimport {\n  forwardRef,\n  useEffect,\n  useImperativeHandle,\n  useLayoutEffect,\n  useRef,\n  useState,\n  type ButtonHTMLAttributes,\n  type ElementRef,\n  type ReactNode,\n  type RefObject,\n} from \"react\";\n\nimport { cn, cva } from \"@/lib/cn\";\nimport {\n  canAnimate,\n  motionEasing,\n  readMotion,\n  useReducedMotion,\n  type Motion,\n} from \"@/lib/motion\";\nimport { Loader } from \"./loader.js\";\n\n/** Supported Button visual variants. */\nexport type ButtonVariant =\n  | \"primary\"\n  | \"secondary\"\n  | \"accent\"\n  | \"destructive\"\n  | \"outline\"\n  | \"ghost\"\n  /** Quiet text that turns to the error colour on hover or focus, e.g. Stop. */\n  | \"ghost-destructive\"\n  | \"link\";\n/** Supported ButtonSize values. */\nexport type ButtonSize = \"xs\" | \"sm\" | \"default\" | \"lg\" | \"icon\" | \"menubar\";\n\n/** Outline and link controls keep a neutral disabled plate behind a hairline. */\nconst disabledPlate =\n  \"disabled:bg-base-200 disabled:text-base-content disabled:outline-1 disabled:outline-solid disabled:outline-base-content/25 aria-disabled:bg-base-200 aria-disabled:text-base-content aria-disabled:outline-1 aria-disabled:outline-solid aria-disabled:outline-base-content/25\";\n\nconst buttonVariants = cva(\"btn caps-button disabled:pointer-events-none\", {\n  variants: {\n    variant: {\n      primary: \"btn-primary caps-button-filled\",\n      secondary: \"btn-secondary caps-button-filled\",\n      accent: \"btn-accent caps-button-filled\",\n      destructive: \"btn-error caps-button-filled\",\n      outline: `btn-outline ${disabledPlate}`,\n      // A faceless ghost stays faceless when disabled: Caps dims its ink.\n      ghost: \"btn-ghost\",\n      \"ghost-destructive\": \"btn-ghost caps-button-ghost-destructive\",\n      link: `btn-link ${disabledPlate}`,\n    },\n    size: {\n      xs: \"btn-xs\",\n      sm: \"btn-sm\",\n      default: \"btn-md\",\n      lg: \"btn-lg\",\n      icon: \"btn-square btn-md\",\n      menubar: \"caps-button-menubar\",\n    },\n  },\n  defaultVariants: { variant: \"primary\", size: \"default\" },\n});\n\n/** The outcome of a Button's last action. */\nexport type ButtonResult = \"done\" | \"failed\";\n\n/** Props accepted by Button. */\nexport type ButtonProps = {\n  asChild?: boolean;\n  loading?: boolean;\n  /**\n   * The outcome of the last action. Becoming `done` plays a short beat: a\n   * check (and `resultLabel`) springs in, holds, then settles back to the\n   * label. Becoming `failed` shakes the label by the theme's\n   * `--stipe-motion-shake`. Say what failed elsewhere, next to the action.\n   */\n  result?: ButtonResult | undefined;\n  /** What the done beat says, such as \"Installed\". The button keeps the wider of its two labels, so nothing shifts. */\n  resultLabel?: ReactNode;\n  /**\n   * Called when the done beat has held long enough to read, just before it\n   * would settle back to the label. Replace the button here to hand off to\n   * what comes next (an \"Installed\" mark, an \"Open\" action).\n   */\n  onResultEnd?: (() => void) | undefined;\n  size?: ButtonSize;\n  variant?: ButtonVariant;\n} & ButtonHTMLAttributes<HTMLButtonElement>;\n\n/** A reusable button with caller-controlled native behavior and intrinsic loading presentation. */\nexport const Button = forwardRef<HTMLButtonElement, ButtonProps>(\n  function Button(\n    {\n      asChild = false,\n      children,\n      className,\n      disabled,\n      loading = false,\n      result,\n      resultLabel,\n      onResultEnd,\n      size = \"default\",\n      variant = \"primary\",\n      ...props\n    },\n    ref,\n  ) {\n    const classes = cn(buttonVariants({ size, variant }), className);\n    // A result present when the button first mounts is history, not news.\n    const mountedResult = useRef(result).current;\n    const node = useRef<HTMLButtonElement>(null);\n    useImperativeHandle<HTMLButtonElement | null, HTMLButtonElement | null>(\n      ref,\n      () => node.current,\n    );\n    // Text labels compare by value; element labels re-measure each render.\n    useWidthTween(node, [loading, result, children]);\n    if (asChild) {\n      return (\n        <Slot\n          {...props}\n          aria-busy={loading ? true : props[\"aria-busy\"]}\n          aria-disabled={disabled === true || loading ? true : undefined}\n          className={classes}\n          ref={node}\n        >\n          {children}\n        </Slot>\n      );\n    }\n    return (\n      <button\n        {...props}\n        aria-busy={loading ? true : props[\"aria-busy\"]}\n        className={classes}\n        disabled={disabled === true || loading}\n        ref={node}\n        type={props.type ?? \"button\"}\n      >\n        {result === undefined && resultLabel === undefined ? (\n          <>\n            {loading ? (\n              <Loader className=\"size-3\" decorative size=\"sm\" />\n            ) : null}\n            {children}\n          </>\n        ) : (\n          <ResultFaces\n            label={resultLabel}\n            loading={loading}\n            onResultEnd={onResultEnd}\n            result={result}\n            settled={mountedResult}\n          >\n            {children}\n          </ResultFaces>\n        )}\n      </button>\n    );\n  },\n);\n\n/**\n * When a button's label changes (loading, a result, new text) its width eases\n * to the new size instead of jumping, so neighbours never lurch.\n */\nfunction useWidthTween(\n  node: RefObject<HTMLButtonElement | null>,\n  label: readonly unknown[],\n) {\n  const width = useRef<number | null>(null);\n  const tween = useRef<Animation | null>(null);\n  useLayoutEffect(() => {\n    const element = node.current;\n    if (!element) return;\n    const running = tween.current;\n    const from = running\n      ? element.getBoundingClientRect().width\n      : width.current;\n    running?.cancel();\n    tween.current = null;\n    const to = element.getBoundingClientRect().width;\n    width.current = to;\n    if (from === null || Math.abs(from - to) < 1 || !canAnimate(element))\n      return;\n    const motion = readMotion(element);\n    if (motion.reduced) return;\n    const animation = element.animate(\n      [{ width: `${String(from)}px` }, { width: `${String(to)}px` }],\n      { duration: motion.normal, easing: motionEasing(motion, motion.ease) },\n    );\n    tween.current = animation;\n    // Content wider than the moving edge is clipped, never spilled or wrapped.\n    element.style.overflow = \"clip\";\n    element.style.whiteSpace = \"nowrap\";\n    const done = () => {\n      if (tween.current !== animation) return;\n      tween.current = null;\n      element.style.removeProperty(\"overflow\");\n      element.style.removeProperty(\"white-space\");\n    };\n    animation.onfinish = done;\n    animation.oncancel = done;\n  }, [node, ...label]);\n}\n\n/** How long the done beat holds before settling: long enough to read. */\nconst resultHoldMs = 1100;\n\nfunction pop(faces: HTMLElement, motion: Motion) {\n  // One overshoot sized by the theme's bounce; a calm theme just nods.\n  const liveliness = motion.bounce / 0.3;\n  const lift = 1 + 0.05 * Math.min(1.4, 0.4 + liveliness);\n  const dip = 1 - 0.02 * Math.min(1.4, liveliness);\n  return faces.animate(\n    [\n      { transform: \"scale(1)\" },\n      { transform: `scale(${String(lift)})`, offset: 0.35 },\n      { transform: `scale(${String(dip)})`, offset: 0.7 },\n      { transform: \"scale(1)\" },\n    ],\n    {\n      duration: motion.springDuration,\n      easing: motionEasing(motion, \"ease-out\"),\n    },\n  );\n}\n\nfunction shake(faces: HTMLElement, motion: Motion) {\n  const x = motion.shake;\n  return faces.animate(\n    [\n      { transform: \"none\" },\n      { transform: `translateX(${String(-x)}px)` },\n      { transform: `translateX(${String(x)}px)` },\n      { transform: `translateX(${String(-x * 0.6)}px)` },\n      { transform: `translateX(${String(x * 0.3)}px)` },\n      { transform: \"none\" },\n    ],\n    { duration: motion.slow * 1.3, easing: motionEasing(motion, \"linear\") },\n  );\n}\n\nfunction swapFaces(\n  leaving: HTMLElement,\n  arriving: HTMLElement,\n  motion: Motion,\n) {\n  const travel = motion.distance + 2;\n  const blur = `blur(${String(motion.blur)}px)`;\n  return [\n    leaving.animate(\n      [\n        { opacity: 1, transform: \"none\", filter: \"blur(0px)\" },\n        {\n          opacity: 0,\n          transform: `translateY(${String(-travel)}px)`,\n          filter: blur,\n        },\n      ],\n      {\n        duration: motion.fast,\n        // A label rolls away at once; an ease-in would linger on stale text.\n        easing: motionEasing(motion, motion.ease),\n      },\n    ),\n    arriving.animate(\n      [\n        {\n          opacity: 0,\n          transform: `translateY(${String(travel)}px)`,\n          filter: blur,\n        },\n        { opacity: 1, transform: \"none\", filter: \"blur(0px)\" },\n      ],\n      {\n        duration: motion.normal,\n        easing: motionEasing(motion, motion.ease),\n        fill: \"backwards\",\n      },\n    ),\n  ];\n}\n\n/** @internal The label and result faces of a Button with a result beat. */\nfunction ResultFaces({\n  children,\n  label,\n  loading,\n  onResultEnd,\n  result,\n  settled,\n}: {\n  children: ReactNode;\n  label: ReactNode;\n  loading: boolean;\n  onResultEnd: (() => void) | undefined;\n  result: ButtonResult | undefined;\n  settled: ButtonResult | undefined;\n}) {\n  const faces = useRef<HTMLSpanElement>(null);\n  const reduced = useReducedMotion();\n  const [showing, setShowing] = useState(false);\n  // The result face exists only for its beat, so it never lingers as hidden\n  // text in the button.\n  const [resultMounted, setResultMounted] = useState(false);\n  if (showing && !resultMounted) setResultMounted(true);\n  const previous = useRef(settled);\n  const ended = useRef(onResultEnd);\n  useEffect(() => {\n    ended.current = onResultEnd;\n  }, [onResultEnd]);\n\n  // Before paint, so the label never flashes ahead of the beat.\n  useLayoutEffect(() => {\n    const before = previous.current;\n    previous.current = result;\n    if (result === before) return;\n    if (result === \"done\") {\n      setShowing(true);\n      const settle = setTimeout(() => {\n        // A caller that hands off keeps the result face until it replaces\n        // the button; otherwise the beat settles back to the label.\n        if (ended.current) ended.current();\n        else setShowing(false);\n      }, resultHoldMs);\n      return () => {\n        clearTimeout(settle);\n      };\n    }\n    setShowing(false);\n    const element = faces.current;\n    if (result !== \"failed\" || !element || !canAnimate(element)) return;\n    const motion = readMotion(element);\n    if (motion.shake <= 0) return;\n    const refusal = shake(element, motion);\n    return () => {\n      refusal.cancel();\n    };\n  }, [result, reduced]);\n\n  const shown = useRef(showing);\n  useLayoutEffect(() => {\n    const element = faces.current;\n    if (!element || shown.current === showing) return;\n    shown.current = showing;\n    const labelFace = element.querySelector<HTMLElement>('[data-face=\"label\"]');\n    const resultFace = element.querySelector<HTMLElement>(\n      '[data-face=\"result\"]',\n    );\n    if (!labelFace || !resultFace || !canAnimate(element)) {\n      if (!showing) setResultMounted(false);\n      return;\n    }\n    const motion = readMotion(element);\n    const animations = showing\n      ? swapFaces(labelFace, resultFace, motion)\n      : swapFaces(resultFace, labelFace, motion);\n    if (!showing)\n      animations[0]?.addEventListener(\"finish\", () => {\n        setResultMounted(false);\n      });\n    if (showing && !motion.reduced) {\n      animations.push(pop(element.closest(\"button\") ?? element, motion));\n      const tick = resultFace.querySelector<SVGPathElement>(\"path\");\n      if (tick)\n        animations.push(\n          tick.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {\n            duration: motion.normal * 1.4,\n            delay: motion.fast / 2,\n            easing: motionEasing(motion, motion.ease),\n            fill: \"backwards\",\n          }),\n        );\n    }\n    return () => {\n      for (const animation of animations) animation.cancel();\n    };\n  }, [showing, reduced]);\n\n  return (\n    <span\n      ref={faces}\n      className=\"caps-button-faces\"\n      data-showing={showing ? \"result\" : \"label\"}\n    >\n      <span\n        className=\"caps-button-face\"\n        data-face=\"label\"\n        aria-hidden={showing ? true : undefined}\n      >\n        {loading || showing ? (\n          <Loader className=\"size-3\" decorative size=\"sm\" />\n        ) : null}\n        {children}\n      </span>\n      {resultMounted ? (\n        <span\n          className=\"caps-button-face\"\n          data-face=\"result\"\n          aria-hidden={showing ? undefined : true}\n        >\n          <svg\n            className=\"caps-button-check\"\n            viewBox=\"0 0 24 24\"\n            aria-hidden=\"true\"\n            focusable=\"false\"\n          >\n            <path d=\"M4.5 12.5 9.5 17.5 19.5 6.5\" pathLength={1} />\n          </svg>\n          {label === undefined ? children : label}\n        </span>\n      ) : null}\n    </span>\n  );\n}\n\n/** The native element type used by Button. */\nexport type ButtonElement = ElementRef<\"button\">;\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    },
+    {
+      "path": "../src/lib/motion.ts",
+      "type": "registry:lib",
+      "target": "@lib/motion.ts",
+      "content": "import {\n  useLayoutEffect,\n  useState,\n  useSyncExternalStore,\n  type RefObject,\n} from \"react\";\n\n/** Resolved, element-scoped motion. Times are milliseconds and distances pixels. */\nexport type Motion = Readonly<{\n  reduced: boolean;\n  squish: number;\n  fast: number;\n  normal: number;\n  slow: number;\n  springDuration: number;\n  bounce: number;\n  stretch: number;\n  distance: number;\n  stagger: number;\n  blur: number;\n  shake: number;\n  steps: number;\n  fuse: number;\n  pressDepth: number;\n  pressScale: number;\n  ease: string;\n  easeExit: string;\n}>;\n\nconst defaults: Motion = Object.freeze({\n  reduced: false,\n  squish: 90,\n  fast: 120,\n  normal: 180,\n  slow: 280,\n  springDuration: 320,\n  bounce: 0.3,\n  stretch: 0.28,\n  distance: 4,\n  stagger: 24,\n  blur: 0,\n  shake: 3,\n  steps: 0,\n  fuse: 1,\n  pressDepth: 0.5,\n  pressScale: 1,\n  ease: \"cubic-bezier(0.2, 0, 0, 1)\",\n  easeExit: \"cubic-bezier(0.4, 0, 1, 1)\",\n});\n\nconst preference = \"(prefers-reduced-motion: reduce)\";\n\n/** Read at an event boundary; no root-theme lookup, so nested tokens win. */\nexport function readMotion(element: Element): Motion {\n  const view = element.ownerDocument.defaultView;\n  if (!view) return defaults;\n  const style = view.getComputedStyle(element);\n  const number = (name: string, fallback: number) => {\n    const value = style.getPropertyValue(name).trim();\n    const parsed = Number.parseFloat(value);\n    return Number.isFinite(parsed) ? Math.max(0, parsed) : fallback;\n  };\n  const time = (name: string, fallback: number) => {\n    const value = style.getPropertyValue(name).trim();\n    return (\n      number(name, fallback) *\n      (value.endsWith(\"s\") && !value.endsWith(\"ms\") ? 1000 : 1)\n    );\n  };\n  const browser: Partial<Pick<Window, \"matchMedia\">> = view;\n  const reduced = browser.matchMedia?.(preference).matches ?? false;\n  const duration = (name: string, fallback: number) =>\n    reduced ? 120 : time(`--stipe-motion-${name}`, fallback);\n  const amount = (name: string, fallback: number) =>\n    reduced ? 0 : number(`--stipe-motion-${name}`, fallback);\n  return {\n    reduced,\n    squish: duration(\"squish\", defaults.squish),\n    fast: duration(\"fast\", defaults.fast),\n    normal: duration(\"normal\", defaults.normal),\n    slow: duration(\"slow\", defaults.slow),\n    springDuration: duration(\"spring-duration\", defaults.springDuration),\n    bounce: Math.min(1, amount(\"bounce\", defaults.bounce)),\n    stretch: amount(\"stretch\", defaults.stretch),\n    distance: amount(\"distance\", defaults.distance),\n    stagger: reduced ? 0 : time(\"--stipe-motion-stagger\", defaults.stagger),\n    blur: amount(\"blur\", defaults.blur),\n    shake: amount(\"shake\", defaults.shake),\n    steps: Math.floor(amount(\"steps\", defaults.steps)),\n    fuse: number(\"--stipe-motion-fuse\", defaults.fuse),\n    pressDepth: reduced\n      ? 0\n      : number(\"--stipe-press-depth\", defaults.pressDepth),\n    pressScale: reduced\n      ? 1\n      : number(\"--stipe-press-scale\", defaults.pressScale),\n    ease: style.getPropertyValue(\"--stipe-motion-ease\").trim() || defaults.ease,\n    easeExit:\n      style.getPropertyValue(\"--stipe-motion-ease-exit\").trim() ||\n      defaults.easeExit,\n  };\n}\n\n/** Live motion tokens for a mounted ref, including nested theme and OS changes. */\nexport function useMotion(ref: RefObject<Element | null>): Motion {\n  const [motion, setMotion] = useState<Motion>(() => ({\n    ...defaults,\n    reduced: true,\n  }));\n  useLayoutEffect(() => {\n    const element = ref.current;\n    const view = element?.ownerDocument.defaultView;\n    if (!element || !view) return;\n    const update = () => {\n      const next = readMotion(element);\n      setMotion((previous) =>\n        JSON.stringify(previous) === JSON.stringify(next) ? previous : next,\n      );\n    };\n    update();\n    const observer = new view.MutationObserver(update);\n    // Observe ancestors only: animation writes to descendants must not trigger reads.\n    for (\n      let parent: Element | null = element;\n      parent;\n      parent = parent.parentElement\n    ) {\n      observer.observe(parent, {\n        attributes: true,\n        attributeFilter: [\"data-theme\", \"class\", \"style\"],\n      });\n    }\n    const browser: Partial<Pick<Window, \"matchMedia\">> = view;\n    const media = browser.matchMedia?.(preference);\n    media?.addEventListener(\"change\", update);\n    return () => {\n      observer.disconnect();\n      media?.removeEventListener(\"change\", update);\n    };\n  }, [ref]);\n  return motion;\n}\n\n/** Today's feel: the defaults that components' authored timings are written against. */\nexport const motionDefaults: Motion = defaults;\n\n/**\n * Scale one of a component's authored durations by the theme's tempo\n * (`--stipe-motion-normal` against its 180ms default). Today's themes return\n * the authored value unchanged; reduced motion returns 0 (nothing travels).\n */\nexport function motionTime(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  return Math.round((authored * motion.normal) / defaults.normal);\n}\n\n/**\n * Scale one of a component's authored spring bounces by the theme's bounce\n * (`--stipe-motion-bounce` against its 0.3 default), so a lively control stays\n * livelier than a calm one inside every theme. A 0 theme is critically damped.\n */\nexport function motionBounce(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  const scaled = (authored * motion.bounce) / defaults.bounce;\n  return Math.min(0.9, Math.max(0, scaled));\n}\n\n/** Scale an authored spring settle time by `--stipe-motion-spring-duration`. */\nexport function motionSpringTime(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  return Math.round(\n    (authored * motion.springDuration) / defaults.springDuration,\n  );\n}\n\n/** A CSS easing for a Web Animation, stepped when the theme asks for it. */\nexport function motionEasing(motion: Motion, ease: string): string {\n  return motion.steps > 0 ? `steps(${String(motion.steps)}, end)` : ease;\n}\n\n/** Whether the element can run Web Animations (not in jsdom or old engines). */\nexport function canAnimate(element: Element): boolean {\n  return \"animate\" in element;\n}\n\nconst globalWindow: Partial<Pick<Window, \"matchMedia\">> = globalThis;\n\nfunction prefersReducedMotion(): boolean {\n  return globalWindow.matchMedia?.(preference).matches ?? false;\n}\n\nfunction subscribeReducedMotion(update: () => void) {\n  const media = globalWindow.matchMedia?.(preference);\n  media?.addEventListener(\"change\", update);\n  return () => {\n    media?.removeEventListener(\"change\", update);\n  };\n}\n\n/** Server renders assume reduced motion, so hydration never starts mid-move. */\nfunction serverReducedMotion() {\n  return true;\n}\n\n/**\n * The live reduced-motion preference alone, for controls that only need to\n * know whether to move (their timing comes from `readMotion` when they do).\n */\nexport function useReducedMotion(): boolean {\n  return useSyncExternalStore(\n    subscribeReducedMotion,\n    prefersReducedMotion,\n    serverReducedMotion,\n  );\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-button.btn-link:not(:disabled):not([aria-disabled=\"true\"])": {
+        "color": "var(--caps-primary-text)"
+      },
+      ".caps-button.btn-ghost:is(:disabled, [aria-disabled=\"true\"])": {
+        "--btn-fg": "var(--caps-disabled-ink)",
+        "color": "var(--caps-disabled-ink)",
+        "backgroundColor": "transparent",
+        "borderColor": "transparent",
+        "outline": "none",
+        "boxShadow": "none"
+      },
+      ".caps-game-share-action.caps-button": {
+        "width": "100%",
+        "minHeight": "3rem",
+        "fontSize": "var(--text-base)",
+        "fontWeight": 800
+      },
+      ".caps-button-faces": {
+        "display": "inline-grid",
+        "placeItems": "center",
+        "gap": "inherit"
+      },
+      ".caps-button-face": {
+        "display": "inline-flex",
+        "gridArea": "1 / 1",
+        "alignItems": "center",
+        "gap": "inherit",
+        "whiteSpace": "nowrap"
+      },
+      ".caps-button-faces[data-showing=\"result\"] > [data-face=\"label\"],.caps-button-faces[data-showing=\"label\"] > [data-face=\"result\"]": {
+        "opacity": 0
+      },
+      ".caps-button-check": {
+        "width": "1.1em",
+        "height": "1.1em",
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": 2.5,
+        "strokeLinecap": "round",
+        "strokeLinejoin": "round",
+        "strokeDasharray": "1"
+      },
+      ".caps-button:focus-visible": {
+        "outline": "2px solid var(--color-base-content)",
+        "outlineOffset": "3px"
+      },
+      ".caps-button-ghost-destructive:is(:hover, :focus-visible)": {
+        "color": "var(--color-error)"
+      },
+      ".caps-button:disabled": { "opacity": 1 },
+      ".caps-button-filled,.caps-button.btn-outline": {
+        "borderWidth": "var(--caps-button-border-width, var(--border))",
+        "fontWeight": "var(--caps-button-weight, 600)",
+        "clipPath": "var(--caps-button-cut, none)",
+        "borderColor": "var(--caps-button-border-color, var(--btn-border))"
+      },
+      ".caps-button-filled:not(.btn-circle),.caps-button.btn-outline:not(.btn-circle)": {
+        "paddingInline": "var(--caps-button-padding, var(--btn-p))",
+        "borderStartStartRadius": "var(\n      --join-ss,\n      var(--caps-button-radius, var(--radius-field))\n    )",
+        "borderStartEndRadius": "var(\n      --join-se,\n      var(--caps-button-radius, var(--radius-field))\n    )",
+        "borderEndStartRadius": "var(\n      --join-es,\n      var(--caps-button-radius, var(--radius-field))\n    )",
+        "borderEndEndRadius": "var(\n      --join-ee,\n      var(--caps-button-radius, var(--radius-field))\n    )"
+      },
+      ".caps-button-filled.btn-square,.caps-button.btn-outline.btn-square": {
+        "paddingInline": "var(--caps-button-padding, 0)"
+      },
+      ".caps-button:not(.btn-ghost):not(.caps-button-filled):is(\n      :disabled,\n      [aria-disabled=\"true\"]\n    )": {
+        "borderColor": "var(--caps-button-border-color, var(--color-base-300))",
+        "boxShadow": "var(--caps-button-drop, none)"
+      },
+      ".caps-button.btn-outline": {
+        "position": "var(--caps-button-outline-position, revert-layer)",
+        "isolation": "var(--caps-button-outline-isolation, auto)",
+        "--btn-border": "color-mix(\n      in oklab,\n      var(--color-base-content) 24%,\n      transparent\n    )",
+        "fontWeight": "var(--caps-button-weight, 500)",
+        "boxShadow": "var(--caps-button-outline-drop, var(--caps-button-drop, none))"
+      },
+      ".caps-button.btn-outline:not(:disabled):not([aria-disabled=\"true\"])": {
+        "backgroundColor": "var(--caps-button-outline-face, revert-layer)",
+        "color": "var(--caps-button-outline-ink, revert-layer)"
+      },
+      ".caps-button.btn-outline:is(:disabled, [aria-disabled=\"true\"])": {
+        "backgroundColor": "var(\n      --caps-button-outline-disabled-face,\n      var(--color-base-200)\n    )"
+      },
+      ".caps-button.btn-outline:not(:disabled):not([aria-disabled=\"true\"]):hover": {
+        "backgroundColor": "var(\n      --caps-button-outline-hover-face,\n      var(--caps-button-outline-face, revert-layer)\n    )",
+        "color": "var(\n      --caps-button-outline-hover-ink,\n      var(--caps-button-outline-ink, revert-layer)\n    )"
+      },
+      ".caps-button.btn-outline::before": {
+        "content": "var(--caps-button-outline-inset-content, none)",
+        "position": "absolute",
+        "zIndex": -1,
+        "inset": "var(--border)",
+        "background": "var(--color-base-100)",
+        "clipPath": "var(--caps-button-cut, none)"
+      },
+      ".caps-button.btn-outline:hover::before": {
+        "background": "var(--color-base-content)"
+      },
+      ".caps-button.btn-outline:not(:disabled):not([aria-disabled=\"true\"]):active": {
+        "translate": "0 var(--caps-button-press, var(--stipe-press-depth))",
+        "boxShadow": "var(\n      --caps-button-outline-drop,\n      var(--caps-button-drop-active, none)\n    )"
+      },
+      ".caps-button.btn-ghost": { "fontWeight": 500 },
+      ".caps-button-filled:not(.btn-circle)": {
+        "--radius-field": "var(--radius-button)"
+      },
+      ".caps-button-filled": {
+        "--btn-bg": "var(--btn-color)",
+        "--caps-button-filled-edge": "var(\n      --caps-button-border-color,\n      color-mix(\n        in oklab,\n        color-mix(in oklab, var(--btn-bg), black calc(var(--depth) * 8%)),\n        var(--stipe-linework)\n          calc((1 - var(--depth)) * var(--caps-button-linework, 100%))\n      )\n    )",
+        "--caps-button-filled-drop": "var(\n      --caps-button-drop,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))\n    )",
+        "backgroundColor": "var(--btn-bg)",
+        "color": "var(--btn-fg)",
+        "backgroundImage": "none",
+        "borderColor": "var(--caps-button-filled-edge)",
+        "textShadow": "none",
+        "boxShadow": "var(--caps-button-filled-drop)",
+        "translate": "0 0",
+        "scale": "1",
+        "transitionProperty": "background-color, border-color, box-shadow, translate, scale",
+        "transitionDuration": "var(--stipe-motion-fast)",
+        "transitionTimingFunction": "var(--stipe-motion-ease)"
+      },
+      ".caps-button-filled:is(:disabled, [aria-disabled=\"true\"])": {
+        "opacity": "var(--caps-button-disabled-opacity, 0.45)",
+        "backgroundColor": "var(--caps-button-disabled-face, var(--btn-bg))",
+        "color": "var(--caps-button-disabled-ink, var(--btn-fg))",
+        "borderColor": "var(\n      --caps-button-disabled-edge,\n      var(--caps-button-filled-edge)\n    )",
+        "boxShadow": "var(\n      --caps-button-disabled-drop,\n      var(--caps-button-filled-drop)\n    )"
+      },
+      ".caps-button-filled.join-item": {
+        "borderWidth": "var(--caps-button-border-width, var(--border))"
+      },
+      ".caps-button-filled.join-item:not(:first-child)": {
+        "marginInlineStart": "calc(var(--border) * -1 * var(--join-h))",
+        "marginBlockStart": "calc(var(--border) * -1 * var(--join-v))"
+      },
+      "@media (hover: hover)": {
+        ".caps-button-filled:not(:disabled):not([aria-disabled=\"true\"]):hover": {
+          "--btn-bg": "color-mix(in oklab, var(--btn-color) 92%, white)"
+        }
+      },
+      ".caps-button-filled:not(:disabled):not([aria-disabled=\"true\"]):is(\n      :active,\n      .btn-active\n    )": {
+        "--btn-bg": "color-mix(in oklab, var(--btn-color) 92%, black)",
+        "translate": "0 var(--caps-button-press, var(--stipe-press-depth))",
+        "scale": "var(--stipe-press-scale)",
+        "boxShadow": "var(\n      --caps-button-drop-active,\n      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))\n    )",
+        "transitionDuration": "var(--stipe-motion-squish)"
+      },
+      ".caps-button.caps-button-menubar": {
+        "height": "var(--spacing-2xl)",
+        "padding": "0 var(--spacing-sm)",
+        "fontSize": "12px",
+        "fontWeight": 500,
+        "border": "0",
+        "borderRadius": "var(--radius-field)",
+        "background": "transparent",
+        "boxShadow": "none"
+      },
+      ".caps-button.caps-button-menubar:hover,.caps-button.caps-button-menubar[data-popup-open]": {
+        "background": "var(--color-base-300)"
+      },
+      ".caps-button.caps-button-menubar:focus-visible": {
+        "outline": "2px solid var(--color-info)",
+        "outlineOffset": "-2px"
+      },
+      ".caps-button-filled.caps-input-group-control": {
+        "translate": "none",
+        "scale": "none",
+        "boxShadow": "inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))"
+      },
+      ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n      [aria-disabled=\"true\"]\n    ):is(:active, .btn-active)": {
+        "boxShadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))"
+      }
+    },
+    "@layer caps-button-group": {
+      ".caps-button-group": {
+        "display": "inline-flex",
+        "alignItems": "center",
+        "gap": "var(--caps-button-group-gap, var(--spacing-md))"
+      }
+    },
+    "@layer caps-window": {
+      ".caps-window-actions .caps-button": {
+        "minWidth": "var(--size)",
+        "flexShrink": 0
+      },
+      ".caps-window-actions .caps-button:focus-visible": {
+        "outlineOffset": "-2px"
+      },
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-window-header .caps-button": {
+          "minWidth": "44px",
+          "minHeight": "44px",
+          "flexShrink": 0
+        }
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".caps-button-filled:not(:disabled):not([aria-disabled=\"true\"])": {
+        "transition": "none",
+        "translate": "none",
+        "scale": "none"
+      },
+      ".caps-button-filled:not(:disabled):not([aria-disabled=\"true\"]):active": {
+        "translate": "var(--caps-button-press-reduced, none)"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-button:not(.caps-icon-button)": {
+          "minWidth": "var(--caps-touch-target)",
+          "minHeight": "var(--caps-touch-target)"
+        }
+      }
+    }
+  }
+}

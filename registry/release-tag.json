@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "release-tag",
+  "type": "registry:block",
+  "title": "Release Tag",
+  "description": "Calendar-page release badge with a stacked title, an accent strip and a ruled list of names and versions.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/blocks/release-tag.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/release-tag.tsx",
+      "content": "import type { HTMLAttributes, ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** One shipped thing and its version, printed under the tag. */\nexport type ReleaseTagEntry = Readonly<{ name: string; version: string }>;\n\n/** Props accepted by ReleaseTag. */\nexport type ReleaseTagProps = Omit<HTMLAttributes<HTMLElement>, \"title\"> & {\n  /** One or two short lines printed large on the tag, such as [\"Fungi\", \"Beta\"]. */\n  title: readonly string[];\n  /** A small accent strip under the title, such as \"Update\". */\n  label?: ReactNode;\n  entries: readonly ReleaseTagEntry[];\n};\n\n/**\n * A release badge: a torn-off calendar page with binder rings, a stacked\n * title, one accent strip and a ruled list of names and versions below.\n * Presentation only; the caller supplies every word.\n */\nexport function ReleaseTag({\n  className,\n  entries,\n  label,\n  title,\n  ...props\n}: ReleaseTagProps) {\n  return (\n    <aside {...props} className={cn(\"caps-release-tag\", className)}>\n      <div className=\"caps-release-tag-page\">\n        <span aria-hidden=\"true\" className=\"caps-release-tag-rings\">\n          <span />\n          <span />\n        </span>\n        <p className=\"caps-release-tag-title\">\n          {title.map((line) => (\n            <span key={line}>{line}</span>\n          ))}\n        </p>\n        {label ? <p className=\"caps-release-tag-label\">{label}</p> : null}\n      </div>\n      <dl className=\"caps-release-tag-entries\">\n        {entries.map((entry) => (\n          <div key={entry.name}>\n            <dt>{entry.name}</dt>\n            <dd>{entry.version}</dd>\n          </div>\n        ))}\n      </dl>\n    </aside>\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

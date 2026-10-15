@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "textarea",
+  "type": "registry:ui",
+  "title": "Textarea",
+  "description": "Native multiline text input with invalid-state styling.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/textarea.tsx",
+      "type": "registry:ui",
+      "target": "@ui/textarea.tsx",
+      "content": "import { forwardRef, type TextareaHTMLAttributes } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by Textarea. */\nexport type TextareaProps = {\n  invalid?: boolean;\n} & TextareaHTMLAttributes<HTMLTextAreaElement>;\n\n/** A styled multiline text input that preserves caller-owned value and event behavior. */\nexport const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(\n  function Textarea({ className, invalid, ...props }, ref) {\n    return (\n      <textarea\n        {...props}\n        aria-invalid={\n          invalid\n            ? true\n            : props[\"aria-invalid\"] === false\n              ? undefined\n              : props[\"aria-invalid\"]\n        }\n        className={cn(\n          \"textarea textarea-bordered w-full\",\n          invalid && \"textarea-error\",\n          className,\n        )}\n        ref={ref}\n      />\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

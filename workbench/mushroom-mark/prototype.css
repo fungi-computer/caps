@@ -1,0 +1,151 @@
+/* Fixed inks are intentional: this brand proof compares black/white silhouettes
+   against the saved concept, independently of the surrounding app theme. */
+/* stylelint-disable color-no-hex */
+.mushroom-prototype {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  gap: var(--spacing-xl);
+  color: var(--color-base-content);
+}
+.mushroom-prototype h1 {
+  font-size: 28px;
+  font-weight: 750;
+}
+.mushroom-prototype h2 {
+  font-size: 16px;
+  font-weight: 750;
+}
+.mushroom-prototype p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.mushroom-prototype a {
+  font-size: 12px;
+  text-decoration: underline;
+}
+.mushroom-comparisons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-md);
+}
+.mushroom-comparisons article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--color-base-200);
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box);
+}
+.mushroom-comparisons article[data-selected="true"] {
+  border-color: var(--color-base-content);
+}
+.mushroom-comparisons article > p {
+  min-height: 4em;
+}
+.mushroom-specimen {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 190px;
+  background: #faf8f2;
+  color: #151412;
+  border-radius: var(--radius-box);
+  cursor: pointer;
+}
+.mushroom-specimen:focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+.mushroom-mark {
+  display: inline-block;
+  flex: none;
+  width: var(--mark-size);
+  height: calc(var(--mark-size) * 550 / 680);
+  background: currentColor;
+  mask: var(--mark-url) center / contain no-repeat;
+}
+.mushroom-size-row {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+.mushroom-size-row > span {
+  display: grid;
+  gap: var(--spacing-xs);
+  justify-items: center;
+}
+.mushroom-size-row small {
+  font-size: 10px;
+}
+.mushroom-colors {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-xs);
+}
+.mushroom-colors > span {
+  display: grid;
+  place-items: center;
+  height: 54px;
+  border-radius: var(--radius-field);
+}
+.mushroom-colors [data-ink="inverse"] {
+  background: #171717;
+  color: #fff;
+}
+.mushroom-colors [data-ink="coral"] {
+  background: #faf8f2;
+  color: var(--color-primary);
+}
+.mushroom-colors [data-ink="mint"] {
+  background: #171717;
+  color: var(--color-secondary);
+}
+.mushroom-colors [data-ink="lilac"] {
+  background: #171717;
+  color: var(--color-accent);
+}
+.mushroom-inspector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: var(--spacing-xl);
+}
+.mushroom-inspector > div {
+  display: grid;
+  gap: var(--spacing-md);
+  justify-items: start;
+}
+.mushroom-overlay {
+  display: block;
+  width: 100%;
+  max-height: 340px;
+  background: #faf8f2;
+  border-radius: var(--radius-box);
+}
+.mushroom-menu-study {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-base-200);
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-box);
+  font-size: 13px;
+}
+@media (max-width: 900px) {
+  .mushroom-comparisons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 540px) {
+  .mushroom-comparisons,
+  .mushroom-inspector {
+    grid-template-columns: 1fr;
+  }
+  .mushroom-menu-study {
+    gap: var(--spacing-sm);
+  }
+}

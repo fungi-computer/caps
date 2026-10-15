@@ -1,0 +1,52 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "upload-queue",
+  "type": "registry:block",
+  "title": "Upload Queue",
+  "description": "Product-neutral upload facts with preview, status, and accessible actions.",
+  "dependencies": ["@fungi.computer/stipe", "react", "lucide-react"],
+  "registryDependencies": ["@shiit/icon-button", "@shiit/progress"],
+  "files": [
+    {
+      "path": "../src/blocks/upload-queue.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/upload-queue.tsx",
+      "content": "import type { JSX } from \"react\";\nimport { FileImage, RotateCcw, X } from \"lucide-react\";\nimport { IconButton } from \"@/components/ui/icon-button\";\nimport { Progress } from \"@/components/ui/progress\";\n\n/**\n * LAW — queue thumbnails are decorative. The adjacent filename is the row's\n * accessible file fact; lifecycle status, progress, and actions remain named.\n */\n\nexport type UploadQueueAction = Readonly<{\n  accessibleLabel: string;\n  label: string;\n}>;\n\n/** Caller-owned labels for the row actions that may be shown. */\nexport type UploadQueueActions = Readonly<{\n  cancel?: UploadQueueAction;\n  remove?: UploadQueueAction;\n  retry?: UploadQueueAction;\n}>;\n\n/** Caller-provided upload queue item data. */\nexport type UploadQueueItem = Readonly<{\n  actions: UploadQueueActions;\n  alert?: string;\n  id: string;\n  name: string;\n  preview: UploadQueuePreview;\n  /** Null means the transport does not report byte progress. */\n  progress: number | null;\n  progressLabel: string;\n  statusLabel: string;\n}>;\n\n/** A caller-provided file or image preview for one upload row. */\nexport type UploadQueuePreview =\n  Readonly<{ kind: \"file\" }> | Readonly<{ kind: \"image\"; url: string }>;\n\n/** Props accepted by UploadQueue. */\nexport type UploadQueueProps = Readonly<{\n  className?: string;\n  items: readonly UploadQueueItem[];\n  /** Handles a caller-requested cancellation. */\n  onCancel: (id: string) => Promise<void> | void;\n  /** Handles removal of a completed or failed row. */\n  onRemove: (id: string) => void;\n  /** Handles a caller-requested retry. */\n  onRetry: (id: string) => Promise<void> | void;\n  rowClassName?: string;\n}>;\n\n/** Product-neutral upload facts and affordances; lifecycle stays with the host. */\nexport function UploadQueue({\n  className,\n  items,\n  onCancel,\n  onRemove,\n  onRetry,\n  rowClassName,\n}: UploadQueueProps): JSX.Element | null {\n  if (!items.length) return null;\n  return (\n    <div\n      aria-live=\"polite\"\n      className={`caps-upload-queue flex w-full min-w-0 flex-col gap-sm ${className ?? \"\"}`}\n      data-upload-rows\n    >\n      {items.map((item) => (\n        <UploadQueueRow\n          item={item}\n          key={item.id}\n          onCancel={onCancel}\n          onRemove={onRemove}\n          onRetry={onRetry}\n          {...(rowClassName === undefined ? {} : { rowClassName })}\n        />\n      ))}\n    </div>\n  );\n}\n\nfunction UploadQueueAction({\n  action,\n  id,\n  onAction,\n  retry = false,\n}: {\n  action: undefined | UploadQueueAction;\n  id: string;\n  onAction: (id: string) => Promise<void> | void;\n  retry?: boolean;\n}): JSX.Element | null {\n  if (!action) return null;\n  return (\n    <IconButton\n      aria-label={action.accessibleLabel}\n      title={action.label}\n      variant=\"ghost\"\n      size=\"xs\"\n      className=\"motion-reduce:transition-none\"\n      icon={retry ? <RotateCcw /> : <X />}\n      onClick={() => void onAction(id)}\n      type=\"button\"\n    />\n  );\n}\n\nfunction UploadQueueDetails({ item }: { item: UploadQueueItem }): JSX.Element {\n  return (\n    <div className=\"min-w-0\">\n      <span className=\"block min-w-0 truncate\" title={item.name}>\n        {item.name}\n      </span>\n      <div className=\"caps-upload-details\">\n        <span\n          aria-live={item.alert ? \"assertive\" : undefined}\n          className=\"caps-upload-status min-w-0 break-words\"\n          data-upload-status\n          role={item.alert ? \"alert\" : undefined}\n        >\n          {item.alert ?? item.statusLabel} {item.progressLabel}\n        </span>\n      </div>\n    </div>\n  );\n}\n\nfunction UploadQueueRow({\n  item,\n  onCancel,\n  onRemove,\n  onRetry,\n  rowClassName,\n}: {\n  item: UploadQueueItem;\n} & Omit<UploadQueueProps, \"className\" | \"items\">): JSX.Element {\n  return (\n    <div\n      className={`caps-upload-row grid w-full min-w-0 max-w-full grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-sm p-sm text-xs ${rowClassName ?? \"\"}`}\n    >\n      {item.preview.kind === \"image\" ? (\n        <img\n          alt=\"\"\n          className=\"caps-upload-preview mask mask-squircle size-8 shrink-0 object-cover\"\n          src={item.preview.url}\n        />\n      ) : (\n        <span\n          aria-hidden=\"true\"\n          className=\"caps-upload-preview mask mask-squircle flex size-8 shrink-0 items-center justify-center bg-base-300\"\n        >\n          <FileImage className=\"size-4\" />\n        </span>\n      )}\n      <UploadQueueDetails item={item} />\n      <UploadQueueRowActions\n        actions={item.actions}\n        id={item.id}\n        onCancel={onCancel}\n        onRemove={onRemove}\n        onRetry={onRetry}\n      />\n      <Progress\n        aria-label={`${item.name} progress`}\n        className=\"caps-upload-progress\"\n        tone={\n          item.alert ? \"error\" : item.progress === 100 ? \"success\" : \"accent\"\n        }\n        max={100}\n        value={item.progress ?? (item.alert ? 0 : undefined)}\n      />\n    </div>\n  );\n}\n\nfunction UploadQueueRowActions({\n  actions,\n  id,\n  onCancel,\n  onRemove,\n  onRetry,\n}: {\n  actions: UploadQueueActions;\n  id: string;\n  onCancel: UploadQueueProps[\"onCancel\"];\n  onRemove: UploadQueueProps[\"onRemove\"];\n  onRetry: UploadQueueProps[\"onRetry\"];\n}): JSX.Element {\n  return (\n    <div className=\"caps-upload-actions flex min-w-0 flex-wrap justify-end gap-xs\">\n      <UploadQueueAction\n        action={actions.retry}\n        id={id}\n        onAction={onRetry}\n        retry\n      />\n      <UploadQueueAction action={actions.cancel} id={id} onAction={onCancel} />\n      <UploadQueueAction action={actions.remove} id={id} onAction={onRemove} />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-upload-row": {
+        "borderRadius": "var(--radius-field)",
+        "background": "var(--color-base-200)",
+        "border": "var(--border) solid\n      color-mix(\n        in oklch,\n        var(--color-base-content) calc(18% + (1 - var(--depth)) * 82%),\n        var(--color-base-200)\n      )",
+        "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 calc(var(--depth) * 1px) 0\n        color-mix(in oklch, white calc(var(--depth) * 45%), transparent),\n      inset 0 calc(var(--depth) * -2px) 0\n        color-mix(\n          in oklch,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        ),\n      0 calc(var(--depth) * 2px) 0\n        color-mix(\n          in oklch,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        )\n    )"
+      },
+      ".caps-upload-details": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "var(--spacing-xs)",
+        "paddingTop": "var(--spacing-xs)"
+      },
+      ".caps-upload-status": {
+        "color": "color-mix(\n      in oklch,\n      var(--color-base-content) 75%,\n      var(--color-base-200)\n    )",
+        "fontSize": "0.75rem",
+        "lineHeight": 1.25
+      },
+      ".caps-upload-status[role=\"alert\"]": { "color": "var(--color-error)" },
+      ".caps-upload-progress": {
+        "gridColumn": "1 / -1",
+        "height": "var(--spacing-sm)"
+      },
+      ".caps-upload-actions": { "minWidth": "3.25rem" },
+      ".caps-upload-preview": { "alignSelf": "center" }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

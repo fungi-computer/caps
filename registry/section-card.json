@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "section-card",
+  "type": "registry:block",
+  "title": "Section Card",
+  "description": "Presentational card shell for labelled account and settings sections.",
+  "dependencies": ["@fungi.computer/stipe", "react"],
+  "registryDependencies": ["@shiit/card"],
+  "files": [
+    {
+      "path": "../src/blocks/section-card.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/section-card.tsx",
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\";\n\n/** Props accepted by SectionCard. */\nexport type SectionCardProps = HTMLAttributes<HTMLDivElement> & {\n  /** The host-provided section heading. */\n  heading: ReactNode;\n  /** Optional host-provided supporting copy. */\n  description?: ReactNode;\n  /** Optional host-provided controls or status content. */\n  actions?: ReactNode;\n  /** The section body, supplied by the host through normal composition. */\n  children?: ReactNode;\n  /** Inside a SectionGrid, `full` spans every column; `auto` takes one. */\n  span?: \"auto\" | \"full\";\n  /** Heading level; the host keeps its document outline. Defaults to 3. */\n  headingLevel?: 2 | 3;\n};\n\n/** A presentational card shell. It does not assign behavior to action content. */\nexport const SectionCard = forwardRef<HTMLDivElement, SectionCardProps>(\n  function SectionCard(\n    {\n      actions,\n      children,\n      className,\n      description,\n      heading,\n      headingLevel = 3,\n      span = \"auto\",\n      ...rootProps\n    },\n    ref,\n  ) {\n    return (\n      <Card\n        {...rootProps}\n        className={className}\n        data-span={span === \"full\" ? \"full\" : undefined}\n        ref={ref}\n        variant=\"outline\"\n      >\n        <CardHeader>\n          <div className=\"caps-section-card-heading-row\">\n            <CardTitle level={headingLevel}>{heading}</CardTitle>\n            {actions ? (\n              <div className=\"caps-section-card-actions\">{actions}</div>\n            ) : null}\n          </div>\n          {description ? (\n            <CardDescription>{description}</CardDescription>\n          ) : null}\n        </CardHeader>\n        {children !== undefined ? <CardContent>{children}</CardContent> : null}\n      </Card>\n    );\n  },\n);\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

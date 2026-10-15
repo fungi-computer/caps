@@ -1,0 +1,96 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "progress",
+  "type": "registry:ui",
+  "title": "Progress",
+  "description": "Native progress element with a gooey value bar and semantic tone variants.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/progress.tsx",
+      "type": "registry:ui",
+      "target": "@ui/progress.tsx",
+      "content": "import {\n  forwardRef,\n  type HTMLAttributes,\n  type ProgressHTMLAttributes,\n} from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Supported ProgressTone values. */\nexport type ProgressTone =\n  | \"neutral\"\n  | \"primary\"\n  | \"secondary\"\n  | \"accent\"\n  | \"success\"\n  | \"info\"\n  | \"warning\"\n  | \"error\";\n\nconst progressToneClasses = {\n  neutral: \"progress-neutral\",\n  primary: \"progress-primary\",\n  secondary: \"progress-secondary\",\n  accent: \"progress-accent\",\n  success: \"progress-success\",\n  info: \"progress-info\",\n  warning: \"progress-warning\",\n  error: \"progress-error\",\n} satisfies Record<ProgressTone, string>;\n\n/** Props accepted by Progress. */\nexport type ProgressProps = {\n  tone?: ProgressTone;\n} & ProgressHTMLAttributes<HTMLProgressElement>;\n\n/** A progress indicator for caller-provided progress values. */\nexport const Progress = forwardRef<HTMLProgressElement, ProgressProps>(\n  function Progress({ className, tone = \"primary\", ...props }, ref) {\n    return (\n      <progress\n        {...props}\n        data-complete={\n          props.value !== undefined &&\n          Number(props.value) >= Number(props.max ?? 1)\n            ? \"true\"\n            : undefined\n        }\n        className={cn(\n          \"progress caps-gooey-motion caps-gooey-progress w-full\",\n          progressToneClasses[tone],\n          className,\n        )}\n        ref={ref}\n      />\n    );\n  },\n);\n\n/** A compact labelled resource meter for game windows. Values come from the game. */\nexport type GameMeterProps = Omit<\n  HTMLAttributes<HTMLDivElement>,\n  \"children\"\n> & {\n  label: string;\n  value: number;\n  max: number;\n  tone?: ProgressTone;\n};\n\n/** Pair a game's bounded resource value with its visible and accessible meter. */\nexport const GameMeter = forwardRef<HTMLDivElement, GameMeterProps>(\n  function GameMeter(\n    { label, value, max, tone = \"info\", className, ...props },\n    ref,\n  ) {\n    return (\n      <div {...props} ref={ref} className={cn(\"caps-game-meter\", className)}>\n        <div className=\"caps-game-meter-readout\">\n          <span>{label}</span>\n          <span className=\"caps-game-meter-value\">\n            {value} / {max}\n          </span>\n        </div>\n        <Progress aria-label={label} value={value} max={max} tone={tone} />\n      </div>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer components": {
+      ".caps-gooey-motion": {
+        "--caps-gooey-duration": "var(--stipe-motion-spring-duration)",
+        "--caps-gooey-ease": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "transitionTimingFunction": "var(--caps-gooey-ease)"
+      }
+    },
+    "@layer utilities": {
+      ".caps-gooey-progress": {
+        "--caps-progress-tip-light": "calc(var(--depth) * 0.28)",
+        "borderRadius": "var(--radius-selector)",
+        "backgroundColor": "var(--color-base-300)",
+        "boxShadow": "inset 0 1px 2px rgb(0 0 0 / calc(var(--depth) * 0.25)),\n      0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.25))"
+      },
+      ".caps-gooey-progress[data-complete=\"true\"]": {
+        "--caps-progress-tip-light": "0"
+      },
+      ".caps-gooey-progress:not(:indeterminate)": { "backgroundImage": "none" },
+      ".caps-gooey-progress::-webkit-progress-bar": {
+        "borderRadius": "var(--radius-selector)",
+        "backgroundColor": "var(--color-base-300)",
+        "boxShadow": "inset 0 1px 2px rgb(0 0 0 / calc(var(--depth) * 0.25))"
+      },
+      ".caps-gooey-progress:not(:indeterminate)::-webkit-progress-value": {
+        "borderRadius": "var(--radius-selector)",
+        "backgroundColor": "currentColor",
+        "backgroundImage": "radial-gradient(\n        ellipse 12px 5px at calc(100% - 5px) 40%,\n        rgb(255 255 255 / var(--caps-progress-tip-light)),\n        transparent\n      ),\n      linear-gradient(\n        to bottom,\n        rgb(0 0 0 / calc(var(--depth) * 0.12)),\n        rgb(255 255 255 / calc(var(--depth) * 0.08)) 45%,\n        transparent 65%,\n        rgb(0 0 0 / calc(var(--depth) * 0.18))\n      )",
+        "boxShadow": "inset 0 1px 1px rgb(0 0 0 / calc(var(--depth) * 0.12)),\n      inset 0 -1px 1px rgb(0 0 0 / calc(var(--depth) * 0.16))",
+        "transitionProperty": "inline-size",
+        "transitionDuration": "calc(var(--stipe-motion-slow) * 5)",
+        "transitionTimingFunction": "cubic-bezier(0.16, 0, 0.3, 1)"
+      },
+      ".caps-gooey-progress:not(:indeterminate)::-moz-progress-bar": {
+        "borderRadius": "var(--radius-selector)",
+        "backgroundColor": "currentColor",
+        "backgroundImage": "radial-gradient(\n        ellipse 12px 5px at calc(100% - 5px) 40%,\n        rgb(255 255 255 / var(--caps-progress-tip-light)),\n        transparent\n      ),\n      linear-gradient(\n        to bottom,\n        rgb(0 0 0 / calc(var(--depth) * 0.12)),\n        rgb(255 255 255 / calc(var(--depth) * 0.08)) 45%,\n        transparent 65%,\n        rgb(0 0 0 / calc(var(--depth) * 0.18))\n      )",
+        "boxShadow": "inset 0 1px 1px rgb(0 0 0 / calc(var(--depth) * 0.12)),\n      inset 0 -1px 1px rgb(0 0 0 / calc(var(--depth) * 0.16))",
+        "transitionProperty": "inline-size",
+        "transitionDuration": "calc(var(--stipe-motion-slow) * 5)",
+        "transitionTimingFunction": "cubic-bezier(0.16, 0, 0.3, 1)"
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".caps-gooey-motion,.caps-gooey-motion::before": {
+        "animation": "none !important",
+        "transitionProperty": "opacity !important",
+        "transitionDuration": "var(--stipe-motion-fast) !important"
+      },
+      ".caps-gooey-progress::-webkit-progress-value": {
+        "animation": "none !important",
+        "transitionProperty": "opacity !important",
+        "transitionDuration": "var(--stipe-motion-fast) !important"
+      },
+      ".caps-gooey-progress::-moz-progress-bar": {
+        "animation": "none !important",
+        "transitionProperty": "opacity !important",
+        "transitionDuration": "var(--stipe-motion-fast) !important"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

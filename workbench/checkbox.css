@@ -1,0 +1,5 @@
+.checkbox-study-magnified .caps-checkbox {
+  width: 96px;
+  height: 96px;
+  border-radius: calc(var(--radius-selector) * 4);
+}

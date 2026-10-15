@@ -1,0 +1,25 @@
+.caps-tray-story {
+  display: grid;
+  gap: var(--spacing-lg);
+  min-width: 0;
+  padding: var(--spacing-lg);
+  background: var(--color-base-200);
+  color: var(--color-base-content);
+}
+
+.caps-tray-story-readout {
+  min-height: 28rem;
+  padding: var(--spacing-lg);
+}
+
+/* A nested host finish changes tokens, never descendant component rules. */
+.caps-tray-story[data-finish="instrument"] {
+  --caps-status-tray-chip-height: 2.75rem;
+  --caps-status-tray-chip-border-color: var(--color-primary);
+  --caps-status-tray-chip-bg: var(--color-base-300);
+  --caps-status-tray-chip-radius: var(--radius-selector);
+  --caps-status-tray-title-case: uppercase;
+  --caps-status-tray-title-tracking: 0.12em;
+  --caps-status-tray-key-tint: 55%;
+  --caps-status-tray-key-height: 2.25rem;
+}

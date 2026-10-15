@@ -1,0 +1,226 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "items": [
+    {
+      "name": "store-card",
+      "type": "registry:ui",
+      "title": "Store card",
+      "description": "A catalogue card with title, cover, badges, and a price tag.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "react",
+        "class-variance-authority",
+        "cn"
+      ],
+      "registryDependencies": [
+        "@shiit/badge",
+        "@shiit/card",
+        "@shiit/price-tag"
+      ],
+      "files": [
+        {
+          "path": "../src/components/store-card.tsx",
+          "type": "registry:ui",
+          "target": "@ui/store-card.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "price-tag",
+      "type": "registry:ui",
+      "title": "Price tag",
+      "description": "Theme-backed price label for store entries.",
+      "dependencies": ["@fungi.computer/stipe"],
+      "registryDependencies": ["@shiit/badge"],
+      "files": [
+        {
+          "path": "../src/components/price-tag.tsx",
+          "type": "registry:ui",
+          "target": "@ui/price-tag.tsx"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "keycap",
+      "type": "registry:ui",
+      "title": "Keycap",
+      "description": "Molded game keys: a kbd legend and a chunky action key with a mode lamp.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/keycap.tsx",
+          "type": "registry:ui",
+          "target": "@ui/keycap.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "pixel-number",
+      "type": "registry:ui",
+      "title": "Pixel number",
+      "description": "Crisp 3\u00d75 pixel numerals for clocks, counters and floating numbers.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/pixel-number.tsx",
+          "type": "registry:ui",
+          "target": "@ui/pixel-number.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "item-grid",
+      "type": "registry:ui",
+      "title": "Item grid",
+      "description": "A keyboard-first inventory grid with footprints, stacks, drop ghosts and equipment slots.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/item-grid.tsx",
+          "type": "registry:ui",
+          "target": "@ui/item-grid.tsx"
+        },
+        {
+          "path": "../src/components/pixel-number.tsx",
+          "type": "registry:ui",
+          "target": "@ui/pixel-number.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "game-feedback",
+      "type": "registry:ui",
+      "title": "Game feedback",
+      "description": "Stepped flashes, floating numbers and refusal notes over a game world, with a pausable layer.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/game-feedback.tsx",
+          "type": "registry:ui",
+          "target": "@ui/game-feedback.tsx"
+        },
+        {
+          "path": "../src/components/pixel-number.tsx",
+          "type": "registry:ui",
+          "target": "@ui/pixel-number.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "game-hud",
+      "type": "registry:ui",
+      "title": "Game HUD",
+      "description": "Paper HUD plates, segmented bars, clock, portraits, minimap, cards, keycap rows and shop and workbench rows for a game shell.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "lucide-react",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/game-hud.tsx",
+          "type": "registry:ui",
+          "target": "@ui/game-hud.tsx"
+        },
+        {
+          "path": "../src/components/minimap-labels.ts",
+          "type": "registry:ui",
+          "target": "@ui/minimap-labels.ts"
+        },
+        {
+          "path": "../src/components/monogram.tsx",
+          "type": "registry:ui",
+          "target": "@ui/monogram.tsx"
+        },
+        {
+          "path": "../src/lib/seed-hash.ts",
+          "type": "registry:lib",
+          "target": "@lib/seed-hash.ts"
+        },
+        {
+          "path": "../src/components/pixel-number.tsx",
+          "type": "registry:ui",
+          "target": "@ui/pixel-number.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    }
+  ]
+}

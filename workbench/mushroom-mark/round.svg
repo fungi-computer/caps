@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="300 210 680 550" fill="currentColor">
+  <title>Mushroom — rounder stem study</title>
+  <!-- Cap: crown, raised right shoulder, curled underside, sweeping left lip. -->
+  <path id="cap" d="
+    M 333 469
+    C 331 423 394 347 448 300
+    C 491 262 548 238 596 238
+    C 665 235 721 281 787 300
+    C 831 315 861 305 890 303
+    C 924 299 942 317 947 345
+    C 956 400 916 452 865 487
+    C 829 510 776 527 727 523
+    C 722 522 731 518 745 513
+    C 805 494 854 470 852 451
+    C 852 429 792 436 738 450
+    C 650 474 532 524 429 529
+    C 375 532 331 512 333 469 Z"/>
+  <!-- Stem: shallow concave shoulders, flared foot, softly flattened base. -->
+  <path id="stem" d="
+    M 550 518 C 594 505 655 504 695 514
+    C 697 566 708 609 735 651
+    C 765 698 723 730 620 730
+    C 534 730 484 707 498 670
+    C 515 627 545 583 550 518 Z"/>
+</svg>

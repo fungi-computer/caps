@@ -1,0 +1,4 @@
+{
+  "extends": "../tsconfig.workbench.json",
+  "include": ["**/*.ts", "**/*.tsx"]
+}

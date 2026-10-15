@@ -1,0 +1,229 @@
+/*
+ * Game-piece story layout and the sprite palette. Layout only: every piece's
+ * look is Caps' own. Sprite colors are Stipe tokens so they follow the theme.
+ */
+.caps-workbench-game {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--spacing-xl);
+  max-width: 64rem;
+}
+
+.caps-workbench-game-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-md);
+}
+
+.caps-workbench-game-caption {
+  margin: 0;
+  color: var(--stipe-fg-muted);
+  font-size: 0.8125rem;
+}
+
+.caps-workbench-game-split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--spacing-xl);
+  align-items: start;
+}
+
+.caps-workbench-game-readout {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.caps-workbench-game-doll {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: var(--spacing-md);
+}
+
+.caps-workbench-game-window-body {
+  display: grid;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+
+/* A fake world for the HUD composition: a flat dusk field, no art. */
+.caps-workbench-game-stage {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--spacing-md);
+  min-height: 34rem;
+  padding: var(--spacing-md);
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at 50% 60%,
+    color-mix(in oklab, var(--color-success), black 35%),
+    color-mix(in oklab, var(--color-success), black 70%) 70%
+  );
+  border-radius: var(--radius-box);
+}
+
+.caps-workbench-game-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.caps-workbench-game-portraits {
+  display: grid;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+}
+
+.caps-workbench-game-portrait {
+  display: grid;
+  grid-template-columns: 2.25rem auto;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.8125rem;
+  font-weight: 800;
+}
+
+.caps-workbench-game-portrait small {
+  display: block;
+  color: var(--stipe-fg-muted);
+  font-weight: 600;
+}
+
+.caps-workbench-game-advisor {
+  align-self: end;
+  justify-self: end;
+  width: min(100%, 20rem);
+}
+
+.caps-workbench-game-advisor-body {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.caps-workbench-game-dock {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-xs);
+}
+
+.caps-workbench-pixel-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  shape-rendering: crispEdges;
+}
+
+.caps-workbench-game-portrait .caps-workbench-pixel-art,
+.caps-workbench-game-advisor-body .caps-workbench-pixel-art {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.caps-workbench-pixel-art {
+  --caps-workbench-ink: light-dark(
+    color-mix(in oklab, var(--color-base-content), black 45%),
+    var(--color-base-300)
+  );
+}
+
+.caps-workbench-px-ink {
+  fill: var(--caps-workbench-ink);
+}
+.caps-workbench-px-wood {
+  fill: color-mix(in oklab, var(--color-warning), black 30%);
+}
+.caps-workbench-px-wood-dark {
+  fill: color-mix(in oklab, var(--color-warning), black 58%);
+}
+.caps-workbench-px-leaf {
+  fill: var(--color-success);
+}
+.caps-workbench-px-leaf-dark {
+  fill: color-mix(in oklab, var(--color-success), black 38%);
+}
+.caps-workbench-px-metal {
+  fill: color-mix(
+    in oklab,
+    var(--color-base-content) 30%,
+    var(--color-base-100)
+  );
+}
+.caps-workbench-px-metal-dark {
+  fill: color-mix(
+    in oklab,
+    var(--color-base-content) 58%,
+    var(--color-base-100)
+  );
+}
+.caps-workbench-px-bread {
+  fill: color-mix(in oklab, var(--color-warning) 65%, white);
+}
+.caps-workbench-px-crust {
+  fill: color-mix(in oklab, var(--color-warning), black 12%);
+}
+.caps-workbench-px-skin {
+  fill: color-mix(in oklab, var(--color-success) 70%, white);
+}
+.caps-workbench-px-skin-dark {
+  fill: color-mix(in oklab, var(--color-success), black 18%);
+}
+.caps-workbench-px-water {
+  fill: var(--color-info);
+}
+.caps-workbench-px-red {
+  fill: var(--color-error);
+}
+.caps-workbench-px-purple {
+  fill: color-mix(in oklab, var(--color-accent), black 32%);
+}
+.caps-workbench-px-purple-dark {
+  fill: color-mix(in oklab, var(--color-accent), black 58%);
+}
+.caps-workbench-px-cream {
+  fill: color-mix(in oklab, white, var(--color-warning) 18%);
+}
+
+.caps-workbench-px-line {
+  fill: currentcolor;
+}
+
+.caps-workbench-game-dock-seat {
+  justify-self: center;
+  max-width: 100%;
+}
+
+.caps-workbench-game-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.caps-workbench-game-icon {
+  width: 1.25rem;
+  height: 1.5rem;
+}
+
+.caps-workbench-game-feedback-stage {
+  position: relative;
+  height: 14rem;
+  max-width: 28rem;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at 50% 60%,
+    color-mix(in oklab, var(--color-success), black 35%),
+    color-mix(in oklab, var(--color-success), black 70%) 75%
+  );
+  border-radius: var(--radius-box);
+}

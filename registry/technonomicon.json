@@ -1,0 +1,1463 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "technonomicon",
+  "type": "registry:ui",
+  "title": "Technonomicon",
+  "description": "Editorial plates, issue layouts, growth labels, data-backed collector cards, and the opt-in pencil sketch layer.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "react",
+    "cn",
+    "class-variance-authority",
+    "roughjs"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/technonomicon.tsx",
+      "type": "registry:ui",
+      "target": "@ui/technonomicon.tsx",
+      "content": "import {\n  useState,\n  type CSSProperties,\n  type HTMLAttributes,\n  type ReactNode,\n} from \"react\";\n\nimport { cn } from \"@/lib/cn\";\nimport { Badge } from \"./badge.js\";\n\n/** Props accepted by Plate. */\nexport type PlateProps = {\n  caption: ReactNode;\n  image: ReactNode;\n  label: string;\n} & HTMLAttributes<HTMLElement>;\n\n/** A labelled graphite illustration plate. */\nexport function Plate({\n  caption,\n  className,\n  image,\n  label,\n  ...props\n}: PlateProps) {\n  return (\n    <figure {...props} className={cn(\"caps-plate\", className)}>\n      <div className=\"caps-plate-image\">{image}</div>\n      <figcaption>\n        <span>{label}</span>\n        <span>{caption}</span>\n      </figcaption>\n    </figure>\n  );\n}\n\n/** Props accepted by StagePlate. */\nexport type StagePlateProps = {\n  caption: ReactNode;\n  /** The live drawing: an element with the `caps-stage-plate-viewport` class. */\n  children: ReactNode;\n  /** How to handle the drawing, shown under the caption. */\n  hint?: ReactNode;\n  /** Id for the hint, so the drawing can name it with aria-describedby. */\n  hintId?: string;\n  label: string;\n  /** A numbered key to what the drawing shows. */\n  specimenKey?: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/**\n * A plate whose illustration is a live pixel-art stage rather than an image.\n * Its drawing reads `--specimen-ink`, `--specimen-paper` and\n * `--specimen-accent`, which follow the theme.\n */\nexport function StagePlate({\n  caption,\n  children,\n  className,\n  hint,\n  hintId,\n  label,\n  specimenKey,\n  ...props\n}: StagePlateProps) {\n  return (\n    <figure {...props} className={cn(\"caps-stage-plate\", className)}>\n      {children}\n      <figcaption>\n        <span>{label}</span>\n        <span className=\"caps-stage-plate-caption\">{caption}</span>\n      </figcaption>\n      {hint ? (\n        <p className=\"caps-stage-plate-hint\" id={hintId}>\n          {hint}\n        </p>\n      ) : null}\n      {specimenKey}\n    </figure>\n  );\n}\n\n/** Props accepted by CompactPlate. */\nexport type CompactPlateProps = Omit<PlateProps, \"className\">;\n\n/** A compact plate for editorial teasers. */\nexport function CompactPlate(props: CompactPlateProps) {\n  return <Plate {...props} className=\"caps-compact-plate\" />;\n}\n\n/** Props accepted by MarginNote. */\nexport type MarginNoteProps = {\n  children: ReactNode;\n} & HTMLAttributes<HTMLSpanElement>;\n\n/** An inline note styled for the page margin. */\nexport function MarginNote({ children, className, ...props }: MarginNoteProps) {\n  return (\n    <span {...props} className={cn(\"caps-margin-note\", className)}>\n      {children}\n    </span>\n  );\n}\n\n/** Supported editorial callout kinds. */\nexport type CalloutKind = \"lesson\" | \"status\" | \"plan\" | \"warning\";\n/** Props accepted by Callout. */\nexport type CalloutProps = {\n  kind: CalloutKind;\n  title?: ReactNode;\n  children: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/** A labelled editorial aside. */\nexport function Callout({\n  children,\n  className,\n  kind,\n  title,\n  ...props\n}: CalloutProps) {\n  return (\n    <aside\n      {...props}\n      className={cn(\"caps-callout\", className)}\n      data-kind={kind}\n    >\n      {title ? <h2>{title}</h2> : null}\n      {children}\n    </aside>\n  );\n}\n\n/** Supported lifecycle stages. */\nexport type GrowthStage = \"spore\" | \"mycelium\" | \"fruiting\";\n/** Props accepted by GrowthBadge. */\nexport type GrowthBadgeProps = {\n  stage: GrowthStage;\n} & HTMLAttributes<HTMLSpanElement>;\n\n/** An outlined Badge in the selected growth-stage color. */\nexport function GrowthBadge({ className, stage, ...props }: GrowthBadgeProps) {\n  const tone =\n    stage === \"spore\"\n      ? \"secondary\"\n      : stage === \"mycelium\"\n        ? \"primary\"\n        : \"accent\";\n  return (\n    <Badge\n      {...props}\n      className={cn(\"caps-growth-badge badge-outline\", className)}\n      data-stage={stage}\n      size=\"sm\"\n      tone={tone}\n    >\n      {stage}\n    </Badge>\n  );\n}\n\n/** Props accepted by IssueMasthead. */\nexport type IssueMastheadProps = {\n  date: string;\n  dek: ReactNode;\n  number: string;\n  /** The publication the Issue belongs to, printed in the kicker. */\n  publication: string;\n  title: string;\n} & HTMLAttributes<HTMLElement>;\n\n/** The title, number, date, and dek for an Issue. */\nexport function IssueMasthead({\n  className,\n  date,\n  dek,\n  number,\n  publication,\n  title,\n  ...props\n}: IssueMastheadProps) {\n  return (\n    <header {...props} className={cn(\"caps-issue-masthead\", className)}>\n      <p className=\"caps-issue-kicker\">\n        {publication} · Issue {number} · {date}\n      </p>\n      <h1>{title}</h1>\n      <p>{dek}</p>\n    </header>\n  );\n}\n\n/** A newspaper nameplate: the front page's large head or a running head. */\nexport type MastheadSize = \"front\" | \"running\";\n/** Props accepted by Masthead. */\nexport type MastheadProps = {\n  /** The publication name, set large in the nameplate face. */\n  wordmark: string;\n  /** Where the nameplate links, normally the front page. */\n  href: string;\n  /** A small printed mark beside the wordmark, such as a logo drawing. */\n  mark?: ReactNode;\n  /** One line under the wordmark in the publication's voice. */\n  tagline?: ReactNode;\n  /** The ruled edition line: date, issue, editor and similar items. */\n  edition?: readonly ReactNode[];\n  /** The left ear box beside the nameplate, such as a weather note. */\n  startEar?: ReactNode;\n  /** The right ear box beside the nameplate, such as the editor's portrait. */\n  endEar?: ReactNode;\n  /** The section bar under the edition line, normally a SectionBar. */\n  sections?: ReactNode;\n  size?: MastheadSize;\n} & HTMLAttributes<HTMLElement>;\n\n/**\n * A print masthead. Ears flank the nameplate on wide pages and sit under it\n * on phones; the edition line runs between a thin and a heavy rule.\n */\nexport function Masthead({\n  className,\n  edition,\n  endEar,\n  href,\n  mark,\n  sections,\n  size = \"front\",\n  startEar,\n  tagline,\n  wordmark,\n  ...props\n}: MastheadProps) {\n  return (\n    <header\n      {...props}\n      className={cn(\"caps-masthead\", className)}\n      data-size={size}\n    >\n      <div className=\"caps-masthead-plate\">\n        {startEar ? (\n          <div className=\"caps-masthead-ear\" data-side=\"start\">\n            {startEar}\n          </div>\n        ) : null}\n        <a className=\"caps-masthead-nameplate\" href={href}>\n          {mark ? (\n            <span aria-hidden=\"true\" className=\"caps-masthead-mark\">\n              {mark}\n            </span>\n          ) : null}\n          <span className=\"caps-masthead-wordmark\">{wordmark}</span>\n        </a>\n        {endEar ? (\n          <div className=\"caps-masthead-ear\" data-side=\"end\">\n            {endEar}\n          </div>\n        ) : null}\n      </div>\n      {tagline ? <p className=\"caps-masthead-tagline\">{tagline}</p> : null}\n      {edition && edition.length > 0 ? (\n        <ul className=\"caps-masthead-edition\">\n          {edition.map((item, index) => (\n            <li key={index}>{item}</li>\n          ))}\n        </ul>\n      ) : null}\n      {sections}\n    </header>\n  );\n}\n\n/** One section of a publication. */\nexport type SectionLink = {\n  href: string;\n  label: string;\n  /** Printed before the label, such as a section letter. */\n  marker?: string;\n  current?: boolean;\n  /** A keyboard shortcut announced through aria-keyshortcuts. */\n  shortcut?: string;\n};\n/** Props accepted by SectionBar. */\nexport type SectionBarProps = {\n  sections: readonly SectionLink[];\n  /** Controls set at the end of the bar, such as theme and help buttons. */\n  tools?: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/**\n * A newspaper section bar: small capitals between hairline rules, the\n * current section printed in reverse. It scrolls sideways on narrow pages\n * instead of wrapping. Name it with aria-label.\n */\nexport function SectionBar({\n  className,\n  sections,\n  tools,\n  ...props\n}: SectionBarProps) {\n  return (\n    <nav {...props} className={cn(\"caps-section-bar\", className)}>\n      <ul>\n        {sections.map((section) => (\n          <li key={section.href}>\n            <a\n              aria-current={section.current ? \"page\" : undefined}\n              aria-keyshortcuts={section.shortcut}\n              className=\"caps-section-bar-link\"\n              href={section.href}\n            >\n              {section.marker ? (\n                <span aria-hidden=\"true\" className=\"caps-section-bar-marker\">\n                  {section.marker}\n                </span>\n              ) : null}\n              <span>{section.label}</span>\n            </a>\n          </li>\n        ))}\n      </ul>\n      {tools ? <div className=\"caps-section-bar-tools\">{tools}</div> : null}\n    </nav>\n  );\n}\n\n/** Props accepted by Folio. */\nexport type FolioProps = {\n  /** Running items, such as the publication, page number and date. */\n  items: readonly ReactNode[];\n} & HTMLAttributes<HTMLElement>;\n\n/** A running foot: the page's folio line between rules. */\nexport function Folio({ className, items, ...props }: FolioProps) {\n  return (\n    <footer {...props} className={cn(\"caps-folio\", className)}>\n      <ul>\n        {items.map((item, index) => (\n          <li key={index}>{item}</li>\n        ))}\n      </ul>\n    </footer>\n  );\n}\n\n/** Supported editorial spread arrangements. */\nexport type SpreadLayout = \"lead\" | \"columns\" | \"grid\";\n/** Props accepted by Spread. */\nexport type SpreadProps = {\n  layout: SpreadLayout;\n  children: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/** A responsive editorial region with an explicit layout. */\nexport function Spread({ children, className, layout, ...props }: SpreadProps) {\n  return (\n    <section\n      {...props}\n      className={cn(\"caps-spread\", className)}\n      data-layout={layout}\n    >\n      {children}\n    </section>\n  );\n}\n\n/** One supplied card measurement and its provenance. `null` means not measured. */\nexport type CardStat = {\n  key: string;\n  label: string;\n  value: string | number | null;\n  unit?: string;\n  source: string;\n  asOf: string;\n};\n/** Print finish: the rarer full-art card lets the drawing run under the text. */\nexport type CigaretteCardFinish = \"standard\" | \"full-art\";\n/** Props accepted by CigaretteCard. */\nexport type CigaretteCardProps = {\n  number: number;\n  /** The series numeral printed on both faces and in the series mark, such as \"I\". */\n  seriesNumeral: string;\n  series: string;\n  title: string;\n  /** The type line beside the title, such as \"Machine of the Burrow\". */\n  typeLine?: string | undefined;\n  image: ReactNode;\n  stats: readonly CardStat[];\n  note: string;\n  finish?: CigaretteCardFinish;\n  /** A small set symbol printed in the collector line. */\n  setMark?: ReactNode;\n  defaultFlipped?: boolean;\n  /**\n   * Makes the card a preview: a link to the card's own page showing its\n   * face, instead of a pressed button that turns over in place.\n   */\n  href?: string;\n  /** \"large\" prints the card bigger, for its own page. */\n  size?: \"standard\" | \"large\";\n  className?: string;\n  /** Inline style on the card, such as a shared view-transition name. */\n  style?: CSSProperties;\n};\n\n/** Print an observation date as a calendar day when it carries a time. */\nfunction calendarDay(asOf: string): string {\n  return /^\\d{4}-\\d{2}-\\d{2}T/.test(asOf) ? asOf.slice(0, 10) : asOf;\n}\n\nfunction groupCardSources(stats: readonly CardStat[]) {\n  const grouped = new Map<string, Set<string>>();\n  for (const { source, asOf } of stats) {\n    const dates = grouped.get(source) ?? new Set<string>();\n    dates.add(calendarDay(asOf));\n    grouped.set(source, dates);\n  }\n  return Array.from(grouped, ([source, dates]) => ({\n    source,\n    asOf: Array.from(dates),\n  }));\n}\n\nfunction StatFigure({ stat }: { stat: CardStat }) {\n  if (stat.value === null)\n    return (\n      <span className=\"caps-cigarette-card-not-measured\">not measured</span>\n    );\n  return (\n    <>\n      <span className=\"caps-cigarette-card-numeral\">{String(stat.value)}</span>\n      {stat.unit ? (\n        <span className=\"caps-cigarette-card-unit\">{stat.unit}</span>\n      ) : null}\n    </>\n  );\n}\n\nfunction CardHead({\n  seriesNumeral,\n  title,\n  typeLine,\n}: Pick<CigaretteCardProps, \"seriesNumeral\" | \"title\" | \"typeLine\">) {\n  return (\n    <>\n      <span className=\"caps-cigarette-card-head\">\n        <span className=\"caps-cigarette-card-title\">{title}</span>\n        {typeLine ? (\n          <span className=\"caps-cigarette-card-type\">{typeLine}</span>\n        ) : null}\n      </span>\n      <span aria-hidden=\"true\" className=\"caps-cigarette-card-mark\">\n        <span>{seriesNumeral}</span>\n      </span>\n    </>\n  );\n}\n\nfunction CollectorLine({\n  number,\n  series,\n  seriesNumeral,\n  setMark,\n}: Pick<\n  CigaretteCardProps,\n  \"number\" | \"series\" | \"seriesNumeral\" | \"setMark\"\n>) {\n  return (\n    <span className=\"caps-cigarette-card-collector\">\n      <span>\n        No. {number} · Series {seriesNumeral}: {series}\n      </span>\n      {setMark ? (\n        <span aria-hidden=\"true\" className=\"caps-cigarette-card-set\">\n          {setMark}\n        </span>\n      ) : null}\n    </span>\n  );\n}\n\n/**\n * A two-sided collector card: a framed front with an inset drawing, a stat\n * plate and a flavor line, and a ruled measurement ledger on the back. Both\n * faces live inside one native pressed button, so the reverse stays in the\n * DOM; the visible face names the button. Hydrated hosts flip through React\n * state. Static hosts load the Caps `enhance/cigarette-card` module, which\n * ignores clicks this component already handled. With `href` the card is a\n * preview instead: a link to the card's own page that shows only its face.\n */\nexport function CigaretteCard({\n  className,\n  defaultFlipped = false,\n  finish = \"standard\",\n  href,\n  image,\n  note,\n  number,\n  series,\n  seriesNumeral,\n  setMark,\n  size = \"standard\",\n  stats,\n  style,\n  title,\n  typeLine,\n}: CigaretteCardProps) {\n  const [flipped, setFlipped] = useState(defaultFlipped);\n  const sources = groupCardSources(stats);\n  const headline = stats.find((stat) => stat.value !== null) ?? stats[0];\n  const others = stats.filter((stat) => stat !== headline).slice(0, 2);\n  const head = { seriesNumeral, title, typeLine };\n  const collector = { number, series, seriesNumeral, setMark };\n  const front = (\n    <span\n      className=\"caps-cigarette-card-face caps-cigarette-card-front\"\n      aria-hidden={href ? undefined : flipped}\n    >\n      <CardHead {...head} />\n      <span className=\"caps-cigarette-card-window\">{image}</span>\n      {headline ? (\n        <span className=\"caps-cigarette-card-plate\">\n          <span className=\"caps-cigarette-card-headline\">\n            <span className=\"caps-cigarette-card-label\">{headline.label}</span>\n            <span className=\"caps-cigarette-card-figure\">\n              <StatFigure stat={headline} />\n            </span>\n          </span>\n          {others.length > 0 ? (\n            <span className=\"caps-cigarette-card-plate-list\">\n              {others.map((stat) => (\n                <span key={stat.key}>\n                  <span className=\"caps-cigarette-card-label\">\n                    {stat.label}\n                  </span>\n                  <span>\n                    <StatFigure stat={stat} />\n                  </span>\n                </span>\n              ))}\n            </span>\n          ) : null}\n        </span>\n      ) : null}\n      <span className=\"caps-cigarette-card-flavor\">{note}</span>\n      <CollectorLine {...collector} />\n    </span>\n  );\n  const back = (\n    <span\n      className=\"caps-cigarette-card-face caps-cigarette-card-back\"\n      aria-hidden={!flipped}\n    >\n      <CardHead {...head} />\n      <span className=\"caps-cigarette-card-ledger\">\n        <span className=\"caps-cigarette-card-ledger-title\">\n          Field measurements\n        </span>\n        <span className=\"caps-cigarette-card-stats\">\n          {stats.map((stat) => (\n            <span className=\"caps-cigarette-card-stat\" key={stat.key}>\n              <span className=\"caps-cigarette-card-stat-label\">\n                {stat.label}\n              </span>\n              <span aria-hidden=\"true\" className=\"caps-cigarette-card-leader\" />\n              <span className=\"caps-cigarette-card-stat-value\">\n                <StatFigure stat={stat} />\n              </span>\n            </span>\n          ))}\n        </span>\n        <span aria-hidden=\"true\" className=\"caps-cigarette-card-cameo\">\n          {image}\n        </span>\n        <span className=\"caps-cigarette-card-note\">{note}</span>\n        <span className=\"caps-cigarette-card-sources\">\n          {sources.map(({ source, asOf }) => (\n            <span className=\"caps-cigarette-card-source\" key={source}>\n              {source} · {asOf.join(\", \")}\n            </span>\n          ))}\n        </span>\n      </span>\n      <CollectorLine {...collector} />\n    </span>\n  );\n  if (href)\n    return (\n      <a\n        className={cn(\"caps-cigarette-card\", className)}\n        data-finish={finish}\n        data-flipped={false}\n        data-size={size}\n        href={href}\n        style={style}\n      >\n        <span className=\"caps-cigarette-card-inner\">{front}</span>\n      </a>\n    );\n  return (\n    <button\n      type=\"button\"\n      aria-pressed={flipped}\n      className={cn(\"caps-cigarette-card\", className)}\n      onClick={(event) => {\n        event.preventDefault();\n        setFlipped((current) => !current);\n      }}\n      data-finish={finish}\n      data-flipped={flipped}\n      data-size={size}\n      style={style}\n    >\n      <span className=\"caps-cigarette-card-inner\">\n        {front}\n        {back}\n      </span>\n    </button>\n  );\n}\n\n/** One numbered album position, optionally occupied by a card. */\nexport type AlbumSlot = { number: number; card?: CigaretteCardProps };\n/** Props accepted by CardAlbum. */\nexport type CardAlbumProps = {\n  title: string;\n  slots: readonly AlbumSlot[];\n} & HTMLAttributes<HTMLElement>;\n\n/** A numbered checklist of supplied cards and ruled spaces for missing ones. */\nexport function CardAlbum({\n  className,\n  slots,\n  title,\n  ...props\n}: CardAlbumProps) {\n  const collected = slots.filter((slot) => slot.card !== undefined).length;\n  return (\n    <section {...props} className={cn(\"caps-album\", className)}>\n      <header className=\"caps-album-head\">\n        <h2>{title}</h2>\n        <p>\n          {collected} of {slots.length} collected\n        </p>\n      </header>\n      <ol>\n        {slots.map(({ card, number }) => (\n          <li key={number} data-collected={card !== undefined}>\n            {card ? (\n              <CigaretteCard {...card} />\n            ) : (\n              <span className=\"caps-album-empty\">\n                <span>No. {number}</span>\n                <span>not yet collected</span>\n              </span>\n            )}\n          </li>\n        ))}\n      </ol>\n    </section>\n  );\n}\n"
+    },
+    {
+      "path": "../src/components/field-guide.tsx",
+      "type": "registry:ui",
+      "target": "@ui/field-guide.tsx",
+      "content": "import type { HTMLAttributes, ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** A visible keyboard key from a shortcut or instruction. */\nexport type KeycapProps = {\n  children: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/** The shared field-guide treatment for a keyboard key. */\nexport function Keycap({ children, className, ...props }: KeycapProps) {\n  return (\n    <kbd {...props} className={cn(\"caps-keycap\", className)}>\n      {children}\n    </kbd>\n  );\n}\n\n/** Semantic accent pigments for the static status light. */\nexport type StatusLedTone = \"spore\" | \"mycelium\" | \"fruiting\";\n/** Props accepted by StatusLed. */\nexport type StatusLedProps = {\n  active: boolean;\n  label: string;\n  tone?: StatusLedTone;\n} & Omit<HTMLAttributes<HTMLSpanElement>, \"children\">;\n\n/** A static, labelled indicator using the current field-guide pigment tokens. */\nexport function StatusLed({\n  active,\n  className,\n  label,\n  tone = \"mycelium\",\n  ...props\n}: StatusLedProps) {\n  return (\n    <span\n      {...props}\n      aria-label={`${label}: ${active ? \"on\" : \"off\"}`}\n      className={cn(\"caps-led\", className)}\n      data-active={active}\n      data-tone={tone}\n      role=\"img\"\n    >\n      <span aria-hidden=\"true\" className=\"caps-led-bead\" />\n      <span aria-hidden=\"true\">{label}</span>\n    </span>\n  );\n}\n\n/** Props accepted by CartridgeLabel. */\nexport type CartridgeLabelProps = {\n  title: string;\n  subtitle?: string;\n  mark?: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/** A ruled, token-backed printed label for a physical game cartridge. */\nexport function CartridgeLabel({\n  className,\n  mark,\n  subtitle,\n  title,\n  ...props\n}: CartridgeLabelProps) {\n  return (\n    <figure\n      {...props}\n      aria-label={`${title} cartridge label`}\n      className={cn(\"caps-cartridge-label\", className)}\n    >\n      <span aria-hidden=\"true\" className=\"caps-cartridge-label-rule\" />\n      {mark ? (\n        <span aria-hidden=\"true\" className=\"caps-cartridge-label-mark\">\n          {mark}\n        </span>\n      ) : null}\n      <span className=\"caps-cartridge-label-title\">{title}</span>\n      {subtitle ? (\n        <span className=\"caps-cartridge-label-subtitle\">{subtitle}</span>\n      ) : null}\n      <span aria-hidden=\"true\" className=\"caps-cartridge-label-rule\" />\n    </figure>\n  );\n}\n\n/** Props accepted by SpecimenLabel. */\nexport type SpecimenLabelProps = {\n  plate: string;\n  detail: string;\n  kind: string;\n  number: string;\n  title: ReactNode;\n  summary?: ReactNode;\n  /**\n   * Mark the plate number for a pencil circle and the detail for a pencil\n   * underline. The ruled CSS marks remain until `enhance/sketch` draws them.\n   */\n  sketch?: boolean;\n} & Omit<HTMLAttributes<HTMLElement>, \"title\">;\n\n/** A caption, catalogue line, title, and note for a specimen illustration. */\nexport function SpecimenLabel({\n  className,\n  detail,\n  kind,\n  number,\n  plate,\n  sketch = false,\n  summary,\n  title,\n  ...props\n}: SpecimenLabelProps) {\n  return (\n    <aside {...props} className={cn(\"caps-specimen-label\", className)}>\n      <p className=\"caps-specimen-label-caption\">\n        <span\n          className=\"caps-specimen-label-plate\"\n          data-sketch={sketch ? \"circle\" : undefined}\n        >\n          {plate}\n        </span>\n        <span\n          className=\"caps-specimen-label-detail\"\n          data-sketch={sketch ? \"underline\" : undefined}\n        >\n          {detail}\n        </span>\n      </p>\n      <span className=\"caps-specimen-label-meta\">\n        {kind} · {number}\n      </span>\n      <div className=\"caps-specimen-label-title\">{title}</div>\n      {summary ? (\n        <p className=\"caps-specimen-label-summary\">{summary}</p>\n      ) : null}\n    </aside>\n  );\n}\n"
+    },
+    {
+      "path": "../src/components/badge.tsx",
+      "type": "registry:ui",
+      "target": "@ui/badge.tsx",
+      "content": "import { forwardRef, type HTMLAttributes } from \"react\";\n\nimport { cn, cva } from \"@/lib/cn\";\n\n/** Supported BadgeTone values. */\nexport type BadgeTone =\n  | \"neutral\"\n  | \"primary\"\n  | \"secondary\"\n  | \"accent\"\n  | \"success\"\n  | \"info\"\n  | \"warning\"\n  | \"error\";\n/** Supported BadgeSize values. */\nexport type BadgeSize = \"sm\" | \"default\" | \"lg\";\n/** `quiet` is a soft tint with no outline, for labels that sit beside keys. */\nexport type BadgeVariant = \"solid\" | \"quiet\";\n\nconst badgeVariants = cva(\"badge caps-badge\", {\n  variants: {\n    tone: {\n      neutral: \"badge-neutral\",\n      primary: \"badge-primary\",\n      secondary: \"badge-secondary\",\n      accent: \"badge-accent\",\n      success: \"badge-success\",\n      info: \"badge-info\",\n      warning: \"badge-warning\",\n      error: \"badge-error\",\n    },\n    size: { sm: \"badge-sm\", default: \"badge-md\", lg: \"badge-lg\" },\n    variant: { solid: \"\", quiet: \"caps-badge-quiet\" },\n  },\n  defaultVariants: { tone: \"neutral\", size: \"default\" },\n});\n\n/** Props accepted by Badge. */\nexport type BadgeProps = {\n  size?: BadgeSize;\n  variant?: BadgeVariant;\n  tone?: BadgeTone;\n} & HTMLAttributes<HTMLSpanElement>;\n\n/** A compact status or category label. */\nexport const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(\n  { className, size, tone, variant, ...props },\n  ref,\n) {\n  return (\n    <span\n      {...props}\n      className={cn(badgeVariants({ size, tone, variant }), className)}\n      ref={ref}\n    />\n  );\n});\n"
+    },
+    {
+      "path": "../src/components/prose.tsx",
+      "type": "registry:ui",
+      "target": "@ui/prose.tsx",
+      "content": "import { forwardRef, type HTMLAttributes } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Supported Prose treatments. */\nexport type ProseVariant = \"default\" | \"dropcap\";\n/** Props accepted by Prose. */\nexport type ProseProps = {\n  variant?: ProseVariant;\n} & HTMLAttributes<HTMLElement>;\n\n/**\n * Tailwind Typography's `prose` rhythm and measure in the active theme's\n * colours and faces; the caller supplies the document content.\n */\nexport const Prose = forwardRef<HTMLElement, ProseProps>(function Prose(\n  { className, variant = \"default\", ...props },\n  ref,\n) {\n  return (\n    <article\n      {...props}\n      className={cn(\n        \"prose prose-caps\",\n        variant === \"dropcap\" && \"caps-prose-dropcap\",\n        className,\n      )}\n      ref={ref}\n    />\n  );\n});\n"
+    },
+    {
+      "path": "../src/enhance/sketch.ts",
+      "type": "registry:lib",
+      "target": "@lib/sketch.ts",
+      "content": "import roughImport from \"roughjs\";\nimport type { RoughSVG } from \"roughjs/bin/svg.js\";\n\ntype RoughSvg = RoughSVG;\ntype RoughOptions = NonNullable<Parameters<RoughSvg[\"line\"]>[4]>;\ntype RoughApi = { svg(svg: SVGSVGElement): RoughSvg };\n\n// roughjs ships CommonJS types beside an ESM `module` build: NodeNext sees the\n// API under `default`, bundlers hand over the API itself. Accept either.\ntype RoughEntry = RoughApi | { readonly default: RoughApi };\n\nfunction resolveRough(entry: RoughEntry): RoughApi {\n  return \"svg\" in entry ? entry : entry.default;\n}\n\nconst rough = resolveRough(roughImport);\n\nconst SVG = \"http://www.w3.org/2000/svg\";\n\n/**\n * The opt-in pencil layer for server-rendered field-guide pages.\n *\n * Markup contract, all plain attributes so any host can use it without React:\n * - `data-sketch-root` marks a positioned host; its overlay is drawn inside it.\n * - `data-sketch=\"circle\" | \"underline\"` marks inline text to annotate.\n * - `data-sketch-leader-x` / `data-sketch-leader-y` (fractions of the target\n *   box) on a note draw a leader from the note to the `data-sketch-target`\n *   inside the same `data-sketch-item`. The layout decides whether leaders\n *   apply by setting `--caps-sketch-leader: on` on the note.\n *\n * Strokes use `currentColor`, so a theme switch recolors them without a\n * redraw. The host receives `data-sketch-drawn` once annotations exist, which\n * lets Caps hide the static CSS fallbacks they replace.\n */\nexport function sketch(root: ParentNode = document): () => void {\n  const hosts = Array.from(\n    root.querySelectorAll<HTMLElement>(\"[data-sketch-root]\"),\n  );\n  const draw = () => {\n    for (const [index, host] of hosts.entries()) drawHost(host, index);\n  };\n  draw();\n  // Older engines and jsdom lack ResizeObserver; they draw once.\n  const observer =\n    \"ResizeObserver\" in globalThis ? new ResizeObserver(draw) : undefined;\n  for (const host of hosts) observer?.observe(host);\n  // Web fonts move annotated text once they load; jsdom has no font set.\n  if (\"fonts\" in document) void document.fonts.ready.then(draw);\n  return () => {\n    observer?.disconnect();\n    for (const host of hosts) {\n      host.querySelector(\":scope > .caps-sketch-overlay\")?.remove();\n      delete host.dataset.sketchDrawn;\n    }\n  };\n}\n\nfunction drawHost(host: HTMLElement, index: number): void {\n  host.querySelector(\":scope > .caps-sketch-overlay\")?.remove();\n  const bounds = host.getBoundingClientRect();\n  if (!bounds.width || !bounds.height) return;\n\n  const overlay = document.createElementNS(SVG, \"svg\");\n  overlay.setAttribute(\n    \"viewBox\",\n    `0 0 ${String(bounds.width)} ${String(bounds.height)}`,\n  );\n  overlay.setAttribute(\"aria-hidden\", \"true\");\n  overlay.setAttribute(\"focusable\", \"false\");\n  overlay.classList.add(\"caps-sketch-overlay\");\n  const generator = rough.svg(overlay);\n\n  for (const [markIndex, mark] of host\n    .querySelectorAll<HTMLElement>(\"[data-sketch]\")\n    .entries()) {\n    const annotation = drawMark(generator, bounds, mark, {\n      roughness: 1.1,\n      stroke: \"currentColor\",\n      strokeWidth: 1.3,\n      seed: 2601 + index * 10 + markIndex,\n    });\n    if (annotation) overlay.append(annotation);\n  }\n  for (const [noteIndex, note] of host\n    .querySelectorAll<HTMLElement>(\"[data-sketch-leader-x]\")\n    .entries()) {\n    const leader = drawLeader(generator, bounds, note, {\n      roughness: 1.2,\n      stroke: \"currentColor\",\n      strokeWidth: 1.2,\n      seed: 3101 + index * 10 + noteIndex,\n    });\n    if (leader) overlay.append(leader);\n  }\n  host.append(overlay);\n  host.dataset.sketchDrawn = \"\";\n}\n\nfunction drawMark(\n  generator: RoughSvg,\n  host: DOMRect,\n  mark: HTMLElement,\n  options: RoughOptions,\n): SVGGElement | undefined {\n  const box = mark.getBoundingClientRect();\n  if (!box.width || !box.height) return undefined;\n  const x = box.left - host.left;\n  const y = box.top - host.top;\n  switch (mark.dataset.sketch) {\n    case \"circle\":\n      return generator.ellipse(\n        x + box.width / 2,\n        y + box.height / 2,\n        box.width + 9,\n        box.height + 7,\n        options,\n      );\n    case \"underline\":\n      return generator.line(\n        x,\n        y + box.height + 3,\n        x + box.width,\n        y + box.height + 3,\n        options,\n      );\n    default:\n      return undefined;\n  }\n}\n\nfunction drawLeader(\n  generator: RoughSvg,\n  host: DOMRect,\n  note: HTMLElement,\n  options: RoughOptions,\n): SVGGElement | undefined {\n  if (\n    getComputedStyle(note).getPropertyValue(\"--caps-sketch-leader\").trim() !==\n    \"on\"\n  )\n    return undefined;\n  const target = note\n    .closest(\"[data-sketch-item]\")\n    ?.querySelector<HTMLElement>(\"[data-sketch-target]\");\n  const fx = Number(note.dataset.sketchLeaderX);\n  const fy = Number(note.dataset.sketchLeaderY);\n  if (!target || !Number.isFinite(fx) || !Number.isFinite(fy)) return undefined;\n\n  const targetBox = target.getBoundingClientRect();\n  const noteBox = note.getBoundingClientRect();\n  const endX = targetBox.left - host.left + targetBox.width * fx;\n  const endY = targetBox.top - host.top + targetBox.height * fy;\n  const startX = Math.min(\n    Math.max(endX, noteBox.left - host.left + 18),\n    noteBox.right - host.left - 18,\n  );\n  const startY = noteBox.top - host.top - 8;\n  const length = Math.hypot(endX - startX, endY - startY);\n  if (length < 12) return undefined;\n\n  const group = document.createElementNS(SVG, \"g\");\n  const bend = Math.min(16, length / 10);\n  group.append(\n    generator.curve(\n      [\n        [startX, startY],\n        [(startX + endX) / 2 + bend, (startY + endY) / 2],\n        [endX, endY],\n      ],\n      options,\n    ),\n  );\n  const angle = Math.atan2(endY - startY, endX - startX);\n  for (const side of [-1, 1]) {\n    const wing = angle + Math.PI + side * 0.45;\n    group.append(\n      generator.line(\n        endX,\n        endY,\n        endX + Math.cos(wing) * 11,\n        endY + Math.sin(wing) * 11,\n        options,\n      ),\n    );\n  }\n  return group;\n}\n"
+    },
+    {
+      "path": "../src/enhance/cigarette-card.ts",
+      "type": "registry:lib",
+      "target": "@lib/cigarette-card.ts",
+      "content": "/** Only the pressed-button card turns over; a preview card is a link. */\nconst CARD = \"button.caps-cigarette-card\";\n\n/** Show one face of a server-rendered CigaretteCard. */\nexport function setCigaretteCardFlipped(\n  card: HTMLElement,\n  flipped: boolean,\n): void {\n  card.setAttribute(\"aria-pressed\", String(flipped));\n  card.dataset.flipped = String(flipped);\n  card\n    .querySelector(\".caps-cigarette-card-front\")\n    ?.setAttribute(\"aria-hidden\", String(flipped));\n  card\n    .querySelector(\".caps-cigarette-card-back\")\n    ?.setAttribute(\"aria-hidden\", String(!flipped));\n}\n\nfunction onClick(event: Event): void {\n  // A hydrated CigaretteCard handles its own click and marks it prevented.\n  if (event.defaultPrevented || !(event.target instanceof Element)) return;\n  const card = event.target.closest<HTMLElement>(CARD);\n  if (!card) return;\n  setCigaretteCardFlipped(card, card.getAttribute(\"aria-pressed\") !== \"true\");\n}\n\n/**\n * Flip server-rendered CigaretteCards on click, tap, Enter or Space. The card\n * is a native button, so the keyboard reaches it as a click; this only\n * toggles the pressed state. Returns a cleanup that removes the listener.\n */\nexport function enhanceCigaretteCards(\n  root: Document | HTMLElement = document,\n): () => void {\n  root.addEventListener(\"click\", onClick);\n  return () => {\n    root.removeEventListener(\"click\", onClick);\n  };\n}\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer components": {
+      ".caps-plate": { "margin": "0", "color": "var(--card-ink)" },
+      ".caps-plate-image": {
+        "border": "var(--card-rule-width) solid var(--card-rule)",
+        "padding": "var(--spacing-sm)",
+        "background": "var(--card-paper)"
+      },
+      ".caps-plate-image > img": {
+        "display": "block",
+        "width": "100%",
+        "height": "auto"
+      },
+      ".caps-plate > figcaption": {
+        "display": "flex",
+        "justifyContent": "space-between",
+        "gap": "var(--spacing-md)",
+        "paddingTop": "var(--spacing-xs)",
+        "color": "var(--marginalia-ink)",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.75rem"
+      },
+      ".caps-stage-plate": {
+        "--specimen-ink": "var(--card-ink)",
+        "--specimen-paper": "var(--card-paper)",
+        "--specimen-accent": "var(--growth-fruiting)",
+        "display": "grid",
+        "justifyItems": "center",
+        "gap": "var(--spacing-sm)",
+        "width": "100%",
+        "margin": "0",
+        "color": "var(--card-ink)"
+      },
+      ".caps-stage-plate-viewport": {
+        "display": "grid",
+        "width": "min(100%, 45rem)",
+        "aspectRatio": "4 / 3",
+        "borderRadius": "var(--radius-box)",
+        "touchAction": "none",
+        "cursor": "grab",
+        "userSelect": "none"
+      },
+      ".caps-stage-plate-viewport:active": { "cursor": "grabbing" },
+      ".caps-stage-plate-viewport:focus-visible": {
+        "outline": "var(--card-rule-width) dashed var(--card-rule)",
+        "outlineOffset": "var(--spacing-xs)"
+      },
+      ".caps-stage-plate-viewport > canvas": {
+        "gridArea": "1 / 1",
+        "width": "100%",
+        "height": "100%",
+        "imageRendering": "pixelated"
+      },
+      ".caps-stage-plate > figcaption": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "baseline",
+        "justifyContent": "center",
+        "gap": "var(--spacing-xs) var(--spacing-md)",
+        "color": "var(--marginalia-ink)",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.75rem",
+        "textAlign": "center"
+      },
+      ".caps-stage-plate-caption": {
+        "color": "var(--card-ink)",
+        "fontFamily": "var(--font-handwritten)",
+        "fontSize": "1.05rem"
+      },
+      ".caps-stage-plate-hint": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "gap": "var(--spacing-xs) var(--spacing-lg)",
+        "margin": "0",
+        "color": "var(--marginalia-ink)",
+        "fontSize": "0.8rem",
+        "--caps-keycap-legend-min-size": "1.5rem",
+        "--caps-keycap-legend-margin": "var(--spacing-2xs)",
+        "--caps-keycap-legend-font-size": "0.75rem"
+      },
+      ".caps-stage-plate-key": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "justifyContent": "center",
+        "gap": "var(--spacing-xs) var(--spacing-md)",
+        "maxWidth": "45rem",
+        "margin": "var(--spacing-xs) 0 0",
+        "padding": "0",
+        "color": "var(--marginalia-ink)",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.75rem",
+        "listStyle": "none"
+      },
+      ".caps-stage-plate-key > li": {
+        "display": "inline-flex",
+        "gap": "var(--spacing-2xs)",
+        "borderBottom": "var(--card-rule-width) solid transparent",
+        "transition": "color var(--stipe-motion-slow) var(--stipe-motion-ease),\n      border-color var(--stipe-motion-slow) var(--stipe-motion-ease)"
+      },
+      ".caps-stage-plate-key > li[data-pending]": {
+        "fontStyle": "italic",
+        "opacity": 0.7
+      },
+      ".caps-stage-plate-key > li[data-current]": {
+        "borderBottomColor": "currentColor",
+        "color": "var(--specimen-accent)",
+        "opacity": 1
+      },
+      "@media (max-width: 35rem)": {
+        ".caps-stage-plate-viewport": { "aspectRatio": "1" }
+      },
+      ".caps-compact-plate .caps-plate-image": {
+        "padding": "var(--spacing-xs)"
+      },
+      ".caps-margin-note": {
+        "color": "var(--marginalia-ink)",
+        "fontSize": "0.875em"
+      },
+      ".caps-keycap": {
+        "display": "inline-grid",
+        "minWidth": "var(--caps-keycap-legend-min-size, 2rem)",
+        "minHeight": "var(--caps-keycap-legend-min-size, 2rem)",
+        "marginInline": "var(--caps-keycap-legend-margin, 0)",
+        "fontSize": "var(--caps-keycap-legend-font-size, inherit)",
+        "placeItems": "center",
+        "border": "var(--card-rule-width) solid\n      var(\n        --caps-keycap-legend-edge,\n        color-mix(in oklab, var(--card-rule) 22%, transparent)\n      )",
+        "borderRadius": "var(--radius-selector)",
+        "paddingInline": "var(--spacing-sm)",
+        "background": "color-mix(in oklab, var(--card-ink) 5%, var(--card-paper))",
+        "color": "var(--card-ink)",
+        "fontFamily": "var(--font-mono)",
+        "lineHeight": 1
+      },
+      ".caps-led": {
+        "display": "inline-flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-xs)",
+        "color": "var(--marginalia-ink)",
+        "fontSize": "0.75rem"
+      },
+      ".caps-led-bead": {
+        "width": "0.625rem",
+        "height": "0.625rem",
+        "flex": "none",
+        "border": "var(--card-rule-width) solid var(--card-rule)",
+        "borderRadius": "var(--radius-selector)",
+        "background": "var(--caps-led-color)",
+        "boxShadow": "0 0 0 var(--card-rule-width)\n      color-mix(in srgb, var(--caps-led-color) 36%, transparent)"
+      },
+      ".caps-led[data-tone=\"spore\"]": {
+        "--caps-led-color": "var(--growth-spore)"
+      },
+      ".caps-led[data-tone=\"mycelium\"]": {
+        "--caps-led-color": "var(--growth-mycelium)"
+      },
+      ".caps-led[data-tone=\"fruiting\"]": {
+        "--caps-led-color": "var(--growth-fruiting)"
+      },
+      ".caps-led[data-active=\"false\"]": {
+        "--caps-led-color": "var(--marginalia-ink)"
+      },
+      ".caps-cartridge-label": {
+        "display": "grid",
+        "justifyItems": "center",
+        "gap": "var(--spacing-sm)",
+        "width": "min(100%, 16rem)",
+        "aspectRatio": "1.14",
+        "margin": "0",
+        "border": "var(--card-rule-width) solid var(--card-rule)",
+        "padding": "var(--spacing-md)",
+        "background": "var(--card-paper)",
+        "color": "var(--card-ink)",
+        "textAlign": "center",
+        "boxShadow": "inset 0 0 0 var(--spacing-xs) var(--card-back-paper)"
+      },
+      ".caps-cartridge-label-rule": {
+        "width": "82%",
+        "height": "var(--card-rule-width)",
+        "alignSelf": "center",
+        "background": "var(--card-rule)"
+      },
+      ".caps-cartridge-label-mark": {
+        "display": "grid",
+        "flex": 1,
+        "placeItems": "center",
+        "color": "var(--growth-fruiting)",
+        "fontSize": "2rem",
+        "lineHeight": 1
+      },
+      ".caps-cartridge-label-title": {
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "1.1rem",
+        "fontWeight": 700,
+        "letterSpacing": "0.16em",
+        "lineHeight": 1
+      },
+      ".caps-cartridge-label-subtitle": {
+        "color": "var(--marginalia-ink)",
+        "fontSize": "0.7rem",
+        "fontVariant": "small-caps"
+      },
+      ".caps-specimen-label": {
+        "display": "grid",
+        "alignContent": "start",
+        "justifyItems": "start",
+        "gap": "var(--spacing-xs)",
+        "color": "var(--card-ink)"
+      },
+      ".caps-specimen-label > p": { "margin": "0" },
+      ".caps-specimen-label-caption": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "baseline",
+        "gap": "var(--spacing-xs) var(--spacing-sm)",
+        "padding": "var(--spacing-xs)",
+        "fontFamily": "var(--font-handwritten)"
+      },
+      ".caps-specimen-label-plate": {
+        "border": "var(--card-rule-width) solid var(--card-rule)",
+        "borderRadius": "var(--radius-box)",
+        "padding": "var(--spacing-xs) var(--spacing-sm)"
+      },
+      ".caps-specimen-label-detail": {
+        "borderBottom": "var(--card-rule-width) solid var(--card-rule)",
+        "paddingBottom": "var(--spacing-xs)"
+      },
+      ".caps-specimen-label-meta": {
+        "color": "var(--marginalia-ink)",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.6875rem",
+        "letterSpacing": "0.08em",
+        "textTransform": "uppercase"
+      },
+      ".caps-specimen-label-title > :first-child": { "marginBlock": "0" },
+      ".caps-specimen-label-summary": { "lineHeight": 1.4 },
+      ".caps-callout": {
+        "borderInlineStart": "var(--card-rule-width) solid var(--card-rule)",
+        "padding": "var(--spacing-md)",
+        "background": "var(--card-paper)",
+        "color": "var(--card-ink)"
+      },
+      ".caps-callout[data-kind=\"warning\"]": {
+        "borderColor": "var(--growth-fruiting)"
+      },
+      ".caps-callout[data-kind=\"lesson\"]": {
+        "borderColor": "var(--growth-mycelium)"
+      },
+      ".caps-growth-badge": {
+        "fontFamily": "var(--font-mono)",
+        "letterSpacing": "0.06em",
+        "textTransform": "lowercase"
+      },
+      ".caps-issue-masthead": {
+        "borderBlock": "var(--card-rule-width) double var(--card-rule)",
+        "paddingBlock": "var(--spacing-lg)",
+        "color": "var(--card-ink)",
+        "textAlign": "center"
+      },
+      ".caps-issue-masthead h1": {
+        "margin": "0",
+        "fontFamily": "var(--font-display)",
+        "fontVariationSettings": "\"SOFT\" 40",
+        "fontWeight": "var(--caps-heading-weight, 600)",
+        "letterSpacing": "var(--caps-heading-tracking, -0.015em)",
+        "fontSize": "clamp(2rem, 7vw, 5rem)",
+        "lineHeight": "var(--caps-heading-line-height, 1)"
+      },
+      ".caps-issue-masthead > p:last-child": {
+        "maxWidth": "44rem",
+        "margin": "var(--spacing-sm) auto 0"
+      },
+      ".caps-issue-kicker": {
+        "margin": "0 0 var(--spacing-sm)",
+        "color": "var(--marginalia-ink)",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.75rem",
+        "letterSpacing": "0.08em",
+        "textTransform": "uppercase"
+      },
+      ".caps-spread": {
+        "display": "grid",
+        "gridTemplateColumns": "minmax(0, 1fr)",
+        "gap": "var(--spacing-xl)",
+        "paddingBlock": "var(--spacing-2xl)",
+        "color": "var(--card-ink)"
+      },
+      ".caps-spread + .caps-spread": {
+        "borderTop": "var(--card-rule-width) solid var(--newsprint-column-rule)"
+      },
+      ".caps-spread[data-layout=\"grid\"]": {
+        "gridTemplateColumns": "repeat(auto-fit, minmax(min(16rem, 100%), 1fr))"
+      },
+      "@media (min-width: 48rem)": {
+        ".caps-spread[data-layout=\"columns\"]": {
+          "gridTemplateColumns": "repeat(2, minmax(0, 1fr))",
+          "columnGap": "0"
+        },
+        ".caps-spread[data-layout=\"columns\"] > :nth-child(odd)": {
+          "borderInlineEnd": "var(--card-rule-width) solid\n        var(--newsprint-column-rule)",
+          "paddingInlineEnd": "var(--spacing-2xl)"
+        },
+        ".caps-spread[data-layout=\"columns\"] > :nth-child(even)": {
+          "paddingInlineStart": "var(--spacing-2xl)"
+        },
+        ".caps-inset[data-align=\"end\"]": {
+          "cssFloat": "inline-end",
+          "clear": "inline-end",
+          "width": "12.5rem",
+          "margin": "var(--spacing-xs) 0 var(--spacing-lg) var(--spacing-xl)"
+        }
+      },
+      ".caps-note-teaser": {
+        "display": "grid",
+        "alignContent": "start",
+        "gap": "var(--spacing-md)",
+        "color": "var(--card-ink)"
+      },
+      ".caps-note-teaser-head": {
+        "display": "grid",
+        "gap": "var(--spacing-sm)"
+      },
+      ".caps-note-teaser-head h2": {
+        "margin": "0",
+        "fontSize": "1.5rem",
+        "fontWeight": 600,
+        "lineHeight": 1.15,
+        "letterSpacing": "-0.01em"
+      },
+      ".caps-note-teaser-head h2 a": {
+        "color": "inherit",
+        "textDecoration": "none"
+      },
+      ".caps-note-teaser-head h2 a:hover,.caps-note-teaser-head h2 a:focus-visible": {
+        "textDecoration": "underline",
+        "textDecorationThickness": "var(--card-rule-width)",
+        "textUnderlineOffset": "0.15em"
+      },
+      ".caps-note-teaser-dek": {
+        "margin": "0",
+        "color": "var(--marginalia-ink)",
+        "fontSize": "1.0625rem",
+        "lineHeight": 1.5
+      },
+      ".caps-note-teaser-body": { "display": "flow-root", "lineHeight": 1.7 },
+      ".caps-note-teaser-body > p": { "margin": "0 0 var(--spacing-md)" },
+      ".caps-note-teaser-body a": {
+        "color": "inherit",
+        "textDecorationLine": "underline",
+        "textDecorationThickness": "var(--card-rule-width)",
+        "textUnderlineOffset": "0.15em"
+      },
+      ".caps-note-teaser-body > .caps-compact-plate": {
+        "margin": "0 0 var(--spacing-lg)"
+      },
+      ".caps-note-teaser-more": {
+        "justifySelf": "start",
+        "color": "inherit",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.8125rem",
+        "letterSpacing": "0.04em",
+        "textDecorationThickness": "var(--card-rule-width)",
+        "textUnderlineOffset": "0.3em"
+      },
+      "@media (min-width: 40rem)": {
+        ".caps-note-teaser-body > .caps-compact-plate": {
+          "cssFloat": "inline-end",
+          "width": "40%",
+          "margin": "var(--spacing-xs) 0 var(--spacing-md) var(--spacing-xl)"
+        },
+        ".caps-spread[data-layout=\"lead\"] .caps-note-teaser-head h2": {
+          "fontSize": "clamp(1.875rem, 3.4vw, 2.625rem)"
+        },
+        ".caps-spread[data-layout=\"lead\"] .caps-note-teaser-body": {
+          "fontSize": "1.125rem"
+        },
+        ".caps-spread[data-layout=\"lead\"]\n      .caps-note-teaser-body\n      > .caps-compact-plate": {
+          "width": "34%"
+        }
+      },
+      ".caps-inset": {
+        "display": "grid",
+        "justifyItems": "center",
+        "width": "min(100%, 15rem)",
+        "margin": "var(--spacing-xl) auto"
+      },
+      ".caps-cigarette-card": {
+        "display": "block",
+        "width": "100%",
+        "maxWidth": "17rem",
+        "aspectRatio": "63 / 88",
+        "padding": "0",
+        "border": "0",
+        "background": "transparent",
+        "color": "var(--card-frame-ink)",
+        "font": "inherit",
+        "textAlign": "left",
+        "cursor": "pointer",
+        "perspective": "1200px",
+        "containerType": "inline-size"
+      },
+      ".caps-cigarette-card:focus-visible": {
+        "outline": "2px solid var(--card-accent)",
+        "outlineOffset": "6px"
+      },
+      ".caps-cigarette-card-inner": {
+        "position": "relative",
+        "display": "block",
+        "width": "100%",
+        "height": "100%",
+        "transformStyle": "preserve-3d",
+        "transition": "transform calc(var(--stipe-motion-slow) * 2)\n      cubic-bezier(0.3, 0.7, 0.2, 1)"
+      },
+      ".caps-cigarette-card[data-flipped=\"true\"] .caps-cigarette-card-inner": {
+        "transform": "rotateY(180deg)"
+      },
+      ".caps-cigarette-card-face": {
+        "position": "absolute",
+        "inset": "0",
+        "display": "flex",
+        "flexDirection": "column",
+        "padding": "4.5cqi",
+        "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-accent) 55%, var(--card-frame))",
+        "borderRadius": "2.2cqi",
+        "background": "var(--card-texture), var(--card-frame)",
+        "backfaceVisibility": "hidden",
+        "boxShadow": "0 0.4cqi 0.8cqi var(--card-shadow),\n      0 3cqi 6cqi -2.5cqi var(--card-shadow)"
+      },
+      ".caps-cigarette-card-head": {
+        "display": "flex",
+        "flex": "none",
+        "flexWrap": "wrap",
+        "alignItems": "baseline",
+        "gap": "0 2.4cqi",
+        "minHeight": "12cqi",
+        "paddingInlineEnd": "13cqi"
+      },
+      ".caps-cigarette-card-title": {
+        "fontFamily": "var(--font-display)",
+        "fontSize": "9cqi",
+        "fontVariationSettings": "\"SOFT\" 60,\n      \"WONK\" 1",
+        "fontWeight": "var(--caps-heading-weight, 640)",
+        "lineHeight": "var(--caps-heading-line-height, 1.05)",
+        "letterSpacing": "var(--caps-heading-tracking, -0.01em)"
+      },
+      ".caps-cigarette-card-type": {
+        "color": "color-mix(in srgb, var(--card-frame-ink) 72%, transparent)",
+        "fontFamily": "var(--font-display)",
+        "fontSize": "4.2cqi",
+        "fontStyle": "italic"
+      },
+      ".caps-cigarette-card-mark": {
+        "position": "absolute",
+        "top": "3cqi",
+        "right": "3cqi",
+        "zIndex": 2,
+        "display": "grid",
+        "width": "12.5cqi",
+        "aspectRatio": "1 / 1.1",
+        "placeItems": "center",
+        "background": "var(--card-accent)",
+        "clipPath": "polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%)"
+      },
+      ".caps-cigarette-card-mark > span": {
+        "display": "grid",
+        "width": "calc(100% - 0.7cqi)",
+        "height": "calc(100% - 0.8cqi)",
+        "placeItems": "center",
+        "background": "var(--card-frame)",
+        "clipPath": "inherit",
+        "fontFamily": "var(--font-display)",
+        "fontSize": "4.6cqi",
+        "fontWeight": 700,
+        "color": "var(--card-accent)"
+      },
+      ".caps-cigarette-card-window": {
+        "position": "relative",
+        "display": "grid",
+        "flex": 1,
+        "gridTemplate": "minmax(0, 1fr) / minmax(0, 1fr)",
+        "placeItems": "center",
+        "minHeight": "0",
+        "marginTop": "1.5cqi",
+        "overflow": "hidden",
+        "padding": "4cqi 4cqi 11cqi",
+        "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
+        "borderRadius": "0.8cqi",
+        "background": "var(--card-texture), var(--card-window)",
+        "boxShadow": "inset 0 0.6cqi 1.8cqi -0.4cqi var(--card-shadow),\n      inset 0 0 0 0.6cqi color-mix(in srgb, var(--card-window) 70%, transparent)"
+      },
+      ".caps-cigarette-card-window img,.caps-cigarette-card-window svg": {
+        "width": "100%",
+        "height": "100%",
+        "objectFit": "contain",
+        "color": "var(--card-ink)",
+        "filter": "grayscale(1) contrast(1.08)"
+      },
+      ".caps-cigarette-card-plate": {
+        "position": "relative",
+        "zIndex": 1,
+        "display": "flex",
+        "flex": "none",
+        "alignItems": "end",
+        "justifyContent": "space-between",
+        "gap": "2cqi",
+        "margin": "-9cqi 1.8cqi 0",
+        "padding": "2.2cqi 3cqi 2.4cqi",
+        "border": "var(--card-rule-width) solid var(--card-accent)",
+        "borderRadius": "0.8cqi",
+        "background": "color-mix(in srgb, var(--card-frame) 90%, transparent)",
+        "backdropFilter": "blur(2px)"
+      },
+      ".caps-cigarette-card-headline": { "display": "grid", "minWidth": "0" },
+      ".caps-cigarette-card-label": {
+        "color": "var(--card-accent)",
+        "fontSize": "max(0.625rem, 4.2cqi)",
+        "fontVariant": "small-caps",
+        "letterSpacing": "0.05em",
+        "lineHeight": 1.2
+      },
+      ".caps-cigarette-card-figure": {
+        "display": "flex",
+        "alignItems": "baseline",
+        "gap": "1.2cqi",
+        "lineHeight": 1
+      },
+      ".caps-cigarette-card-figure .caps-cigarette-card-numeral": {
+        "fontFamily": "var(--font-display)",
+        "fontSize": "11cqi",
+        "fontVariantNumeric": "lining-nums",
+        "fontWeight": 700,
+        "lineHeight": 0.95
+      },
+      ".caps-cigarette-card-figure .caps-cigarette-card-not-measured": {
+        "paddingBlock": "1.4cqi 0.6cqi",
+        "fontSize": "5cqi"
+      },
+      ".caps-cigarette-card-unit": {
+        "color": "color-mix(in srgb, var(--card-frame-ink) 75%, transparent)",
+        "fontSize": "max(0.5625rem, 3.8cqi)",
+        "fontVariant": "small-caps",
+        "letterSpacing": "0.04em"
+      },
+      ".caps-cigarette-card-plate-list": {
+        "display": "grid",
+        "justifyItems": "end",
+        "gap": "1.2cqi",
+        "fontSize": "max(0.625rem, 4.2cqi)",
+        "lineHeight": 1.2,
+        "textAlign": "right"
+      },
+      ".caps-cigarette-card-plate-list > span": {
+        "display": "grid",
+        "justifyItems": "end"
+      },
+      ".caps-cigarette-card-plate-list .caps-cigarette-card-numeral": {
+        "fontFamily": "var(--font-display)",
+        "fontWeight": 700
+      },
+      ".caps-cigarette-card-not-measured": {
+        "color": "color-mix(in srgb, currentColor 72%, transparent)",
+        "fontFamily": "var(--font-display)",
+        "fontStyle": "italic"
+      },
+      ".caps-cigarette-card-flavor": {
+        "display": "-webkit-box",
+        "flex": "none",
+        "overflow": "hidden",
+        "margin": "2.4cqi 1.8cqi 0",
+        "color": "color-mix(in srgb, var(--card-frame-ink) 88%, transparent)",
+        "fontFamily": "var(--font-display)",
+        "fontSize": "max(0.6875rem, 4.7cqi)",
+        "fontStyle": "italic",
+        "lineHeight": 1.25,
+        "WebkitBoxOrient": "vertical",
+        "WebkitLineClamp": "2"
+      },
+      ".caps-cigarette-card-collector": {
+        "display": "flex",
+        "flex": "none",
+        "alignItems": "center",
+        "justifyContent": "space-between",
+        "gap": "2cqi",
+        "marginTop": "auto",
+        "paddingTop": "2cqi",
+        "borderTop": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-accent) 45%, transparent)",
+        "color": "color-mix(in srgb, var(--card-frame-ink) 70%, transparent)",
+        "fontSize": "max(0.5rem, 3.2cqi)",
+        "fontVariant": "small-caps",
+        "letterSpacing": "0.05em"
+      },
+      ".caps-cigarette-card-flavor + .caps-cigarette-card-collector": {
+        "marginTop": "auto"
+      },
+      ".caps-cigarette-card-set": {
+        "display": "grid",
+        "flex": "none",
+        "width": "5.5cqi",
+        "height": "5.5cqi",
+        "placeItems": "center",
+        "color": "var(--card-accent)"
+      },
+      ".caps-cigarette-card-set svg": { "width": "100%", "height": "100%" },
+      ".caps-cigarette-card-back": { "transform": "rotateY(180deg)" },
+      ".caps-cigarette-card-ledger": {
+        "display": "flex",
+        "flex": 1,
+        "flexDirection": "column",
+        "gap": "1.8cqi",
+        "minHeight": "0",
+        "marginBlock": "1.5cqi 2.4cqi",
+        "overflow": "hidden",
+        "padding": "3.2cqi 3.6cqi",
+        "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
+        "borderRadius": "0.8cqi",
+        "background": "var(--card-texture), var(--card-window)",
+        "color": "var(--card-window-ink)",
+        "--card-rule": "color-mix(in srgb, var(--card-window-ink) 60%, transparent)",
+        "--marginalia-ink": "color-mix(\n      in srgb,\n      var(--card-window-ink) 72%,\n      transparent\n    )"
+      },
+      ".caps-cigarette-card-ledger-title": {
+        "borderBottom": "calc(var(--card-rule-width) * 3) double var(--card-rule)",
+        "paddingBottom": "1.4cqi",
+        "color": "var(--marginalia-ink, var(--card-ink))",
+        "fontSize": "max(0.5625rem, 3.8cqi)",
+        "fontVariant": "small-caps",
+        "letterSpacing": "0.08em",
+        "textAlign": "center"
+      },
+      ".caps-cigarette-card-stats": {
+        "display": "flex",
+        "flex": "none",
+        "flexDirection": "column",
+        "fontSize": "max(0.625rem, 4.5cqi)",
+        "lineHeight": 1.25
+      },
+      ".caps-cigarette-card-stat": {
+        "display": "flex",
+        "alignItems": "baseline",
+        "paddingBlock": "1.1cqi",
+        "borderBottom": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 35%, transparent)"
+      },
+      ".caps-cigarette-card-stat-label": {
+        "fontVariant": "small-caps",
+        "letterSpacing": "0.02em"
+      },
+      ".caps-cigarette-card-leader": {
+        "flex": 1,
+        "minWidth": "1.5em",
+        "marginInline": "var(--spacing-xs)",
+        "borderBottom": "var(--card-rule-width) dotted\n      color-mix(in srgb, var(--card-rule) 60%, transparent)"
+      },
+      ".caps-cigarette-card-stat-value": {
+        "display": "flex",
+        "alignItems": "baseline",
+        "gap": "1cqi",
+        "textAlign": "right"
+      },
+      ".caps-cigarette-card-stat-value .caps-cigarette-card-numeral": {
+        "fontFamily": "var(--font-display)",
+        "fontSize": "1.15em",
+        "fontVariantNumeric": "lining-nums tabular-nums",
+        "fontWeight": 700
+      },
+      ".caps-cigarette-card-stat-value .caps-cigarette-card-unit": {
+        "color": "var(--marginalia-ink, var(--card-ink))"
+      },
+      ".caps-cigarette-card-cameo": {
+        "position": "relative",
+        "flex": 1,
+        "minHeight": "0",
+        "overflow": "hidden",
+        "opacity": 0.75
+      },
+      ".caps-cigarette-card-cameo img,.caps-cigarette-card-cameo svg": {
+        "position": "absolute",
+        "inset": "0",
+        "width": "auto",
+        "maxWidth": "62%",
+        "height": "auto",
+        "maxHeight": "100%",
+        "margin": "auto",
+        "objectFit": "contain",
+        "filter": "grayscale(1)"
+      },
+      ".caps-cigarette-card-note": {
+        "display": "-webkit-box",
+        "flex": "none",
+        "overflow": "hidden",
+        "WebkitBoxOrient": "vertical",
+        "WebkitLineClamp": "2",
+        "fontFamily": "var(--font-display)",
+        "fontSize": "max(0.6875rem, 4.5cqi)",
+        "fontStyle": "italic",
+        "lineHeight": 1.25
+      },
+      ".caps-cigarette-card-sources": {
+        "display": "flex",
+        "flex": "none",
+        "flexDirection": "column",
+        "gap": "0.8cqi",
+        "maxHeight": "15cqi",
+        "overflow": "hidden",
+        "borderTop": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 35%, transparent)",
+        "paddingTop": "1.8cqi",
+        "color": "var(--marginalia-ink, var(--card-ink))",
+        "fontSize": "max(0.5rem, 3.3cqi)",
+        "lineHeight": 1.3
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"] .caps-cigarette-card-front": {
+        "padding": "3cqi",
+        "border": "0.9cqi solid var(--card-accent)",
+        "background": "var(--card-texture), var(--card-window)",
+        "color": "var(--card-window-ink)"
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-window": {
+        "position": "absolute",
+        "inset": "0",
+        "margin": "0",
+        "padding": "16cqi 3cqi 36cqi",
+        "border": "0",
+        "borderRadius": "0",
+        "background": "none",
+        "boxShadow": "none"
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-window\n    img": {
+        "width": "125%",
+        "maxWidth": "none",
+        "height": "100%",
+        "maxHeight": "none",
+        "objectFit": "cover"
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-head,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-plate,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-flavor,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+        "position": "relative",
+        "zIndex": 1
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-head": {
+        "margin": "-3cqi -3cqi 0",
+        "padding": "3cqi 16cqi 3cqi 4cqi",
+        "background": "linear-gradient(\n      var(--card-window) 55%,\n      color-mix(in srgb, var(--card-window) 0%, transparent)\n    )"
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-type,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+        "color": "color-mix(in srgb, var(--card-window-ink) 72%, transparent)"
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-plate": {
+        "margin": "auto 0 0",
+        "color": "var(--card-frame-ink)"
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-flavor": {
+        "margin": "2cqi 0 0",
+        "padding": "2.4cqi 3cqi",
+        "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 40%, transparent)",
+        "borderRadius": "0.8cqi",
+        "background": "color-mix(in srgb, var(--card-window) 88%, transparent)",
+        "color": "var(--card-window-ink)"
+      },
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+        "marginTop": "2.4cqi"
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        ".caps-cigarette-card[data-flipped=\"true\"] .caps-cigarette-card-inner": {
+          "transform": "none"
+        },
+        ".caps-cigarette-card-inner": { "transition": "none" },
+        ".caps-cigarette-card-face": {
+          "transition": "opacity var(--stipe-motion-normal) ease"
+        },
+        ".caps-cigarette-card-back": { "transform": "none", "opacity": 0 },
+        ".caps-cigarette-card[data-flipped=\"true\"] .caps-cigarette-card-front": {
+          "opacity": 0
+        },
+        ".caps-cigarette-card[data-flipped=\"true\"] .caps-cigarette-card-back": {
+          "opacity": 1
+        },
+        ".caps-pencil-reveal": { "animation": "none" }
+      },
+      ".caps-album": {
+        "display": "grid",
+        "gap": "var(--spacing-xl)",
+        "color": "var(--card-ink)"
+      },
+      ".caps-album-head": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "baseline",
+        "justifyContent": "space-between",
+        "gap": "var(--spacing-xs) var(--spacing-lg)",
+        "borderBottom": "calc(var(--card-rule-width) * 3) double var(--card-rule)",
+        "paddingBottom": "var(--spacing-sm)"
+      },
+      ".caps-album-head h2": {
+        "margin": "0",
+        "fontSize": "1.25rem",
+        "fontWeight": 600
+      },
+      ".caps-album-head p": {
+        "margin": "0",
+        "color": "var(--marginalia-ink)",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.75rem",
+        "letterSpacing": "0.08em",
+        "textTransform": "uppercase"
+      },
+      ".caps-album ol": {
+        "display": "grid",
+        "gridTemplateColumns": "repeat(auto-fill, minmax(min(13rem, 100%), 1fr))",
+        "justifyItems": "center",
+        "gap": "var(--spacing-2xl) var(--spacing-xl)",
+        "margin": "0",
+        "padding": "0",
+        "listStyle": "none"
+      },
+      ".caps-album li": {
+        "display": "grid",
+        "width": "100%",
+        "maxWidth": "17rem"
+      },
+      ".caps-album-empty": {
+        "display": "grid",
+        "aspectRatio": "63 / 88",
+        "placeContent": "center",
+        "justifyItems": "center",
+        "gap": "var(--spacing-xs)",
+        "border": "var(--card-rule-width) dashed var(--card-rule)",
+        "borderRadius": "var(--radius-box)",
+        "color": "var(--marginalia-ink)",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.75rem"
+      },
+      ".caps-prose-dropcap > p:first-of-type::first-letter,.caps-spread[data-layout=\"lead\"]\n    .caps-note-teaser-body\n    > p:first-of-type::first-letter": {
+        "cssFloat": "left",
+        "margin": "var(--spacing-2xs) var(--spacing-xs) 0 0",
+        "color": "var(--card-ink)",
+        "fontFamily": "var(--font-display)",
+        "fontSize": "3.6em",
+        "fontWeight": 600,
+        "lineHeight": 0.8
+      },
+      ".caps-sketch-overlay": {
+        "position": "absolute",
+        "zIndex": 1,
+        "inset": "0",
+        "width": "100%",
+        "height": "100%",
+        "overflow": "visible",
+        "pointerEvents": "none"
+      },
+      "[data-sketch-drawn] .caps-specimen-label-plate,[data-sketch-drawn] .caps-specimen-label-detail": {
+        "borderColor": "transparent"
+      },
+      ".caps-pencil-reveal": {
+        "animation": "caps-pencil-reveal calc(var(--stipe-motion-slow) * 2) ease-out\n      both"
+      },
+      ".caps-meta": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "center",
+        "gap": "var(--spacing-xs) var(--spacing-md)",
+        "margin": "0",
+        "color": "var(--marginalia-ink, var(--stipe-fg-muted))",
+        "fontFamily": "var(--font-mono)",
+        "fontSize": "0.75rem",
+        "letterSpacing": "0.08em",
+        "lineHeight": 1.5,
+        "textTransform": "uppercase"
+      },
+      ".caps-entry-row": {
+        "display": "grid",
+        "gridTemplateColumns": "minmax(7rem, 0.2fr) 6.25rem minmax(0, 1fr)",
+        "gap": "var(--spacing-xl)",
+        "padding": "var(--spacing-lg) var(--spacing-xl)"
+      },
+      ".caps-entry-row[data-thumb=\"none\"]": {
+        "gridTemplateColumns": "minmax(7rem, 0.2fr) minmax(0, 1fr)"
+      },
+      ".caps-entry-row .caps-meta": {
+        "flexDirection": "column",
+        "alignItems": "start",
+        "alignContent": "start"
+      },
+      ".caps-entry-row-thumb": {
+        "alignSelf": "start",
+        "margin": "0",
+        "overflow": "hidden"
+      },
+      ".caps-entry-row-thumb img": {
+        "display": "block",
+        "width": "100%",
+        "aspectRatio": "4 / 5",
+        "objectFit": "cover"
+      },
+      ".caps-entry-row-body": {
+        "display": "grid",
+        "alignContent": "start",
+        "gap": "var(--spacing-sm)"
+      },
+      ".caps-entry-row-body > p": { "margin": "0" },
+      ".caps-entry-row-title": {
+        "margin": "0",
+        "fontSize": "1.1875rem",
+        "fontWeight": 600,
+        "lineHeight": 1.3
+      },
+      ".caps-entry-row-title a": {
+        "color": "inherit",
+        "textDecoration": "none",
+        "backgroundImage": "linear-gradient(currentColor, currentColor)",
+        "backgroundPosition": "0 100%",
+        "backgroundRepeat": "no-repeat",
+        "backgroundSize": "0 var(--border, 1px)",
+        "transition": "background-size var(--stipe-motion-normal) ease-out"
+      },
+      ".caps-entry-row-title a:hover,.caps-entry-row-title a:focus-visible": {
+        "backgroundSize": "100% var(--border, 1px)"
+      },
+      "@media (max-width: 38.75rem)": {
+        ".caps-entry-row,.caps-entry-row[data-thumb=\"none\"]": {
+          "gridTemplateColumns": "4.25rem minmax(0, 1fr)",
+          "gap": "var(--spacing-sm) var(--spacing-lg)",
+          "padding": "var(--spacing-lg)"
+        },
+        ".caps-entry-row[data-thumb=\"none\"]": {
+          "gridTemplateColumns": "minmax(0, 1fr)"
+        },
+        ".caps-entry-row .caps-meta": {
+          "gridColumn": "1 / -1",
+          "flexDirection": "row",
+          "alignItems": "center"
+        }
+      },
+      ".caps-toc": {
+        "borderBlock": "var(--border, 1px) solid\n      var(--newsprint-column-rule, var(--stipe-linework))",
+        "paddingBlock": "var(--spacing-md)"
+      },
+      ".caps-toc > .caps-meta": { "marginBottom": "var(--spacing-sm)" },
+      ".caps-toc ol": {
+        "display": "grid",
+        "gap": "var(--spacing-xs)",
+        "margin": "0",
+        "padding": "0",
+        "listStyle": "none",
+        "fontSize": "0.9375rem"
+      },
+      ".caps-toc a": { "color": "inherit", "textDecoration": "none" },
+      ".caps-toc a:hover,.caps-toc a:focus-visible": {
+        "textDecoration": "underline",
+        "textUnderlineOffset": "0.2em"
+      },
+      ".caps-toc li[data-depth=\"3\"]": {
+        "paddingInlineStart": "var(--spacing-lg)"
+      },
+      ".caps-toc li[data-depth=\"4\"],.caps-toc li[data-depth=\"5\"],.caps-toc li[data-depth=\"6\"]": {
+        "paddingInlineStart": "var(--spacing-2xl)"
+      },
+      ".caps-backlinks": {
+        "borderTop": "var(--border, 1px) solid\n      var(--newsprint-column-rule, var(--stipe-linework))",
+        "paddingTop": "var(--spacing-lg)"
+      },
+      ".caps-backlinks > h2": { "margin": "0 0 var(--spacing-sm)" },
+      ".caps-backlinks a": {
+        "color": "inherit",
+        "textDecorationLine": "underline",
+        "textDecorationThickness": "var(--border, 1px)",
+        "textUnderlineOffset": "0.2em"
+      },
+      ".caps-backlinks ul": {
+        "display": "grid",
+        "gap": "var(--spacing-xs)",
+        "margin": "0",
+        "padding": "0",
+        "listStyle": "none"
+      },
+      ".caps-tool-call": {
+        "display": "inline-flex",
+        "gap": "var(--spacing-xs)",
+        "padding": "var(--spacing-md)",
+        "--caps-tool-call-tone": "var(--color-base-content)",
+        "position": "relative",
+        "minHeight": "1.5rem",
+        "maxWidth": "100%",
+        "alignItems": "center",
+        "paddingInline": "var(--spacing-sm)",
+        "overflow": "hidden",
+        "isolation": "isolate",
+        "border": "1px solid var(--stipe-hairline)",
+        "borderRadius": "var(--radius-field)",
+        "color": "var(--stipe-fg-muted)",
+        "fontSize": "var(--text-xs)",
+        "verticalAlign": "middle",
+        "transition": "border-color var(--stipe-motion-normal) ease"
+      },
+      ".caps-tool-call-body": { "display": "grid", "gap": "var(--spacing-md)" },
+      ".caps-tool-call-head": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "alignItems": "baseline",
+        "gap": "var(--spacing-sm)"
+      },
+      ".caps-tool-call-name": {
+        "fontFamily": "var(--font-mono)",
+        "fontWeight": 600,
+        "minWidth": "0",
+        "overflow": "hidden",
+        "color": "var(--color-base-content)",
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap"
+      },
+      ".caps-tool-call-io": {
+        "display": "grid",
+        "gridTemplateColumns": "minmax(0, 1fr)",
+        "gap": "var(--spacing-md)"
+      },
+      ".caps-tool-call-io pre": {
+        "maxWidth": "100%",
+        "margin": "0",
+        "overflowX": "auto"
+      },
+      ".caps-tool-call > figcaption": {
+        "color": "var(--marginalia-ink, var(--stipe-fg-muted))",
+        "fontSize": "0.875rem"
+      },
+      ".caps-collage": {
+        "position": "relative",
+        "display": "grid",
+        "gap": "var(--spacing-2xl)",
+        "margin": "0",
+        "padding": "0",
+        "listStyle": "none",
+        "containerType": "inline-size"
+      },
+      ".caps-collage-item": { "minWidth": "0" },
+      ".caps-collage-item > a": {
+        "display": "grid",
+        "gap": "var(--spacing-md)",
+        "color": "inherit",
+        "textDecoration": "none"
+      },
+      ".caps-collage-item > a:focus-visible": { "outline": "none" },
+      ".caps-collage-item > a:focus-visible .caps-collage-note": {
+        "outline": "2px solid currentColor",
+        "outlineOffset": "6px"
+      },
+      ".caps-collage-item > a:hover .caps-specimen-label-title": {
+        "textDecoration": "underline",
+        "textUnderlineOffset": "0.2em"
+      },
+      ".caps-collage-art": {
+        "width": "min(100%, 26rem)",
+        "marginInline": "auto"
+      },
+      ".caps-collage-art img": {
+        "display": "block",
+        "width": "100%",
+        "height": "auto"
+      },
+      ".caps-collage-note": {
+        "position": "relative",
+        "zIndex": 2,
+        "--caps-sketch-leader": "off"
+      },
+      ".caps-collage-note .caps-specimen-label-title": {
+        "fontSize": "1.125rem",
+        "fontWeight": 600
+      },
+      "@media (min-width: 40.0625rem) and (max-width: 62.49rem)": {
+        ".caps-collage-item > a": {
+          "gridTemplateColumns": "minmax(0, 0.9fr) minmax(0, 1fr)",
+          "alignItems": "center",
+          "gap": "var(--spacing-2xl)"
+        },
+        ".caps-collage-item:nth-child(even) .caps-collage-art": { "order": 2 }
+      },
+      "@media (min-width: 62.5rem)": {
+        ".caps-collage": { "display": "block" },
+        ".caps-collage::after": {
+          "display": "block",
+          "height": "calc(58cqw + var(--spacing-4xl) * 3.5)",
+          "content": "\"\""
+        },
+        ".caps-collage-item > a": { "display": "block" },
+        ".caps-collage-art": {
+          "position": "absolute",
+          "top": "var(--art-y)",
+          "left": "var(--art-x)",
+          "width": "var(--art-w)",
+          "margin": "0",
+          "transform": "rotate(var(--tilt))"
+        },
+        ".caps-collage-note": {
+          "position": "absolute",
+          "top": "var(--note-y)",
+          "left": "var(--note-x)",
+          "width": "var(--note-w)",
+          "--caps-sketch-leader": "on"
+        }
+      },
+      ".caps-nav-link": {
+        "display": "inline-flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-sm)",
+        "padding": "var(--spacing-sm)",
+        "border": "0",
+        "background": "transparent",
+        "color": "inherit",
+        "font": "inherit",
+        "whiteSpace": "nowrap",
+        "textDecoration": "none",
+        "cursor": "pointer"
+      },
+      ".caps-nav-link:hover > :last-child,.caps-nav-link[aria-current=\"page\"] > :last-child": {
+        "textDecoration": "underline",
+        "textDecorationThickness": "var(--border, 1px)",
+        "textUnderlineOffset": "0.35em"
+      },
+      ".caps-shortcuts": {
+        "display": "grid",
+        "gap": "var(--spacing-sm)",
+        "margin": "0"
+      },
+      ".caps-shortcuts > div": {
+        "display": "grid",
+        "gridTemplateColumns": "3rem 1fr",
+        "alignItems": "center",
+        "gap": "var(--spacing-md)"
+      },
+      ".caps-shortcuts dt,.caps-shortcuts dd": { "margin": "0" },
+      ".caps-skip-link": {
+        "position": "static",
+        "display": "block",
+        "width": "1px",
+        "height": "1px",
+        "margin": "0",
+        "overflow": "hidden",
+        "clipPath": "inset(50%)",
+        "border": "0",
+        "padding": "0",
+        "background": "var(--color-base-100)",
+        "color": "var(--color-base-content)"
+      },
+      ".caps-skip-link:focus": {
+        "width": "auto",
+        "height": "auto",
+        "margin": "0",
+        "overflow": "visible",
+        "clipPath": "none",
+        "border": "var(--border, 1px) solid var(--stipe-linework)",
+        "padding": "var(--spacing-md)"
+      },
+      ".caps-section-head > .caps-meta": { "gridColumn": "1 / -1" },
+      ".caps-section-head > p:not(.caps-meta)": {
+        "gridColumn": "1 / -1",
+        "maxWidth": "62ch",
+        "margin": "0"
+      },
+      ".caps-print-prose h2:not(.caps-meta),.caps-print-prose h3:not(.caps-meta)": {
+        "fontFamily": "var(--font-display)",
+        "fontVariationSettings": "\"SOFT\" 50,\n      \"WONK\" 1",
+        "fontWeight": 750,
+        "letterSpacing": "-0.015em"
+      },
+      ".caps-print-prose h2:not(.caps-meta)": {
+        "borderTop": "var(--card-rule-width) solid var(--newsprint-column-rule)",
+        "paddingTop": "var(--spacing-lg)",
+        "fontSize": "1.75em",
+        "lineHeight": 1.1
+      },
+      ".caps-tool-call[data-state=\"done\"]": {
+        "--caps-tool-call-tone": "var(--color-success)"
+      },
+      ".caps-tool-call[data-state=\"failed\"]": {
+        "--caps-tool-call-tone": "var(--color-error)",
+        "borderColor": "color-mix(in oklab, var(--color-error) 45%, transparent)"
+      },
+      ".caps-tool-call-fill": {
+        "position": "absolute",
+        "inset": "0",
+        "zIndex": -1,
+        "backgroundColor": "color-mix(\n      in oklab,\n      var(--caps-tool-call-tone) 12%,\n      transparent\n    )",
+        "transform": "scaleX(0)",
+        "transformOrigin": "left center",
+        "transition": "background-color var(--stipe-motion-normal) ease"
+      },
+      ".caps-tool-call-fill:dir(rtl)": { "transformOrigin": "right center" },
+      ".caps-tool-call-time": {
+        "flex": "none",
+        "fontFamily": "var(--font-mono)",
+        "fontVariantNumeric": "tabular-nums"
+      },
+      ".caps-tool-call .caps-presence": { "display": "inline-flex" }
+    },
+    "@layer utilities": {
+      ".caps-keycap-button:is(:disabled, [aria-disabled=\"true\"])": {
+        "opacity": "var(--caps-button-disabled-opacity, 0.45)"
+      }
+    },
+    "@layer caps-navigation-rail": {
+      ".caps-navigation-rail": { "position": "relative", "minWidth": "0" },
+      ".caps-navigation-rail-viewport": {
+        "overflowX": "auto",
+        "overscrollBehaviorInline": "contain",
+        "scrollbarWidth": "none",
+        "scrollSnapType": "x mandatory",
+        "scrollPaddingInline": "var(--spacing-xs)"
+      },
+      ".caps-navigation-rail-viewport::-webkit-scrollbar": {
+        "display": "none"
+      },
+      ".caps-navigation-rail-content": {
+        "display": "flex",
+        "width": "max-content",
+        "minWidth": "100%",
+        "alignItems": "center",
+        "gap": "var(--spacing-xs)",
+        "paddingBlock": "var(--spacing-2xs) var(--spacing-xs)"
+      },
+      ".caps-navigation-rail-content > a": {
+        "flex": "0 0 auto",
+        "scrollSnapAlign": "start",
+        "padding": "var(--spacing-xs) var(--spacing-sm)",
+        "borderRadius": "var(--radius-sm)",
+        "color": "var(--color-base-content)",
+        "textDecoration": "none",
+        "whiteSpace": "nowrap"
+      },
+      ".caps-navigation-rail-content > a[aria-current=\"page\"],.caps-navigation-rail-content > button[aria-current=\"page\"]": {
+        "background": "var(--color-base-200)",
+        "fontWeight": 700
+      },
+      ".caps-navigation-rail-content > a:focus-visible": {
+        "outline": "2px solid var(--caps-focus-ring)",
+        "outlineOffset": "2px"
+      },
+      ".caps-navigation-rail::before,.caps-navigation-rail::after": {
+        "position": "absolute",
+        "zIndex": 1,
+        "insetBlock": "0",
+        "width": "2rem",
+        "opacity": 0,
+        "pointerEvents": "none",
+        "content": "\"\"",
+        "transition": "opacity var(--stipe-motion-fast) ease-out"
+      },
+      ".caps-navigation-rail::before": {
+        "insetInlineStart": "0",
+        "background": "linear-gradient(to right, var(--color-base-100), transparent)"
+      },
+      ".caps-navigation-rail::after": {
+        "insetInlineEnd": "0",
+        "background": "linear-gradient(to left, var(--color-base-100), transparent)"
+      },
+      ".caps-navigation-rail[data-overflow-start=\"true\"]::before,.caps-navigation-rail[data-overflow-end=\"true\"]::after": {
+        "opacity": 1
+      },
+      "@media (min-width: 64rem)": {
+        ".caps-navigation-rail-fit-wide .caps-navigation-rail-viewport": {
+          "overflowX": "auto"
+        },
+        ".caps-navigation-rail-fit-wide .caps-navigation-rail-content": {
+          "width": "max-content",
+          "minWidth": "100%",
+          "justifyContent": "space-between",
+          "gap": "var(--spacing-xs)"
+        },
+        ".caps-navigation-rail-fit-wide .caps-navigation-rail-content > a": {
+          "paddingInline": "var(--spacing-xs)",
+          "fontSize": "var(--text-sm)"
+        }
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        ".caps-navigation-rail::before,.caps-navigation-rail::after": {
+          "transition": "none"
+        }
+      }
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      ".caps-keycap,.caps-keycap-button": { "transition": "none" }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    },
+    "@layer caps-game": {
+      ".caps-keycap-button": {
+        "--caps-keycap-lip": "calc(var(--depth) * 1px)",
+        "display": "flex",
+        "width": "var(--caps-keycap-width, 100%)",
+        "minWidth": "var(--caps-keycap-min-width, 0)",
+        "minHeight": "var(--caps-keycap-height, 2.5rem)",
+        "alignItems": "center",
+        "justifyContent": "var(--caps-keycap-justify, space-between)",
+        "gap": "var(--spacing-sm)",
+        "padding": "var(--caps-keycap-padding, var(--spacing-xs) var(--spacing-sm))",
+        "border": "var(\n      --caps-keycap-context-border,\n      var(--border) solid var(--caps-keycap-edge, var(--stipe-linework))\n    )",
+        "fontSize": "var(--caps-keycap-font-size, inherit)",
+        "fontWeight": "var(\n      --caps-keycap-context-weight,\n      var(--caps-keycap-font-weight, inherit)\n    )",
+        "borderRadius": "var(--radius-field)",
+        "--caps-keycap-painted-face": "var(\n      --caps-keycap-context-face,\n      var(--caps-keycap-face, var(--color-base-200))\n    )",
+        "backgroundColor": "var(--caps-keycap-painted-face)",
+        "--caps-keycap-default-image": "none",
+        "backgroundImage": "var(\n      --caps-keycap-context-image,\n      var(--caps-keycap-default-image)\n    )",
+        "boxShadow": "var(\n      --caps-keycap-context-shadow,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.14)),\n      0 var(--caps-keycap-lip) 0\n        color-mix(\n          in oklab,\n          var(--caps-keycap-face, var(--color-base-200)),\n          var(--color-base-content) 14%\n        )\n    )",
+        "color": "var(--caps-keycap-ink, var(--color-base-content))",
+        "textAlign": "left",
+        "cursor": "pointer",
+        "transitionProperty": "background-color, border-color, color, box-shadow, translate",
+        "transitionDuration": "var(--stipe-motion-fast)",
+        "transitionTimingFunction": "ease-out"
+      },
+      ".caps-keycap-button:active": {
+        "translate": "0 var(--caps-keycap-context-travel, var(--caps-keycap-lip))",
+        "boxShadow": "var(\n      --caps-keycap-active-shadow,\n      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n      0 0 0 transparent\n    )"
+      },
+      ".caps-keycap-button:focus-visible": {
+        "outline": "2px solid var(--caps-keycap-focus-ink, var(--color-base-content))",
+        "outlineOffset": "2px"
+      },
+      ".caps-keycap-button[data-tone=\"primary\"]": {
+        "--caps-keycap-face": "color-mix(\n      in oklab,\n      var(--color-primary) var(--caps-keycap-tint, 34%),\n      var(--color-base-100)\n    )",
+        "--caps-keycap-edge": "color-mix(\n      in oklab,\n      var(--color-primary) 62%,\n      var(--color-base-content)\n    )"
+      },
+      ".caps-keycap-button[data-tone=\"accent\"]": {
+        "--caps-keycap-face": "color-mix(\n      in oklab,\n      var(--color-accent) var(--caps-keycap-tint, 34%),\n      var(--color-base-100)\n    )",
+        "--caps-keycap-edge": "color-mix(\n      in oklab,\n      var(--color-accent) 62%,\n      var(--color-base-content)\n    )"
+      },
+      ".caps-keycap-button[data-tone=\"inverse\"]": {
+        "--caps-keycap-face": "var(--color-neutral)",
+        "--caps-keycap-ink": "var(--color-neutral-content)",
+        "--caps-keycap-edge": "var(--color-neutral)"
+      },
+      ".caps-keycap-button[data-tone=\"destructive\"]:is(:hover, :focus-visible)": {
+        "--caps-keycap-ink": "var(--color-error)",
+        "--caps-keycap-edge": "color-mix(\n      in oklab,\n      var(--color-error) 70%,\n      var(--stipe-linework)\n    )"
+      },
+      ".caps-keycap-button:hover": {
+        "--caps-keycap-painted-face": "var(\n      --caps-keycap-hover-face,\n      var(\n        --caps-keycap-context-face,\n        var(--caps-keycap-face, var(--color-base-200))\n      )\n    )",
+        "backgroundColor": "var(--caps-keycap-painted-face)",
+        "backgroundImage": "var(\n      --caps-keycap-hover-image,\n      var(--caps-keycap-context-image, var(--caps-keycap-default-image))\n    )"
+      },
+      ".caps-keycap-button-label": {
+        "minWidth": "var(--caps-keycap-label-min-width, auto)",
+        "lineHeight": "var(--caps-keycap-label-line-height, inherit)"
+      },
+      ".caps-keycap-button .caps-keycap": {
+        "flex": "var(--caps-keycap-shortcut-flex, 0 1 auto)",
+        "minWidth": "var(\n      --caps-keycap-shortcut-size,\n      var(--caps-keycap-legend-min-size, 2rem)\n    )",
+        "minHeight": "var(\n      --caps-keycap-shortcut-size,\n      var(--caps-keycap-legend-min-size, 2rem)\n    )",
+        "border": "var(\n      --caps-keycap-shortcut-border,\n      var(--card-rule-width) solid\n        var(\n          --caps-keycap-legend-edge,\n          color-mix(in oklab, var(--card-rule) 22%, transparent)\n        )\n    )",
+        "background": "var(\n      --caps-keycap-shortcut-face,\n      color-mix(in oklab, var(--card-ink) 5%, var(--card-paper))\n    )",
+        "color": "var(--caps-keycap-shortcut-ink, var(--card-ink))",
+        "boxShadow": "var(--caps-keycap-shortcut-shadow, none)",
+        "fontSize": "var(\n      --caps-keycap-shortcut-font-size,\n      var(--caps-keycap-legend-font-size, inherit)\n    )",
+        "fontWeight": "var(--caps-keycap-shortcut-weight, inherit)"
+      },
+      ".caps-keycap-button:is([aria-expanded=\"true\"], [aria-pressed=\"true\"])": {
+        "color": "var(\n      --caps-keycap-selected-ink,\n      var(--caps-keycap-ink, var(--color-base-content))\n    )",
+        "backgroundColor": "var(\n      --caps-keycap-selected-face,\n      var(--caps-keycap-painted-face)\n    )"
+      },
+      ".caps-keycap-button:has(> .caps-keycap-led)": { "position": "relative" },
+      ".caps-keycap-led": {
+        "--caps-key-side": "color-mix(\n      in oklab,\n      var(--color-base-300),\n      var(--color-base-content) 30%\n    )",
+        "position": "absolute",
+        "top": "5px",
+        "left": "5px",
+        "width": "5px",
+        "height": "5px",
+        "borderRadius": "var(--radius-full)",
+        "background": "color-mix(in oklab, var(--caps-key-side), black 10%)",
+        "boxShadow": "inset 0 1px 1px oklch(0% 0 0 / 0.3)"
+      },
+      ".caps-keycap-button-icon": { "display": "inline-flex" },
+      ".caps-keycap-button-icon > svg": { "width": "1rem", "height": "1rem" },
+      ".caps-keycap-led[data-lit=\"true\"]": {
+        "background": "var(--color-success)",
+        "boxShadow": "inset 0 -1px 0 oklch(0% 0 0 / 0.2)"
+      },
+      ".caps-hud-keys .caps-keycap-button": {
+        "width": "auto",
+        "minHeight": "2.5rem"
+      },
+      ".caps-hud-keys .caps-keycap-led[data-lit=\"false\"]": {
+        "display": "none"
+      },
+      ".caps-hud-keys[data-orientation=\"vertical\"] .caps-keycap-button": {
+        "width": "100%",
+        "justifyContent": "flex-start"
+      },
+      ".caps-hud-keys .caps-keycap-button > .caps-keycap": {
+        "marginLeft": "auto"
+      }
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-navigation-rail-content > a": {
+          "minWidth": "var(--caps-touch-target)",
+          "minHeight": "var(--caps-touch-target)",
+          "alignContent": "center"
+        }
+      }
+    }
+  }
+}

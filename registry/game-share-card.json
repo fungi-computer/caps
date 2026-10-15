@@ -1,0 +1,85 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "game-share-card",
+  "type": "registry:block",
+  "title": "Game Share Card",
+  "description": "Published-game presentation with host-owned cover, share details and play action.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "react",
+    "cn",
+    "class-variance-authority"
+  ],
+  "registryDependencies": ["@shiit/card", "@shiit/button"],
+  "files": [
+    {
+      "path": "../src/blocks/game-share-card.tsx",
+      "type": "registry:block",
+      "target": "@components/blocks/game-share-card.tsx",
+      "content": "import {\n  forwardRef,\n  type HTMLAttributes,\n  type ReactElement,\n  type ReactNode,\n} from \"react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport {\n  Card,\n  CardContent,\n  CardFooter,\n  CardHeader,\n} from \"@/components/ui/card\";\nimport { cn } from \"@/lib/cn\";\n\n/** Presentation for a published game; fetching and navigation stay with the host. */\nexport type GameShareCardProps = HTMLAttributes<HTMLDivElement> & {\n  heading: ReactNode;\n  eyebrow?: ReactNode;\n  cover?: ReactNode;\n  /** A host-owned link or button, presented as the primary play action. */\n  action: ReactElement;\n};\n\n/** Compose a game's cover, share details and play action in the enclosing theme. */\nexport const GameShareCard = forwardRef<HTMLDivElement, GameShareCardProps>(\n  function GameShareCard(\n    { heading, eyebrow, cover, action, children, className, ...props },\n    ref,\n  ) {\n    return (\n      <Card {...props} className={cn(\"caps-game-share\", className)} ref={ref}>\n        {cover ? <div className=\"caps-game-share-cover\">{cover}</div> : null}\n        <CardHeader>\n          {eyebrow}\n          <h3 className=\"caps-game-share-heading\">{heading}</h3>\n        </CardHeader>\n        <CardContent className=\"gap-sm\">{children}</CardContent>\n        <CardFooter>\n          <Button asChild variant=\"primary\" className=\"caps-game-share-action\">\n            {action}\n          </Button>\n        </CardFooter>\n      </Card>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-game-share": {
+        "--caps-card-edge": "var(\n      --caps-card-interactive-edge,\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(13% + (1 - var(--depth)) * 87%),\n        transparent\n      )\n    )",
+        "backgroundColor": "var(\n      --caps-card-interactive-face,\n      var(--caps-card-resting-face)\n    )",
+        "backgroundImage": "var(\n      --caps-card-interactive-image,\n      var(--caps-card-image, none)\n    )",
+        "backgroundSize": "var(\n      --caps-card-interactive-image-size,\n      var(--caps-print-texture-size, auto)\n    )",
+        "boxShadow": "var(\n      --caps-card-interactive-shadow,\n      var(--caps-card-resting-shadow)\n    )",
+        "width": "min(32rem, calc(100% - var(--spacing-md) - var(--spacing-md)))",
+        "minWidth": "0",
+        "margin": "0 var(--spacing-md) var(--spacing-md)",
+        "overflow": "hidden"
+      },
+      ".caps-game-share:is(:hover, :focus-within)": {
+        "borderColor": "var(--caps-card-hover-edge, var(--caps-card-edge))"
+      },
+      ".caps-game-share-cover > img": {
+        "display": "block",
+        "width": "100%",
+        "aspectRatio": "16 / 9",
+        "objectFit": "cover",
+        "background": "var(--color-base-300)"
+      },
+      ".caps-game-share-heading": {
+        "minWidth": "0",
+        "margin": "0",
+        "overflowWrap": "anywhere",
+        "fontSize": "var(--text-2xl)",
+        "fontWeight": 800,
+        "lineHeight": 1.1
+      },
+      ".caps-game-share-action.caps-button": {
+        "width": "100%",
+        "minHeight": "3rem",
+        "fontSize": "var(--text-base)",
+        "fontWeight": 800
+      },
+      "@media (prefers-reduced-motion: no-preference) and (hover: hover)": {
+        ".caps-game-share:hover": {
+          "animation": "var(--caps-card-hover-animation, none)"
+        }
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        ".caps-game-share": {
+          "animation": "none !important",
+          "transition": "none !important"
+        }
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

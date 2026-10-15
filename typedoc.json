@@ -1,0 +1,33 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "extends": "../../tooling/docs/typedoc.base.json",
+  "name": "@fungi.computer/caps",
+  "entryPointStrategy": "expand",
+  "entryPoints": [
+    "src/lib",
+    "src/components",
+    "src/blocks",
+    "src/enhance",
+    "src/form.tsx"
+  ],
+  "exclude": [
+    "src/**/*.test.tsx",
+    "src/components/gooey.tsx",
+    "src/components/selectable.ts",
+    "src/test-utils/**",
+    "src/enhance/*.test.tsx"
+  ],
+  "tsconfig": "tsconfig.json",
+  "out": "docs/api",
+  "requiredToBeDocumented": [
+    "Enum",
+    "EnumMember",
+    "Variable",
+    "Function",
+    "Class",
+    "Interface",
+    "Method",
+    "Accessor",
+    "TypeAlias"
+  ]
+}

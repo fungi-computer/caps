@@ -1,0 +1,995 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "items": [
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "Input Group",
+      "description": "Composable input wrapper for prefixes, suffixes, and attached actions.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/input-group.tsx",
+          "type": "registry:ui",
+          "target": "@ui/input-group.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Native select control with Daisy styling and invalid-state semantics.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "lucide-react",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/select.tsx",
+          "type": "registry:ui",
+          "target": "@ui/select.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "Native checkbox with refs, native props, and invalid-state styling.",
+      "dependencies": [
+        "animejs",
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/checkbox.tsx"
+        },
+        {
+          "path": "../src/components/checkbox-bead.tsx",
+          "type": "registry:ui",
+          "target": "@ui/checkbox-bead.tsx"
+        },
+        {
+          "path": "../src/components/gooey.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gooey.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        },
+        {
+          "path": "../src/lib/motion-spring.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion-spring.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "radio-group",
+      "type": "registry:ui",
+      "title": "Radio Group",
+      "description": "Controlled or uncontrolled native radio group with keyboard semantics.",
+      "dependencies": [
+        "animejs",
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/radio-group.tsx",
+          "type": "registry:ui",
+          "target": "@ui/radio-group.tsx"
+        },
+        {
+          "path": "../src/components/radio-bead.tsx",
+          "type": "registry:ui",
+          "target": "@ui/radio-bead.tsx"
+        },
+        {
+          "path": "../src/components/gooey.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gooey.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        },
+        {
+          "path": "../src/lib/motion-spring.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion-spring.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "switch",
+      "type": "registry:ui",
+      "title": "Switch",
+      "description": "Native checkbox-backed switch with a gooey thumb and controlled change callback.",
+      "dependencies": [
+        "animejs",
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/switch.tsx",
+          "type": "registry:ui",
+          "target": "@ui/switch.tsx"
+        },
+        {
+          "path": "../src/components/switch-bead.tsx",
+          "type": "registry:ui",
+          "target": "@ui/switch-bead.tsx"
+        },
+        {
+          "path": "../src/components/gooey.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gooey.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        },
+        {
+          "path": "../src/lib/motion-spring.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion-spring.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "slider",
+      "type": "registry:ui",
+      "title": "Slider",
+      "description": "Native range input with product-neutral tone and size variants.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/slider.tsx",
+          "type": "registry:ui",
+          "target": "@ui/slider.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "Surface composition with header, content, footer, and interactive variants.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/card.tsx",
+          "type": "registry:ui",
+          "target": "@ui/card.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "trading-card",
+      "type": "registry:ui",
+      "title": "Trading Card",
+      "description": "A 63:88 trading card with a rim, name bar, art window, one move row that can hold a form, flavor text, facts and an optional holo finish.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/trading-card.tsx",
+          "type": "registry:ui",
+          "target": "@ui/trading-card.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "Horizontal or vertical visual or semantic divider.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/separator.tsx",
+          "type": "registry:ui",
+          "target": "@ui/separator.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "visually-hidden",
+      "type": "registry:ui",
+      "title": "Visually Hidden",
+      "description": "Visually hides content while retaining it for assistive technology.",
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/visually-hidden.tsx",
+          "type": "registry:ui",
+          "target": "@ui/visually-hidden.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "prose",
+      "type": "registry:ui",
+      "title": "Prose",
+      "description": "Readable content measure with semantic Daisy/Stipe text tokens.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/prose.tsx",
+          "type": "registry:ui",
+          "target": "@ui/prose.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "markdown",
+      "type": "registry:ui",
+      "title": "Markdown",
+      "description": "Themed Markdown renderer for repository documents, set in Prose with safe links, safe images and syntax-highlighted code.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "@tanstack/highlight",
+        "@tanstack/markdown",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": ["@shiit/prose"],
+      "files": [
+        {
+          "path": "../src/components/markdown.tsx",
+          "type": "registry:ui",
+          "target": "@ui/markdown.tsx"
+        },
+        {
+          "path": "../src/lib/tanstack-highlight.ts",
+          "type": "registry:lib",
+          "target": "@lib/tanstack-highlight.ts"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "Compact semantic label with Daisy tone and size variants.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/badge.tsx",
+          "type": "registry:ui",
+          "target": "@ui/badge.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "Semantic alert region with tone, title, description, and action slots.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/alert.tsx",
+          "type": "registry:ui",
+          "target": "@ui/alert.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "status",
+      "type": "registry:ui",
+      "title": "Status",
+      "description": "Gooey SVG bead with interruptible dot, pill and bang transitions, plus ring, arc, check and cross task marks.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react",
+        "animejs"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/status.tsx",
+          "type": "registry:ui",
+          "target": "@ui/status.tsx"
+        },
+        {
+          "path": "../src/components/status-mark.tsx",
+          "type": "registry:ui",
+          "target": "@ui/status-mark.tsx"
+        },
+        {
+          "path": "../src/components/status-bead.tsx",
+          "type": "registry:ui",
+          "target": "@ui/status-bead.tsx"
+        },
+        {
+          "path": "../src/components/motion-visibility.ts",
+          "type": "registry:ui",
+          "target": "@ui/motion-visibility.ts"
+        },
+        {
+          "path": "../src/components/gooey.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gooey.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        },
+        {
+          "path": "../src/lib/motion-spring.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion-spring.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "count-badge",
+      "type": "registry:ui",
+      "title": "Count Badge",
+      "description": "Count and optional label with no positioning or product semantics.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/count-badge.tsx",
+          "type": "registry:ui",
+          "target": "@ui/count-badge.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "progress",
+      "type": "registry:ui",
+      "title": "Progress",
+      "description": "Native progress element with a gooey value bar and semantic tone variants.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/progress.tsx",
+          "type": "registry:ui",
+          "target": "@ui/progress.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "scroll-to-bottom-blob",
+      "type": "registry:ui",
+      "title": "Scroll To Bottom Blob",
+      "description": "Theme-driven water drop with continuous scroll pull, unread arrival, visibility hysteresis and focus return.",
+      "dependencies": ["@fungi.computer/stipe", "lucide-react", "react"],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/scroll-to-bottom-blob.tsx",
+          "type": "registry:ui",
+          "target": "@ui/scroll-to-bottom-blob.tsx"
+        },
+        {
+          "path": "../src/components/scroll-to-bottom-blob-state.ts",
+          "type": "registry:ui",
+          "target": "@ui/scroll-to-bottom-blob-state.ts"
+        },
+        {
+          "path": "../src/components/motion-visibility.ts",
+          "type": "registry:ui",
+          "target": "@ui/motion-visibility.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "loader",
+      "type": "registry:ui",
+      "title": "Loader",
+      "description": "Gooey loading beads in three sizes, with accessible and decorative modes.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "animejs",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": ["@shiit/visually-hidden"],
+      "files": [
+        {
+          "path": "../src/components/loader.tsx",
+          "type": "registry:ui",
+          "target": "@ui/loader.tsx"
+        },
+        {
+          "path": "../src/components/loader-blobs.tsx",
+          "type": "registry:ui",
+          "target": "@ui/loader-blobs.tsx"
+        },
+        {
+          "path": "../src/components/motion-visibility.ts",
+          "type": "registry:ui",
+          "target": "@ui/motion-visibility.ts"
+        },
+        {
+          "path": "../src/components/gooey.tsx",
+          "type": "registry:ui",
+          "target": "@ui/gooey.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "Arbitrary-shape loading placeholder styled by Daisy/Stipe tokens.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/skeleton.tsx",
+          "type": "registry:ui",
+          "target": "@ui/skeleton.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "stat",
+      "type": "registry:ui",
+      "title": "Stat",
+      "description": "Native definition-list statistic with optional supporting description.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/stat.tsx",
+          "type": "registry:ui",
+          "target": "@ui/stat.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "quota-meter",
+      "type": "registry:ui",
+      "title": "Quota Meter",
+      "description": "Labelled native progress meter for a quota value and maximum.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/quota-meter.tsx",
+          "type": "registry:ui",
+          "target": "@ui/quota-meter.tsx"
+        },
+        {
+          "path": "../src/components/progress.tsx",
+          "type": "registry:ui",
+          "target": "@ui/progress.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "data-list",
+      "type": "registry:ui",
+      "title": "Data List",
+      "description": "Native unordered list and row primitives with Daisy list styling.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/data-list.tsx",
+          "type": "registry:ui",
+          "target": "@ui/data-list.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "icon-checkbox",
+      "type": "registry:ui",
+      "title": "Icon Checkbox",
+      "description": "An icon choice with native checkbox selection, form submission and a full accessible label.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": ["@shiit/checkbox"],
+      "files": [
+        {
+          "path": "../src/components/icon-checkbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/icon-checkbox.tsx"
+        },
+        {
+          "path": "../src/components/icon-choice-mark.tsx",
+          "type": "registry:ui",
+          "target": "@ui/icon-choice-mark.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "icon-lamp",
+      "type": "registry:ui",
+      "title": "Icon Lamp",
+      "description": "A read-only icon state with the icon key's face, for rights or settings shown but not changed here.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/icon-lamp.tsx",
+          "type": "registry:ui",
+          "target": "@ui/icon-lamp.tsx"
+        },
+        {
+          "path": "../src/components/icon-choice-mark.tsx",
+          "type": "registry:ui",
+          "target": "@ui/icon-choice-mark.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "icon-radio",
+      "type": "registry:ui",
+      "title": "Icon Radio",
+      "description": "An icon choice in the existing native RadioGroup, with exclusive selection and keyboard semantics.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": ["@shiit/radio-group"],
+      "files": [
+        {
+          "path": "../src/components/icon-radio.tsx",
+          "type": "registry:ui",
+          "target": "@ui/icon-radio.tsx"
+        },
+        {
+          "path": "../src/components/icon-choice-mark.tsx",
+          "type": "registry:ui",
+          "target": "@ui/icon-choice-mark.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "generation-frame",
+      "type": "registry:ui",
+      "title": "Generation frame",
+      "description": "A fixed frame a generation develops in, from queued to done or failed.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": ["@shiit/loader", "@shiit/visually-hidden"],
+      "files": [
+        {
+          "path": "../src/components/generation-frame.tsx",
+          "type": "registry:ui",
+          "target": "@ui/generation-frame.tsx"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "send-action",
+      "type": "registry:ui",
+      "title": "Send action",
+      "description": "A composer send key: wakes when ready, launches while busy, offers stop.",
+      "dependencies": ["@fungi.computer/stipe", "lucide-react", "react"],
+      "registryDependencies": ["@shiit/button", "@shiit/loader"],
+      "files": [
+        {
+          "path": "../src/components/send-action.tsx",
+          "type": "registry:ui",
+          "target": "@ui/send-action.tsx"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "code-input",
+      "type": "registry:ui",
+      "title": "Code input",
+      "description": "A one-time code as slots over one native input, with landing, refusal and acceptance motion.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "cn",
+        "class-variance-authority",
+        "react"
+      ],
+      "registryDependencies": ["@shiit/input"],
+      "files": [
+        {
+          "path": "../src/components/code-input.tsx",
+          "type": "registry:ui",
+          "target": "@ui/code-input.tsx"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "confirm-action",
+      "type": "registry:ui",
+      "title": "Confirm action",
+      "description": "Hold or type an exact phrase to confirm a destructive action, with busy and failure feedback.",
+      "dependencies": ["@fungi.computer/stipe", "react"],
+      "registryDependencies": [
+        "@shiit/button",
+        "@shiit/dialog",
+        "@shiit/field",
+        "@shiit/input",
+        "@shiit/undo-action"
+      ],
+      "files": [
+        {
+          "path": "../src/components/confirm-action.tsx",
+          "type": "registry:ui",
+          "target": "@ui/confirm-action.tsx"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    }
+  ]
+}

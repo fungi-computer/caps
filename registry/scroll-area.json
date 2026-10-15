@@ -1,0 +1,370 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scroll-area",
+  "type": "registry:ui",
+  "title": "Scroll area",
+  "description": "Native scrolling with a spring-loaded plastic thumb.",
+  "registryDependencies": [],
+  "dependencies": [
+    "@base-ui/react",
+    "animejs",
+    "react",
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn"
+  ],
+  "files": [
+    {
+      "path": "../src/components/scroll-motion.ts",
+      "type": "registry:ui",
+      "target": "@ui/scroll-motion.ts",
+      "content": "/** @internal Velocities are signed pixels/ms. Only meaningful speed changes deform the thumb. */\nexport function scrollImpulse(\n  previousVelocity: number,\n  velocity: number,\n  elapsed: number,\n) {\n  const acceleration =\n    (Math.abs(velocity) - Math.abs(previousVelocity)) / Math.max(16, elapsed);\n  if (Math.abs(acceleration) < 0.035) return null;\n  const amount = Math.min(0.04, Math.abs(acceleration) * 0.3);\n  const stretching = acceleration > 0;\n  const direction = Math.sign(velocity || previousVelocity);\n  return {\n    scaleY: 1 + (stretching ? amount : -amount),\n    scaleX: 1 + (stretching ? -amount / 2 : amount / 2),\n    origin: (stretching ? direction > 0 : direction < 0)\n      ? \"center top\"\n      : \"center bottom\",\n  };\n}\n\n/** @internal Wheel/trackpad pressure at an edge compresses toward that edge. */\nexport function overscrollImpulse(\n  position: number,\n  maximum: number,\n  delta: number,\n) {\n  if (maximum <= 0 || Math.abs(delta) < 4) return null;\n  const top = position <= 0 && delta < 0;\n  const bottom = position >= maximum - 1 && delta > 0;\n  if (!top && !bottom) return null;\n  const amount = Math.min(0.06, (Math.abs(delta) / 120) * 0.06);\n  return {\n    scaleY: 1 - amount,\n    scaleX: 1 + amount / 2,\n    origin: top ? \"center top\" : \"center bottom\",\n  };\n}\n"
+    },
+    {
+      "path": "../src/components/scroll-area.tsx",
+      "type": "registry:ui",
+      "target": "@ui/scroll-area.tsx",
+      "content": "import { ScrollArea as BaseScrollArea } from \"@base-ui/react/scroll-area\";\nimport { animate, type JSAnimation } from \"animejs\";\nimport { forwardRef, useEffect, useRef, type HTMLAttributes } from \"react\";\nimport { cn } from \"@/lib/cn\";\nimport { readMotion, useReducedMotion } from \"@/lib/motion\";\nimport { themedEase, themedSpring } from \"@/lib/motion-spring\";\nimport { overscrollImpulse, scrollImpulse } from \"./scroll-motion.js\";\nimport { Screen, Surface, type SurfaceProps } from \"./surface.js\";\n\n/** Native scrolling with a plastic thumb responding to changes in scroll speed.\n * The ref and native props address the viewport; className sizes the frame.\n */\nexport const ScrollArea = forwardRef<\n  HTMLDivElement,\n  HTMLAttributes<HTMLDivElement> & {\n    surface?: boolean;\n    surfaceSize?: SurfaceProps[\"size\"];\n    surfaceDepth?: SurfaceProps[\"depth\"];\n    /** Use the shared theme-aware display material on the fixed viewport. */\n    screen?: boolean;\n  }\n>(function ScrollArea(\n  {\n    children,\n    className,\n    surface = false,\n    surfaceSize,\n    surfaceDepth,\n    screen = false,\n    ...props\n  },\n  ref,\n) {\n  const root = useRef<HTMLDivElement>(null);\n  const thumbSurface = useRef<HTMLSpanElement>(null);\n  const reduced = useReducedMotion();\n  useEffect(() => {\n    const frame = root.current;\n    const viewport = frame?.querySelector<HTMLDivElement>(\n      \".caps-scroll-viewport\",\n    );\n    if (!viewport || !frame) return;\n    let motion: JSAnimation | null = null;\n    let idle: ReturnType<typeof setTimeout> | undefined;\n    let position = viewport.scrollTop;\n    let time = performance.now();\n    let velocity = 0;\n    const deform = (impulse: ReturnType<typeof scrollImpulse>) => {\n      const thumb = thumbSurface.current;\n      if (!impulse || reduced || !thumb) return;\n      motion?.cancel();\n      thumb.style.transformOrigin = impulse.origin;\n      const feel = readMotion(thumb);\n      const kick = themedEase(feel, { ease: \"outQuad\", duration: 45 });\n      const settle = themedSpring(feel, { bounce: 0.18, duration: 180 });\n      motion = animate(thumb, {\n        scaleY: [\n          { to: impulse.scaleY, ...kick },\n          { to: 1, ...settle },\n        ],\n        scaleX: [\n          { to: impulse.scaleX, ...kick },\n          { to: 1, ...settle },\n        ],\n      });\n    };\n    const react = (nextVelocity: number, elapsed: number) => {\n      const impulse = scrollImpulse(velocity, nextVelocity, elapsed);\n      velocity = nextVelocity;\n      deform(impulse);\n    };\n    const onWheel = (event: WheelEvent) => {\n      if (event.ctrlKey || Math.abs(event.deltaX) > Math.abs(event.deltaY))\n        return;\n      const unit =\n        event.deltaMode === 1\n          ? 16\n          : event.deltaMode === 2\n            ? viewport.clientHeight\n            : 1;\n      const impulse = overscrollImpulse(\n        viewport.scrollTop,\n        viewport.scrollHeight - viewport.clientHeight,\n        event.deltaY * unit,\n      );\n      if (!impulse) return;\n      clearTimeout(idle);\n      velocity = 0;\n      deform(impulse);\n    };\n    const onScroll = () => {\n      const now = performance.now();\n      const gap = now - time;\n      const elapsed = gap > 100 ? 16 : Math.max(16, gap);\n      const delta = viewport.scrollTop - position;\n      if (gap > 100) velocity = 0;\n      react(delta / elapsed, elapsed);\n      position = viewport.scrollTop;\n      time = now;\n      clearTimeout(idle);\n      idle = setTimeout(() => {\n        react(0, 32);\n      }, 64);\n    };\n    viewport.addEventListener(\"scroll\", onScroll, { passive: true });\n    frame.addEventListener(\"wheel\", onWheel, { passive: true });\n    return () => {\n      clearTimeout(idle);\n      motion?.cancel();\n      // A preference change re-runs this effect: never strand a squash.\n      if (thumbSurface.current) thumbSurface.current.style.transform = \"none\";\n      viewport.removeEventListener(\"scroll\", onScroll);\n      frame.removeEventListener(\"wheel\", onWheel);\n    };\n  }, [screen, surface, reduced]);\n  const viewport = (\n    <BaseScrollArea.Viewport\n      render={screen ? <Screen /> : <div />}\n      {...props}\n      ref={ref}\n      className=\"caps-scroll-viewport\"\n    >\n      <BaseScrollArea.Content style={{ minWidth: 0 }}>\n        {children}\n      </BaseScrollArea.Content>\n    </BaseScrollArea.Viewport>\n  );\n  return (\n    <BaseScrollArea.Root\n      render={\n        surface ? (\n          <Surface\n            size={surfaceSize ?? \"md\"}\n            depth={surfaceDepth ?? \"shallow\"}\n          />\n        ) : (\n          <div />\n        )\n      }\n      ref={root}\n      className={cn(\"caps-scroll-area\", className)}\n    >\n      {screen ? (\n        <div className=\"caps-display-gasket caps-scroll-display\">\n          {viewport}\n        </div>\n      ) : (\n        viewport\n      )}\n      <Surface\n        size=\"sm\"\n        depth=\"deep\"\n        placement=\"embedded\"\n        className=\"caps-scroll-track-surface\"\n      >\n        <BaseScrollArea.Scrollbar className=\"caps-scroll-track\">\n          <BaseScrollArea.Thumb className=\"caps-scroll-thumb\">\n            <span className=\"caps-scroll-thumb-surface\" ref={thumbSurface} />\n          </BaseScrollArea.Thumb>\n        </BaseScrollArea.Scrollbar>\n      </Surface>\n    </BaseScrollArea.Root>\n  );\n});\n"
+    },
+    {
+      "path": "../src/components/surface.tsx",
+      "type": "registry:ui",
+      "target": "@ui/surface.tsx",
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/cn\";\n\n/** Native surface attributes with independent rim, depth and placement choices. */\nexport type SurfaceProps = HTMLAttributes<HTMLDivElement> & {\n  /** Rim scale, independent of the content's dimensions. */\n  size?: \"sm\" | \"md\" | \"lg\";\n  depth?: \"shallow\" | \"deep\";\n  /** Embedded surfaces borrow their parent's casing; omit the exterior surround. */\n  placement?: \"standalone\" | \"embedded\";\n};\n\n/** A themeable frame around a surface. No padding or interaction ownership. */\nexport const Surface = forwardRef<HTMLDivElement, SurfaceProps>(\n  function Surface(\n    {\n      className,\n      size = \"md\",\n      depth = \"shallow\",\n      placement = \"standalone\",\n      ...props\n    },\n    ref,\n  ) {\n    return (\n      <div\n        {...props}\n        ref={ref}\n        data-surface-size={size}\n        data-surface-depth={depth}\n        data-surface-placement={placement}\n        className={cn(\"caps-surface\", className)}\n      />\n    );\n  },\n);\n\n/** Display face using theme surfaces while preserving the inherited text font. */\nexport const Screen = forwardRef<\n  HTMLDivElement,\n  HTMLAttributes<HTMLDivElement>\n>(function Screen({ className, ...props }, ref) {\n  return <div {...props} ref={ref} className={cn(\"caps-screen\", className)} />;\n});\n\n/** A recessed display with a separate gasket and screen face. */\nexport type DisplayProps = SurfaceProps & {\n  /** Fill a flex region rather than sizing to its content. */\n  fit?: \"content\" | \"fill\";\n  /** Reduce the gasket footprint for compact displays. */\n  density?: \"normal\" | \"compact\";\n};\n\n/** Theme-owned recessed screen with a gasket and optional compact fill geometry. */\nexport const Display = forwardRef<HTMLDivElement, DisplayProps>(\n  function Display(\n    {\n      children,\n      className,\n      depth = \"deep\",\n      fit = \"content\",\n      density = \"normal\",\n      ...props\n    },\n    ref,\n  ) {\n    const fill = fit === \"fill\";\n    return (\n      <Surface\n        {...props}\n        className={cn(className, fill && \"flex min-h-0 flex-1\")}\n        depth={depth}\n        ref={ref}\n      >\n        <div\n          className={cn(\n            \"caps-display-gasket\",\n            fill && \"flex min-h-0 min-w-0 flex-1\",\n          )}\n          data-display-density={density}\n        >\n          <Screen\n            className={cn(\n              fill && \"flex min-h-0 min-w-0 flex-1 overflow-hidden\",\n            )}\n          >\n            {children}\n          </Screen>\n        </div>\n      </Surface>\n    );\n  },\n);\n\n/** Props accepted by ScreenHeader. */\nexport type ScreenHeaderProps = {\n  /** A decorative Sigil or App icon before the title. */\n  icon?: ReactNode;\n  title: ReactNode;\n  /** A Status or short readout opposite the title. */\n  status?: ReactNode;\n} & Omit<HTMLAttributes<HTMLElement>, \"title\" | \"children\">;\n\n/** A screen's title bar, printed on the glass above a hairline. */\nexport const ScreenHeader = forwardRef<HTMLElement, ScreenHeaderProps>(\n  function ScreenHeader({ className, icon, status, title, ...props }, ref) {\n    return (\n      <header\n        {...props}\n        className={cn(\"caps-screen-header\", className)}\n        ref={ref}\n      >\n        {icon ? (\n          <span className=\"caps-screen-header-icon\" aria-hidden=\"true\">\n            {icon}\n          </span>\n        ) : null}\n        <span className=\"caps-screen-header-title\">{title}</span>\n        {status ? (\n          <span className=\"caps-screen-header-status\">{status}</span>\n        ) : null}\n      </header>\n    );\n  },\n);\n\n/**\n * An instrument's cells: a grid of hairline-ruled cells that reflows to one\n * column when narrow. Put ScreenCells straight inside a Screen or Display.\n */\nexport const ScreenCells = forwardRef<\n  HTMLDivElement,\n  HTMLAttributes<HTMLDivElement> & {\n    /** Compact instruments retain full-width rows instead of a cell grid. */\n    appearance?: \"default\" | \"compact\";\n  }\n>(function ScreenCells({ appearance, className, ...props }, ref) {\n  return (\n    <div\n      {...props}\n      className={cn(\"caps-screen-cells\", className)}\n      data-appearance={appearance === \"compact\" ? appearance : undefined}\n      ref={ref}\n    />\n  );\n});\n\n/** Props accepted by ScreenCell. */\nexport type ScreenCellProps = {\n  /** Compact rows put their subject icon and legend before the controls. */\n  appearance?: \"default\" | \"compact\";\n  /** A leading subject icon. */\n  icon?: ReactNode;\n  /** The cell's tiny mono legend, such as \"Processes\". */\n  legend?: ReactNode;\n  /** A short value readout in the cell's corner, such as \"2/4 ON\". */\n  readout?: ReactNode;\n  /** Span the full row instead of one column. */\n  wide?: boolean;\n} & HTMLAttributes<HTMLDivElement>;\n\n/** One instrument cell: a legend, an optional corner readout and its content. */\nexport const ScreenCell = forwardRef<HTMLDivElement, ScreenCellProps>(\n  function ScreenCell(\n    {\n      children,\n      className,\n      legend,\n      readout,\n      icon,\n      appearance,\n      wide = false,\n      ...props\n    },\n    ref,\n  ) {\n    return (\n      <div\n        {...props}\n        className={cn(\"caps-screen-cell\", className)}\n        data-wide={wide || undefined}\n        data-appearance={appearance === \"compact\" ? appearance : undefined}\n        ref={ref}\n      >\n        {icon ? <span className=\"caps-screen-cell-icon\">{icon}</span> : null}\n        {legend ? (\n          <span className=\"caps-screen-cell-legend\">{legend}</span>\n        ) : null}\n        {readout ? (\n          <span className=\"caps-screen-cell-readout\">{readout}</span>\n        ) : null}\n        {appearance === \"compact\" ? (\n          <div className=\"caps-screen-cell-controls\">{children}</div>\n        ) : (\n          children\n        )}\n      </div>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    },
+    {
+      "path": "../src/lib/motion.ts",
+      "type": "registry:lib",
+      "target": "@lib/motion.ts",
+      "content": "import {\n  useLayoutEffect,\n  useState,\n  useSyncExternalStore,\n  type RefObject,\n} from \"react\";\n\n/** Resolved, element-scoped motion. Times are milliseconds and distances pixels. */\nexport type Motion = Readonly<{\n  reduced: boolean;\n  squish: number;\n  fast: number;\n  normal: number;\n  slow: number;\n  springDuration: number;\n  bounce: number;\n  stretch: number;\n  distance: number;\n  stagger: number;\n  blur: number;\n  shake: number;\n  steps: number;\n  fuse: number;\n  pressDepth: number;\n  pressScale: number;\n  ease: string;\n  easeExit: string;\n}>;\n\nconst defaults: Motion = Object.freeze({\n  reduced: false,\n  squish: 90,\n  fast: 120,\n  normal: 180,\n  slow: 280,\n  springDuration: 320,\n  bounce: 0.3,\n  stretch: 0.28,\n  distance: 4,\n  stagger: 24,\n  blur: 0,\n  shake: 3,\n  steps: 0,\n  fuse: 1,\n  pressDepth: 0.5,\n  pressScale: 1,\n  ease: \"cubic-bezier(0.2, 0, 0, 1)\",\n  easeExit: \"cubic-bezier(0.4, 0, 1, 1)\",\n});\n\nconst preference = \"(prefers-reduced-motion: reduce)\";\n\n/** Read at an event boundary; no root-theme lookup, so nested tokens win. */\nexport function readMotion(element: Element): Motion {\n  const view = element.ownerDocument.defaultView;\n  if (!view) return defaults;\n  const style = view.getComputedStyle(element);\n  const number = (name: string, fallback: number) => {\n    const value = style.getPropertyValue(name).trim();\n    const parsed = Number.parseFloat(value);\n    return Number.isFinite(parsed) ? Math.max(0, parsed) : fallback;\n  };\n  const time = (name: string, fallback: number) => {\n    const value = style.getPropertyValue(name).trim();\n    return (\n      number(name, fallback) *\n      (value.endsWith(\"s\") && !value.endsWith(\"ms\") ? 1000 : 1)\n    );\n  };\n  const browser: Partial<Pick<Window, \"matchMedia\">> = view;\n  const reduced = browser.matchMedia?.(preference).matches ?? false;\n  const duration = (name: string, fallback: number) =>\n    reduced ? 120 : time(`--stipe-motion-${name}`, fallback);\n  const amount = (name: string, fallback: number) =>\n    reduced ? 0 : number(`--stipe-motion-${name}`, fallback);\n  return {\n    reduced,\n    squish: duration(\"squish\", defaults.squish),\n    fast: duration(\"fast\", defaults.fast),\n    normal: duration(\"normal\", defaults.normal),\n    slow: duration(\"slow\", defaults.slow),\n    springDuration: duration(\"spring-duration\", defaults.springDuration),\n    bounce: Math.min(1, amount(\"bounce\", defaults.bounce)),\n    stretch: amount(\"stretch\", defaults.stretch),\n    distance: amount(\"distance\", defaults.distance),\n    stagger: reduced ? 0 : time(\"--stipe-motion-stagger\", defaults.stagger),\n    blur: amount(\"blur\", defaults.blur),\n    shake: amount(\"shake\", defaults.shake),\n    steps: Math.floor(amount(\"steps\", defaults.steps)),\n    fuse: number(\"--stipe-motion-fuse\", defaults.fuse),\n    pressDepth: reduced\n      ? 0\n      : number(\"--stipe-press-depth\", defaults.pressDepth),\n    pressScale: reduced\n      ? 1\n      : number(\"--stipe-press-scale\", defaults.pressScale),\n    ease: style.getPropertyValue(\"--stipe-motion-ease\").trim() || defaults.ease,\n    easeExit:\n      style.getPropertyValue(\"--stipe-motion-ease-exit\").trim() ||\n      defaults.easeExit,\n  };\n}\n\n/** Live motion tokens for a mounted ref, including nested theme and OS changes. */\nexport function useMotion(ref: RefObject<Element | null>): Motion {\n  const [motion, setMotion] = useState<Motion>(() => ({\n    ...defaults,\n    reduced: true,\n  }));\n  useLayoutEffect(() => {\n    const element = ref.current;\n    const view = element?.ownerDocument.defaultView;\n    if (!element || !view) return;\n    const update = () => {\n      const next = readMotion(element);\n      setMotion((previous) =>\n        JSON.stringify(previous) === JSON.stringify(next) ? previous : next,\n      );\n    };\n    update();\n    const observer = new view.MutationObserver(update);\n    // Observe ancestors only: animation writes to descendants must not trigger reads.\n    for (\n      let parent: Element | null = element;\n      parent;\n      parent = parent.parentElement\n    ) {\n      observer.observe(parent, {\n        attributes: true,\n        attributeFilter: [\"data-theme\", \"class\", \"style\"],\n      });\n    }\n    const browser: Partial<Pick<Window, \"matchMedia\">> = view;\n    const media = browser.matchMedia?.(preference);\n    media?.addEventListener(\"change\", update);\n    return () => {\n      observer.disconnect();\n      media?.removeEventListener(\"change\", update);\n    };\n  }, [ref]);\n  return motion;\n}\n\n/** Today's feel: the defaults that components' authored timings are written against. */\nexport const motionDefaults: Motion = defaults;\n\n/**\n * Scale one of a component's authored durations by the theme's tempo\n * (`--stipe-motion-normal` against its 180ms default). Today's themes return\n * the authored value unchanged; reduced motion returns 0 (nothing travels).\n */\nexport function motionTime(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  return Math.round((authored * motion.normal) / defaults.normal);\n}\n\n/**\n * Scale one of a component's authored spring bounces by the theme's bounce\n * (`--stipe-motion-bounce` against its 0.3 default), so a lively control stays\n * livelier than a calm one inside every theme. A 0 theme is critically damped.\n */\nexport function motionBounce(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  const scaled = (authored * motion.bounce) / defaults.bounce;\n  return Math.min(0.9, Math.max(0, scaled));\n}\n\n/** Scale an authored spring settle time by `--stipe-motion-spring-duration`. */\nexport function motionSpringTime(motion: Motion, authored: number): number {\n  if (motion.reduced) return 0;\n  return Math.round(\n    (authored * motion.springDuration) / defaults.springDuration,\n  );\n}\n\n/** A CSS easing for a Web Animation, stepped when the theme asks for it. */\nexport function motionEasing(motion: Motion, ease: string): string {\n  return motion.steps > 0 ? `steps(${String(motion.steps)}, end)` : ease;\n}\n\n/** Whether the element can run Web Animations (not in jsdom or old engines). */\nexport function canAnimate(element: Element): boolean {\n  return \"animate\" in element;\n}\n\nconst globalWindow: Partial<Pick<Window, \"matchMedia\">> = globalThis;\n\nfunction prefersReducedMotion(): boolean {\n  return globalWindow.matchMedia?.(preference).matches ?? false;\n}\n\nfunction subscribeReducedMotion(update: () => void) {\n  const media = globalWindow.matchMedia?.(preference);\n  media?.addEventListener(\"change\", update);\n  return () => {\n    media?.removeEventListener(\"change\", update);\n  };\n}\n\n/** Server renders assume reduced motion, so hydration never starts mid-move. */\nfunction serverReducedMotion() {\n  return true;\n}\n\n/**\n * The live reduced-motion preference alone, for controls that only need to\n * know whether to move (their timing comes from `readMotion` when they do).\n */\nexport function useReducedMotion(): boolean {\n  return useSyncExternalStore(\n    subscribeReducedMotion,\n    prefersReducedMotion,\n    serverReducedMotion,\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/motion-spring.ts",
+      "type": "registry:lib",
+      "target": "@lib/motion-spring.ts",
+      "content": "import { spring, steps, type EasingParam } from \"animejs\";\n\nimport {\n  motionBounce,\n  motionSpringTime,\n  motionTime,\n  type Motion,\n} from \"./motion.js\";\n\n/** Anime.js timing for one tween or segment. */\nexport type MotionTiming = Readonly<{ ease: EasingParam; duration: number }>;\n\n/** Timing for a change that must land at once. */\nexport const immediateTiming: MotionTiming = Object.freeze({\n  ease: \"linear\",\n  duration: 0,\n});\n\n/** A component's own spring, as authored for today's default feel. */\nexport type AuthoredSpring = Readonly<{ bounce: number; duration: number }>;\n\n/**\n * Anime.js timing for an authored spring, in the theme's feel: bounce and\n * settle time scale with `--stipe-motion-bounce` and\n * `--stipe-motion-spring-duration`, and a stepped theme moves in\n * `--stipe-motion-steps` discrete steps instead. Today's themes reproduce the\n * authored spring exactly.\n */\nexport function themedSpring(\n  motion: Motion,\n  authored: AuthoredSpring,\n): MotionTiming {\n  const duration = motionSpringTime(motion, authored.duration);\n  if (duration <= 0) return immediateTiming;\n  if (motion.steps > 0) return { ease: steps(motion.steps), duration };\n  return {\n    ease: spring({ bounce: motionBounce(motion, authored.bounce), duration }),\n    duration,\n  };\n}\n\n/**\n * Anime.js timing for an authored eased segment: the duration scales with the\n * theme's tempo, and a stepped theme replaces the curve with steps.\n */\nexport function themedEase(\n  motion: Motion,\n  authored: MotionTiming,\n): MotionTiming {\n  const duration = motionTime(motion, authored.duration);\n  return {\n    ease: motion.steps > 0 ? steps(motion.steps) : authored.ease,\n    duration,\n  };\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer components": {
+      "dialog.caps-surface": { "color": "inherit" },
+      "dialog.caps-surface::backdrop": {
+        "background": "color-mix(in srgb, var(--color-neutral) 55%, transparent)"
+      }
+    },
+    "@layer utilities": {
+      ".caps-surface": {
+        "--caps-surface-rim": "max(\n      var(--border),\n      calc(var(--stipe-surface-frame-width, 6px) * var(--depth))\n    )",
+        "--caps-surface-inset": "2px",
+        "--caps-surface-molding-base": "color-mix(\n      in oklab,\n      var(--color-base-100),\n      var(--color-base-200) calc(var(--depth) * 100%)\n    )",
+        "--caps-surface-molding": "linear-gradient(\n      155deg,\n      color-mix(\n        in oklab,\n        var(--caps-surface-molding-base),\n        var(--color-base-content)\n          calc(var(--depth) * var(--stipe-surface-molding-contrast))\n      ),\n      var(--caps-surface-molding-base) 50%,\n      color-mix(\n        in oklab,\n        var(--caps-surface-molding-base),\n        white calc(var(--depth) * var(--stipe-surface-molding-contrast))\n      )\n    )",
+        "position": "relative",
+        "isolation": "isolate",
+        "minWidth": "0",
+        "minHeight": "0",
+        "border": "var(--caps-surface-rim) solid\n      color-mix(\n        in oklab,\n        transparent,\n        var(--stipe-linework) calc((1 - var(--depth)) * 100%)\n      )",
+        "borderRadius": "calc(var(--radius-field) + var(--caps-surface-rim))",
+        "background": "linear-gradient(\n          var(--caps-surface-face, var(--color-base-100)),\n          var(--caps-surface-face, var(--color-base-100))\n        )\n        padding-box,\n      var(--stipe-surface-frame-image, var(--caps-surface-molding)) border-box",
+        "boxShadow": "var(\n      --stipe-shadow-raised,\n      0 0 0 calc(var(--depth) * 1px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) 12%,\n          var(--color-base-200)\n        ),\n      0 0 0 calc(var(--depth) * 3px) var(--color-base-200),\n      0 calc(var(--depth) * 1px) 0 calc(var(--depth) * 4px)\n        oklch(100% 0 0 / calc(var(--depth) * 0.3))\n    )"
+      },
+      ".caps-surface[data-surface-size=\"sm\"]": {
+        "--caps-surface-rim": "max(\n      var(--border),\n      calc(var(--stipe-surface-frame-width, 2px) * var(--depth))\n    )"
+      },
+      ".caps-surface[data-surface-size=\"lg\"]": {
+        "--caps-surface-rim": "max(\n      var(--border),\n      calc(var(--stipe-surface-frame-width, 10px) * var(--depth))\n    )"
+      },
+      ".caps-surface[data-surface-depth=\"deep\"]": {
+        "--caps-surface-inset": "5px"
+      },
+      ".caps-surface[data-surface-placement=\"embedded\"],.caps-surface .caps-surface": {
+        "--caps-surface-rim": "var(--border)",
+        "boxShadow": "none"
+      },
+      ".caps-surface[data-surface-placement=\"embedded\"]::before,.caps-surface[data-surface-placement=\"embedded\"]::after,.caps-surface .caps-surface::before,.caps-surface .caps-surface::after": {
+        "boxShadow": "none"
+      },
+      ".caps-surface::before,.caps-surface::after": {
+        "content": "\"\"",
+        "position": "absolute",
+        "pointerEvents": "none",
+        "zIndex": 2
+      },
+      ".caps-surface::before": {
+        "inset": "calc(-1 * var(--caps-surface-rim))",
+        "borderRadius": "inherit",
+        "boxShadow": "var(\n      --stipe-shadow-edge,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.48)),\n      inset 1px 0 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),\n      inset 0 -1px 0\n        color-mix(in oklab, var(--color-base-content) 10%, transparent)\n    )"
+      },
+      ".caps-surface::after": {
+        "inset": "0",
+        "borderRadius": "var(--radius-field)",
+        "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 1px 0\n        color-mix(in oklab, var(--color-base-content) 18%, transparent),\n      inset 0 var(--caps-surface-inset) var(--caps-surface-inset)\n        oklch(0% 0 0 / calc(var(--depth) * 0.16)),\n      inset 0 0 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n      inset -1px -1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.16))\n    )"
+      },
+      ".caps-display-gasket": {
+        "--caps-display-gasket-padding": "calc(var(--spacing-sm) * var(--depth))",
+        "padding": "var(--caps-display-gasket-padding)",
+        "borderRadius": "var(--radius-field)",
+        "background": "var(--stipe-display-gasket-face, var(--color-base-300))",
+        "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 20%),\n          transparent\n        )\n    )"
+      },
+      ".caps-display-gasket[data-display-density=\"compact\"]": {
+        "--caps-display-gasket-padding": "var(--spacing-2xs)"
+      },
+      ".caps-surface[data-surface-size=\"sm\"][data-surface-placement=\"embedded\"]\n    > .caps-display-gasket[data-display-density=\"compact\"]": {
+        "--caps-display-gasket-padding": "1px"
+      },
+      ".caps-display-gasket > .caps-screen": {
+        "borderRadius": "var(--radius-field)",
+        "border": "var(--border) solid var(--stipe-linework)"
+      },
+      ".caps-screen": {
+        "--caps-control-depth": "var(--stipe-screen-depth, 0)",
+        "--caps-control-ink": "var(--stipe-screen-ink, var(--color-base-content))",
+        "--caps-control-dim": "var(\n      --stipe-screen-dim,\n      color-mix(in oklab, var(--color-base-content) 68%, var(--color-base-100))\n    )",
+        "--caps-control-line": "var(\n      --stipe-screen-line,\n      color-mix(in oklab, var(--color-base-content) 22%, transparent)\n    )",
+        "--caps-control-face": "var(--stipe-screen-face, transparent)",
+        "--caps-control-label-font": "var(--stipe-screen-label-font, var(--font-mono))",
+        "--caps-control-label-size": "var(--stipe-screen-label-size, 0.625rem)",
+        "--caps-control-label-case": "var(--stipe-screen-label-case, uppercase)",
+        "--caps-control-label-tracking": "var(--stipe-screen-label-tracking, 0.08em)",
+        "--caps-control-segment": "var(--stipe-screen-segment, 0.5rem)",
+        "--caps-control-segment-gap": "var(--stipe-screen-segment-gap, 2px)",
+        "--caps-control-range-mask": "repeating-linear-gradient(\n      to right,\n      black 0 var(--caps-control-segment),\n      transparent var(--caps-control-segment)\n        calc(var(--caps-control-segment) + var(--caps-control-segment-gap))\n    )",
+        "--caps-control-range-track": "100%",
+        "--caps-control-range-thumb": "var(--caps-control-ink)",
+        "--caps-control-range-focus": "var(--caps-focus-ring)",
+        "--caps-control-selected-face": "var(\n      --stipe-screen-selected-face,\n      color-mix(in oklab, var(--caps-control-ink) 6%, transparent)\n    )",
+        "--caps-control-selected-line": "var(\n      --stipe-screen-selected-line,\n      var(--caps-control-ink)\n    )",
+        "--caps-control-dial": "block",
+        "--caps-control-number-areas": "\"down dial up\"",
+        "--caps-control-number-value": "dial",
+        "--caps-control-number-face": "transparent",
+        "--caps-control-number-line": "transparent",
+        "--caps-control-number-size": "var(--text-xl)",
+        "--caps-control-number-key-align": "center",
+        "--caps-control-number-width": "4ch",
+        "--caps-control-number-padding": "0",
+        "--caps-control-number-unit-room": "0",
+        "--caps-control-number-stack": "column",
+        "--caps-control-number-unit-position": "static",
+        "minWidth": "0",
+        "borderRadius": "var(--radius-field)",
+        "fontFamily": "var(--font-sans)",
+        "color": "var(--color-base-content)",
+        "backgroundColor": "var(--color-base-100)",
+        "backgroundImage": "var(--stipe-display-texture-image)",
+        "backgroundSize": "var(--caps-print-texture-size, auto)",
+        "textShadow": "var(--stipe-display-text-shadow)",
+        "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        )\n    )"
+      },
+      ".caps-screen-header": {
+        "display": "flex",
+        "alignItems": "center",
+        "gap": "var(--spacing-sm)",
+        "minWidth": "0",
+        "padding": "var(--spacing-sm) var(--spacing-md)",
+        "borderBottom": "var(--border) solid\n      var(--caps-control-line, var(--color-base-300))",
+        "fontFamily": "var(--caps-control-label-font, inherit)",
+        "fontSize": "var(--text-sm)"
+      },
+      ".caps-screen-header-icon": {
+        "display": "inline-flex",
+        "flex": "none",
+        "width": "1.5rem",
+        "height": "1.5rem"
+      },
+      ".caps-screen-header-icon > :is(svg, img)": {
+        "width": "100%",
+        "height": "100%"
+      },
+      ".caps-screen-header-title": {
+        "flex": 1,
+        "minWidth": "0",
+        "overflowWrap": "anywhere"
+      },
+      ".caps-screen-header-status": {
+        "display": "inline-flex",
+        "flex": "none",
+        "alignItems": "center",
+        "gap": "var(--spacing-xs)"
+      },
+      ".caps-screen-cells": {
+        "display": "grid",
+        "gridTemplateColumns": "repeat(\n      auto-fit,\n      minmax(min(100%, var(--caps-screen-cell-min, 12rem)), 1fr)\n    )",
+        "overflow": "hidden"
+      },
+      ".caps-screen-cell": {
+        "position": "relative",
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "var(--spacing-xs)",
+        "minWidth": "0",
+        "padding": "var(--spacing-sm) var(--spacing-md) var(--spacing-md)",
+        "boxShadow": "calc(var(--border) * -1) calc(var(--border) * -1) 0 0\n      var(--caps-control-line, var(--color-base-300))"
+      },
+      ".caps-screen-cell[data-wide]": { "gridColumn": "1 / -1" },
+      ".caps-screen-cell-legend,.caps-screen-cell-readout": {
+        "fontFamily": "var(--caps-control-label-font, inherit)",
+        "fontSize": "var(--caps-control-label-size, var(--text-xs))",
+        "letterSpacing": "var(--caps-control-label-tracking, inherit)",
+        "textTransform": "var(--caps-control-label-case, inherit)",
+        "lineHeight": 1.5
+      },
+      ".caps-screen-cell-legend": {
+        "fontWeight": 600,
+        "color": "var(--stipe-fg-muted)"
+      },
+      ".caps-screen-cell-readout": {
+        "position": "absolute",
+        "top": "var(--spacing-sm)",
+        "insetInlineEnd": "var(--spacing-md)",
+        "color": "var(--caps-control-ink, var(--color-base-content))"
+      },
+      ".caps-screen-cells[data-appearance=\"compact\"]": {
+        "display": "block",
+        "overflow": "visible"
+      },
+      ".caps-screen-cell[data-appearance=\"compact\"]": {
+        "flexDirection": "row",
+        "alignItems": "center",
+        "gap": "var(--spacing-sm)",
+        "minHeight": "2.5rem",
+        "padding": "0",
+        "boxShadow": "none",
+        "fontSize": "0.875rem"
+      },
+      ".caps-screen-cell[data-appearance=\"compact\"]\n    + .caps-screen-cell[data-appearance=\"compact\"]": {
+        "borderTop": "1px solid color-mix(in oklab, currentcolor 12%, transparent)"
+      },
+      ".caps-screen-cell[data-appearance=\"compact\"] > .caps-screen-cell-icon": {
+        "flex": "0 0 2.5rem"
+      },
+      ".caps-screen-cell[data-appearance=\"compact\"] > .caps-screen-cell-legend": {
+        "flex": 1,
+        "minWidth": "0",
+        "overflowWrap": "anywhere",
+        "font": "inherit",
+        "letterSpacing": "inherit",
+        "textTransform": "inherit",
+        "color": "inherit"
+      },
+      ".caps-screen-cell-controls": {
+        "display": "flex",
+        "gap": "var(--spacing-sm)",
+        "marginLeft": "auto"
+      },
+      ".caps-screen-cell-controls svg": {
+        "width": "1.5rem",
+        "height": "1.5rem"
+      },
+      "@media (max-width: 540px)": {
+        ".caps-screen-cell[data-appearance=\"compact\"]": {
+          "flexWrap": "wrap"
+        },
+        ".caps-screen-cell-controls": {
+          "flexBasis": "100%",
+          "justifyContent": "flex-end"
+        }
+      },
+      "@media (max-width: 480px)": {
+        ".caps-screen-cell[data-appearance=\"compact\"]": {
+          "paddingBlock": "var(--spacing-sm)"
+        },
+        ".caps-screen-cell-controls": { "width": "100%" }
+      },
+      ".caps-scroll-area": {
+        "--caps-scroll-track-width": "var(--caps-scrollbar-size, 6px)",
+        "--caps-scroll-frame-inset": "0px",
+        "--caps-scroll-gutter-width": "calc(\n      var(--caps-scroll-track-width) + var(--spacing-xs) * 2 -\n        var(--caps-scroll-frame-inset)\n    )",
+        "position": "relative",
+        "minHeight": "0",
+        "minWidth": "0"
+      },
+      ".caps-scroll-viewport": {
+        "height": "100%",
+        "width": "100%",
+        "overscrollBehavior": "contain"
+      },
+      ".caps-scroll-display": {
+        "height": "100%",
+        "boxSizing": "border-box",
+        "padding": "calc(var(--spacing-xs) / 2)"
+      },
+      ".caps-scroll-area.caps-surface:has(> .caps-scroll-display)::after": {
+        "display": "none"
+      },
+      ".caps-scroll-area > .caps-scroll-viewport,.caps-scroll-area > .caps-scroll-display": {
+        "width": "calc(100% - var(--caps-scroll-gutter-width))"
+      },
+      ".caps-scroll-area.caps-surface > .caps-scroll-viewport": {
+        "borderRadius": "var(--radius-field)"
+      },
+      ".caps-scroll-area.caps-surface": {
+        "--caps-scroll-frame-inset": "var(--caps-surface-rim)",
+        "background": "var(--stipe-surface-frame-image, var(--caps-surface-molding))\n      border-box"
+      },
+      ".caps-scroll-area.caps-surface::after": {
+        "insetInlineEnd": "var(--caps-scroll-gutter-width)"
+      },
+      ".caps-scroll-track-surface": {
+        "position": "absolute",
+        "insetBlock": "var(--spacing-sm)",
+        "insetInlineEnd": "calc(var(--spacing-xs) - var(--caps-scroll-frame-inset))",
+        "display": "none",
+        "width": "var(--caps-scroll-track-width)",
+        "background": "transparent"
+      },
+      ".caps-scroll-track-surface::before": { "display": "none" },
+      ".caps-scroll-area[data-has-overflow-y] > .caps-scroll-track-surface": {
+        "display": "block"
+      },
+      ".caps-scroll-track": {
+        "position": "absolute",
+        "inset": "0",
+        "display": "flex",
+        "width": "100%",
+        "touchAction": "none",
+        "userSelect": "none"
+      },
+      ".caps-scroll-thumb": {
+        "position": "relative",
+        "width": "100%",
+        "cursor": "grab"
+      },
+      ".caps-scroll-thumb:active": { "cursor": "grabbing" },
+      ".caps-scroll-thumb-surface": {
+        "position": "absolute",
+        "inset": "0",
+        "pointerEvents": "none",
+        "borderRadius": "var(--radius-selector)",
+        "backgroundColor": "var(\n      --caps-scrollbar-thumb,\n      color-mix(in oklab, var(--color-base-content) 22%, transparent)\n    )",
+        "transition": "background-color var(--stipe-motion-fast) ease-out"
+      },
+      ".caps-scroll-area:hover .caps-scroll-thumb-surface,.caps-scroll-thumb:active .caps-scroll-thumb-surface": {
+        "backgroundColor": "var(\n      --caps-scrollbar-thumb-active,\n      color-mix(in oklab, var(--color-base-content) 40%, transparent)\n    )"
+      },
+      "@media (prefers-reduced-motion: reduce)": {
+        ".caps-scroll-thumb-surface": { "transform": "none !important" }
+      },
+      "@media (forced-colors: active)": {
+        ".caps-scroll-track": { "background": "Canvas", "boxShadow": "none" },
+        ".caps-scroll-thumb-surface": {
+          "background": "ButtonText",
+          "boxShadow": "none"
+        }
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

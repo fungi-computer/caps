@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stat",
+  "type": "registry:ui",
+  "title": "Stat",
+  "description": "Native definition-list statistic with optional supporting description.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/stat.tsx",
+      "type": "registry:ui",
+      "target": "@ui/stat.tsx",
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by Stat. */\nexport type StatProps = {\n  label: ReactNode;\n  value: ReactNode;\n  description?: ReactNode;\n  /** Reduce internal padding when a statistic sits inside a compact card. */\n  density?: \"regular\" | \"compact\";\n} & Omit<HTMLAttributes<HTMLDListElement>, \"children\">;\n\n/** A compact statistic presentation for caller-provided values. */\nexport const Stat = forwardRef<HTMLDListElement, StatProps>(function Stat(\n  { className, density = \"regular\", label, value, description, ...props },\n  ref,\n) {\n  return (\n    <dl\n      {...props}\n      className={cn(\n        \"stats\",\n        density === \"compact\" && \"caps-stat-compact\",\n        className,\n      )}\n      ref={ref}\n    >\n      <div className=\"stat\">\n        <dt className=\"stat-title text-base-content\">{label}</dt>\n        <dd className=\"stat-value caps-numeric\">{value}</dd>\n        {description !== undefined ? (\n          <dd className=\"stat-desc text-base-content\">{description}</dd>\n        ) : null}\n      </div>\n    </dl>\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

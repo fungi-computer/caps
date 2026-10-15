@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "slider",
+  "type": "registry:ui",
+  "title": "Slider",
+  "description": "Native range input with product-neutral tone and size variants.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/slider.tsx",
+      "type": "registry:ui",
+      "target": "@ui/slider.tsx",
+      "content": "import { forwardRef, type InputHTMLAttributes } from \"react\";\n\nimport { cn, cva } from \"@/lib/cn\";\n\n/** Supported SliderTone values. */\nexport type SliderTone =\n  | \"neutral\"\n  | \"primary\"\n  | \"secondary\"\n  | \"accent\"\n  | \"success\"\n  | \"info\"\n  | \"warning\"\n  | \"error\";\n\n/** Supported SliderSize values. */\nexport type SliderSize = \"xs\" | \"sm\" | \"default\" | \"lg\";\n\nconst sliderVariants = cva(\"range caps-slider\", {\n  variants: {\n    tone: {\n      neutral: \"range-neutral\",\n      primary: \"range-primary\",\n      secondary: \"range-secondary\",\n      accent: \"range-accent\",\n      success: \"range-success\",\n      info: \"range-info\",\n      warning: \"range-warning\",\n      error: \"range-error\",\n    },\n    size: {\n      xs: \"range-xs\",\n      sm: \"range-sm\",\n      default: \"range-md\",\n      lg: \"range-lg\",\n    },\n  },\n  defaultVariants: { tone: \"neutral\", size: \"default\" },\n});\n\n/** Props accepted by Slider. */\nexport type SliderProps = {\n  size?: SliderSize;\n  tone?: SliderTone;\n} & Omit<InputHTMLAttributes<HTMLInputElement>, \"size\" | \"type\">;\n\n/**\n * A native range input with product-neutral tone and size variants. On a\n * Screen it reads the screen context and draws as a segmented level.\n */\nexport const Slider = forwardRef<HTMLInputElement, SliderProps>(function Slider(\n  { className, size, tone, ...props },\n  ref,\n) {\n  return (\n    <input\n      {...props}\n      className={cn(sliderVariants({ size, tone }), className)}\n      ref={ref}\n      type=\"range\"\n    />\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

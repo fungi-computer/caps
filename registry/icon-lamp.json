@@ -1,0 +1,175 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "icon-lamp",
+  "type": "registry:ui",
+  "title": "Icon Lamp",
+  "description": "A read-only icon state with the icon key's face, for rights or settings shown but not changed here.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/icon-lamp.tsx",
+      "type": "registry:ui",
+      "target": "@ui/icon-lamp.tsx",
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\nimport { IconChoiceMark } from \"./icon-choice-mark.js\";\n\n/** Props accepted by IconLamp. */\nexport type IconLampProps = {\n  /** The full name read with the state, such as \"Read files\". */\n  label: string;\n  icon: ReactNode;\n  /** A short visible legend; it does not replace the accessible label. */\n  caption?: string;\n  /** Lit: the icon in colour with the ink lamp. Off: the grey silhouette. */\n  on: boolean;\n  /** How the state reads aloud, as [on, off]. */\n  stateLabels?: readonly [string, string];\n} & Omit<HTMLAttributes<HTMLElement>, \"children\">;\n\n/**\n * A read-only icon state: an icon key's face with no input, for rights or\n * settings shown but not changed here. It reads as \"Label: state\".\n */\nexport const IconLamp = forwardRef<HTMLElement, IconLampProps>(\n  function IconLamp(\n    {\n      label,\n      icon,\n      caption,\n      on,\n      stateLabels = [\"on\", \"off\"],\n      className,\n      ...props\n    },\n    ref,\n  ) {\n    return (\n      <span\n        {...props}\n        className={cn(\"caps-icon-lamp\", className)}\n        data-on={on}\n        ref={ref}\n      >\n        <IconChoiceMark icon={icon} caption={caption} />\n        <span className=\"sr-only\">\n          {label}: {on ? stateLabels[0] : stateLabels[1]}\n        </span>\n      </span>\n    );\n  },\n);\n\n/** One lamp in an IconLamps row. */\nexport type IconLampItem = Omit<IconLampProps, \"stateLabels\"> & {\n  id: string;\n};\n\n/** Props accepted by IconLamps. */\nexport type IconLampsProps = {\n  items: readonly IconLampItem[];\n  stateLabels?: readonly [string, string];\n} & Omit<HTMLAttributes<HTMLUListElement>, \"children\">;\n\n/** A named row of read-only icon lamps; name it with `aria-label(ledby)`. */\nexport const IconLamps = forwardRef<HTMLUListElement, IconLampsProps>(\n  function IconLamps({ items, stateLabels, className, ...props }, ref) {\n    return (\n      <ul {...props} className={cn(\"caps-icon-lamps\", className)} ref={ref}>\n        {items.map(({ id, ...item }) => (\n          <li key={id}>\n            <IconLamp\n              {...item}\n              {...(stateLabels === undefined ? {} : { stateLabels })}\n            />\n          </li>\n        ))}\n      </ul>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/components/icon-choice-mark.tsx",
+      "type": "registry:ui",
+      "target": "@ui/icon-choice-mark.tsx",
+      "content": "import type { ReactNode } from \"react\";\n\n/** The decorative face shared by icon choices; its native input names it. */\nexport function IconChoiceMark({\n  icon,\n  caption,\n}: {\n  icon: ReactNode;\n  caption?: string | undefined;\n}) {\n  return (\n    <span className=\"caps-icon-choice-mark\" aria-hidden=\"true\">\n      <span className=\"caps-icon-choice-art\">{icon}</span>\n      {caption ? (\n        <span className=\"caps-icon-choice-caption\">{caption}</span>\n      ) : null}\n      <span className=\"caps-icon-choice-lamp\" />\n    </span>\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer components": {
+      ".caps-icon-choice": {
+        "display": "inline-grid",
+        "minWidth": "3.5rem",
+        "minHeight": "3.25rem",
+        "cursor": "pointer"
+      },
+      ".caps-icon-choice-mark": {
+        "gridArea": "control",
+        "position": "relative",
+        "display": "grid",
+        "justifyItems": "center",
+        "alignContent": "center",
+        "gap": "var(--spacing-2xs)",
+        "padding": "var(--spacing-xs) var(--spacing-sm)",
+        "border": "var(--border) solid var(--caps-control-line, var(--color-base-300))",
+        "borderRadius": "var(--radius-field)",
+        "background": "var(--caps-control-face, var(--color-base-100))",
+        "color": "var(--caps-control-dim, var(--stipe-fg-muted))",
+        "pointerEvents": "none"
+      },
+      ".caps-icon-choice-art": {
+        "display": "grid",
+        "placeItems": "center",
+        "width": "2rem",
+        "height": "2rem",
+        "filter": "var(--caps-control-icon-off, grayscale(1) contrast(0))",
+        "opacity": 0.55,
+        "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n      opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
+      },
+      ".caps-icon-choice-art > svg": { "width": "100%", "height": "100%" },
+      ".caps-icon-choice-caption": {
+        "fontFamily": "var(--caps-control-label-font, inherit)",
+        "fontSize": "var(--caps-control-label-size, var(--text-xs))",
+        "letterSpacing": "var(--caps-control-label-tracking, inherit)",
+        "textTransform": "var(--caps-control-label-case, inherit)",
+        "lineHeight": 1
+      },
+      ".caps-icon-choice-lamp": {
+        "position": "absolute",
+        "top": "4px",
+        "right": "4px",
+        "width": "4px",
+        "height": "4px",
+        "borderRadius": "var(--radius-full)",
+        "background": "currentcolor",
+        "opacity": 0
+      },
+      ".caps-icon-choice-input:checked + .caps-icon-choice-mark,.caps-icon-choice-input:indeterminate + .caps-icon-choice-mark,.caps-icon-lamp[data-on=\"true\"] > .caps-icon-choice-mark": {
+        "borderColor": "var(--caps-control-selected-line, var(--color-base-content))",
+        "background": "var(--caps-control-selected-face, var(--color-base-200))",
+        "color": "var(--caps-control-ink, var(--color-base-content))"
+      },
+      ".caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+        "filter": "none",
+        "opacity": 1
+      },
+      ".caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+        "opacity": 1
+      },
+      ".caps-icon-lamp": {
+        "display": "inline-grid",
+        "minWidth": "3.5rem",
+        "minHeight": "3.25rem"
+      },
+      ".caps-icon-lamps": {
+        "display": "flex",
+        "flexWrap": "wrap",
+        "gap": "var(--spacing-xs)",
+        "margin": "0",
+        "padding": "0",
+        "listStyle": "none"
+      },
+      ".caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+        "width": "7px",
+        "height": "2px",
+        "borderRadius": "0",
+        "opacity": 1
+      },
+      ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+        "opacity": 0.8
+      },
+      ".caps-icon-choice[data-appearance=\"compact\"]": {
+        "--caps-control-selected-face": "transparent",
+        "display": "grid",
+        "placeItems": "center",
+        "position": "relative",
+        "minWidth": "2.5rem",
+        "minHeight": "2.5rem"
+      },
+      ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-input": {
+        "gridArea": "auto",
+        "position": "absolute",
+        "inset": "0",
+        "cursor": "inherit"
+      },
+      ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-mark": {
+        "gridArea": "auto",
+        "position": "static",
+        "gap": "var(--spacing-2xs)",
+        "padding": "0",
+        "border": "0",
+        "borderRadius": "0",
+        "background": "none",
+        "color": "var(--color-base-content)",
+        "fontSize": "0.5rem"
+      },
+      ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-art": {
+        "display": "contents",
+        "filter": "none",
+        "opacity": 1
+      },
+      ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-art > svg": {
+        "width": "1.5rem",
+        "height": "1.5rem"
+      },
+      ".caps-icon-choice[data-appearance=\"compact\"]\n    .caps-icon-choice-input:not(:checked, :indeterminate)\n    + .caps-icon-choice-mark\n    svg": {
+        "filter": "grayscale(1)",
+        "opacity": 0.55
+      },
+      ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-caption": {
+        "font": "inherit",
+        "letterSpacing": "inherit",
+        "textTransform": "inherit"
+      },
+      ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-lamp": {
+        "display": "none"
+      },
+      ".caps-icon-choice:has(.caps-icon-choice-input:disabled)": {
+        "cursor": "not-allowed"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "items": [
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Accessible composition for local tab selection with roving keyboard focus.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/tabs.tsx",
+          "type": "registry:ui",
+          "target": "@ui/tabs.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "listbox",
+      "type": "registry:ui",
+      "title": "Listbox",
+      "description": "Generic single- or multiple-selection listbox with local keyboard navigation.",
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/listbox.tsx",
+          "type": "registry:ui",
+          "target": "@ui/listbox.tsx"
+        },
+        {
+          "path": "../src/components/selectable.ts",
+          "type": "registry:ui",
+          "target": "@ui/selectable.ts"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        },
+        {
+          "path": "../src/lib/glide.ts",
+          "type": "registry:lib",
+          "target": "@lib/glide.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:ui",
+      "title": "Dropdown Menu",
+      "description": "Base UI menu composition with Daisy-backed items and typed change details.",
+      "dependencies": [
+        "@base-ui/react",
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/dropdown-menu.tsx",
+          "type": "registry:ui",
+          "target": "@ui/dropdown-menu.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        },
+        {
+          "path": "../src/lib/glide.ts",
+          "type": "registry:lib",
+          "target": "@lib/glide.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        },
+        {
+          "path": "../src/components/overlay-root.tsx",
+          "type": "registry:ui",
+          "target": "@ui/overlay-root.tsx"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "Hover- and focus-accessible tooltip with rich content, delay, and local placement.",
+      "dependencies": [
+        "@radix-ui/react-slot",
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react",
+        "@base-ui/react"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "../src/components/tooltip.tsx",
+          "type": "registry:ui",
+          "target": "@ui/tooltip.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
+        },
+        {
+          "path": "../src/lib/motion.ts",
+          "type": "registry:lib",
+          "target": "@lib/motion.ts"
+        },
+        {
+          "path": "../src/components/overlay-root.tsx",
+          "type": "registry:ui",
+          "target": "@ui/overlay-root.tsx"
+        }
+      ],
+      "css": {
+        "@import \"@fungi.computer/stipe/styles.css\"": {}
+      }
+    }
+  ]
+}

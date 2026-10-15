@@ -1,0 +1,35 @@
+.bento-study {
+  position: relative;
+  width: 100%;
+  height: var(--bento-content-height);
+}
+.bento-study-tile {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--spacing-xs);
+  position: absolute;
+  left: var(--bento-x);
+  top: var(--bento-y);
+  width: var(--bento-width);
+  height: var(--bento-height);
+}
+.bento-study-controls {
+  display: flex;
+  gap: var(--spacing-xs);
+  touch-action: none;
+}
+
+.bento-study-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.bento-study-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+}

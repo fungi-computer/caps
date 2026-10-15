@@ -1,0 +1,35 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "quota-meter",
+  "type": "registry:ui",
+  "title": "Quota Meter",
+  "description": "Labelled native progress meter for a quota value and maximum.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/quota-meter.tsx",
+      "type": "registry:ui",
+      "target": "@ui/quota-meter.tsx",
+      "content": "import { forwardRef, useId, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\nimport { Progress, type ProgressTone } from \"./progress.js\";\n\n/** Props accepted by QuotaMeter. */\nexport type QuotaMeterProps = {\n  label: ReactNode;\n  value: number;\n  max: number;\n  valueLabel?: ReactNode;\n  maxLabel?: ReactNode;\n  description?: ReactNode;\n  indicator?: ReactNode;\n  tone?: ProgressTone;\n} & Omit<HTMLAttributes<HTMLDivElement>, \"children\">;\n\n/** A meter presentation for caller-provided quota values. */\nexport const QuotaMeter = forwardRef<HTMLDivElement, QuotaMeterProps>(\n  function QuotaMeter(\n    {\n      className,\n      label,\n      value,\n      max,\n      valueLabel,\n      maxLabel,\n      description,\n      indicator,\n      tone,\n      ...props\n    },\n    ref,\n  ) {\n    const id = useId();\n    const labelId = `${id}-label`;\n    const descriptionId = `${id}-description`;\n\n    return (\n      <div {...props} className={cn(\"space-y-sm\", className)} ref={ref}>\n        <div className=\"flex items-center justify-between gap-sm\">\n          <div className=\"flex items-center gap-sm\">\n            <div className=\"font-medium\" id={labelId}>\n              {label}\n            </div>\n            {indicator !== undefined ? <div>{indicator}</div> : null}\n          </div>\n          <div className=\"caps-numeric\">\n            {valueLabel ?? value} / {maxLabel ?? max}\n          </div>\n        </div>\n        <Progress\n          aria-describedby={\n            description !== undefined ? descriptionId : undefined\n          }\n          aria-labelledby={labelId}\n          max={max}\n          {...(tone === undefined ? {} : { tone })}\n          value={value}\n        />\n        {description !== undefined ? (\n          <p className=\"text-sm text-base-content\" id={descriptionId}>\n            {description}\n          </p>\n        ) : null}\n      </div>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/components/progress.tsx",
+      "type": "registry:ui",
+      "target": "@ui/progress.tsx",
+      "content": "import {\n  forwardRef,\n  type HTMLAttributes,\n  type ProgressHTMLAttributes,\n} from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Supported ProgressTone values. */\nexport type ProgressTone =\n  | \"neutral\"\n  | \"primary\"\n  | \"secondary\"\n  | \"accent\"\n  | \"success\"\n  | \"info\"\n  | \"warning\"\n  | \"error\";\n\nconst progressToneClasses = {\n  neutral: \"progress-neutral\",\n  primary: \"progress-primary\",\n  secondary: \"progress-secondary\",\n  accent: \"progress-accent\",\n  success: \"progress-success\",\n  info: \"progress-info\",\n  warning: \"progress-warning\",\n  error: \"progress-error\",\n} satisfies Record<ProgressTone, string>;\n\n/** Props accepted by Progress. */\nexport type ProgressProps = {\n  tone?: ProgressTone;\n} & ProgressHTMLAttributes<HTMLProgressElement>;\n\n/** A progress indicator for caller-provided progress values. */\nexport const Progress = forwardRef<HTMLProgressElement, ProgressProps>(\n  function Progress({ className, tone = \"primary\", ...props }, ref) {\n    return (\n      <progress\n        {...props}\n        data-complete={\n          props.value !== undefined &&\n          Number(props.value) >= Number(props.max ?? 1)\n            ? \"true\"\n            : undefined\n        }\n        className={cn(\n          \"progress caps-gooey-motion caps-gooey-progress w-full\",\n          progressToneClasses[tone],\n          className,\n        )}\n        ref={ref}\n      />\n    );\n  },\n);\n\n/** A compact labelled resource meter for game windows. Values come from the game. */\nexport type GameMeterProps = Omit<\n  HTMLAttributes<HTMLDivElement>,\n  \"children\"\n> & {\n  label: string;\n  value: number;\n  max: number;\n  tone?: ProgressTone;\n};\n\n/** Pair a game's bounded resource value with its visible and accessible meter. */\nexport const GameMeter = forwardRef<HTMLDivElement, GameMeterProps>(\n  function GameMeter(\n    { label, value, max, tone = \"info\", className, ...props },\n    ref,\n  ) {\n    return (\n      <div {...props} ref={ref} className={cn(\"caps-game-meter\", className)}>\n        <div className=\"caps-game-meter-readout\">\n          <span>{label}</span>\n          <span className=\"caps-game-meter-value\">\n            {value} / {max}\n          </span>\n        </div>\n        <Progress aria-label={label} value={value} max={max} tone={tone} />\n      </div>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

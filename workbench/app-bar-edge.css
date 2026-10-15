@@ -1,0 +1,5 @@
+.caps-dial-edge-study {
+  position: fixed;
+  inset-inline-end: var(--spacing-md);
+  inset-block-end: var(--spacing-md);
+}

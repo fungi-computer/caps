@@ -1,0 +1,282 @@
+/*
+ * StatusTray: footer chips that open a small popover list. Popover is the
+ * housing and Status is each LED; rows are one calm line each (the host's
+ * icon, a title, a truncating muted detail and a quiet text action). This file
+ * owns layout and hands those parts their --caps-status-tray-* token values.
+ */
+@layer utilities {
+  .caps-status-tray {
+    display: block;
+    min-width: 0;
+  }
+
+  .caps-status-tray-row,
+  .caps-status-tray-chips {
+    display: flex;
+    align-items: center;
+    gap: var(--caps-status-tray-chip-gap, var(--spacing-xs));
+    min-width: 0;
+  }
+
+  /* A host may let the row wrap, or flatten the chips into it (`contents`)
+     so its own controls interleave with them. */
+  .caps-status-tray-row {
+    flex-wrap: var(--caps-status-tray-row-wrap, nowrap);
+    min-height: 2rem;
+    font-size: var(--text-xs);
+  }
+
+  .caps-status-tray-chips {
+    display: var(--caps-status-tray-chips-display, flex);
+    flex-wrap: wrap;
+  }
+
+  /* Footer readout chips are this block's own control. */
+  .caps-status-tray-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    min-height: var(--caps-status-tray-chip-height, 2rem);
+    max-width: 100%;
+    padding: var(--spacing-2xs) var(--spacing-xs) var(--spacing-2xs)
+      var(--spacing-sm);
+    border: var(--caps-status-tray-chip-border, var(--border)) solid
+      var(--caps-status-tray-chip-border-color, var(--stipe-hairline));
+    border-radius: var(--caps-status-tray-chip-radius, var(--radius-field));
+    background: var(--caps-status-tray-chip-bg, var(--color-base-100));
+    box-shadow: var(--caps-status-tray-chip-shadow, none);
+    color: var(--caps-status-tray-chip-fg, var(--color-base-content));
+    font: inherit;
+    font-weight: 600;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .caps-status-tray-label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .caps-status-tray-chip:hover:not(:disabled),
+  .caps-status-tray-chip[aria-expanded="true"] {
+    background: var(--caps-status-tray-chip-bg-active, var(--color-base-300));
+  }
+
+  .caps-status-tray-chip:focus-visible {
+    outline: 2px solid var(--caps-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .caps-status-tray-chip:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .caps-status-tray-count {
+    flex: none;
+    min-width: 1.25rem;
+    padding-inline: var(--spacing-2xs);
+    border-radius: var(--radius-selector);
+    background: var(--caps-status-tray-count-bg, var(--color-base-300));
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+
+  /* Housing: Popover's own material, sized and spaced for a tray. */
+  .caps-status-tray .caps-status-tray-panel {
+    width: min(
+      var(--caps-status-tray-width, 28rem),
+      100%,
+      calc(100vw - 1.5rem)
+    );
+    max-height: min(34rem, 72dvh);
+    outline: none;
+    overflow: hidden;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+  }
+
+  .caps-status-tray[data-align="end"] .caps-status-tray-panel {
+    inset-inline: auto 0;
+  }
+
+  .caps-status-tray[data-align="start"] .caps-status-tray-panel {
+    inset-inline: 0 auto;
+  }
+
+  /* A host's chrome drew the trigger: sit above it, inset from both edges. */
+  .caps-status-tray[data-placement="host"] {
+    --caps-status-tray-host-width: min(
+      var(--caps-status-tray-width, 28rem),
+      100% - 2 * var(--spacing-sm)
+    );
+  }
+
+  .caps-status-tray[data-placement="host"] .caps-status-tray-panel {
+    width: var(--caps-status-tray-host-width);
+    inset-inline: clamp(
+        var(--spacing-sm),
+        var(--caps-status-tray-host-inset, 0px),
+        100% - var(--spacing-sm) - var(--caps-status-tray-host-width)
+      )
+      auto;
+  }
+
+  .caps-status-tray-head {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding-inline-start: var(--spacing-2xs);
+  }
+
+  .caps-status-tray-title {
+    min-width: 0;
+    margin-inline-end: auto;
+    font-size: var(--text-sm);
+    font-weight: 650;
+    overflow-wrap: anywhere;
+    text-transform: var(--caps-status-tray-title-case, none);
+    letter-spacing: var(--caps-status-tray-title-tracking, normal);
+  }
+
+  .caps-status-tray-body {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* Keys beside the chips (a host's Send or Upload): compact, legend-sized. */
+  .caps-status-tray {
+    --caps-keycap-face: var(--caps-status-tray-key-face, var(--color-base-100));
+    --caps-keycap-tint: var(--caps-status-tray-key-tint, 26%);
+    --caps-keycap-width: auto;
+    --caps-keycap-height: var(--caps-status-tray-key-height, 2rem);
+    --caps-keycap-justify: center;
+    --caps-keycap-padding: 0 var(--spacing-sm);
+    --caps-keycap-font-size: var(--text-xs);
+    --caps-keycap-font-weight: 650;
+  }
+
+  /* A calm list: one line per row, nothing boxed. */
+  .caps-status-tray-list {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .caps-status-tray-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    min-width: 0;
+    min-height: var(--caps-status-tray-row-height, 2.5rem);
+    padding: var(--spacing-2xs) var(--spacing-xs);
+    border-radius: var(--radius-field);
+  }
+
+  .caps-status-tray-item:hover {
+    background: var(
+      --caps-status-tray-row-hover,
+      color-mix(in oklab, var(--color-base-content) 5%, transparent)
+    );
+  }
+
+  .caps-status-tray-icon,
+  .caps-status-tray-actions {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--spacing-2xs);
+  }
+
+  .caps-status-tray-icon {
+    justify-content: center;
+    min-width: var(--caps-status-tray-icon-size, 1.25rem);
+  }
+
+  .caps-status-tray-text {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    align-items: baseline;
+    gap: var(--spacing-xs);
+    white-space: nowrap;
+  }
+
+  .caps-status-tray-primary {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-overflow: ellipsis;
+  }
+
+  .caps-status-tray-secondary {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--caps-status-tray-muted, var(--stipe-fg-muted));
+    font-size: var(--text-xs);
+    text-overflow: ellipsis;
+  }
+
+  /* Empty is "All caught up."; unavailable is calm, not an error. */
+  .caps-status-tray-note {
+    display: grid;
+    flex: none;
+    justify-items: center;
+    gap: var(--spacing-2xs);
+    padding: var(--spacing-md) var(--spacing-sm);
+    color: var(--caps-status-tray-muted, var(--stipe-fg-muted));
+    font-size: var(--text-sm);
+    text-align: center;
+  }
+
+  .caps-status-tray-note p {
+    margin: 0;
+  }
+
+  .caps-status-tray-note-title {
+    color: var(--color-base-content);
+    font-size: var(--text-xs);
+    font-weight: 650;
+    letter-spacing: var(--caps-status-tray-note-tracking, 0.08em);
+    text-transform: uppercase;
+  }
+
+  /* Screen is a structural seat: flat readouts, no molded housing. */
+  .caps-status-tray[data-placement="screen"] {
+    font-family: var(--font-mono);
+  }
+
+  .caps-status-tray[data-placement="screen"] .caps-status-tray-chip {
+    border: 0;
+    border-radius: 0;
+    background: var(--caps-status-tray-screen-bg, transparent);
+    box-shadow: none;
+    color: var(--caps-status-tray-screen-fg, inherit);
+  }
+
+  .caps-status-tray[data-placement="screen"]
+    .caps-status-tray-chip:hover:not(:disabled),
+  .caps-status-tray[data-placement="screen"]
+    .caps-status-tray-chip[aria-expanded="true"] {
+    background: var(
+      --caps-status-tray-screen-bg-active,
+      var(--color-base-content)
+    );
+    color: var(--caps-status-tray-screen-fg-active, var(--color-base-100));
+  }
+
+  .caps-status-tray[data-placement="screen"] .caps-status-tray-panel {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}

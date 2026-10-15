@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "keycap",
+  "type": "registry:ui",
+  "title": "Keycap",
+  "description": "Molded game keys: a kbd legend and a chunky action key with a mode lamp.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/keycap.tsx",
+      "type": "registry:ui",
+      "target": "@ui/keycap.tsx",
+      "content": "import {\n  forwardRef,\n  type ButtonHTMLAttributes,\n  type HTMLAttributes,\n  type ReactNode,\n} from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/**\n * Molded key colors. `inverse` is the contrasting key; `destructive` stays neutral until\n * hovered or focused; the rest follow the theme.\n */\nexport type KeycapTone =\n  \"neutral\" | \"primary\" | \"accent\" | \"inverse\" | \"destructive\";\n/** Keycap sizes: a legend chip, a dock key and a big face key. */\nexport type KeycapSize = \"sm\" | \"md\" | \"lg\";\n\n/** Props accepted by Keycap. */\nexport type KeycapProps = HTMLAttributes<HTMLElement> & {\n  tone?: KeycapTone;\n  size?: KeycapSize;\n  /** Show the key held down. Presentation only; the host owns input. */\n  pressed?: boolean;\n};\n\n/**\n * One molded key legend, rendered as native `<kbd>`: the key a player presses.\n * The key sits on its own travel so pressed and resting keys take the same room.\n */\nexport const Keycap = forwardRef<HTMLElement, KeycapProps>(function Keycap(\n  { tone = \"neutral\", size = \"md\", pressed = false, className, ...props },\n  ref,\n) {\n  return (\n    <kbd\n      {...props}\n      ref={ref}\n      className={cn(\"caps-keycap\", className)}\n      data-tone={tone}\n      data-size={size}\n      data-pressed={pressed}\n    />\n  );\n});\n\n/** Props accepted by KeycapButton. */\nexport type KeycapButtonProps = Omit<\n  ButtonHTMLAttributes<HTMLButtonElement>,\n  \"children\"\n> & {\n  /**\n   * Visible name of the action, e.g. \"Build\". `null` makes an icon-only key,\n   * which then needs an `aria-label`.\n   */\n  label: ReactNode;\n  /** The keyboard key that runs the same action, shown as a small keycap. */\n  shortcut?: string;\n  /** Decorative icon before the label. */\n  icon?: ReactNode;\n  /** Extra readout after the label, such as a PixelNumber count. */\n  readout?: ReactNode;\n  tone?: KeycapTone;\n  /**\n   * Toggle state for mode keys. `undefined` is a momentary key; a boolean adds\n   * `aria-pressed` and lights the key's indicator.\n   */\n  pressed?: boolean;\n  /**\n   * Disclosure state for keys that open a palette or window. A boolean adds\n   * `aria-expanded` and lights the lamp; use it instead of `pressed` for\n   * menus.\n   */\n  expanded?: boolean;\n};\n\n/**\n * A chunky action key for game docks and toy panels. The host owns the action\n * and the keyboard binding; `shortcut` only labels it.\n */\nexport const KeycapButton = forwardRef<HTMLButtonElement, KeycapButtonProps>(\n  function KeycapButton(\n    {\n      label,\n      shortcut,\n      icon,\n      readout,\n      tone = \"neutral\",\n      pressed,\n      expanded,\n      className,\n      type = \"button\",\n      ...props\n    },\n    ref,\n  ) {\n    const lamp = pressed ?? expanded;\n    return (\n      <button\n        {...props}\n        ref={ref}\n        type={type}\n        className={cn(\"caps-keycap-button\", className)}\n        data-tone={tone}\n        aria-pressed={pressed}\n        aria-expanded={expanded}\n        aria-keyshortcuts={props[\"aria-keyshortcuts\"] ?? shortcut}\n      >\n        {lamp === undefined ? null : (\n          <span\n            className=\"caps-keycap-led\"\n            data-lit={lamp}\n            aria-hidden=\"true\"\n          />\n        )}\n        {icon ? (\n          <span className=\"caps-keycap-button-icon\" aria-hidden=\"true\">\n            {icon}\n          </span>\n        ) : null}\n        {label === null ? null : (\n          <span className=\"caps-keycap-button-label\">{label}</span>\n        )}\n        {readout}\n        {shortcut ? (\n          <Keycap size=\"sm\" tone=\"neutral\" aria-hidden=\"true\">\n            {shortcut}\n          </Keycap>\n        ) : null}\n      </button>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
+}

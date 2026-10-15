@@ -1,0 +1,101 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "select",
+  "type": "registry:ui",
+  "title": "Select",
+  "description": "Native select control with Daisy styling and invalid-state semantics.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "lucide-react",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/select.tsx",
+      "type": "registry:ui",
+      "target": "@ui/select.tsx",
+      "content": "import { forwardRef, type SelectHTMLAttributes } from \"react\";\nimport { ChevronDown } from \"lucide-react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by Select. */\nexport type SelectProps = {\n  invalid?: boolean;\n} & SelectHTMLAttributes<HTMLSelectElement>;\n\n/** A styled native select that preserves caller-owned value and event behavior. */\nexport const Select = forwardRef<HTMLSelectElement, SelectProps>(\n  function Select({ className, invalid, ...props }, ref) {\n    return (\n      <span className=\"caps-select-shell\">\n        <select\n          {...props}\n          aria-invalid={\n            invalid\n              ? true\n              : props[\"aria-invalid\"] === false\n                ? undefined\n                : props[\"aria-invalid\"]\n          }\n          className={cn(\n            \"select select-bordered caps-select w-full\",\n            invalid && \"select-error\",\n            className,\n          )}\n          ref={ref}\n        />\n        {!props.multiple && (!props.size || props.size <= 1) ? (\n          <ChevronDown className=\"caps-select-chevron\" aria-hidden=\"true\" />\n        ) : null}\n      </span>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      "@media (max-width: 480px)": {
+        ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+          "flexDirection": "column",
+          "alignItems": "stretch",
+          "gap": "var(--spacing-xs)",
+          "--caps-field-control-width": "100%"
+        }
+      },
+      ".caps-select": {
+        "borderRadius": "var(--radius-field)",
+        "borderColor": "color-mix(\n      in oklab,\n      var(--color-base-content) 14%,\n      transparent\n    )",
+        "backgroundColor": "var(--color-base-100)",
+        "color": "var(--color-base-content)",
+        "fontWeight": 650,
+        "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.22)),\n      0 calc(var(--depth) * 1px) 0\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        )\n    )"
+      },
+      ".caps-select-shell": {
+        "display": "inline-grid",
+        "position": "relative",
+        "width": "min(100%, var(--caps-field-control-width, 100%))",
+        "minWidth": "0"
+      },
+      ".caps-select-shell .caps-select,.caps-select-shell .caps-select:open": {
+        "backgroundImage": "none"
+      },
+      ".caps-select-chevron": {
+        "position": "absolute",
+        "insetInlineEnd": "12px",
+        "top": "50%",
+        "transform": "translateY(-50%)",
+        "width": "1rem",
+        "height": "1rem",
+        "pointerEvents": "none",
+        "color": "var(--color-base-content)"
+      },
+      ".caps-select-shell:has(select:disabled) .caps-select-chevron": {
+        "opacity": 0.4
+      },
+      ".caps-select:focus-visible": {
+        "outline": "2px solid var(--color-info)",
+        "outlineOffset": "2px"
+      },
+      ".caps-select[aria-invalid=\"true\"]": {
+        "borderColor": "var(--color-error)"
+      },
+      ".caps-select:disabled": {
+        "backgroundColor": "var(--color-base-200)",
+        "boxShadow": "none",
+        "cursor": "not-allowed"
+      },
+      "@media (forced-colors: active)": {
+        ".caps-select:focus-visible": { "outlineColor": "Highlight" }
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-select": {
+          "minWidth": "var(--caps-touch-target)",
+          "minHeight": "var(--caps-touch-target)"
+        }
+      }
+    }
+  }
+}

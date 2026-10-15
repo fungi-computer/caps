@@ -1,0 +1,158 @@
+/*
+ * AppStatusBar: one App window's bottom status bar. Its attachment (the
+ * window's Computer, say) comes first, the App's readouts follow, and one
+ * group of readouts may hold the far end. The row is the window's ground,
+ * not a control surface: legend-sized text on the base-200 plate with an
+ * inset rule. Controls in it are ordinary Caps controls, so Caps keeps their
+ * 44px touch targets.
+ */
+@layer utilities {
+  .caps-app-status-bar {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--spacing-md);
+    min-width: 0;
+    min-height: var(--spacing-2xl);
+    padding-inline: var(--spacing-xs) var(--spacing-md);
+    overflow: hidden;
+    /* An inset rule keeps the 1px line out of the row's geometry. */
+    box-shadow: inset 0 1px 0
+      var(--caps-app-status-bar-rule, var(--color-base-300));
+    background: var(--caps-app-status-bar-bg, var(--color-base-200));
+    color: var(--caps-app-status-bar-fg, var(--color-base-content));
+    font-size: 0.6875rem;
+    /* Keys in the bar: compact and legend-sized, as beside a status tray. */
+    --caps-keycap-width: auto;
+    --caps-keycap-height: var(--caps-app-status-bar-key-height, 1.5rem);
+    --caps-keycap-justify: center;
+    --caps-keycap-padding: 0 var(--spacing-sm);
+    --caps-keycap-font-size: var(--text-xs);
+    --caps-keycap-font-weight: 650;
+  }
+
+  .caps-app-status-bar-rule {
+    flex: none;
+    align-self: stretch;
+    margin-block: var(--spacing-xs);
+  }
+
+  /* Touch keeps every key in the bar a full touch target. */
+  @media (max-width: 640px), (any-pointer: coarse) {
+    .caps-app-status-bar {
+      --caps-app-status-bar-key-height: var(--caps-touch-target);
+    }
+  }
+
+  /* On a phone an iconed key shows its icon; its name stays for readers. */
+  @media (max-width: 640px) {
+    .caps-app-status-bar
+      .caps-keycap-button:has(.caps-keycap-button-icon)
+      .caps-keycap-button-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  .caps-app-status-item {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--spacing-xs);
+    white-space: nowrap;
+  }
+
+  .caps-app-status-bar-end {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-inline-start: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* The picker may shrink and truncate its label before the bar overflows. */
+  .caps-status-bar-picker {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 14rem;
+  }
+
+  .caps-status-bar-picker > svg {
+    flex: none;
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .caps-status-bar-picker-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* App-declared controls: flat chips on the bar's ground, as the picker. */
+  .caps-status-bar-chip {
+    flex: none;
+    min-height: var(--caps-app-status-bar-key-height, 1.5rem);
+    gap: var(--spacing-xs);
+    color: var(--stipe-fg-muted);
+  }
+
+  .caps-status-bar-chip:hover,
+  .caps-status-bar-chip:is([aria-pressed="true"], [aria-expanded="true"]) {
+    color: var(--caps-app-status-bar-fg, var(--color-base-content));
+  }
+
+  .caps-status-bar-chip:is([aria-pressed="true"], [aria-expanded="true"]) {
+    background-color: var(--color-base-300);
+  }
+
+  .caps-status-bar-chip-icon {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .caps-status-bar-chip-icon > svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  /* On a phone an iconed chip shows its icon; its name stays for readers. */
+  @media (max-width: 640px) {
+    .caps-status-bar-chip:has(.caps-status-bar-chip-icon)
+      .caps-status-bar-chip-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  .caps-status-bar-picker-list {
+    min-width: min(18rem, calc(100vw - 1.5rem));
+  }
+
+  .caps-status-bar-picker-option {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .caps-status-bar-picker-option > svg {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Match Keycap's material layer so compact disclosure lamps use its flex gap. */
+.caps-app-status-bar .caps-keycap-led {
+  position: static;
+  flex: none;
+}

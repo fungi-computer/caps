@@ -1,0 +1,57 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "toaster",
+  "type": "registry:ui",
+  "title": "Toaster",
+  "description": "Swipeable Sonner notifications styled for Caps.",
+  "dependencies": [
+    "sonner",
+    "@fungi.computer/stipe",
+    "cn",
+    "class-variance-authority",
+    "react",
+    "react-dom"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/toaster.tsx",
+      "type": "registry:ui",
+      "target": "@ui/toaster.tsx",
+      "content": "import { Toaster as Sonner, type ToasterProps } from \"sonner\";\nimport { cn } from \"@/lib/cn\";\nimport { createPortal } from \"react-dom\";\nimport { useOverlayRoot } from \"@/components/ui/overlay-root\";\n\nexport { toast } from \"sonner\";\n\n/** Sonner owns gestures, stacking, focus and lifetime; Caps owns the surface. */\nexport function Toaster({ className, ...props }: ToasterProps) {\n  const root = useOverlayRoot(\"toast\");\n  if (!root) return null;\n  return createPortal(\n    <Sonner\n      position=\"top-right\"\n      swipeDirections={[\"right\", \"top\"]}\n      offset={16}\n      gap={8}\n      className={cn(\"caps-toaster\", className)}\n      {...props}\n    />,\n    root,\n  );\n}\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    },
+    {
+      "path": "../src/components/overlay-root.tsx",
+      "type": "registry:ui",
+      "target": "@ui/overlay-root.tsx",
+      "content": "import {\n  createContext,\n  useContext,\n  useEffect,\n  useRef,\n  type ReactNode,\n} from \"react\";\n\n/** Semantic destinations; the host owns their paint order and positioning. */\nexport type OverlayLayer = \"popover\" | \"dialog\" | \"toast\" | \"tooltip\";\n/** Host portal roots; null keeps an overlay waiting until its layer mounts. */\nexport type OverlayContainers = Readonly<\n  Record<OverlayLayer, HTMLElement | null>\n>;\n\nconst DismissContext = createContext<\n  ((listener: () => void) => () => void) | undefined\n>(undefined);\n\nconst Context = createContext<OverlayContainers | null>(null);\n\n/** Supply shell portal roots without teaching Caps about the shell's layout. */\nexport function OverlayRoot({\n  containers,\n  children,\n  subscribeDismiss,\n}: {\n  containers: OverlayContainers;\n  children?: ReactNode;\n  /** Subscribe to the host losing focus to a child surface or another window. */\n  subscribeDismiss?: (listener: () => void) => () => void;\n}) {\n  return (\n    <Context.Provider value={containers}>\n      <DismissContext.Provider value={subscribeDismiss}>\n        {children}\n      </DismissContext.Provider>\n    </Context.Provider>\n  );\n}\n\n/** Wait for a provided root; standalone overlays use the current document body. */\nexport function useOverlayRoot(layer: OverlayLayer): HTMLElement | null {\n  const containers = useContext(Context);\n  if (containers !== null) return containers[layer];\n  return Object.hasOwn(globalThis, \"document\") ? document.body : null;\n}\n\n/** Retire a transient overlay when its owning host requests light dismissal. */\nexport function useOverlayDismiss(dismiss: () => void): void {\n  const subscribe = useContext(DismissContext);\n  const callback = useRef(dismiss);\n  callback.current = dismiss;\n  useEffect(\n    () =>\n      subscribe?.(() => {\n        callback.current();\n      }),\n    [subscribe],\n  );\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    ".caps-toaster[data-sonner-toaster]": {
+      "zIndex": "var(--stipe-layer-toast)"
+    },
+    "@layer utilities": {
+      ".caps-toaster": { "maxWidth": "calc(100% - var(--spacing-xl))" },
+      ".caps-toaster[data-sonner-toaster]": { "fontFamily": "inherit" },
+      ".caps-toaster [data-sonner-toast][data-styled=\"false\"]": {
+        "width": "100%",
+        "userSelect": "none",
+        "touchAction": "none"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}

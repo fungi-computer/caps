@@ -1,0 +1,55 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "alert",
+  "type": "registry:ui",
+  "title": "Alert",
+  "description": "Semantic alert region with tone, title, description, and action slots.",
+  "dependencies": [
+    "@fungi.computer/stipe",
+    "class-variance-authority",
+    "cn",
+    "react"
+  ],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "../src/components/alert.tsx",
+      "type": "registry:ui",
+      "target": "@ui/alert.tsx",
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Supported AlertTone values. */\nexport type AlertTone =\n  | \"neutral\"\n  | \"primary\"\n  | \"secondary\"\n  | \"accent\"\n  | \"success\"\n  | \"info\"\n  | \"warning\"\n  | \"error\";\n\nconst alertToneClasses = {\n  neutral: \"alert-neutral\",\n  primary: \"alert-primary\",\n  secondary: \"alert-secondary\",\n  accent: \"alert-accent\",\n  success: \"alert-success\",\n  info: \"alert-info\",\n  warning: \"alert-warning\",\n  error: \"alert-error\",\n} satisfies Record<AlertTone, string>;\n\n/** Props accepted by Alert. */\nexport type AlertProps = {\n  action?: ReactNode;\n  description?: ReactNode;\n  title?: ReactNode;\n  tone?: AlertTone;\n} & Omit<HTMLAttributes<HTMLDivElement>, \"title\">;\n\n/** A caller-labelled alert presentation. */\nexport const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(\n  {\n    action,\n    children,\n    className,\n    description,\n    title,\n    tone = \"neutral\",\n    ...props\n  },\n  ref,\n) {\n  return (\n    <div\n      {...props}\n      className={cn(\"alert caps-alert\", alertToneClasses[tone], className)}\n      data-tone={tone}\n      role={props.role ?? \"alert\"}\n      ref={ref}\n    >\n      <div className=\"min-w-0 flex-1\">\n        {title ? <h3 className=\"font-semibold\">{title}</h3> : null}\n        {description ? <p className=\"text-sm\">{description}</p> : null}\n        {children}\n      </div>\n      {action ? <div className=\"shrink-0\">{action}</div> : null}\n    </div>\n  );\n});\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
+    }
+  ],
+  "css": {
+    "@import \"@fungi.computer/stipe/styles.css\"": {},
+    "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-alert": {
+        "borderRadius": "var(--radius-field)",
+        "background": "var(--color-base-200)",
+        "border": "var(--border) solid\n      color-mix(\n        in oklch,\n        var(--color-base-content) calc(18% + (1 - var(--depth)) * 82%),\n        var(--color-base-200)\n      )",
+        "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 calc(var(--depth) * 1px) 0\n        color-mix(in oklch, white calc(var(--depth) * 45%), transparent),\n      inset 0 calc(var(--depth) * -2px) 0\n        color-mix(\n          in oklch,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        ),\n      0 calc(var(--depth) * 2px) 0\n        color-mix(\n          in oklch,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        )\n    )",
+        "display": "flex",
+        "alignItems": "flex-start",
+        "gap": "var(--spacing-sm)",
+        "padding": "var(--spacing-md)",
+        "color": "var(--color-base-content)",
+        "fontSize": "0.875rem"
+      },
+      ".caps-alert[data-tone=\"error\"] h3": { "color": "var(--color-error)" },
+      ".caps-alert[data-tone=\"success\"] h3": {
+        "color": "var(--color-success)"
+      }
+    },
+    "@property --caps-game-host-ink": {
+      "syntax": "\"<color>\"",
+      "inherits": "true",
+      "initialValue": "black"
+    }
+  }
+}
