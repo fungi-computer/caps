@@ -1,6 +1,6 @@
 {
   "name": "@fungi.computer/caps",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Levi <levi@technomancy.dev>",
   "description": "Product-neutral React primitives and blocks for Fungi interfaces",
   "type": "module",
@@ -578,9 +578,6 @@
     "react"
   ],
   "peerDependenciesMeta": {
-    "@tanstack/react-form": {
-      "optional": true
-    },
     "effect": {
       "optional": true
     }

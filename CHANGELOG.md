@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.0.2
+
+### Patch Changes
+
+- Changes since 0.0.1:
+
+  - fix(oyster): clear the post-move fallow findings
+
 ## 0.0.1
 
 ### Patch Changes
