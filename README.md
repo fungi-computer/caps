@@ -550,9 +550,9 @@ marginalia, growth and type tokens, so they look right in `field-guide`,
 `field-guide-night` and the other editorial themes.
 
 - `@fungi.computer/caps/components/field-guide`: `Keycap` (a native keyboard
-  key), `StatusLed` (a static labelled light), `CartridgeLabel` (a ruled
-  cartridge face) and `SpecimenLabel` (plate annotation, catalogue metadata,
-  title and summary).
+  key), `CartridgeLabel` (a ruled cartridge face) and `SpecimenLabel` (plate
+  annotation, catalogue metadata, title and summary). Status lights are the
+  gooey `Status` bead from `@fungi.computer/caps/components/status`.
 - `@fungi.computer/caps/components/technonomicon`: `CigaretteCard`, `Masthead`,
   `SectionBar`, `Folio`, `IssueMasthead`, `Spread` and related editorial pieces.
 
@@ -1006,7 +1006,8 @@ its own control finish.
 ### Editorial pieces
 
 ```tsx
-import { Keycap, StatusLed } from "@fungi.computer/caps/components/field-guide";
+import { Keycap } from "@fungi.computer/caps/components/field-guide";
+import { Status } from "@fungi.computer/caps/components/status";
 import {
   Folio,
   Masthead,
@@ -1030,7 +1031,7 @@ export function FrontPage() {
       />
       <p>
         Press <Keycap>J</Keycap> for the next story.{" "}
-        <StatusLed active label="Online" />
+        <Status tone="success" label="Online" />
       </p>
       <Folio items={["The Spore Print", "Page A1"]} />
     </>

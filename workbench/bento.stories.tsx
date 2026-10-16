@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { applyBentoOps, useMaosaicoBento } from "@fungi.computer/maosaico";
 import { Screen } from "../src/components/surface.js";
 import { Keycap } from "../src/components/keycap.js";
-import { StatusLed } from "../src/components/field-guide.js";
+import { Status } from "../src/components/status.js";
 import {
   DataList,
   DataRow,
@@ -86,7 +86,7 @@ export function ControlledBento() {
               <DataListHeading
                 aside={
                   binding.previewId === tile.id ? (
-                    <StatusLed active label="Preview" tone="spore" />
+                    <Status tone="info" label="Preview" />
                   ) : null
                 }
               >

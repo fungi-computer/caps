@@ -110,7 +110,6 @@
         "fontSize": "var(--text-xs)",
         "whiteSpace": "nowrap"
       },
-      ".caps-status-compact .caps-status-bead": { "transform": "scale(0.6)" },
       ".caps-status-chip": {
         "--caps-status-chip-tone": "var(--color-base-content)",
         "display": "inline-flex",

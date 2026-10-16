@@ -188,4 +188,113 @@ describe("Window", () => {
     expect(promote).toHaveBeenCalledOnce();
     expect(minimize).toHaveBeenCalledOnce();
   });
+
+  it("shows a crumb trail in place of the title, with links and a drag spacer", () => {
+    const crumb = vi.fn();
+    const drag = vi.fn();
+    const view = render(
+      <WindowHeader
+        title="Trellis"
+        subtitle="ignored"
+        crumbs={[
+          { id: "app", label: "Trellis" },
+          { id: "wf", label: "Storyboard test" },
+          { id: "run", label: "Run 3" },
+        ]}
+        onCrumb={crumb}
+        handleProps={{ onPointerDown: drag }}
+      />,
+    );
+    const nav = requireValue(view.queryBySelector("nav"), "nav");
+    expect(nav.textContent).toBe("Trellis›Storyboard test›Run 3");
+    expect(view.container.textContent).not.toContain("ignored");
+    const links = [...nav.querySelectorAll("button")];
+    expect(links.map((link) => link.textContent)).toEqual([
+      "Trellis",
+      "Storyboard test",
+    ]);
+    act(() => links[1]?.click());
+    expect(crumb).toHaveBeenCalledWith("wf");
+    expect(nav.querySelector('[aria-current="page"]')?.textContent).toBe(
+      "Run 3",
+    );
+    const handle = requireValue(
+      view.queryBySelector("[data-caps-window-handle]"),
+      "handle",
+    );
+    expect(handle.getAttribute("aria-label")).toBe("Trellis · ignored");
+    act(() => {
+      handle.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    });
+    expect(drag).toHaveBeenCalledOnce();
+  });
+
+  it("folds a long trail's middle and marks the phone-visible crumbs", () => {
+    const view = render(
+      <WindowHeader
+        title="Bonsai"
+        crumbs={["a", "b", "c", "d", "e"].map((id) => ({ id, label: id }))}
+      />,
+    );
+    const positions = [
+      ...view.container.querySelectorAll("[data-caps-crumb-position]"),
+    ].map((item) => item.getAttribute("data-caps-crumb-position"));
+    expect(positions).toEqual(["ancestor", "ancestor", "parent", "current"]);
+    expect(
+      view.container.querySelector('[aria-label="More of the path"]'),
+    ).not.toBeNull();
+  });
+
+  it("reports the primary and menu commands the content declares", () => {
+    const action = vi.fn();
+    const view = render(
+      <WindowHeader
+        title="Trellis"
+        primary={[
+          { id: "run", label: "Run" },
+          {
+            id: "publish",
+            label: "Publish",
+            variant: "primary",
+            disabled: true,
+          },
+        ]}
+        menu={[{ id: "fork", label: "Fork" }]}
+        onAction={action}
+      />,
+    );
+    const buttons = [...view.container.querySelectorAll("button")];
+    expect(
+      buttons.map(
+        (button) => button.textContent || button.getAttribute("aria-label"),
+      ),
+    ).toEqual(["Run", "Publish", "More"]);
+    expect(buttons[1]?.disabled).toBe(true);
+    act(() => buttons[0]?.click());
+    expect(action).toHaveBeenCalledWith("run");
+  });
+
+  it("shows header state with the Caps status bead", () => {
+    const view = render(
+      <WindowHeader
+        title="Trellis"
+        status={[
+          { id: "valid", label: "Valid", tone: "success" },
+          { id: "saved", label: "Saved" },
+        ]}
+      />,
+    );
+    const group = requireValue(
+      view.queryBySelector('[aria-label="State"]'),
+      "state",
+    );
+    expect(group.textContent).toBe("ValidSaved");
+    expect(group.querySelectorAll("svg").length).toBeGreaterThan(0);
+  });
+
+  it("keeps the title path when no crumbs are supplied", () => {
+    const view = render(<WindowHeader title="Games" subtitle="Rank" />);
+    expect(view.container.querySelector("nav")).toBeNull();
+    expect(view.container.textContent).toContain("Rank");
+  });
 });

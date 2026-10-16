@@ -82,15 +82,22 @@ Supply handleProps only when the title is an interactive layout handle.
 
 #### Type Declaration
 
-| Name           | Type                                                                              | Description                                                          |
-| -------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `title`        | `string`                                                                          | -                                                                    |
-| `subtitle?`    | `string`                                                                          | Where the content is now, shown after the title and truncated first. |
-| `icon?`        | `ReactNode`                                                                       | -                                                                    |
-| `actions?`     | `ReactNode`                                                                       | -                                                                    |
-| `back?`        | [`WindowBackAction`](#windowbackaction)                                           | Present only while there is somewhere to go back to.                 |
-| `density?`     | `"regular"` \| `"compact"`                                                        | `compact` is a slim bar for tiled layouts; touch targets keep 44px.  |
-| `handleProps?` | `Omit`\<`ButtonHTMLAttributes`\<`HTMLButtonElement`\>, `"children"` \| `"type"`\> | -                                                                    |
+| Name           | Type                                                                              | Description                                                                                                                                                         |
+| -------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `title`        | `string`                                                                          | -                                                                                                                                                                   |
+| `subtitle?`    | `string`                                                                          | Where the content is now, shown after the title and truncated first.                                                                                                |
+| `icon?`        | `ReactNode`                                                                       | -                                                                                                                                                                   |
+| `actions?`     | `ReactNode`                                                                       | -                                                                                                                                                                   |
+| `back?`        | [`WindowBackAction`](#windowbackaction)                                           | Present only while there is somewhere to go back to.                                                                                                                |
+| `crumbs?`      | readonly [`WindowCrumb`](window-crumbs.md#windowcrumb)[]                          | The content's path, shown in place of the title and subtitle. The last crumb is the current place; earlier ones are links, and a crumb with siblings is a switcher. |
+| `onCrumb()?`   | (`crumbId`, `siblingId?`) => `void`                                               | Selected crumb, or the sibling chosen from a switcher crumb.                                                                                                        |
+| `status?`      | readonly [`WindowStatus`](window-crumbs.md#windowstatus)[]                        | Quiet facts about the view, such as "Valid" or "Saved", with beads.                                                                                                 |
+| `primary?`     | readonly [`WindowCommand`](window-crumbs.md#windowcommand)[]                      | The view's own commands, as buttons before the window controls.                                                                                                     |
+| `menu?`        | readonly [`WindowCommand`](window-crumbs.md#windowcommand)[]                      | Less common commands, behind a ⋯ menu.                                                                                                                              |
+| `onAction()?`  | (`id`) => `void`                                                                  | A primary or menu command the person used, by its id.                                                                                                               |
+| `popover?`     | `HTMLElement` \| `null`                                                           | Where header menus open; the host's popover layer.                                                                                                                  |
+| `density?`     | `"regular"` \| `"compact"`                                                        | `compact` is a slim bar for tiled layouts; touch targets keep 44px.                                                                                                 |
+| `handleProps?` | `Omit`\<`ButtonHTMLAttributes`\<`HTMLButtonElement`\>, `"children"` \| `"type"`\> | -                                                                                                                                                                   |
 
 ---
 
@@ -289,3 +296,21 @@ Consistent icons, ordering and accessible names for host-owned commands.
 #### Returns
 
 `Element`
+
+## References
+
+### WindowCommand
+
+Re-exports [WindowCommand](window-crumbs.md#windowcommand)
+
+---
+
+### WindowCrumb
+
+Re-exports [WindowCrumb](window-crumbs.md#windowcrumb)
+
+---
+
+### WindowStatus
+
+Re-exports [WindowStatus](window-crumbs.md#windowstatus)

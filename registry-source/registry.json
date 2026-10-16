@@ -99,12 +99,22 @@
         "cn",
         "react"
       ],
-      "registryDependencies": ["@shiit/icon-button"],
+      "registryDependencies": [
+        "@shiit/icon-button",
+        "@shiit/button",
+        "@shiit/status",
+        "@shiit/dropdown-menu"
+      ],
       "files": [
         {
           "path": "../src/components/window.tsx",
           "type": "registry:ui",
           "target": "@ui/window.tsx"
+        },
+        {
+          "path": "../src/components/window-crumbs.tsx",
+          "type": "registry:ui",
+          "target": "@ui/window-crumbs.tsx"
         },
         {
           "path": "../src/lib/cn.ts",

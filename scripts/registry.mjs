@@ -82,7 +82,6 @@ const capsCssScopes = new Map([
       "caps-cigarette-card",
       "caps-album",
       "caps-keycap",
-      "caps-led",
       "caps-cartridge-label",
       "caps-specimen-label",
       "caps-margin-note",

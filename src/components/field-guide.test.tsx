@@ -1,12 +1,7 @@
 import { afterEach, expect, test } from "vitest";
 
 import { cleanup, render } from "../test-utils/index.js";
-import {
-  CartridgeLabel,
-  Keycap,
-  SpecimenLabel,
-  StatusLed,
-} from "./field-guide.js";
+import { CartridgeLabel, Keycap, SpecimenLabel } from "./field-guide.js";
 
 afterEach(cleanup);
 
@@ -20,14 +15,6 @@ test("Keycap uses the native kbd element and forwards attributes", () => {
   expect(keycap?.textContent).toBe("J");
   expect(keycap?.getAttribute("aria-label")).toBe("jump shortcut");
   expect(keycap?.getAttribute("data-key")).toBe("j");
-});
-
-test("StatusLed exposes state in its accessible name and tone metadata", () => {
-  const view = render(<StatusLed active={false} label="Signal" tone="spore" />);
-  const led = view.queryBySelector('[role="img"].caps-led');
-  expect(led?.getAttribute("aria-label")).toBe("Signal: off");
-  expect(led?.getAttribute("data-tone")).toBe("spore");
-  expect(led?.getAttribute("data-active")).toBe("false");
 });
 
 test("CartridgeLabel and SpecimenLabel retain their supplied material text", () => {

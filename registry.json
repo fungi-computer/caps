@@ -434,12 +434,22 @@
         "cn",
         "react"
       ],
-      "registryDependencies": ["@shiit/icon-button"],
+      "registryDependencies": [
+        "@shiit/icon-button",
+        "@shiit/button",
+        "@shiit/status",
+        "@shiit/dropdown-menu"
+      ],
       "files": [
         {
           "path": "../src/components/window.tsx",
           "type": "registry:ui",
           "target": "@ui/window.tsx"
+        },
+        {
+          "path": "../src/components/window-crumbs.tsx",
+          "type": "registry:ui",
+          "target": "@ui/window-crumbs.tsx"
         },
         {
           "path": "../src/lib/cn.ts",
@@ -593,6 +603,82 @@
             },
             ".caps-window-title[data-caps-window-handle]": {
               "minHeight": "44px"
+            }
+          },
+          ".caps-window-header:has(> .caps-window-crumbs)": {
+            "minHeight": "40px"
+          },
+          ".caps-window-crumbs": {
+            "display": "flex",
+            "alignItems": "center",
+            "minWidth": "0",
+            "flexShrink": 1,
+            "fontFamily": "var(--caps-label-font, inherit)",
+            "fontSize": "var(--text-sm)",
+            "fontWeight": 500
+          },
+          ".caps-window-crumb-item[data-caps-crumb-position=\"current\"]": {
+            "fontWeight": 600
+          },
+          ".caps-window-crumb-item": {
+            "display": "flex",
+            "alignItems": "center",
+            "minWidth": "0"
+          },
+          ".caps-window-crumb-separator": {
+            "paddingInline": "var(--spacing-2xs)",
+            "color": "color-mix(in srgb, currentColor 50%, transparent)"
+          },
+          ".caps-window-crumb": {
+            "minWidth": "0",
+            "fontSize": "inherit",
+            "fontWeight": "inherit",
+            "gap": "var(--spacing-2xs)"
+          },
+          ".caps-window-crumb-label": {
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap"
+          },
+          ".caps-window-crumb-item[data-caps-crumb-position=\"current\"]\n    .caps-window-crumb": {
+            "paddingInline": "var(--spacing-xs)"
+          },
+          ".caps-window-crumbs:has(+ .caps-window-title)": {
+            "maxWidth": "70%"
+          },
+          ".caps-window-statuses": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": "var(--spacing-sm)",
+            "flexShrink": 0,
+            "paddingInlineEnd": "var(--spacing-sm)",
+            "fontSize": "var(--text-sm)",
+            "color": "color-mix(in srgb, currentColor 65%, transparent)"
+          },
+          ".caps-window-commands": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": "var(--spacing-2xs)",
+            "flexShrink": 0
+          },
+          "@media (max-width: 640px)": {
+            ".caps-window-statuses": {
+              "gap": "var(--spacing-2xs)",
+              "paddingInlineEnd": "var(--spacing-2xs)"
+            },
+            ".caps-window-status > span": {
+              "position": "absolute",
+              "width": "1px",
+              "height": "1px",
+              "overflow": "hidden",
+              "clipPath": "inset(50%)",
+              "whiteSpace": "nowrap"
+            },
+            ".caps-window-crumb-item[data-caps-crumb-position=\"ancestor\"]": {
+              "display": "none"
+            },
+            ".caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      .caps-window-crumb-separator": {
+              "display": "none"
             }
           },
           ".caps-window-body": {
@@ -3411,34 +3497,6 @@
             "fontFamily": "var(--font-mono)",
             "lineHeight": 1
           },
-          ".caps-led": {
-            "display": "inline-flex",
-            "alignItems": "center",
-            "gap": "var(--spacing-xs)",
-            "color": "var(--marginalia-ink)",
-            "fontSize": "0.75rem"
-          },
-          ".caps-led-bead": {
-            "width": "0.625rem",
-            "height": "0.625rem",
-            "flex": "none",
-            "border": "var(--card-rule-width) solid var(--card-rule)",
-            "borderRadius": "var(--radius-selector)",
-            "background": "var(--caps-led-color)",
-            "boxShadow": "0 0 0 var(--card-rule-width)\n      color-mix(in srgb, var(--caps-led-color) 36%, transparent)"
-          },
-          ".caps-led[data-tone=\"spore\"]": {
-            "--caps-led-color": "var(--growth-spore)"
-          },
-          ".caps-led[data-tone=\"mycelium\"]": {
-            "--caps-led-color": "var(--growth-mycelium)"
-          },
-          ".caps-led[data-tone=\"fruiting\"]": {
-            "--caps-led-color": "var(--growth-fruiting)"
-          },
-          ".caps-led[data-active=\"false\"]": {
-            "--caps-led-color": "var(--marginalia-ink)"
-          },
           ".caps-cartridge-label": {
             "display": "grid",
             "justifyItems": "center",
@@ -5929,9 +5987,6 @@
             "gap": "var(--spacing-xs)",
             "fontSize": "var(--text-xs)",
             "whiteSpace": "nowrap"
-          },
-          ".caps-status-compact .caps-status-bead": {
-            "transform": "scale(0.6)"
           },
           ".caps-status-chip": {
             "--caps-status-chip-tone": "var(--color-base-content)",

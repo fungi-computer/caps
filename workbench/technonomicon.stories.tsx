@@ -6,8 +6,8 @@ import {
   CartridgeLabel,
   Keycap,
   SpecimenLabel,
-  StatusLed,
 } from "../src/components/field-guide.js";
+import { Status } from "../src/components/status.js";
 import { sketch } from "../src/enhance/sketch.js";
 import {
   Callout,
@@ -267,8 +267,8 @@ export function FieldGuideMaterials() {
           <div className="flex flex-wrap items-center gap-md">
             <Keycap>J</Keycap>
             <Keycap>?</Keycap>
-            <StatusLed active label="Online" />
-            <StatusLed active={false} label="Standby" tone="spore" />
+            <Status tone="success" label="Online" />
+            <Status tone="neutral" label="Standby" />
           </div>
           <CartridgeLabel
             title="VISHNU"

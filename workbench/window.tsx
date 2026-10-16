@@ -225,3 +225,48 @@ function WindowPreview({
     </WindowFrame>
   );
 }
+
+/** The content's path, commands and ⋯ menu in one header row. */
+export const WindowCrumbs: Story = () => {
+  const [path, setPath] = useState("Run 3");
+  return (
+    <WindowFrame active aria-label="Trellis" className="relative">
+      <WindowHeader
+        title="Trellis"
+        icon={<FilePenLine />}
+        crumbs={[
+          { id: "app", label: "Trellis" },
+          {
+            id: "wf",
+            label: "Storyboard test",
+            siblings: [
+              { id: "a", label: "Storyboard test" },
+              { id: "b", label: "Repo list" },
+            ],
+          },
+          { id: "runs", label: "Runs" },
+          { id: "run", label: path },
+        ]}
+        onCrumb={(id, sibling) => {
+          setPath(sibling ?? id);
+        }}
+        status={[
+          { id: "valid", label: "Valid", tone: "success" },
+          { id: "saved", label: "Saved" },
+        ]}
+        primary={[
+          { id: "run", label: "Run" },
+          { id: "publish", label: "Publish", variant: "primary" },
+        ]}
+        menu={[
+          { id: "fork", label: "Fork" },
+          { id: "export", label: "Export" },
+        ]}
+        actions={<WindowActions title="Trellis" onClose={() => undefined} />}
+      />
+      <WindowBody>
+        <p className="p-md">Current: {path}</p>
+      </WindowBody>
+    </WindowFrame>
+  );
+};

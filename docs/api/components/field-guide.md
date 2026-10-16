@@ -26,35 +26,6 @@ A visible keyboard key from a shortcut or instruction.
 
 ---
 
-### StatusLedTone
-
-```ts
-type StatusLedTone = "spore" | "mycelium" | "fruiting";
-```
-
-Semantic accent pigments for the static status light.
-
----
-
-### StatusLedProps
-
-```ts
-type StatusLedProps = object &
-  Omit<HTMLAttributes<HTMLSpanElement>, "children">;
-```
-
-Props accepted by StatusLed.
-
-#### Type Declaration
-
-| Name     | Type                              |
-| -------- | --------------------------------- |
-| `active` | `boolean`                         |
-| `label`  | `string`                          |
-| `tone?`  | [`StatusLedTone`](#statusledtone) |
-
----
-
 ### CartridgeLabelProps
 
 ```ts
@@ -108,26 +79,6 @@ The shared field-guide treatment for a keyboard key.
 | Parameter           | Type                          |
 | ------------------- | ----------------------------- |
 | `__namedParameters` | [`KeycapProps`](#keycapprops) |
-
-#### Returns
-
-`Element`
-
----
-
-### StatusLed()
-
-```ts
-function StatusLed(__namedParameters): Element;
-```
-
-A static, labelled indicator using the current field-guide pigment tokens.
-
-#### Parameters
-
-| Parameter           | Type                                |
-| ------------------- | ----------------------------------- |
-| `__namedParameters` | [`StatusLedProps`](#statusledprops) |
 
 #### Returns
 

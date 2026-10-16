@@ -1,6 +1,6 @@
 /*
  * Caps' single style entry. Stipe owns Daisy's theme engine and all shared
- * semantic values; Caps only asks Tailwind to scan its editable source.
+ * semantic values; Caps only asks Tailwind to scan its own components.
  * Caps owns reading rhythm through Tailwind Typography's `prose`.
  */
 @import "@fungi.computer/stipe/styles.css";
@@ -9,7 +9,13 @@
 
 @plugin "@tailwindcss/typography";
 
+/* In the workspace Tailwind scans the component source; published, this
+ * entry ships without it, and the compiled components in dist carry the same
+ * class names. Tests ship in neither, so neither build styles them. */
 @source "./";
+@source "../dist/**/*.js";
+@source not "./**/*.test.tsx";
+@source not "./test-utils";
 
 /* The themed brand fill stays untouched. Link ink and focus rings keep the
    primary's hue and chroma and only move lightness toward the ink side of
@@ -410,35 +416,6 @@
     color: var(--card-ink);
     font-family: var(--font-mono);
     line-height: 1;
-  }
-  .caps-led {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    color: var(--marginalia-ink);
-    font-size: 0.75rem;
-  }
-  .caps-led-bead {
-    width: 0.625rem;
-    height: 0.625rem;
-    flex: none;
-    border: var(--card-rule-width) solid var(--card-rule);
-    border-radius: var(--radius-selector);
-    background: var(--caps-led-color);
-    box-shadow: 0 0 0 var(--card-rule-width)
-      color-mix(in srgb, var(--caps-led-color) 36%, transparent);
-  }
-  .caps-led[data-tone="spore"] {
-    --caps-led-color: var(--growth-spore);
-  }
-  .caps-led[data-tone="mycelium"] {
-    --caps-led-color: var(--growth-mycelium);
-  }
-  .caps-led[data-tone="fruiting"] {
-    --caps-led-color: var(--growth-fruiting);
-  }
-  .caps-led[data-active="false"] {
-    --caps-led-color: var(--marginalia-ink);
   }
   .caps-cartridge-label {
     display: grid;
@@ -5849,6 +5826,90 @@
       min-height: 44px;
     }
   }
+  /* The path trail: flat text crumbs on the header face, no new colours.
+     A header that carries a path reads at body size, one control high. */
+  .caps-window-header:has(> .caps-window-crumbs) {
+    min-height: 40px;
+  }
+  .caps-window-crumbs {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex-shrink: 1;
+    font-family: var(--caps-label-font, inherit);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+  .caps-window-crumb-item[data-caps-crumb-position="current"] {
+    font-weight: 600;
+  }
+  .caps-window-crumb-item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+  .caps-window-crumb-separator {
+    padding-inline: var(--spacing-2xs);
+    color: color-mix(in srgb, currentColor 50%, transparent);
+  }
+  .caps-window-crumb {
+    min-width: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    gap: var(--spacing-2xs);
+  }
+  .caps-window-crumb-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .caps-window-crumb-item[data-caps-crumb-position="current"]
+    .caps-window-crumb {
+    padding-inline: var(--spacing-xs);
+  }
+  /* The trail keeps its width beside the empty title handle (a zero basis),
+     and gives way, crumb labels first, only when the row runs out of room. */
+  .caps-window-crumbs:has(+ .caps-window-title) {
+    max-width: 70%;
+  }
+  .caps-window-statuses {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+    padding-inline-end: var(--spacing-sm);
+    font-size: var(--text-sm);
+    color: color-mix(in srgb, currentColor 65%, transparent);
+  }
+  .caps-window-commands {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+    flex-shrink: 0;
+  }
+  /* A phone keeps `‹ parent › current`; the rest of the trail is a tap away on Back. */
+  @media (max-width: 640px) {
+    /* State shrinks to its beads; the words stay for screen readers and a long press. */
+    .caps-window-statuses {
+      gap: var(--spacing-2xs);
+      padding-inline-end: var(--spacing-2xs);
+    }
+    .caps-window-status > span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .caps-window-crumb-item[data-caps-crumb-position="ancestor"] {
+      display: none;
+    }
+    .caps-window-crumb-item[data-caps-crumb-position="parent"]
+      .caps-window-crumb-separator {
+      display: none;
+    }
+  }
   .caps-window-body {
     flex: 1;
     min-height: 0;
@@ -7062,9 +7123,6 @@
     gap: var(--spacing-xs);
     font-size: var(--text-xs);
     white-space: nowrap;
-  }
-  .caps-status-compact .caps-status-bead {
-    transform: scale(0.6);
   }
   .caps-action-row-trailing {
     display: flex;

@@ -16,6 +16,20 @@ import {
 } from "react";
 import { cn } from "../lib/cn.js";
 import { IconButton } from "./icon-button.js";
+import {
+  WindowCommands,
+  WindowCrumbs,
+  WindowStatuses,
+  type WindowStatus,
+  type WindowCommand,
+  type WindowCrumb,
+} from "./window-crumbs.js";
+
+export type {
+  WindowCommand,
+  WindowCrumb,
+  WindowStatus,
+} from "./window-crumbs.js";
 
 /** Window presentation only. The host owns geometry, focus order and lifecycle. */
 export type WindowFrameProps = HTMLAttributes<HTMLElement> & {
@@ -86,6 +100,24 @@ export type WindowHeaderProps = Omit<
   actions?: ReactNode;
   /** Present only while there is somewhere to go back to. */
   back?: WindowBackAction;
+  /**
+   * The content's path, shown in place of the title and subtitle. The last
+   * crumb is the current place; earlier ones are links, and a crumb with
+   * siblings is a switcher.
+   */
+  crumbs?: readonly WindowCrumb[];
+  /** Selected crumb, or the sibling chosen from a switcher crumb. */
+  onCrumb?: (crumbId: string, siblingId?: string) => void;
+  /** Quiet facts about the view, such as "Valid" or "Saved", with beads. */
+  status?: readonly WindowStatus[];
+  /** The view's own commands, as buttons before the window controls. */
+  primary?: readonly WindowCommand[];
+  /** Less common commands, behind a ⋯ menu. */
+  menu?: readonly WindowCommand[];
+  /** A primary or menu command the person used, by its id. */
+  onAction?: (id: string) => void;
+  /** Where header menus open; the host's popover layer. */
+  popover?: HTMLElement | null;
   /** `compact` is a slim bar for tiled layouts; touch targets keep 44px. */
   density?: "regular" | "compact";
   handleProps?: Omit<
@@ -101,13 +133,21 @@ export function WindowHeader({
   icon,
   actions,
   back,
+  crumbs,
+  onCrumb,
+  primary,
+  menu,
+  status,
+  onAction,
+  popover,
   density = "regular",
   handleProps,
   className,
   ...props
 }: WindowHeaderProps) {
   const label = subtitle ? `${title} · ${subtitle}` : title;
-  const content = (
+  const trail = crumbs !== undefined && crumbs.length > 0;
+  const content = trail ? null : (
     <>
       {icon && (
         <span className="caps-window-icon" aria-hidden="true">
@@ -137,6 +177,16 @@ export function WindowHeader({
           onClick={back.onBack}
         />
       )}
+      {trail ? (
+        <>
+          {icon && (
+            <span className="caps-window-icon" aria-hidden="true">
+              {icon}
+            </span>
+          )}
+          <WindowCrumbs crumbs={crumbs} popover={popover} onCrumb={onCrumb} />
+        </>
+      ) : null}
       {handleProps ? (
         <button
           {...handleProps}
@@ -144,14 +194,26 @@ export function WindowHeader({
           data-caps-window-handle
           className={cn("caps-window-title", handleProps.className)}
           title={label}
+          {...(trail ? { "aria-label": label } : {})}
         >
           {content}
         </button>
       ) : (
-        <div className="caps-window-title" title={label}>
+        <div
+          className="caps-window-title"
+          title={label}
+          {...(trail ? { "aria-hidden": true } : {})}
+        >
           {content}
         </div>
       )}
+      {status ? <WindowStatuses status={status} /> : null}
+      <WindowCommands
+        primary={primary}
+        menu={menu}
+        popover={popover}
+        onAction={onAction}
+      />
       {actions}
     </header>
   );

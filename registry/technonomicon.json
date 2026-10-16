@@ -23,7 +23,7 @@
       "path": "../src/components/field-guide.tsx",
       "type": "registry:ui",
       "target": "@ui/field-guide.tsx",
-      "content": "import type { HTMLAttributes, ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** A visible keyboard key from a shortcut or instruction. */\nexport type KeycapProps = {\n  children: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/** The shared field-guide treatment for a keyboard key. */\nexport function Keycap({ children, className, ...props }: KeycapProps) {\n  return (\n    <kbd {...props} className={cn(\"caps-keycap\", className)}>\n      {children}\n    </kbd>\n  );\n}\n\n/** Semantic accent pigments for the static status light. */\nexport type StatusLedTone = \"spore\" | \"mycelium\" | \"fruiting\";\n/** Props accepted by StatusLed. */\nexport type StatusLedProps = {\n  active: boolean;\n  label: string;\n  tone?: StatusLedTone;\n} & Omit<HTMLAttributes<HTMLSpanElement>, \"children\">;\n\n/** A static, labelled indicator using the current field-guide pigment tokens. */\nexport function StatusLed({\n  active,\n  className,\n  label,\n  tone = \"mycelium\",\n  ...props\n}: StatusLedProps) {\n  return (\n    <span\n      {...props}\n      aria-label={`${label}: ${active ? \"on\" : \"off\"}`}\n      className={cn(\"caps-led\", className)}\n      data-active={active}\n      data-tone={tone}\n      role=\"img\"\n    >\n      <span aria-hidden=\"true\" className=\"caps-led-bead\" />\n      <span aria-hidden=\"true\">{label}</span>\n    </span>\n  );\n}\n\n/** Props accepted by CartridgeLabel. */\nexport type CartridgeLabelProps = {\n  title: string;\n  subtitle?: string;\n  mark?: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/** A ruled, token-backed printed label for a physical game cartridge. */\nexport function CartridgeLabel({\n  className,\n  mark,\n  subtitle,\n  title,\n  ...props\n}: CartridgeLabelProps) {\n  return (\n    <figure\n      {...props}\n      aria-label={`${title} cartridge label`}\n      className={cn(\"caps-cartridge-label\", className)}\n    >\n      <span aria-hidden=\"true\" className=\"caps-cartridge-label-rule\" />\n      {mark ? (\n        <span aria-hidden=\"true\" className=\"caps-cartridge-label-mark\">\n          {mark}\n        </span>\n      ) : null}\n      <span className=\"caps-cartridge-label-title\">{title}</span>\n      {subtitle ? (\n        <span className=\"caps-cartridge-label-subtitle\">{subtitle}</span>\n      ) : null}\n      <span aria-hidden=\"true\" className=\"caps-cartridge-label-rule\" />\n    </figure>\n  );\n}\n\n/** Props accepted by SpecimenLabel. */\nexport type SpecimenLabelProps = {\n  plate: string;\n  detail: string;\n  kind: string;\n  number: string;\n  title: ReactNode;\n  summary?: ReactNode;\n  /**\n   * Mark the plate number for a pencil circle and the detail for a pencil\n   * underline. The ruled CSS marks remain until `enhance/sketch` draws them.\n   */\n  sketch?: boolean;\n} & Omit<HTMLAttributes<HTMLElement>, \"title\">;\n\n/** A caption, catalogue line, title, and note for a specimen illustration. */\nexport function SpecimenLabel({\n  className,\n  detail,\n  kind,\n  number,\n  plate,\n  sketch = false,\n  summary,\n  title,\n  ...props\n}: SpecimenLabelProps) {\n  return (\n    <aside {...props} className={cn(\"caps-specimen-label\", className)}>\n      <p className=\"caps-specimen-label-caption\">\n        <span\n          className=\"caps-specimen-label-plate\"\n          data-sketch={sketch ? \"circle\" : undefined}\n        >\n          {plate}\n        </span>\n        <span\n          className=\"caps-specimen-label-detail\"\n          data-sketch={sketch ? \"underline\" : undefined}\n        >\n          {detail}\n        </span>\n      </p>\n      <span className=\"caps-specimen-label-meta\">\n        {kind} · {number}\n      </span>\n      <div className=\"caps-specimen-label-title\">{title}</div>\n      {summary ? (\n        <p className=\"caps-specimen-label-summary\">{summary}</p>\n      ) : null}\n    </aside>\n  );\n}\n"
+      "content": "import type { HTMLAttributes, ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** A visible keyboard key from a shortcut or instruction. */\nexport type KeycapProps = {\n  children: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/** The shared field-guide treatment for a keyboard key. */\nexport function Keycap({ children, className, ...props }: KeycapProps) {\n  return (\n    <kbd {...props} className={cn(\"caps-keycap\", className)}>\n      {children}\n    </kbd>\n  );\n}\n\n/** Props accepted by CartridgeLabel. */\nexport type CartridgeLabelProps = {\n  title: string;\n  subtitle?: string;\n  mark?: ReactNode;\n} & HTMLAttributes<HTMLElement>;\n\n/** A ruled, token-backed printed label for a physical game cartridge. */\nexport function CartridgeLabel({\n  className,\n  mark,\n  subtitle,\n  title,\n  ...props\n}: CartridgeLabelProps) {\n  return (\n    <figure\n      {...props}\n      aria-label={`${title} cartridge label`}\n      className={cn(\"caps-cartridge-label\", className)}\n    >\n      <span aria-hidden=\"true\" className=\"caps-cartridge-label-rule\" />\n      {mark ? (\n        <span aria-hidden=\"true\" className=\"caps-cartridge-label-mark\">\n          {mark}\n        </span>\n      ) : null}\n      <span className=\"caps-cartridge-label-title\">{title}</span>\n      {subtitle ? (\n        <span className=\"caps-cartridge-label-subtitle\">{subtitle}</span>\n      ) : null}\n      <span aria-hidden=\"true\" className=\"caps-cartridge-label-rule\" />\n    </figure>\n  );\n}\n\n/** Props accepted by SpecimenLabel. */\nexport type SpecimenLabelProps = {\n  plate: string;\n  detail: string;\n  kind: string;\n  number: string;\n  title: ReactNode;\n  summary?: ReactNode;\n  /**\n   * Mark the plate number for a pencil circle and the detail for a pencil\n   * underline. The ruled CSS marks remain until `enhance/sketch` draws them.\n   */\n  sketch?: boolean;\n} & Omit<HTMLAttributes<HTMLElement>, \"title\">;\n\n/** A caption, catalogue line, title, and note for a specimen illustration. */\nexport function SpecimenLabel({\n  className,\n  detail,\n  kind,\n  number,\n  plate,\n  sketch = false,\n  summary,\n  title,\n  ...props\n}: SpecimenLabelProps) {\n  return (\n    <aside {...props} className={cn(\"caps-specimen-label\", className)}>\n      <p className=\"caps-specimen-label-caption\">\n        <span\n          className=\"caps-specimen-label-plate\"\n          data-sketch={sketch ? \"circle\" : undefined}\n        >\n          {plate}\n        </span>\n        <span\n          className=\"caps-specimen-label-detail\"\n          data-sketch={sketch ? \"underline\" : undefined}\n        >\n          {detail}\n        </span>\n      </p>\n      <span className=\"caps-specimen-label-meta\">\n        {kind} · {number}\n      </span>\n      <div className=\"caps-specimen-label-title\">{title}</div>\n      {summary ? (\n        <p className=\"caps-specimen-label-summary\">{summary}</p>\n      ) : null}\n    </aside>\n  );\n}\n"
     },
     {
       "path": "../src/components/badge.tsx",
@@ -192,34 +192,6 @@
         "color": "var(--card-ink)",
         "fontFamily": "var(--font-mono)",
         "lineHeight": 1
-      },
-      ".caps-led": {
-        "display": "inline-flex",
-        "alignItems": "center",
-        "gap": "var(--spacing-xs)",
-        "color": "var(--marginalia-ink)",
-        "fontSize": "0.75rem"
-      },
-      ".caps-led-bead": {
-        "width": "0.625rem",
-        "height": "0.625rem",
-        "flex": "none",
-        "border": "var(--card-rule-width) solid var(--card-rule)",
-        "borderRadius": "var(--radius-selector)",
-        "background": "var(--caps-led-color)",
-        "boxShadow": "0 0 0 var(--card-rule-width)\n      color-mix(in srgb, var(--caps-led-color) 36%, transparent)"
-      },
-      ".caps-led[data-tone=\"spore\"]": {
-        "--caps-led-color": "var(--growth-spore)"
-      },
-      ".caps-led[data-tone=\"mycelium\"]": {
-        "--caps-led-color": "var(--growth-mycelium)"
-      },
-      ".caps-led[data-tone=\"fruiting\"]": {
-        "--caps-led-color": "var(--growth-fruiting)"
-      },
-      ".caps-led[data-active=\"false\"]": {
-        "--caps-led-color": "var(--marginalia-ink)"
       },
       ".caps-cartridge-label": {
         "display": "grid",

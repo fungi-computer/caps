@@ -16,38 +16,6 @@ export function Keycap({ children, className, ...props }: KeycapProps) {
   );
 }
 
-/** Semantic accent pigments for the static status light. */
-export type StatusLedTone = "spore" | "mycelium" | "fruiting";
-/** Props accepted by StatusLed. */
-export type StatusLedProps = {
-  active: boolean;
-  label: string;
-  tone?: StatusLedTone;
-} & Omit<HTMLAttributes<HTMLSpanElement>, "children">;
-
-/** A static, labelled indicator using the current field-guide pigment tokens. */
-export function StatusLed({
-  active,
-  className,
-  label,
-  tone = "mycelium",
-  ...props
-}: StatusLedProps) {
-  return (
-    <span
-      {...props}
-      aria-label={`${label}: ${active ? "on" : "off"}`}
-      className={cn("caps-led", className)}
-      data-active={active}
-      data-tone={tone}
-      role="img"
-    >
-      <span aria-hidden="true" className="caps-led-bead" />
-      <span aria-hidden="true">{label}</span>
-    </span>
-  );
-}
-
 /** Props accepted by CartridgeLabel. */
 export type CartridgeLabelProps = {
   title: string;

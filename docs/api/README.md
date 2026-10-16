@@ -118,6 +118,7 @@
 | [components/undo-action](components/undo-action.md)                                 | -           |
 | [components/undo-toast](components/undo-toast.md)                                   | -           |
 | [components/visually-hidden](components/visually-hidden.md)                         | -           |
+| [components/window-crumbs](components/window-crumbs.md)                             | -           |
 | [components/window](components/window.md)                                           | -           |
 | [components/wizard](components/wizard.md)                                           | -           |
 | [enhance/cigarette-card](enhance/cigarette-card.md)                                 | -           |
