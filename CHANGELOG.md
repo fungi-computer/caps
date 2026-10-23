@@ -1,5 +1,29 @@
 # @fungi.computer/caps
 
+## 0.2.0
+
+### Minor Changes
+
+- Changes since 0.1.0:
+
+  - feat(stranger): typecheck each public entry in its own environment
+  - fix: cover Computer and Oyster packed dependency closures
+  - fix(caps): reserve phone header targets before wrapping
+  - fix(caps): keep decorative bead overflow out of hit testing
+  - feat(docs): consolidate package documentation under one site
+  - fix(trellis): finish workflow header feedback
+  - fix(trellis): offer header variant A with status beads and icon Run
+  - fix(caps): keep window header statuses at title size
+  - fix(caps): keep window crumbs at title size in the 32px header
+  - perf(oyster): ship only the sans font on login
+  - fix(caps): tween button width by rendered label in layout pixels
+  - feat(oyster): public release 0.2.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @fungi.computer/stipe@0.1.0
+
 ## 0.1.0
 
 ### Minor Changes

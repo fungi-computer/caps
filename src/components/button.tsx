@@ -117,8 +117,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref,
       () => node.current,
     );
-    // Text labels compare by value; element labels re-measure each render.
-    useWidthTween(node, [loading, result, children]);
+    useWidthTween(node, loading, result);
     if (asChild) {
       return (
         <Slot
@@ -167,25 +166,49 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 /**
  * When a button's label changes (loading, a result, new text) its width eases
  * to the new size instead of jumping, so neighbours never lurch.
+ *
+ * What counts as "changed" is what the button renders (its text, loading and
+ * result), never the identity of its children: a caller that builds a fresh
+ * array or element with the same words each render has not changed the label.
+ * Widths are layout (CSS) pixels from `offsetWidth`, the unit the animated
+ * `width` is in, so a scaled or zoomed ancestor cannot distort the glide. A
+ * button that has no box (an ancestor is `display: none`) records no width, so
+ * when it is shown it settles at its size instead of growing from nothing.
  */
 function useWidthTween(
   node: RefObject<HTMLButtonElement | null>,
-  label: readonly unknown[],
+  loading: boolean,
+  result: ButtonResult | undefined,
 ) {
   const width = useRef<number | null>(null);
+  const look = useRef<string | null>(null);
   const tween = useRef<Animation | null>(null);
+  // After every commit: the rendered text is only known once it is in the DOM.
   useLayoutEffect(() => {
     const element = node.current;
     if (!element) return;
+    const now = JSON.stringify([loading, result ?? null, element.textContent]);
+    const changed = now !== look.current;
+    look.current = now;
     const running = tween.current;
-    const from = running
-      ? element.getBoundingClientRect().width
-      : width.current;
-    running?.cancel();
-    tween.current = null;
-    const to = element.getBoundingClientRect().width;
-    width.current = to;
-    if (from === null || Math.abs(from - to) < 1 || !canAnimate(element))
+    // Nothing new to say: let a glide in progress finish undisturbed.
+    if (!changed && running) return;
+    const from = running ? element.offsetWidth : width.current;
+    if (running) {
+      tween.current = null;
+      running.cancel();
+      element.style.removeProperty("overflow");
+      element.style.removeProperty("white-space");
+    }
+    const to = element.offsetWidth;
+    width.current = to > 0 ? to : null;
+    if (
+      !changed ||
+      from === null ||
+      to === 0 ||
+      Math.abs(from - to) < 1 ||
+      !canAnimate(element)
+    )
       return;
     const motion = readMotion(element);
     if (motion.reduced) return;
@@ -205,7 +228,7 @@ function useWidthTween(
     };
     animation.onfinish = done;
     animation.oncancel = done;
-  }, [node, ...label]);
+  });
 }
 
 /** How long the done beat holds before settling: long enough to read. */

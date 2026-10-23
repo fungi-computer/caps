@@ -64,6 +64,14 @@ id: string;
 label: string;
 ```
 
+##### icon?
+
+```ts
+optional icon?: "play";
+```
+
+Render a supported glyph alone; label remains the accessible name.
+
 ##### variant?
 
 ```ts
@@ -109,6 +117,14 @@ id: string;
 ```ts
 label: string;
 ```
+
+##### presentation?
+
+```ts
+optional presentation?: "bead";
+```
+
+Hide only the visible label, retaining it for assistive technology.
 
 ##### tone?
 
@@ -171,7 +187,7 @@ Primary commands as buttons, the rest behind a ⋯ menu.
 function WindowStatuses(__namedParameters): Element | null;
 ```
 
-Muted state text with the Caps status bead; hidden on a phone.
+Settled beads reveal their labels on hover/focus; other state stays visible.
 
 #### Parameters
 

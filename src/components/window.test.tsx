@@ -12,6 +12,117 @@ import {
 afterEach(cleanup);
 
 describe("Window", () => {
+  it("opens a bead's maintained tooltip from keyboard focus without inventing an action", () => {
+    vi.useFakeTimers();
+    try {
+      const view = render(
+        <WindowHeader
+          title="Trellis"
+          status={[{ id: "saved", label: "Saved", presentation: "bead" }]}
+        />,
+      );
+      const bead = requireValue(
+        view.container.querySelector<HTMLSpanElement>(".caps-window-status"),
+        "focusable Saved readout",
+      );
+      expect(bead.closest("button")).toBeNull();
+      act(() => {
+        bead.focus();
+        vi.advanceTimersByTime(300);
+      });
+      const tooltip = requireValue(
+        document.body.querySelector('[role="tooltip"]'),
+        "Saved tooltip",
+      );
+      expect(tooltip.textContent).toBe("Saved");
+      expect(bead.getAttribute("aria-describedby")).toBe(tooltip.id);
+      expect(bead.hasAttribute("title")).toBe(false);
+      act(() => {
+        bead.blur();
+        vi.runOnlyPendingTimers();
+      });
+      expect(document.body.querySelector('[role="tooltip"]')).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("renders bead-only status with an accessible label while retaining labeled statuses", () => {
+    const states = [
+      { id: "saved", label: "Saved", presentation: "bead" as const },
+      {
+        id: "valid",
+        label: "Valid",
+        tone: "success" as const,
+        presentation: "bead" as const,
+      },
+      { id: "issue", label: "Not saved", tone: "error" as const },
+    ];
+    const view = render(<WindowHeader title="Trellis" status={states} />);
+    const saved = requireValue(
+      view.queryBySelector(".caps-window-status"),
+      "Saved bead",
+    );
+    expect(saved.textContent).toBe("Saved");
+    expect(saved.querySelector(".sr-only")?.textContent).toBe("Saved");
+    expect(saved.querySelector("svg")).not.toBeNull();
+    expect(
+      view.container.querySelectorAll(".caps-window-status .sr-only")[1]
+        ?.textContent,
+    ).toBe("Valid");
+    const issue = requireValue(
+      view.queryBySelector('[title="Not saved"]'),
+      "labeled error",
+    );
+    expect(issue.textContent).toBe("Not saved");
+    expect(issue.querySelector(".sr-only")).toBeNull();
+  });
+
+  it("renders an icon-only command with its accessible label and preserves disabled admission", () => {
+    const action = vi.fn();
+    const commands = [
+      {
+        id: "run",
+        label: "Run workflow",
+        icon: "play" as const,
+        variant: "ghost" as const,
+      },
+      {
+        id: "blocked",
+        label: "Run unavailable",
+        icon: "play" as const,
+        disabled: true,
+      },
+    ];
+    const view = render(
+      <WindowHeader title="Trellis" primary={commands} onAction={action} />,
+    );
+    const run = requireValue(
+      view.container.querySelector<HTMLButtonElement>(
+        'button[aria-label="Run workflow"]',
+      ),
+      "accessible Run icon button",
+    );
+    expect(run.getAttribute("title")).toBe("Run workflow");
+    expect(run.querySelector("svg")).not.toBeNull();
+    expect(run.textContent).toBe("");
+    act(() => {
+      run.click();
+    });
+    expect(action).toHaveBeenCalledExactlyOnceWith("run");
+    const blocked = requireValue(
+      view.container.querySelector<HTMLButtonElement>(
+        'button[aria-label="Run unavailable"]',
+      ),
+      "disabled icon command",
+    );
+    expect(blocked.disabled).toBe(true);
+    act(() => {
+      blocked.click();
+    });
+    expect(action).toHaveBeenCalledTimes(1);
+  });
+
   it("forwards the shell ref and native attributes without claiming modal behavior", () => {
     const ref = createRef<HTMLElement>();
     const view = render(

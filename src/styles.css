@@ -5827,9 +5827,11 @@
     }
   }
   /* The path trail: flat text crumbs on the header face, no new colours.
-     A header that carries a path reads at body size, one control high. */
-  .caps-window-header:has(> .caps-window-crumbs) {
-    min-height: 40px;
+     It keeps the title's size and the header's 32px height, and its icon
+     sits where a plain title's icon sits, so switching views never shifts it. */
+  .caps-window-header > .caps-window-icon {
+    margin-inline: var(--spacing-md)
+      calc(var(--spacing-sm) - var(--spacing-2xs));
   }
   .caps-window-crumbs {
     display: flex;
@@ -5837,7 +5839,7 @@
     min-width: 0;
     flex-shrink: 1;
     font-family: var(--caps-label-font, inherit);
-    font-size: var(--text-sm);
+    font-size: 11px;
     font-weight: 500;
   }
   .caps-window-crumb-item[data-caps-crumb-position="current"] {
@@ -5878,7 +5880,7 @@
     gap: var(--spacing-sm);
     flex-shrink: 0;
     padding-inline-end: var(--spacing-sm);
-    font-size: var(--text-sm);
+    font-size: 11px;
     color: color-mix(in srgb, currentColor 65%, transparent);
   }
   .caps-window-commands {
@@ -5889,6 +5891,18 @@
   }
   /* A phone keeps `‹ parent › current`; the rest of the trail is a tap away on Back. */
   @media (max-width: 640px) {
+    /* Touch buttons cannot shrink below 44px. Reserve their path's width
+       instead of shrinking its containers underneath neighbouring targets. */
+    .caps-window-header:has(.caps-window-crumbs) {
+      flex-wrap: wrap;
+    }
+    .caps-window-crumbs {
+      min-width: min-content;
+      flex-shrink: 0;
+    }
+    .caps-window-crumb-item {
+      flex-shrink: 0;
+    }
     /* State shrinks to its beads; the words stay for screen readers and a long press. */
     .caps-window-statuses {
       gap: var(--spacing-2xs);
@@ -6321,6 +6335,8 @@
     display: block;
     flex: none;
     overflow: visible;
+    /* Decorative material overflows the bead; only its status wrapper is a target. */
+    pointer-events: none;
     transition: color var(--stipe-motion-normal) ease;
   }
 

@@ -222,9 +222,9 @@ keep their shared seam.
 ### Class merging
 
 `@fungi.computer/caps/lib/cn` merges classes with `cn@0.2.6` and Stipe's
-[named spacing scale](https://stipe.shiit.app/concepts/#named-spacing). It
-accepts conditional strings, arrays and objects and keeps caller-last Tailwind
-overrides, so `cn("text-xs px-xs py-sm", "px-md")` gives
+[named spacing scale](https://docs.fungi.computer/stipe/concepts/#named-spacing).
+It accepts conditional strings, arrays and objects and keeps caller-last
+Tailwind overrides, so `cn("text-xs px-xs py-sm", "px-md")` gives
 `"text-xs py-sm px-md"`. The helper keeps typography and spacing names apart.
 
 ### Forms

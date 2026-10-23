@@ -1,4 +1,4 @@
-import { ChevronDown, Ellipsis } from "lucide-react";
+import { ChevronDown, Ellipsis, Play } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "./button.js";
 import { Status, type StatusTone } from "./status.js";
@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu.js";
 import { IconButton } from "./icon-button.js";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip.js";
 
 /** One place in the content's path; `siblings` makes it a switcher. */
 export type WindowCrumb = {
@@ -22,6 +23,8 @@ export type WindowCrumb = {
 export type WindowCommand = {
   id: string;
   label: string;
+  /** Render a supported glyph alone; label remains the accessible name. */
+  icon?: "play";
   /** Which Caps button a primary command wears; default `outline`. */
   variant?: "primary" | "outline" | "ghost";
   /** A menu item that removes or discards something. */
@@ -33,6 +36,8 @@ export type WindowCommand = {
 export type WindowStatus = {
   id: string;
   label: string;
+  /** Hide only the visible label, retaining it for assistive technology. */
+  presentation?: "bead";
   tone?: Extract<
     StatusTone,
     "neutral" | "info" | "warning" | "success" | "error"
@@ -72,7 +77,7 @@ function Crumb({
         <DropdownMenuTrigger
           {...common}
           className="caps-window-crumb shrink"
-          render={<Button size="sm" variant="ghost" />}
+          render={<Button size="xs" variant="ghost" />}
           aria-label={`${crumb.label}, switch`}
         >
           {label}
@@ -102,7 +107,7 @@ function Crumb({
   return (
     <Button
       {...common}
-      size="sm"
+      size="xs"
       variant="ghost"
       className="caps-window-crumb shrink"
       onClick={() => {
@@ -165,7 +170,7 @@ export function WindowCrumbs({
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger
             className="caps-window-crumb"
-            render={<Button size="sm" variant="ghost" />}
+            render={<Button size="xs" variant="ghost" />}
             aria-label="More of the path"
           >
             <Ellipsis aria-hidden="true" className="size-3" />
@@ -208,19 +213,33 @@ export function WindowCommands({
   if (!primary?.length && !menu?.length) return null;
   return (
     <div className="caps-window-commands" role="group" aria-label="Commands">
-      {primary?.map((command) => (
-        <Button
-          key={command.id}
-          size="sm"
-          variant={command.variant ?? "outline"}
-          disabled={command.disabled === true}
-          onClick={() => {
-            onAction?.(command.id);
-          }}
-        >
-          {command.label}
-        </Button>
-      ))}
+      {primary?.map((command) =>
+        command.icon === "play" ? (
+          <IconButton
+            key={command.id}
+            icon={<Play />}
+            aria-label={command.label}
+            title={command.label}
+            variant={command.variant ?? "ghost"}
+            disabled={command.disabled === true}
+            onClick={() => {
+              onAction?.(command.id);
+            }}
+          />
+        ) : (
+          <Button
+            key={command.id}
+            size="xs"
+            variant={command.variant ?? "outline"}
+            disabled={command.disabled === true}
+            onClick={() => {
+              onAction?.(command.id);
+            }}
+          >
+            {command.label}
+          </Button>
+        ),
+      )}
       {menu?.length ? (
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger
@@ -248,7 +267,7 @@ export function WindowCommands({
   );
 }
 
-/** Muted state text with the Caps status bead; hidden on a phone. */
+/** Settled beads reveal their labels on hover/focus; other state stays visible. */
 export function WindowStatuses({
   status,
 }: {
@@ -257,17 +276,35 @@ export function WindowStatuses({
   if (status.length === 0) return null;
   return (
     <div className="caps-window-statuses" role="group" aria-label="State">
-      {status.map((item) => (
-        <Status
-          key={item.id}
-          glyph="dot"
-          size="compact"
-          tone={item.tone ?? "neutral"}
-          label={item.label}
-          title={item.label}
-          className="caps-window-status"
-        />
-      ))}
+      {status.map((item) => {
+        const beadOnly = item.presentation === "bead";
+        const readout = (
+          <Status
+            key={item.id}
+            glyph="dot"
+            size="compact"
+            tone={item.tone ?? "neutral"}
+            label={
+              beadOnly ? (
+                <span className="sr-only">{item.label}</span>
+              ) : (
+                item.label
+              )
+            }
+            tabIndex={beadOnly ? 0 : undefined}
+            title={beadOnly ? undefined : item.label}
+            className="caps-window-status"
+          />
+        );
+        return beadOnly ? (
+          <Tooltip key={item.id} side="bottom">
+            <TooltipTrigger asChild>{readout}</TooltipTrigger>
+            <TooltipContent>{item.label}</TooltipContent>
+          </Tooltip>
+        ) : (
+          readout
+        );
+      })}
     </div>
   );
 }

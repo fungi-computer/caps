@@ -173,6 +173,7 @@
     "package/docs/api/lib/cn.md",
     "package/package.json",
     "package/src/fonts.css",
+    "package/src/fonts-sans.css",
     "package/src/styles.css",
     "package/docs/api/blocks/listing-detail.md",
     "package/docs/api/components/minimap-labels.md",
@@ -275,6 +276,8 @@
     "package/dist/components/toaster.js",
     "package/dist/components/trading-card.d.ts",
     "package/dist/components/trading-card.js",
+    "package/dist/components/window-crumbs.d.ts",
+    "package/dist/components/window-crumbs.js",
     "package/dist/components/window.d.ts",
     "package/dist/components/window.js",
     "package/dist/components/wizard.d.ts",
@@ -333,6 +336,7 @@
     "package/docs/api/components/technonomicon.md",
     "package/docs/api/components/toaster.md",
     "package/docs/api/components/trading-card.md",
+    "package/docs/api/components/window-crumbs.md",
     "package/docs/api/components/window.md",
     "package/docs/api/components/wizard.md",
     "package/docs/api/enhance/cigarette-card.md",
@@ -396,7 +400,11 @@
   ],
   "localDependencies": ["../stipe"],
   "runtimeFixture": "test/stranger/runtime.mjs",
-  "typecheckFixture": "test/stranger/consumer.mts",
+  "typechecks": [
+    {
+      "fixture": "test/stranger/consumer.mts"
+    }
+  ],
   "docs": {
     "sigil": "computer",
     "home": {
