@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.3.0
+
+### Minor Changes
+
+- Changes since 0.2.0:
+
+  - feat(site): say Get in on every call to action
+
 ## 0.2.0
 
 ### Minor Changes

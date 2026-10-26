@@ -11,17 +11,19 @@ export type ReleaseTagProps = Omit<HTMLAttributes<HTMLElement>, "title"> & {
   title: readonly string[];
   /** A small accent strip under the title, such as "Update". */
   label?: ReactNode;
-  entries: readonly ReleaseTagEntry[];
+  /** Names and versions ruled under the page; omit for a tag with none. */
+  entries?: readonly ReleaseTagEntry[];
 };
 
 /**
  * A release badge: a torn-off calendar page with binder rings, a stacked
- * title, one accent strip and a ruled list of names and versions below.
+ * title, one accent strip and an optional ruled list of names and versions
+ * below.
  * Presentation only; the caller supplies every word.
  */
 export function ReleaseTag({
   className,
-  entries,
+  entries = [],
   label,
   title,
   ...props
@@ -40,14 +42,16 @@ export function ReleaseTag({
         </p>
         {label ? <p className="caps-release-tag-label">{label}</p> : null}
       </div>
-      <dl className="caps-release-tag-entries">
-        {entries.map((entry) => (
-          <div key={entry.name}>
-            <dt>{entry.name}</dt>
-            <dd>{entry.version}</dd>
-          </div>
-        ))}
-      </dl>
+      {entries.length > 0 ? (
+        <dl className="caps-release-tag-entries">
+          {entries.map((entry) => (
+            <div key={entry.name}>
+              <dt>{entry.name}</dt>
+              <dd>{entry.version}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : null}
     </aside>
   );
 }

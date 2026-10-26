@@ -26,4 +26,12 @@ describe("ReleaseTag", () => {
     expect(markup).toContain("<dt>Grove</dt><dd>0.3</dd>");
     expect(markup).toContain("<dt>Shed</dt><dd>0.2</dd>");
   });
+
+  it("leaves the ruled list out when there are no entries", () => {
+    const markup = renderToStaticMarkup(
+      <ReleaseTag label="Now shipping" title={["Fungi", "Beta"]} />,
+    );
+    expect(markup).toContain("<span>Fungi</span><span>Beta</span>");
+    expect(markup).not.toContain("<dl");
+  });
 });

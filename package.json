@@ -1,6 +1,6 @@
 {
   "name": "@fungi.computer/caps",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Levi <levi@technomancy.dev>",
   "description": "Product-neutral React primitives and blocks for Fungi interfaces",
   "type": "module",
@@ -372,6 +372,8 @@
     },
     "./fonts.css": "./src/fonts.css",
     "./fonts-sans.css": "./src/fonts-sans.css",
+    "./fonts-display.css": "./src/fonts-display.css",
+    "./fonts-mono.css": "./src/fonts-mono.css",
     "./blocks/section-heading": {
       "types": "./dist/blocks/section-heading.d.ts",
       "import": "./dist/blocks/section-heading.js"
@@ -460,6 +462,8 @@
     "README.md",
     "src/fonts.css",
     "src/fonts-sans.css",
+    "src/fonts-display.css",
+    "src/fonts-mono.css",
     "src/status-tray.css",
     "src/app-status-bar.css"
   ],
