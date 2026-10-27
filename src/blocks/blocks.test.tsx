@@ -76,6 +76,28 @@ describe("product-neutral blocks", () => {
     expect(option?.querySelector("kbd")?.textContent).toBe("z");
   });
 
+  it("places a CommandMenu description right after its label and leads with media", () => {
+    const view = render(
+      <CommandMenu
+        descriptionPlacement="inline"
+        items={[
+          {
+            description: "A long description that truncates",
+            id: "one",
+            label: "@one",
+            media: <img alt="" src="blob:one" />,
+          },
+        ]}
+        onSelect={vi.fn()}
+      />,
+    );
+    const option = view.container.querySelector('[role="option"]');
+    expect(option?.firstElementChild?.getAttribute("aria-hidden")).toBe("true");
+    expect(option?.querySelector("img")?.getAttribute("src")).toBe("blob:one");
+    expect(option?.lastElementChild?.className).toContain("truncate");
+    expect(option?.lastElementChild?.className).toContain("flex-1");
+  });
+
   it("navigates CommandMenu with one listbox focus and skips disabled options", () => {
     const onSelect = vi.fn();
     const view = render(

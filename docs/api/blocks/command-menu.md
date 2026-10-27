@@ -52,6 +52,14 @@ optional shortcut?: string;
 
 Key hint shown before the label, e.g. `z` in a which-key list.
 
+##### media?
+
+```ts
+optional media?: ReactNode;
+```
+
+Decorative leading visual, such as a thumbnail, shown before the label.
+
 ---
 
 ### CommandMenuProps
@@ -68,11 +76,12 @@ Props accepted by CommandMenu.
 
 #### Type Declaration
 
-| Name         | Type                                             | Description                                                      |
-| ------------ | ------------------------------------------------ | ---------------------------------------------------------------- |
-| `items`      | readonly [`CommandMenuItem`](#commandmenuitem)[] | -                                                                |
-| `onSelect()` | (`id`) => `void`                                 | Called after a non-disabled item is selected.                    |
-| `selected?`  | `string`                                         | Caller-owned selected state; distinct from local keyboard focus. |
+| Name                    | Type                                             | Description                                                                                                                                                                                                   |
+| ----------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `items`                 | readonly [`CommandMenuItem`](#commandmenuitem)[] | -                                                                                                                                                                                                             |
+| `onSelect()`            | (`id`) => `void`                                 | Called after a non-disabled item is selected.                                                                                                                                                                 |
+| `selected?`             | `string`                                         | Caller-owned selected state; distinct from local keyboard focus.                                                                                                                                              |
+| `descriptionPlacement?` | `"end"` \| `"inline"`                            | `end` (default) sets each description at the row's end. `inline` keeps the label at its own width and starts the description right after it, truncated, so long descriptions never push the row's text apart. |
 
 ## Variables
 

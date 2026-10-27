@@ -6,6 +6,7 @@ import {
   useImperativeHandle,
   useRef,
   type HTMLAttributes,
+  type ReactNode,
 } from "react";
 import { useGlide } from "../lib/glide.js";
 import { useSelectableCollection } from "../components/selectable.js";
@@ -18,6 +19,8 @@ export type CommandMenuItem = {
   label: string;
   /** Key hint shown before the label, e.g. `z` in a which-key list. */
   shortcut?: string;
+  /** Decorative leading visual, such as a thumbnail, shown before the label. */
+  media?: ReactNode;
 };
 
 /** Props accepted by CommandMenu. */
@@ -30,12 +33,26 @@ export type CommandMenuProps = Omit<
   onSelect: (id: string) => void;
   /** Caller-owned selected state; distinct from local keyboard focus. */
   selected?: string;
+  /**
+   * `end` (default) sets each description at the row's end. `inline` keeps the
+   * label at its own width and starts the description right after it,
+   * truncated, so long descriptions never push the row's text apart.
+   */
+  descriptionPlacement?: "end" | "inline";
 };
 
 /** A single-focus listbox with local navigation and caller-owned selection. */
 export const CommandMenu = forwardRef<HTMLUListElement, CommandMenuProps>(
   function CommandMenu(
-    { className, items, onKeyDown, onSelect, selected, ...props },
+    {
+      className,
+      descriptionPlacement = "end",
+      items,
+      onKeyDown,
+      onSelect,
+      selected,
+      ...props
+    },
     ref,
   ) {
     const instanceId = useId();
@@ -130,9 +147,33 @@ export const CommandMenu = forwardRef<HTMLUListElement, CommandMenuProps>(
                   {item.shortcut}
                 </kbd>
               ) : null}
-              <span className="flex-1 truncate">{item.label}</span>
+              {item.media ? (
+                <span aria-hidden="true" className="flex shrink-0">
+                  {item.media}
+                </span>
+              ) : null}
+              <span
+                className={
+                  descriptionPlacement === "inline"
+                    ? "max-w-[50%] shrink-0 truncate"
+                    : "flex-1 truncate"
+                }
+              >
+                {item.label}
+              </span>
               {item.description ? (
-                <span className="text-xs text-base-content">
+                <span
+                  className={
+                    descriptionPlacement === "inline"
+                      ? "min-w-0 flex-1 truncate text-xs text-base-content"
+                      : "text-xs text-base-content"
+                  }
+                  title={
+                    descriptionPlacement === "inline"
+                      ? item.description
+                      : undefined
+                  }
+                >
                   {item.description}
                 </span>
               ) : null}

@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.3.1
+
+### Patch Changes
+
+- Changes since 0.3.0:
+
+  - fix(prints): count @character expansion against the prompt limit; align the
+    mention list
+
 ## 0.3.0
 
 ### Minor Changes
