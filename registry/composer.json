@@ -3,9 +3,10 @@
   "name": "composer",
   "type": "registry:block",
   "title": "Composer",
-  "description": "Product-neutral joined layout with caller-owned input and action slots.",
+  "description": "One composer surface: attachments, text typed straight onto the host region, and a bottom row of caller-owned toolbar and action slots.",
   "dependencies": [
     "@fungi.computer/stipe",
+    "cn",
     "react"
   ],
   "registryDependencies": [],
@@ -14,7 +15,13 @@
       "path": "../src/blocks/composer.tsx",
       "type": "registry:block",
       "target": "@components/blocks/composer.tsx",
-      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\n/** Props accepted by Composer. */\nexport type ComposerProps = HTMLAttributes<HTMLDivElement> & {\n  /** The caller-owned primary input control. */\n  input: ReactNode;\n  /** The caller-owned action control. Its disabled state and accessible name stay on that control. */\n  action?: ReactNode;\n  /** Optional caller-owned leading slot, such as an avatar. */\n  leading?: ReactNode;\n  /** Classes for the joined row; useful when the host exposes a busy state. */\n  rowClassName?: string;\n};\n\n/** Layout and slots only. It never assigns action-control semantics. */\nexport const Composer = forwardRef<HTMLDivElement, ComposerProps>(\n  function Composer(\n    { action, className, input, leading, rowClassName, ...rootProps },\n    ref,\n  ) {\n    return (\n      <div\n        {...rootProps}\n        ref={ref}\n        className={[\n          \"caps-composer flex min-w-0 flex-1 items-end gap-sm\",\n          className,\n        ]\n          .filter(Boolean)\n          .join(\" \")}\n      >\n        <div\n          className={[\"join w-full p-2xs\", rowClassName]\n            .filter(Boolean)\n            .join(\" \")}\n        >\n          {leading}\n          {input}\n          {action}\n        </div>\n      </div>\n    );\n  },\n);\n"
+      "content": "import { forwardRef, type HTMLAttributes, type ReactNode } from \"react\";\n\nimport { cn } from \"@/lib/cn\";\n\n/** Props accepted by Composer. */\nexport type ComposerProps = HTMLAttributes<HTMLDivElement> & {\n  /** The caller-owned field, typed into directly: the surface is the field. */\n  input: ReactNode;\n  /** The caller-owned key at the end of the bottom row, such as a SendAction. */\n  action?: ReactNode;\n  /** Caller-owned controls and readouts along the bottom edge, before the action. */\n  toolbar?: ReactNode;\n  /** Caller-owned items riding with the draft, shown above the text. */\n  attachments?: ReactNode;\n};\n\n/**\n * One composer surface: attachments, then the text, then a slim row along the\n * bottom edge holding the toolbar and, at its end, the action. It draws no box\n * of its own: the host region is the field. Layout and slots only; it never\n * assigns action-control semantics.\n */\nexport const Composer = forwardRef<HTMLDivElement, ComposerProps>(\n  function Composer(\n    { action, attachments, className, input, toolbar, ...rootProps },\n    ref,\n  ) {\n    return (\n      <div {...rootProps} ref={ref} className={cn(\"caps-composer\", className)}>\n        {attachments === undefined ? null : (\n          <div className=\"caps-composer-attachments\">{attachments}</div>\n        )}\n        <div className=\"caps-composer-input\">{input}</div>\n        {toolbar === undefined && action === undefined ? null : (\n          <div className=\"caps-composer-bar\">\n            <div className=\"caps-composer-toolbar\">{toolbar}</div>\n            {action}\n          </div>\n        )}\n      </div>\n    );\n  },\n);\n"
+    },
+    {
+      "path": "../src/lib/cn.ts",
+      "type": "registry:lib",
+      "target": "@lib/cn.ts",
+      "content": "import { STIPE_SPACING_NAMES } from \"@fungi.computer/stipe\";\nimport { cva } from \"class-variance-authority\";\nimport { createCn } from \"cn/config\";\n\n/** A conditional class value accepted by cn. */\nexport type { ClassValue } from \"cn\";\nexport { cva };\n\n/** Merge conditional classes with Tailwind rules and Stipe's named spacing. */\nexport const cn = createCn({\n  extend: { theme: { spacing: [...STIPE_SPACING_NAMES] } },\n});\n\n/** Resolve a typed React class-name prop before merging its classes. */\nexport function resolveClassName<State>(\n  className: string | ((state: State) => string | undefined) | undefined,\n  state: State,\n): string | undefined {\n  return typeof className === \"function\" ? className(state) : className;\n}\n"
     }
   ],
   "css": {

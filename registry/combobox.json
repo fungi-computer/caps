@@ -66,6 +66,10 @@
       }
     },
     "@layer utilities": {
+      ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+        "height": "var(--caps-status-tray-key-height)",
+        "minHeight": "var(--caps-status-tray-key-height)"
+      },
       ".caps-search-input[data-leading=\"true\"] .caps-input": {
         "paddingInlineStart": "var(--spacing-3xl)"
       },

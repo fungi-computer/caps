@@ -526,14 +526,19 @@
       "name": "composer",
       "type": "registry:block",
       "title": "Composer",
-      "description": "Product-neutral joined layout with caller-owned input and action slots.",
-      "dependencies": ["@fungi.computer/stipe", "react"],
+      "description": "One composer surface: attachments, text typed straight onto the host region, and a bottom row of caller-owned toolbar and action slots.",
+      "dependencies": ["@fungi.computer/stipe", "cn", "react"],
       "registryDependencies": [],
       "files": [
         {
           "path": "../src/blocks/composer.tsx",
           "type": "registry:block",
           "target": "@components/blocks/composer.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
         }
       ],
       "css": {
@@ -823,7 +828,7 @@
       "registryDependencies": [
         "@shiit/button",
         "@shiit/input",
-        "@shiit/composer"
+        "@shiit/input-group"
       ],
       "files": [
         {

@@ -12,8 +12,9 @@ import {
   readMotion,
   type Motion,
 } from "../lib/motion.js";
-import { Button, type ButtonProps } from "./button.js";
+import { KeycapButton, type KeycapButtonProps } from "./keycap.js";
 import { Loader } from "./loader.js";
+import { cn } from "../lib/cn.js";
 
 /** Where a composer's send action is: nothing to send, ready, or working. */
 export type SendActionState = "empty" | "ready" | "busy";
@@ -29,7 +30,16 @@ export type SendActionProps = {
   stopLabel?: string;
   /** Glyph size in pixels. */
   iconSize?: number;
-} & Omit<ButtonProps, "children" | "size" | "loading" | "aria-label">;
+} & Omit<
+  KeycapButtonProps,
+  | "label"
+  | "icon"
+  | "readout"
+  | "shortcut"
+  | "pressed"
+  | "expanded"
+  | "aria-label"
+>;
 
 function lift(face: HTMLElement, motion: Motion) {
   // The arrow launches upward and away: the prompt has gone.
@@ -97,11 +107,12 @@ function charge(button: HTMLElement, motion: Motion) {
 }
 
 /**
- * A composer's send key. Empty, it rests disabled; given something to send it
- * wakes with a small pop; sending, its arrow launches away and a working
- * indicator (or, with `onStop`, a stop square) takes its place; when the work
- * ends the arrow drops back in. All timing comes from the theme's motion
- * tokens, and reduced motion keeps short fades only.
+ * A composer's one send key, on the Caps keycap. Empty, it rests disabled;
+ * given something to send it wakes with a small pop; sending, its arrow
+ * launches away and a working indicator (or, with `onStop`, a stop square)
+ * takes its place in the same key; when the work ends the arrow drops back
+ * in. It never grows a second button. All timing comes from the theme's
+ * motion tokens, and reduced motion keeps short fades only.
  */
 export const SendAction = forwardRef<HTMLButtonElement, SendActionProps>(
   function SendAction(
@@ -112,6 +123,8 @@ export const SendAction = forwardRef<HTMLButtonElement, SendActionProps>(
       iconSize = 20,
       onClick,
       disabled,
+      className,
+      tone = "primary",
       "aria-label": label,
       ...props
     },
@@ -147,9 +160,11 @@ export const SendAction = forwardRef<HTMLButtonElement, SendActionProps>(
     const busy = state === "busy";
     const stoppable = busy && onStop !== undefined;
     return (
-      <Button
+      <KeycapButton
         {...props}
         ref={node}
+        className={cn("caps-send-action", className)}
+        tone={tone}
         aria-busy={busy ? true : undefined}
         aria-label={stoppable ? stopLabel : label}
         data-send-state={state}
@@ -157,25 +172,26 @@ export const SendAction = forwardRef<HTMLButtonElement, SendActionProps>(
           disabled === true || state === "empty" || (busy && !stoppable)
         }
         onClick={stoppable ? onStop : onClick}
-        size="icon"
-      >
-        <span className="caps-send-glyph" data-state={state}>
-          <span data-glyph="arrow">
-            <ArrowUp aria-hidden="true" size={iconSize} />
+        label={null}
+        icon={
+          <span className="caps-send-glyph" data-state={state}>
+            <span data-glyph="arrow">
+              <ArrowUp aria-hidden="true" size={iconSize} />
+            </span>
+            <span data-glyph="busy">
+              {onStop === undefined ? (
+                <Loader decorative size="sm" />
+              ) : (
+                <Square
+                  aria-hidden="true"
+                  fill="currentColor"
+                  size={Math.round(iconSize * 0.7)}
+                />
+              )}
+            </span>
           </span>
-          <span data-glyph="busy">
-            {onStop === undefined ? (
-              <Loader decorative size="sm" />
-            ) : (
-              <Square
-                aria-hidden="true"
-                fill="currentColor"
-                size={Math.round(iconSize * 0.7)}
-              />
-            )}
-          </span>
-        </span>
-      </Button>
+        }
+      />
     );
   },
 );

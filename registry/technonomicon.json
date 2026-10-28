@@ -1222,6 +1222,10 @@
       ".caps-tool-call .caps-presence": { "display": "inline-flex" }
     },
     "@layer utilities": {
+      ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+        "height": "var(--caps-status-tray-key-height)",
+        "minHeight": "var(--caps-status-tray-key-height)"
+      },
       ".caps-keycap-button:is(:disabled, [aria-disabled=\"true\"])": {
         "opacity": "var(--caps-button-disabled-opacity, 0.45)"
       }
@@ -1360,6 +1364,18 @@
         "--caps-keycap-face": "var(--color-neutral)",
         "--caps-keycap-ink": "var(--color-neutral-content)",
         "--caps-keycap-edge": "var(--color-neutral)"
+      },
+      ".caps-keycap-button.caps-send-action[data-tone=\"primary\"]": {
+        "--caps-keycap-face": "var(--color-primary)",
+        "--caps-keycap-ink": "var(--color-primary-content)",
+        "--caps-keycap-edge": "color-mix(in oklab, var(--color-primary) 82%, black)",
+        "--caps-keycap-hover-face": "color-mix(\n      in oklab,\n      var(--color-primary) 92%,\n      black\n    )"
+      },
+      ".caps-keycap-button.caps-send-action[data-send-state=\"empty\"]": {
+        "--caps-keycap-face": "var(--color-base-200)",
+        "--caps-keycap-ink": "var(--color-base-content)",
+        "--caps-keycap-edge": "var(--stipe-linework)",
+        "--caps-keycap-hover-face": "var(--color-base-200)"
       },
       ".caps-keycap-button[data-tone=\"destructive\"]:is(:hover, :focus-visible)": {
         "--caps-keycap-ink": "var(--color-error)",

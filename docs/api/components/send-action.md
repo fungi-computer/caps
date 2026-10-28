@@ -24,7 +24,16 @@ Where a composer's send action is: nothing to send, ready, or working.
 
 ```ts
 type SendActionProps = object &
-  Omit<ButtonProps, "children" | "size" | "loading" | "aria-label">;
+  Omit<
+    KeycapButtonProps,
+    | "label"
+    | "icon"
+    | "readout"
+    | "shortcut"
+    | "pressed"
+    | "expanded"
+    | "aria-label"
+  >;
 ```
 
 Props accepted by SendAction.
@@ -46,13 +55,23 @@ Props accepted by SendAction.
 ```ts
 const SendAction: ForwardRefExoticComponent<
   object &
-    Omit<ButtonProps, "aria-label" | "children" | "size" | "loading"> &
+    Omit<
+      KeycapButtonProps,
+      | "aria-label"
+      | "label"
+      | "icon"
+      | "readout"
+      | "expanded"
+      | "pressed"
+      | "shortcut"
+    > &
     RefAttributes<HTMLButtonElement>
 >;
 ```
 
-A composer's send key. Empty, it rests disabled; given something to send it
-wakes with a small pop; sending, its arrow launches away and a working indicator
-(or, with `onStop`, a stop square) takes its place; when the work ends the arrow
-drops back in. All timing comes from the theme's motion tokens, and reduced
+A composer's one send key, on the Caps keycap. Empty, it rests disabled; given
+something to send it wakes with a small pop; sending, its arrow launches away
+and a working indicator (or, with `onStop`, a stop square) takes its place in
+the same key; when the work ends the arrow drops back in. It never grows a
+second button. All timing comes from the theme's motion tokens, and reduced
 motion keeps short fades only.

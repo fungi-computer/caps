@@ -101,6 +101,27 @@ export const WindowComposition: Story = () => {
   );
 };
 
+/** A confirmation as products ship it: an outline Cancel beside the primary key. */
+export const ConfirmDialog: Story = () => (
+  <Dialog defaultOpen modal={false}>
+    <DialogTrigger render={<Button variant="outline" size="sm" />}>
+      Delete print
+    </DialogTrigger>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Delete this print?</DialogTitle>
+        <DialogDescription>
+          The print leaves your gallery. Its source images stay in Media.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
+        <Button>Continue</Button>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+);
+
 export default {
   title: "Overlays",
 } satisfies StoryDefault;

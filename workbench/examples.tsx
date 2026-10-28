@@ -84,6 +84,7 @@ import { VisuallyHidden as CapsVisuallyHidden } from "@fungi.computer/caps/compo
 import { AsyncState as CapsAsyncState } from "@fungi.computer/caps/blocks/async-state";
 import { CommandMenu as CapsCommandMenu } from "@fungi.computer/caps/blocks/command-menu";
 import { Composer as CapsComposer } from "@fungi.computer/caps/blocks/composer";
+import { SendAction as CapsSendAction } from "@fungi.computer/caps/components/send-action";
 import { FaqChat as CapsFaqChat } from "@fungi.computer/caps/blocks/faq-chat";
 import {
   SpecDiagram as CapsSpecDiagram,
@@ -172,7 +173,7 @@ export const Composer: Story = () => (
   <Surface>
     <CapsComposer
       data-conformance="composer"
-      leading={
+      attachments={
         <canvas
           aria-hidden="true"
           className="pointer-events-none size-12 shrink-0"
@@ -183,21 +184,13 @@ export const Composer: Story = () => (
       input={
         <CapsTextarea
           aria-label="Message"
-          className="join-item min-h-12 flex-1"
+          className="min-h-12"
           placeholder="Ask Shiitake anything"
           rows={1}
         />
       }
-      action={
-        <button
-          aria-label="Send"
-          className="join-item btn btn-lg relative flex h-auto min-h-0 cursor-pointer items-center justify-center self-stretch overflow-visible border-none"
-          onClick={noop}
-          type="button"
-        >
-          Send
-        </button>
-      }
+      toolbar={<span className="text-xs">openai/gpt-6-luna</span>}
+      action={<CapsSendAction aria-label="Send" onClick={noop} state="ready" />}
     />
   </Surface>
 );

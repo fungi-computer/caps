@@ -72,7 +72,7 @@ export function NoteComposer() {
       <Composer
         input={
           <input
-            className="input join-item w-full"
+            className="input w-full"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
             aria-label="Note"
@@ -663,9 +663,12 @@ compose, so color belongs in `variant` or an extra daisyUI class.
 
 ### Composer with an async submit
 
-`Composer` is a layout block. Its input and action are your controls, and so are
-their labels, disabled state, keyboard behaviour and effects. An avatar or other
-leading content goes in the `leading` slot as any React node.
+`Composer` is a layout block: one surface with optional `attachments` on top,
+your `input` typed straight onto the host region, and a bottom row of `toolbar`
+controls with the `action` at its end. It draws no box of its own; the host
+region is the field. Every slot is your control, and so are its labels, disabled
+state, keyboard behaviour and effects. A composer's send key is `SendAction`,
+which turns into a stop key while work runs.
 
 ```tsx
 import { useState, type FormEvent } from "react";
@@ -697,7 +700,7 @@ export function PromptComposer({
       <Composer
         input={
           <input
-            className="input join-item w-full"
+            className="input w-full"
             value={value}
             onChange={(event) => setValue(event.target.value)}
             aria-label="Prompt"
@@ -720,7 +723,7 @@ export function PromptComposer({
 ```
 
 `submit` is your effect. It can call an API, enqueue work or do something local.
-Caps only joins the controls.
+Caps only lays out the controls.
 
 ### Window
 

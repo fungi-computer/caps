@@ -915,14 +915,19 @@
       "name": "send-action",
       "type": "registry:ui",
       "title": "Send action",
-      "description": "A composer send key: wakes when ready, launches while busy, offers stop.",
-      "dependencies": ["@fungi.computer/stipe", "lucide-react", "react"],
-      "registryDependencies": ["@shiit/button", "@shiit/loader"],
+      "description": "A composer's one send key on the Caps keycap: wakes when ready, launches while busy, turns into stop.",
+      "dependencies": ["@fungi.computer/stipe", "cn", "lucide-react", "react"],
+      "registryDependencies": ["@shiit/keycap", "@shiit/loader"],
       "files": [
         {
           "path": "../src/components/send-action.tsx",
           "type": "registry:ui",
           "target": "@ui/send-action.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
         },
         {
           "path": "../src/lib/motion.ts",

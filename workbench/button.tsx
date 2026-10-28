@@ -128,3 +128,15 @@ export const Button: Story = () => {
     </main>
   );
 };
+
+/** Every key role side by side, as products ship them. */
+export const KeyRow: Story = () => (
+  <main className="button-set">
+    <div className="button-set-row" aria-label="Button roles" role="group">
+      <CapsButton>Default</CapsButton>
+      <CapsButton variant="outline">Outline</CapsButton>
+      <CapsButton variant="primary">Primary</CapsButton>
+      <CapsButton variant="destructive">Destructive</CapsButton>
+    </div>
+  </main>
+);

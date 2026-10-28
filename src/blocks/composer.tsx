@@ -1,43 +1,42 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 
+import { cn } from "../lib/cn.js";
+
 /** Props accepted by Composer. */
 export type ComposerProps = HTMLAttributes<HTMLDivElement> & {
-  /** The caller-owned primary input control. */
+  /** The caller-owned field, typed into directly: the surface is the field. */
   input: ReactNode;
-  /** The caller-owned action control. Its disabled state and accessible name stay on that control. */
+  /** The caller-owned key at the end of the bottom row, such as a SendAction. */
   action?: ReactNode;
-  /** Optional caller-owned leading slot, such as an avatar. */
-  leading?: ReactNode;
-  /** Classes for the joined row; useful when the host exposes a busy state. */
-  rowClassName?: string;
+  /** Caller-owned controls and readouts along the bottom edge, before the action. */
+  toolbar?: ReactNode;
+  /** Caller-owned items riding with the draft, shown above the text. */
+  attachments?: ReactNode;
 };
 
-/** Layout and slots only. It never assigns action-control semantics. */
+/**
+ * One composer surface: attachments, then the text, then a slim row along the
+ * bottom edge holding the toolbar and, at its end, the action. It draws no box
+ * of its own: the host region is the field. Layout and slots only; it never
+ * assigns action-control semantics.
+ */
 export const Composer = forwardRef<HTMLDivElement, ComposerProps>(
   function Composer(
-    { action, className, input, leading, rowClassName, ...rootProps },
+    { action, attachments, className, input, toolbar, ...rootProps },
     ref,
   ) {
     return (
-      <div
-        {...rootProps}
-        ref={ref}
-        className={[
-          "caps-composer flex min-w-0 flex-1 items-end gap-sm",
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        <div
-          className={["join w-full p-2xs", rowClassName]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {leading}
-          {input}
-          {action}
-        </div>
+      <div {...rootProps} ref={ref} className={cn("caps-composer", className)}>
+        {attachments === undefined ? null : (
+          <div className="caps-composer-attachments">{attachments}</div>
+        )}
+        <div className="caps-composer-input">{input}</div>
+        {toolbar === undefined && action === undefined ? null : (
+          <div className="caps-composer-bar">
+            <div className="caps-composer-toolbar">{toolbar}</div>
+            {action}
+          </div>
+        )}
       </div>
     );
   },

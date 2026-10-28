@@ -1,5 +1,22 @@
 # @fungi.computer/caps
 
+## 0.4.0
+
+### Minor Changes
+
+- Changes since 0.3.1:
+
+  - fix(caps): drop the lighter ring from filled keys
+  - feat(caps): tone the keycap down to a calm step from today
+  - feat(caps): give buttons today's keycap material and raise the keycap
+  - feat(caps): one key material for Button and KeycapButton
+  - feat(composer): one Caps composer surface for chat and Prints
+  - fix(caps): status bar counts read as quiet numerals, not pills
+  - fix(caps): drop the lighter ring from filled keys
+  - feat(caps): tone the keycap down to a calm step from today
+  - feat(caps): give buttons today's keycap material and raise the keycap
+  - feat(caps): one key material for Button and KeycapButton
+
 ## 0.3.1
 
 ### Patch Changes

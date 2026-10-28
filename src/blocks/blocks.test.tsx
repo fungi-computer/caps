@@ -46,22 +46,35 @@ describe("product-neutral blocks", () => {
     const view = render(
       <Composer
         className="host"
-        input={<input aria-label="Draft" className="join-item" />}
+        attachments={<img alt="Sketch" />}
+        input={<textarea aria-label="Draft" />}
+        toolbar={<span>Model</span>}
         action={
-          <button aria-label="Send now" className="join-item" type="button">
+          <button aria-label="Send now" type="button">
             Send
           </button>
         }
         ref={ref}
-        rowClassName="busy"
       />,
     );
     expect(ref.current?.className).toContain("host");
-    expect(view.container.querySelector(".join")?.className).toContain("busy");
+    const root = view.container.querySelector(".caps-composer");
+    expect([...(root?.children ?? [])].map((child) => child.className)).toEqual(
+      ["caps-composer-attachments", "caps-composer-input", "caps-composer-bar"],
+    );
+    const bar = view.container.querySelector(".caps-composer-bar");
+    expect(bar?.lastElementChild?.getAttribute("aria-label")).toBe("Send now");
+    expect(bar?.querySelector(".caps-composer-toolbar")?.textContent).toBe(
+      "Model",
+    );
+  });
+
+  it("draws only the Composer rows it is given", () => {
+    const view = render(<Composer input={<textarea aria-label="Draft" />} />);
     expect(
-      view.container.querySelector('[aria-label="Send now"]')?.parentElement
-        ?.className,
-    ).toContain("join");
+      view.container.querySelector(".caps-composer-attachments"),
+    ).toBeNull();
+    expect(view.container.querySelector(".caps-composer-bar")).toBeNull();
   });
 
   it("shows a CommandMenu key hint before the label and announces it", () => {

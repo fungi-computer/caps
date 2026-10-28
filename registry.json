@@ -605,8 +605,8 @@
               "minHeight": "44px"
             }
           },
-          ".caps-window-header:has(> .caps-window-crumbs)": {
-            "minHeight": "40px"
+          ".caps-window-header > .caps-window-icon": {
+            "marginInline": "var(--spacing-md)\n      calc(var(--spacing-sm) - var(--spacing-2xs))"
           },
           ".caps-window-crumbs": {
             "display": "flex",
@@ -614,7 +614,7 @@
             "minWidth": "0",
             "flexShrink": 1,
             "fontFamily": "var(--caps-label-font, inherit)",
-            "fontSize": "var(--text-sm)",
+            "fontSize": "11px",
             "fontWeight": 500
           },
           ".caps-window-crumb-item[data-caps-crumb-position=\"current\"]": {
@@ -652,7 +652,7 @@
             "gap": "var(--spacing-sm)",
             "flexShrink": 0,
             "paddingInlineEnd": "var(--spacing-sm)",
-            "fontSize": "var(--text-sm)",
+            "fontSize": "11px",
             "color": "color-mix(in srgb, currentColor 65%, transparent)"
           },
           ".caps-window-commands": {
@@ -662,6 +662,14 @@
             "flexShrink": 0
           },
           "@media (max-width: 640px)": {
+            ".caps-window-header:has(.caps-window-crumbs)": {
+              "flexWrap": "wrap"
+            },
+            ".caps-window-crumbs": {
+              "minWidth": "min-content",
+              "flexShrink": 0
+            },
+            ".caps-window-crumb-item": { "flexShrink": 0 },
             ".caps-window-statuses": {
               "gap": "var(--spacing-2xs)",
               "paddingInlineEnd": "var(--spacing-2xs)"
@@ -2044,14 +2052,19 @@
       "name": "composer",
       "type": "registry:block",
       "title": "Composer",
-      "description": "Product-neutral joined layout with caller-owned input and action slots.",
-      "dependencies": ["@fungi.computer/stipe", "react"],
+      "description": "One composer surface: attachments, text typed straight onto the host region, and a bottom row of caller-owned toolbar and action slots.",
+      "dependencies": ["@fungi.computer/stipe", "cn", "react"],
       "registryDependencies": [],
       "files": [
         {
           "path": "../src/blocks/composer.tsx",
           "type": "registry:block",
           "target": "@components/blocks/composer.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
         }
       ],
       "css": { "@import \"@fungi.computer/stipe/styles.css\"": {} }
@@ -2191,6 +2204,10 @@
           }
         },
         "@layer utilities": {
+          ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+            "height": "var(--caps-status-tray-key-height)",
+            "minHeight": "var(--caps-status-tray-key-height)"
+          },
           ".caps-search-input[data-leading=\"true\"] .caps-input": {
             "paddingInlineStart": "var(--spacing-3xl)"
           },
@@ -2590,7 +2607,7 @@
       "registryDependencies": [
         "@shiit/button",
         "@shiit/input",
-        "@shiit/composer"
+        "@shiit/input-group"
       ],
       "files": [
         {
@@ -4539,6 +4556,10 @@
           ".caps-tool-call .caps-presence": { "display": "inline-flex" }
         },
         "@layer utilities": {
+          ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+            "height": "var(--caps-status-tray-key-height)",
+            "minHeight": "var(--caps-status-tray-key-height)"
+          },
           ".caps-keycap-button:is(:disabled, [aria-disabled=\"true\"])": {
             "opacity": "var(--caps-button-disabled-opacity, 0.45)"
           }
@@ -4677,6 +4698,18 @@
             "--caps-keycap-face": "var(--color-neutral)",
             "--caps-keycap-ink": "var(--color-neutral-content)",
             "--caps-keycap-edge": "var(--color-neutral)"
+          },
+          ".caps-keycap-button.caps-send-action[data-tone=\"primary\"]": {
+            "--caps-keycap-face": "var(--color-primary)",
+            "--caps-keycap-ink": "var(--color-primary-content)",
+            "--caps-keycap-edge": "color-mix(in oklab, var(--color-primary) 82%, black)",
+            "--caps-keycap-hover-face": "color-mix(\n      in oklab,\n      var(--color-primary) 92%,\n      black\n    )"
+          },
+          ".caps-keycap-button.caps-send-action[data-send-state=\"empty\"]": {
+            "--caps-keycap-face": "var(--color-base-200)",
+            "--caps-keycap-ink": "var(--color-base-content)",
+            "--caps-keycap-edge": "var(--stipe-linework)",
+            "--caps-keycap-hover-face": "var(--color-base-200)"
           },
           ".caps-keycap-button[data-tone=\"destructive\"]:is(:hover, :focus-visible)": {
             "--caps-keycap-ink": "var(--color-error)",
@@ -4981,6 +5014,10 @@
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
         "@layer utilities": {
+          ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+            "height": "var(--caps-status-tray-key-height)",
+            "minHeight": "var(--caps-status-tray-key-height)"
+          },
           "@media (max-width: 480px)": {
             ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
               "flexDirection": "column",
@@ -5943,6 +5980,27 @@
       "css": {
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
+        "@layer utilities": {
+          ".caps-composer-toolbar > .caps-status-tray": {
+            "flex": 1,
+            "minWidth": "0",
+            "--caps-status-tray-row-wrap": "wrap",
+            "--caps-status-tray-chips-display": "contents",
+            "--caps-status-tray-key-height": "calc(var(--size-field) * 8)",
+            "--caps-status-tray-chip-height": "var(--caps-status-tray-key-height)",
+            "--caps-status-tray-width": "28rem",
+            "--caps-keycap-width": "auto",
+            "--caps-keycap-height": "var(--caps-status-tray-key-height)"
+          },
+          ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+            "height": "var(--caps-status-tray-key-height)",
+            "minHeight": "var(--caps-status-tray-key-height)"
+          },
+          ".caps-composer-toolbar > .caps-status-tray .caps-status-tray-label": {
+            "display": "flex",
+            "alignItems": "center"
+          }
+        },
         "@layer components": {
           ".caps-status": {
             "display": "inline-flex",
@@ -5955,6 +6013,7 @@
             "display": "block",
             "flex": "none",
             "overflow": "visible",
+            "pointerEvents": "none",
             "transition": "color var(--stipe-motion-normal) ease"
           },
           ".caps-status-mark": {
@@ -6952,14 +7011,19 @@
       "name": "send-action",
       "type": "registry:ui",
       "title": "Send action",
-      "description": "A composer send key: wakes when ready, launches while busy, offers stop.",
-      "dependencies": ["@fungi.computer/stipe", "lucide-react", "react"],
-      "registryDependencies": ["@shiit/button", "@shiit/loader"],
+      "description": "A composer's one send key on the Caps keycap: wakes when ready, launches while busy, turns into stop.",
+      "dependencies": ["@fungi.computer/stipe", "cn", "lucide-react", "react"],
+      "registryDependencies": ["@shiit/keycap", "@shiit/loader"],
       "files": [
         {
           "path": "../src/components/send-action.tsx",
           "type": "registry:ui",
           "target": "@ui/send-action.tsx"
+        },
+        {
+          "path": "../src/lib/cn.ts",
+          "type": "registry:lib",
+          "target": "@lib/cn.ts"
         },
         {
           "path": "../src/lib/motion.ts",
@@ -6971,6 +7035,13 @@
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
         "@layer utilities": {
+          ".caps-send-action": {
+            "--caps-keycap-width": "auto",
+            "--caps-keycap-justify": "center",
+            "--caps-keycap-padding": "0",
+            "--caps-keycap-min-width": "var(--caps-keycap-height, 2.5rem)",
+            "flex": "none"
+          },
           ".caps-send-glyph": {
             "display": "inline-grid",
             "placeItems": "center"
@@ -6987,6 +7058,20 @@
           "syntax": "\"<color>\"",
           "inherits": "true",
           "initialValue": "black"
+        },
+        "@layer caps-game": {
+          ".caps-keycap-button.caps-send-action[data-tone=\"primary\"]": {
+            "--caps-keycap-face": "var(--color-primary)",
+            "--caps-keycap-ink": "var(--color-primary-content)",
+            "--caps-keycap-edge": "color-mix(in oklab, var(--color-primary) 82%, black)",
+            "--caps-keycap-hover-face": "color-mix(\n      in oklab,\n      var(--color-primary) 92%,\n      black\n    )"
+          },
+          ".caps-keycap-button.caps-send-action[data-send-state=\"empty\"]": {
+            "--caps-keycap-face": "var(--color-base-200)",
+            "--caps-keycap-ink": "var(--color-base-content)",
+            "--caps-keycap-edge": "var(--stipe-linework)",
+            "--caps-keycap-hover-face": "var(--color-base-200)"
+          }
         }
       }
     },

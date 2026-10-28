@@ -87,13 +87,11 @@ function Example() {
             input={
               <Input aria-label={disabled ? "Queued prompt" : "Ready prompt"} />
             }
+            toolbar={<span>Model</span>}
             action={
-              <div className="flex items-stretch">
-                <Button variant="ghost">Cancel</Button>
-                <Button className="join-item" disabled={disabled}>
-                  {disabled ? "Disabled" : "Ready"}
-                </Button>
-              </div>
+              <Button disabled={disabled}>
+                {disabled ? "Disabled" : "Ready"}
+              </Button>
             }
           />
         ))}

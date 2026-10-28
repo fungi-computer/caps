@@ -2422,26 +2422,73 @@
     color: var(--color-base-content);
     font-size: 0.875rem;
   }
-  .caps-composer > .join {
-    border: var(--border) solid
-      color-mix(in oklab, var(--color-base-content) 12%, var(--color-base-300));
-    border-radius: var(--radius-box);
-    background: var(--color-base-200);
-    box-shadow: var(
-      --stipe-shadow-inset,
-      inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)
-        color-mix(
-          in oklab,
-          var(--color-base-content) calc(var(--depth) * 12%),
-          transparent
-        ),
-      0 calc(var(--depth) * 1px) 0
-        color-mix(
-          in oklab,
-          var(--color-base-100) calc(var(--depth) * 60%),
-          transparent
-        )
-    );
+  /* The composer is a surface, not a box inside a panel: the host region is
+     the field, and the text sits directly on the host's face. A slim row along
+     the bottom edge carries the toolbar and, at its end, the action key. */
+  .caps-composer {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+  .caps-composer-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+  .caps-composer-input {
+    position: relative;
+    min-width: 0;
+  }
+  .caps-composer-input :is(textarea, input),
+  .caps-composer-input :is(textarea, input):focus,
+  .caps-composer-input :is(textarea, input):focus-visible {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    outline: none;
+    padding-inline: 0;
+  }
+  .caps-composer-bar {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+  .caps-composer-toolbar {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+  /* A StatusTray seated as the composer's toolbar: one wrapping row of keys,
+     selects and chips on the theme's field-size grid, the same in every App. */
+  .caps-composer-toolbar > .caps-status-tray {
+    flex: 1;
+    min-width: 0;
+    --caps-status-tray-row-wrap: wrap;
+    --caps-status-tray-chips-display: contents;
+    --caps-status-tray-key-height: calc(var(--size-field) * 8);
+    --caps-status-tray-chip-height: var(--caps-status-tray-key-height);
+    --caps-status-tray-width: 28rem;
+    --caps-keycap-width: auto;
+    --caps-keycap-height: var(--caps-status-tray-key-height);
+  }
+  .caps-composer-toolbar
+    > .caps-status-tray
+    .caps-status-tray-row
+    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select) {
+    height: var(--caps-status-tray-key-height);
+    min-height: var(--caps-status-tray-key-height);
+  }
+  /* A chip label is a flex row, so an inline label box adds no text strut
+     and chip text shares the keys' baseline. */
+  .caps-composer-toolbar > .caps-status-tray .caps-status-tray-label {
+    display: flex;
+    align-items: center;
   }
   .caps-alert[data-tone="error"] h3 {
     color: var(--color-error);
@@ -4221,6 +4268,14 @@
     text-align: center;
   }
   /* SendAction: the arrow and the working glyph share one cell. */
+  /* The send key: one square keycap whose glyph changes, never a second key. */
+  .caps-send-action {
+    --caps-keycap-width: auto;
+    --caps-keycap-justify: center;
+    --caps-keycap-padding: 0;
+    --caps-keycap-min-width: var(--caps-keycap-height, 2.5rem);
+    flex: none;
+  }
   .caps-send-glyph {
     display: inline-grid;
     place-items: center;
@@ -5333,8 +5388,8 @@
     isolation: var(--caps-button-outline-isolation, auto);
   }
   .caps-button.btn-outline:not(:disabled):not([aria-disabled="true"]) {
-    background-color: var(--caps-button-outline-face, revert-layer);
-    color: var(--caps-button-outline-ink, revert-layer);
+    background-color: var(--caps-key-face);
+    color: var(--caps-button-outline-ink, var(--color-base-content));
   }
   .caps-button.btn-outline:is(:disabled, [aria-disabled="true"]) {
     background-color: var(
@@ -5345,11 +5400,11 @@
   .caps-button.btn-outline:not(:disabled):not([aria-disabled="true"]):hover {
     background-color: var(
       --caps-button-outline-hover-face,
-      var(--caps-button-outline-face, revert-layer)
+      var(--caps-keycap-hover-face, var(--caps-key-face))
     );
     color: var(
       --caps-button-outline-hover-ink,
-      var(--caps-button-outline-ink, revert-layer)
+      var(--caps-button-outline-ink, var(--color-base-content))
     );
   }
   /* A cut outline uses an inset face; an ordinary outline needs no extra face. */
@@ -5365,24 +5420,48 @@
     background: var(--color-base-content);
   }
 
-  /* An outline button is a hairline frame with a medium label: no drop in
-     any state, unless a theme's finish asks for one. */
+  /* The Caps key material: a flat face on a 1px lip shaded toward the ink,
+     a faint top edge, and a press that settles the face onto its lip. Every
+     Button reads it; KeycapButton reads its face and lip and raises its own
+     finish on them. Everything scales with --depth, so flat themes keep a
+     flat linework key, and a theme's --caps-button-drop/-press still win. */
+  .caps-keycap-button,
+  .caps-button-filled,
   .caps-button.btn-outline {
-    --btn-border: color-mix(
-      in oklab,
-      var(--color-base-content) 24%,
-      transparent
-    );
+    --caps-key-lip: calc(var(--depth) * 1px);
+    --caps-key-rest-shadow:
+      inset 0 1px 0
+        oklch(100% 0 0 / calc(var(--depth) * var(--caps-key-top-edge, 0.14))),
+      0 var(--caps-key-lip) 0
+        color-mix(
+          in oklab,
+          var(--caps-key-face),
+          var(--caps-key-lip-ink, var(--color-base-content)) 14%
+        );
+    --caps-key-pressed-shadow:
+      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)), 0 0 0 transparent;
+  }
+
+  /* An outline button is the neutral key: a base-200 face on linework. */
+  .caps-button.btn-outline {
+    --btn-border: var(--stipe-linework);
+    --caps-key-face: var(--caps-button-outline-face, var(--color-base-200));
 
     font-weight: var(--caps-button-weight, 500);
-    box-shadow: var(--caps-button-outline-drop, var(--caps-button-drop, none));
+    box-shadow: var(
+      --caps-button-outline-drop,
+      var(--caps-button-drop, var(--caps-key-rest-shadow))
+    );
+    transition-property: background-color, border-color, box-shadow, translate;
+    transition-duration: var(--stipe-motion-fast);
+    transition-timing-function: ease-out;
   }
 
   .caps-button.btn-outline:not(:disabled):not([aria-disabled="true"]):active {
-    translate: 0 var(--caps-button-press, var(--stipe-press-depth));
+    translate: 0 var(--caps-button-press, var(--caps-key-lip));
     box-shadow: var(
       --caps-button-outline-drop,
-      var(--caps-button-drop-active, none)
+      var(--caps-button-drop-active, var(--caps-key-pressed-shadow))
     );
   }
 
@@ -5394,25 +5473,28 @@
     --radius-field: var(--radius-button);
   }
 
-  /* A filled button is a flat key: one solid fill, a hairline edge a step
-     darker than the fill, and at most a faint 1px top highlight. Flat themes
-     edge it in linework instead; a theme sets --caps-button-linework: 0% to
-     edge it in its own fill. Press feel comes from the theme's
-     --stipe-press-depth and --stipe-press-scale. */
+  /* A filled button is the same key in its role colour: one solid fill with
+     no lighter ring, an edge a hair darker than the fill, a quiet lip shaded
+     darker still, and only a very faint top edge. Flat themes edge it in
+     linework instead; a theme sets --caps-button-linework: 0% to edge it in
+     its own fill. */
   .caps-button-filled {
     --btn-bg: var(--btn-color);
+    --caps-key-face: var(--btn-color);
+    --caps-key-lip-ink: black;
+    --caps-key-top-edge: 0.06;
     --caps-button-filled-edge: var(
       --caps-button-border-color,
       color-mix(
         in oklab,
-        color-mix(in oklab, var(--btn-bg), black calc(var(--depth) * 8%)),
+        color-mix(in oklab, var(--btn-bg), black calc(var(--depth) * 6%)),
         var(--stipe-linework)
           calc((1 - var(--depth)) * var(--caps-button-linework, 100%))
       )
     );
     --caps-button-filled-drop: var(
       --caps-button-drop,
-      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))
+      var(--caps-key-rest-shadow)
     );
 
     background-color: var(--btn-bg);
@@ -5470,12 +5552,9 @@
     ) {
     --btn-bg: color-mix(in oklab, var(--btn-color) 92%, black);
 
-    translate: 0 var(--caps-button-press, var(--stipe-press-depth));
+    translate: 0 var(--caps-button-press, var(--caps-key-lip));
     scale: var(--stipe-press-scale);
-    box-shadow: var(
-      --caps-button-drop-active,
-      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))
-    );
+    box-shadow: var(--caps-button-drop-active, var(--caps-key-pressed-shadow));
     transition-duration: var(--stipe-motion-squish);
   }
 
@@ -6686,8 +6765,9 @@
     scale: none;
   }
 
+  /* The press is a state, not motion: a key still settles onto its lip. */
   .caps-button-filled:not(:disabled):not([aria-disabled="true"]):active {
-    translate: var(--caps-button-press-reduced, none);
+    translate: var(--caps-button-press-reduced, 0 var(--caps-key-lip));
   }
 
   .caps-gooey-motion,
@@ -7990,7 +8070,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .caps-keycap,
-  .caps-keycap-button {
+  .caps-keycap-button,
+  .caps-button.btn-outline {
     transition: none;
   }
 }
@@ -8071,11 +8152,23 @@
   .caps-game-meter .progress {
     height: 0.625rem;
   }
-  /* A key: a flat face on a 1px lip, with a faint top highlight. The lip and
-     press travel scale with --depth, so flat themes keep a flat linework key.
-     A host or theme picks the face through --caps-keycap-face/-ink/-edge. */
+  /* A key: today's flat key on a 1px lip, a touch richer. The face carries a
+     faint ±3% grade, the top edge is 0.18, a small soft drop sits under the
+     lip, and the linework edge is softened 20% toward the face. It reads its
+     face and lip from the Caps key material; everything scales with --depth,
+     so flat themes keep a flat linework key. A host or theme picks the face
+     through --caps-keycap-face/-ink/-edge. */
   .caps-keycap-button {
-    --caps-keycap-lip: calc(var(--depth) * 1px);
+    --caps-key-face: var(--caps-keycap-face, var(--color-base-200));
+    --caps-keycap-rest-shadow:
+      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),
+      0 var(--caps-key-lip) 0
+        color-mix(in oklab, var(--caps-key-face), var(--color-base-content) 14%),
+      0 var(--caps-key-lip) calc(var(--depth) * 2px)
+        oklch(0% 0 0 / calc(var(--depth) * 0.15));
+    --caps-keycap-pressed-shadow:
+      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)),
+      0 0 0 transparent, 0 0 0 transparent;
     display: flex;
     width: var(--caps-keycap-width, 100%);
     min-width: var(--caps-keycap-min-width, 0);
@@ -8086,7 +8179,11 @@
     padding: var(--caps-keycap-padding, var(--spacing-xs) var(--spacing-sm));
     border: var(
       --caps-keycap-context-border,
-      var(--border) solid var(--caps-keycap-edge, var(--stipe-linework))
+      var(--border) solid
+        var(
+          --caps-keycap-edge,
+          color-mix(in oklab, var(--stipe-linework) 80%, var(--caps-key-face))
+        )
     );
     font-size: var(--caps-keycap-font-size, inherit);
     font-weight: var(
@@ -8099,20 +8196,26 @@
       var(--caps-keycap-face, var(--color-base-200))
     );
     background-color: var(--caps-keycap-painted-face);
-    --caps-keycap-default-image: none;
+    --caps-keycap-default-image: linear-gradient(
+      to bottom,
+      color-mix(
+        in oklab,
+        var(--caps-keycap-painted-face),
+        white calc(var(--depth) * 3%)
+      ),
+      color-mix(
+        in oklab,
+        var(--caps-keycap-painted-face),
+        black calc(var(--depth) * 3%)
+      )
+    );
     background-image: var(
       --caps-keycap-context-image,
       var(--caps-keycap-default-image)
     );
     box-shadow: var(
       --caps-keycap-context-shadow,
-      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.14)),
-      0 var(--caps-keycap-lip) 0
-        color-mix(
-          in oklab,
-          var(--caps-keycap-face, var(--color-base-200)),
-          var(--color-base-content) 14%
-        )
+      var(--caps-keycap-rest-shadow)
     );
     color: var(--caps-keycap-ink, var(--color-base-content));
     text-align: left;
@@ -8123,11 +8226,10 @@
     transition-timing-function: ease-out;
   }
   .caps-keycap-button:active {
-    translate: 0 var(--caps-keycap-context-travel, var(--caps-keycap-lip));
+    translate: 0 var(--caps-keycap-context-travel, var(--caps-key-lip));
     box-shadow: var(
       --caps-keycap-active-shadow,
-      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)),
-      0 0 0 transparent
+      var(--caps-keycap-pressed-shadow)
     );
   }
   .caps-keycap-button:focus-visible {
@@ -8163,6 +8265,25 @@
     --caps-keycap-face: var(--color-neutral);
     --caps-keycap-ink: var(--color-neutral-content);
     --caps-keycap-edge: var(--color-neutral);
+  }
+  /* The send key is a filled key in its role colour, like a filled Button:
+     a solid face and a hairline edge one step darker, no light rim. With
+     nothing to send it rests as a calm neutral key. */
+  .caps-keycap-button.caps-send-action[data-tone="primary"] {
+    --caps-keycap-face: var(--color-primary);
+    --caps-keycap-ink: var(--color-primary-content);
+    --caps-keycap-edge: color-mix(in oklab, var(--color-primary) 82%, black);
+    --caps-keycap-hover-face: color-mix(
+      in oklab,
+      var(--color-primary) 92%,
+      black
+    );
+  }
+  .caps-keycap-button.caps-send-action[data-send-state="empty"] {
+    --caps-keycap-face: var(--color-base-200);
+    --caps-keycap-ink: var(--color-base-content);
+    --caps-keycap-edge: var(--stipe-linework);
+    --caps-keycap-hover-face: var(--color-base-200);
   }
   /* Destructive keys stay quiet until the pointer or focus is on them. */
   .caps-keycap-button[data-tone="destructive"]:is(:hover, :focus-visible) {

@@ -11,8 +11,8 @@ import {
 
 import { Button } from "../components/button.js";
 import { Input } from "../components/input.js";
+import { InputGroup } from "../components/input-group.js";
 import { cn } from "../lib/cn.js";
-import { Composer } from "./composer.js";
 
 /** One reviewed question and its fixed answer. */
 export type FaqChatEntry = {
@@ -200,24 +200,17 @@ export const FaqChat = forwardRef<HTMLElement, FaqChatProps>(function FaqChat(
         ))}
       </ul>
       <form className="caps-faq-chat-form" onSubmit={submit}>
-        <Composer
-          action={
-            <Button className="join-item" type="submit">
-              {submitLabel}
-            </Button>
-          }
-          input={
-            <Input
-              aria-label={inputLabel}
-              className="join-item"
-              onChange={(event) => {
-                setDraft(event.target.value);
-              }}
-              placeholder={placeholder}
-              value={draft}
-            />
-          }
-        />
+        <InputGroup>
+          <Input
+            aria-label={inputLabel}
+            onChange={(event) => {
+              setDraft(event.target.value);
+            }}
+            placeholder={placeholder}
+            value={draft}
+          />
+          <Button type="submit">{submitLabel}</Button>
+        </InputGroup>
       </form>
     </section>
   );

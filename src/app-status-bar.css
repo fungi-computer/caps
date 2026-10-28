@@ -134,6 +134,27 @@
     }
   }
 
+  /*
+   * A count in a bar key is a quiet readout beside its label: plain muted
+   * numerals below the label's cap height, never a filled pill as tall as
+   * the key. Every key's CountBadge draws this way.
+   */
+  .caps-app-status-bar .badge {
+    height: auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--stipe-fg-muted);
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .caps-app-status-bar .badge-warning {
+    color: var(--color-warning);
+  }
+
   .caps-status-bar-picker-list {
     min-width: min(18rem, calc(100vw - 1.5rem));
   }

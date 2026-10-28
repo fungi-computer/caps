@@ -229,14 +229,14 @@ async function assertNamedTargets(page, baseUrl, axePath) {
     const inputStyle = input ? globalThis.getComputedStyle(input) : null;
     return {
       display: rootStyle.display,
-      alignItems: rootStyle.alignItems,
+      flexDirection: rootStyle.flexDirection,
       minWidth: rootStyle.minWidth,
       inputMinHeight: inputStyle?.minHeight,
     };
   });
   if (
     composerGeometry.display !== "flex" ||
-    composerGeometry.alignItems !== "flex-end" ||
+    composerGeometry.flexDirection !== "column" ||
     composerGeometry.minWidth !== "0px" ||
     composerGeometry.inputMinHeight !== "48px"
   )
