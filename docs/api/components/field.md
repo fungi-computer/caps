@@ -39,9 +39,10 @@ Props accepted by Form.
 
 #### Type Declaration
 
-| Name    | Type      | Description                                             |
-| ------- | --------- | ------------------------------------------------------- |
-| `busy?` | `boolean` | Disables every control while a submission is in flight. |
+| Name      | Type        | Description                                                       |
+| --------- | ----------- | ----------------------------------------------------------------- |
+| `busy?`   | `boolean`   | Disables every control while a submission is in flight.           |
+| `layout?` | `"columns"` | Opt-in label/control grid; the default field rhythm is unchanged. |
 
 ---
 
@@ -55,12 +56,13 @@ Props accepted by FormSection.
 
 #### Type Declaration
 
-| Name           | Type              | Description                            |
-| -------------- | ----------------- | -------------------------------------- |
-| `title`        | `ReactNode`       | -                                      |
-| `description?` | `ReactNode`       | -                                      |
-| `level?`       | `2` \| `3` \| `4` | Heading level inside the page outline. |
-| `children`     | `ReactNode`       | -                                      |
+| Name           | Type              | Description                                                |
+| -------------- | ----------------- | ---------------------------------------------------------- |
+| `title`        | `ReactNode`       | -                                                          |
+| `description?` | `ReactNode`       | -                                                          |
+| `layout?`      | `"columns"`       | Opt-in label/control grid when used without a Form parent. |
+| `level?`       | `2` \| `3` \| `4` | Heading level inside the page outline.                     |
+| `children`     | `ReactNode`       | -                                                          |
 
 ---
 
@@ -78,6 +80,7 @@ Props accepted by FieldSet.
 | -------------- | ----------- | ----------------------------------------------------------------- |
 | `legend`       | `ReactNode` | -                                                                 |
 | `description?` | `ReactNode` | -                                                                 |
+| `layout?`      | `"columns"` | Opt-in label/control grid when used without a Form parent.        |
 | `error?`       | `ReactNode` | The group's announced error, such as "Choose at least one right". |
 | `children`     | `ReactNode` | -                                                                 |
 

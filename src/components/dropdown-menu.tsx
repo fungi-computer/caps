@@ -250,7 +250,7 @@ export const DropdownMenuCheckboxItem = forwardRef<
   HTMLElement,
   DropdownMenuCheckboxItemProps
 >(function DropdownMenuCheckboxItem(
-  { className, onClick, onSelect, ...props },
+  { children, className, onClick, onSelect, ...props },
   ref,
 ) {
   return (
@@ -262,7 +262,12 @@ export const DropdownMenuCheckboxItem = forwardRef<
         if (!event.defaultPrevented) onSelect?.(event);
       }}
       ref={ref}
-    />
+    >
+      <span className="min-w-0 flex-1">{children}</span>
+      <BaseMenu.CheckboxItemIndicator aria-hidden="true" className="shrink-0">
+        ✓
+      </BaseMenu.CheckboxItemIndicator>
+    </BaseMenu.CheckboxItem>
   );
 });
 

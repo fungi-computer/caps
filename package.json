@@ -1,6 +1,6 @@
 {
   "name": "@fungi.computer/caps",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": "Levi <levi@technomancy.dev>",
   "description": "Product-neutral React primitives and blocks for Fungi interfaces",
   "type": "module",
@@ -500,7 +500,7 @@
     "format:check": "node ../../tooling/repository/scripts/format-package-check.mjs",
     "lint:anti-slop": "node ../../tooling/repository/scripts/lint-package-anti-slop.mjs",
     "build:workbench": "node scripts/workbench-build.mjs --prepared",
-    "test:nightly": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-workbench --origin-env CAPS_WORKBENCH_URL test/screen-theme.browser.mjs test/scroll-area.browser.mjs test/display-density.browser.mjs && node test/scroll-gutter.browser.mjs",
+    "test:nightly": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-workbench --origin-env CAPS_WORKBENCH_URL test/screen-theme.browser.mjs test/scroll-area.browser.mjs test/display-density.browser.mjs test/resize-handle.browser.mjs && node test/scroll-gutter.browser.mjs",
     "test:code-input": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-code-input --origin-env CAPS_WORKBENCH_URL test/code-input.browser.mjs",
     "test:icon-choice": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-icon-choice --origin-env CAPS_WORKBENCH_URL test/icon-choice.browser.mjs",
     "test:choice-label-alignment": "node --import tsx ../../tooling/repository/scripts/workbench-proofs.mjs --output ../../.botanical/caps-choice-alignment --origin-env CAPS_WORKBENCH_URL test/choice-label-alignment.browser.mjs",

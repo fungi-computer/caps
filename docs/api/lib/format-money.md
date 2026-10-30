@@ -13,17 +13,19 @@
 ### formatMoney()
 
 ```ts
-function formatMoney(amount): string;
+function formatMoney(amount, options?): string;
 ```
 
-Format USD with cents, preserving sub-cent precision without displaying non-zero
-amounts as zero.
+Format USD to cents, marking non-zero sub-cent amounts rather than rounding them
+to zero. Callers needing the supported five-decimal precision opt in with
+`precision: "exact"`.
 
 #### Parameters
 
-| Parameter | Type     |
-| --------- | -------- |
-| `amount`  | `number` |
+| Parameter  | Type                                        |
+| ---------- | ------------------------------------------- |
+| `amount`   | `number`                                    |
+| `options?` | `Readonly`\<\{ `precision`: `"exact"`; \}\> |
 
 #### Returns
 

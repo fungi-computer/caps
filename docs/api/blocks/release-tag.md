@@ -33,11 +33,11 @@ Props accepted by ReleaseTag.
 
 #### Type Declaration
 
-| Name      | Type                                             | Description                                                                 |
-| --------- | ------------------------------------------------ | --------------------------------------------------------------------------- |
-| `title`   | readonly `string`[]                              | One or two short lines printed large on the tag, such as ["Fungi", "Beta"]. |
-| `label?`  | `ReactNode`                                      | A small accent strip under the title, such as "Update".                     |
-| `entries` | readonly [`ReleaseTagEntry`](#releasetagentry)[] | -                                                                           |
+| Name       | Type                                             | Description                                                                 |
+| ---------- | ------------------------------------------------ | --------------------------------------------------------------------------- |
+| `title`    | readonly `string`[]                              | One or two short lines printed large on the tag, such as ["Fungi", "Beta"]. |
+| `label?`   | `ReactNode`                                      | A small accent strip under the title, such as "Update".                     |
+| `entries?` | readonly [`ReleaseTagEntry`](#releasetagentry)[] | Names and versions ruled under the page; omit for a tag with none.          |
 
 ## Functions
 
@@ -48,8 +48,8 @@ function ReleaseTag(__namedParameters): Element;
 ```
 
 A release badge: a torn-off calendar page with binder rings, a stacked title,
-one accent strip and a ruled list of names and versions below. Presentation
-only; the caller supplies every word.
+one accent strip and an optional ruled list of names and versions below.
+Presentation only; the caller supplies every word.
 
 #### Parameters
 

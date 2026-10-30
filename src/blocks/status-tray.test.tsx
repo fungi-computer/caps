@@ -1,6 +1,7 @@
 import { act, useState } from "react";
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, fireKey, render, requireValue } from "../test-utils/index.js";
+import { KeycapButton } from "../components/keycap.js";
 import {
   StatusTray,
   StatusTrayList,
@@ -10,7 +11,13 @@ import {
 
 afterEach(cleanup);
 
-function Harness({ disabled = false }: { disabled?: boolean }) {
+function Harness({
+  disabled = false,
+  nativeKeys = false,
+}: {
+  disabled?: boolean;
+  nativeKeys?: boolean;
+}) {
   const [openId, setOpenId] = useState<string | null>(null);
   return (
     <>
@@ -18,6 +25,17 @@ function Harness({ disabled = false }: { disabled?: boolean }) {
       <StatusTray
         openId={openId}
         onOpenChange={setOpenId}
+        renderTrigger={
+          nativeKeys
+            ? ({ children, ...props }) => (
+                <KeycapButton
+                  {...props}
+                  label={children}
+                  expanded={props["aria-expanded"] === true}
+                />
+              )
+            : undefined
+        }
         items={[
           {
             id: "ports",
@@ -54,6 +72,30 @@ function button(container: HTMLElement, label: string) {
 }
 
 describe("StatusTray", () => {
+  it("keeps disclosure, disabled state and focus ownership with a native trigger", () => {
+    const { container } = render(<Harness nativeKeys disabled />);
+    const ports = button(container, "Ports3");
+    const disabled = button(container, "Processes");
+    expect(ports.classList.contains("caps-keycap-button")).toBe(true);
+    expect(ports.classList.contains("caps-status-tray-chip")).toBe(false);
+    expect(disabled.disabled).toBe(true);
+    act(() => {
+      ports.click();
+    });
+    const panel = requireValue(
+      container.querySelector('[role="dialog"]'),
+      "tray",
+    );
+    expect(ports.getAttribute("aria-controls")).toBe(panel.id);
+    expect(document.activeElement).toBe(panel);
+    act(() => {
+      fireKey(document, { key: "Escape" });
+    });
+    expect(container.querySelector('[role="dialog"]')).toBeNull();
+    expect(ports.getAttribute("aria-expanded")).toBe("false");
+    expect(document.activeElement).toBe(ports);
+  });
+
   it("opens only the selected tray, exposes its label/control relationship and hides zero counts", () => {
     const { container } = render(<Harness />);
     const ports = button(container, "Ports3");

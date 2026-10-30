@@ -155,6 +155,14 @@ Props accepted by FormFields.
 model: SchemaFormModel<V>;
 ```
 
+##### layout?
+
+```ts
+optional layout?: "columns";
+```
+
+Opt-in label/control grid for generated sections and groups.
+
 ##### names?
 
 ```ts
@@ -1286,6 +1294,32 @@ Receives the parsed value, never the raw input.
 \| `Promise`\<[`SubmitResult`](#submitresult)\<`V`\> \| `undefined`\> \|
 `Promise`\<`void`\> \| [`SubmitResult`](#submitresult)\<`V`\> \| `undefined`
 
+##### onSaved?
+
+```ts
+optional onSaved?: (values) => void;
+```
+
+Called only after a saved result, with the new raw-value baseline.
+
+###### Parameters
+
+| Parameter | Type |
+| --------- | ---- |
+| `values`  | `V`  |
+
+###### Returns
+
+`void`
+
+##### failure?
+
+```ts
+optional failure?: string;
+```
+
+Safe message for a thrown submit; the cause is logged, never shown.
+
 ---
 
 ### Validator
@@ -1508,14 +1542,16 @@ How a SchemaForm presents its actions and state.
 
 #### Type Declaration
 
-| Name            | Type        | Description                                                                                                                       |
-| --------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `submitLabel?`  | `ReactNode` | The primary action's label; defaults to "Save changes".                                                                           |
-| `discardLabel?` | `ReactNode` | Show a Discard action while there are unsaved changes.                                                                            |
-| `allowClean?`   | `boolean`   | Keep the primary action available on a clean form (create forms).                                                                 |
-| `footer?`       | `ReactNode` | Replaces the SaveBar, such as a footer with a retry key; `null` drops it.                                                         |
-| `children?`     | `ReactNode` | Replaces the generated field list, for custom layouts such as Screen cells: place fields with `<FormFields model names={[…]} />`. |
-| `disabled?`     | `boolean`   | Disable every field, such as while an uncertain request is retried.                                                               |
+| Name            | Type         | Description                                                                                                                       |
+| --------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `submitLabel?`  | `ReactNode`  | The primary action's label; defaults to "Save changes".                                                                           |
+| `discardLabel?` | `ReactNode`  | Show a Discard action while there are unsaved changes.                                                                            |
+| `onCancel()?`   | () => `void` | A secondary exit action, shown even when clean; never submits or discards.                                                        |
+| `cancelLabel?`  | `ReactNode`  | -                                                                                                                                 |
+| `allowClean?`   | `boolean`    | Keep the primary action available on a clean form (create forms).                                                                 |
+| `footer?`       | `ReactNode`  | Replaces the SaveBar, such as a footer with a retry key; `null` drops it.                                                         |
+| `children?`     | `ReactNode`  | Replaces the generated field list, for custom layouts such as Screen cells: place fields with `<FormFields model names={[…]} />`. |
+| `disabled?`     | `boolean`    | Disable every field, such as while an uncertain request is retried.                                                               |
 
 ---
 
@@ -1525,6 +1561,8 @@ How a SchemaForm presents its actions and state.
 type SchemaFormProps<V, Out> = SchemaFormPresentation &
   | {
   model: SchemaFormModel<V>;
+  onSaved?: never;
+  failure?: never;
 }
 | SchemaFormOptions<V, Out>;
 ```
@@ -1585,6 +1623,8 @@ Props accepted by SaveBar.
 | `model`         | [`SchemaFormModel`](#schemaformmodel)\<`V`\>                                                                                                       | -                                                                                                                                             |
 | `label`         | `ReactNode`                                                                                                                                        | The primary action, such as "Save changes" or "Create Team".                                                                                  |
 | `discardLabel?` | `ReactNode`                                                                                                                                        | Show a Discard action while there are unsaved changes.                                                                                        |
+| `onCancel()?`   | () => `void`                                                                                                                                       | A secondary exit action that never submits or resets the form.                                                                                |
+| `cancelLabel?`  | `ReactNode`                                                                                                                                        | -                                                                                                                                             |
 | `allowClean?`   | `boolean`                                                                                                                                          | Keep the primary action available on a clean form (create forms that may submit their defaults). By default a clean form has nothing to save. |
 | `dirtyLabel?`   | `ReactNode`                                                                                                                                        | The quiet readout while there are unsaved changes.                                                                                            |
 | `buttonProps?`  | `Omit`\<[`ButtonProps`](components/button.md#buttonprops), `"type"` \| `"disabled"` \| `"loading"` \| `"children"` \| `"onClick"` \| `"asChild"`\> | -                                                                                                                                             |

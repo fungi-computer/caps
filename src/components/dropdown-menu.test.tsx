@@ -21,6 +21,83 @@ import {
 
 afterEach(cleanup);
 
+it("renders the native checked indicator and follows the item's checked state", async () => {
+  const view = render(
+    <DropdownMenu>
+      <DropdownMenuTrigger>Options</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuCheckboxItem defaultChecked>
+          Current
+        </DropdownMenuCheckboxItem>
+      </DropdownMenuContent>
+    </DropdownMenu>,
+  );
+  const menu = await openMenu(
+    requireValue(view.queryBySelector("button"), "menu trigger"),
+  );
+  const item = requireValue(
+    menu.querySelector<HTMLElement>('[role="menuitemcheckbox"]'),
+    "checkable item",
+  );
+  expect(item.getAttribute("aria-checked")).toBe("true");
+  expect(item.querySelector("span[data-checked]")?.textContent).toBe("✓");
+  expect(
+    item.querySelector("span[data-checked]")?.getAttribute("aria-hidden"),
+  ).toBe("true");
+  await act(async () => {
+    item.click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  expect(item.getAttribute("aria-checked")).toBe("false");
+  expect(item.textContent).not.toContain("✓");
+  await act(async () => {
+    item.click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  expect(item.getAttribute("aria-checked")).toBe("true");
+  expect(item.querySelector("span[data-checked]")?.textContent).toBe("✓");
+});
+
+it("places different-length checked labels in the existing item's right-edge column", async () => {
+  const view = render(
+    <DropdownMenu>
+      <DropdownMenuTrigger>Options</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuCheckboxItem defaultChecked>
+          Pinned
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem defaultChecked>
+          Notify when in season
+        </DropdownMenuCheckboxItem>
+      </DropdownMenuContent>
+    </DropdownMenu>,
+  );
+  const menu = await openMenu(
+    requireValue(view.queryBySelector("button"), "menu trigger"),
+  );
+  const items = menu.querySelectorAll<HTMLElement>(
+    '[role="menuitemcheckbox"][aria-checked="true"]',
+  );
+  expect(items).toHaveLength(2);
+  for (const item of items) {
+    const indicator = requireValue(
+      item.querySelector("span[data-checked]"),
+      "native checked indicator",
+    );
+    expect(item.classList.contains("flex")).toBe(true);
+    expect(item.classList.contains("w-full")).toBe(true);
+    expect(indicator.parentElement).toBe(item);
+    const label = requireValue(
+      indicator.previousElementSibling,
+      "flexible menu label slot",
+    );
+    expect(label.classList.contains("flex-1")).toBe(true);
+    expect(label.classList.contains("min-w-0")).toBe(true);
+    expect(["Pinned", "Notify when in season"]).toContain(label.textContent);
+    expect(indicator.classList.contains("shrink-0")).toBe(true);
+  }
+});
+
 it("composes menu items without losing selection or native checked details", async () => {
   const onSelect = vi.fn();
   const onCheckedChange = vi.fn();

@@ -419,7 +419,11 @@ function SpecGroup({
   field,
   locked,
   error,
-}: ControlState & { error: string | undefined }) {
+  layout,
+}: ControlState & {
+  error: string | undefined;
+  layout?: "columns" | undefined;
+}) {
   const disabled = locked || spec.readOnly === true;
   const legend = spec.label;
   if (spec.kind === "checkboxes" || spec.kind === "icon-checkboxes") {
@@ -434,6 +438,8 @@ function SpecGroup({
     return (
       <FieldSet
         legend={legend}
+        layout={layout}
+        {...(layout === "columns" ? { legendTitle: legend } : {})}
         description={spec.help}
         disabled={disabled}
         error={error ?? null}
@@ -489,6 +495,8 @@ function SpecGroup({
   return (
     <FieldSet
       legend={legend}
+      layout={layout}
+      {...(layout === "columns" ? { legendTitle: legend } : {})}
       description={spec.help}
       disabled={disabled}
       error={error ?? null}
@@ -573,10 +581,12 @@ function SchemaField({
   form,
   spec,
   locked,
+  layout,
 }: {
   form: AnyFormApi;
   spec: ResolvedField;
   locked: boolean;
+  layout?: "columns" | undefined;
 }) {
   const field = useField({ form, name: spec.name });
   const submitted = useSelector(
@@ -589,17 +599,31 @@ function SchemaField({
       : undefined;
   if (spec.render === undefined && groupKinds.has(spec.kind))
     return (
-      <SpecGroup spec={spec} field={field} locked={locked} error={error} />
+      <SpecGroup
+        spec={spec}
+        field={field}
+        locked={locked}
+        error={error}
+        layout={layout}
+      />
     );
+  // A columns form chooses one rhythm; per-field layout hints only govern
+  // the unchanged default presentation.
   const orientation =
-    spec.kind === "checkbox"
-      ? "inline"
-      : (spec.layout ?? (spec.kind === "switch" ? "row" : "stacked")) === "row"
+    layout === "columns"
+      ? spec.kind === "switch" || spec.kind === "checkbox"
         ? "horizontal"
-        : "vertical";
+        : "vertical"
+      : spec.kind === "checkbox"
+        ? "inline"
+        : (spec.layout ?? (spec.kind === "switch" ? "row" : "stacked")) ===
+            "row"
+          ? "horizontal"
+          : "vertical";
   return (
     <Field
       label={spec.label}
+      {...(layout === "columns" ? { labelTitle: spec.label } : {})}
       description={spec.help}
       icon={spec.icon}
       orientation={orientation}
@@ -625,6 +649,8 @@ function SchemaField({
 /** Props accepted by FormFields. */
 export type FormFieldsProps<V extends FormValues> = {
   model: SchemaFormModel<V>;
+  /** Opt-in label/control grid for generated sections and groups. */
+  layout?: "columns" | undefined;
   /** Render only these fields, in this order, without section headings. */
   names?: readonly (keyof V & string)[];
   /** Disable every field, such as while an uncertain request is retried. */
@@ -639,10 +665,12 @@ function Visible({
   form,
   spec,
   locked,
+  layout,
 }: {
   form: AnyFormApi;
   spec: ResolvedField;
   locked: boolean;
+  layout?: "columns" | undefined;
 }) {
   const when = spec.when;
   const shown = useSelector(form.store, (state) =>
@@ -653,25 +681,39 @@ function Visible({
         ),
   );
   if (!shown) return null;
-  return <SchemaField form={form} spec={spec} locked={locked} />;
+  return (
+    <SchemaField form={form} spec={spec} locked={locked} layout={layout} />
+  );
 }
 
 function SectionFields({
   form,
   section,
   locked,
+  layout,
 }: {
   form: AnyFormApi;
   section: ResolvedSection;
   locked: boolean;
+  layout?: "columns" | undefined;
 }) {
   const fields = section.fields.map((spec) => (
-    <Visible key={spec.name} form={form} spec={spec} locked={locked} />
+    <Visible
+      key={spec.name}
+      form={form}
+      spec={spec}
+      locked={locked}
+      layout={layout}
+    />
   ));
   return section.title === undefined ? (
     fields
   ) : (
-    <FormSection title={section.title} description={section.description}>
+    <FormSection
+      title={section.title}
+      description={section.description}
+      layout={layout}
+    >
       {fields}
     </FormSection>
   );
@@ -685,6 +727,7 @@ export function FormFields<V extends FormValues>({
   model,
   names,
   disabled = false,
+  layout,
 }: FormFieldsProps<V>) {
   const form: AnyFormApi = model.form;
   if (names !== undefined)
@@ -693,7 +736,13 @@ export function FormFields<V extends FormValues>({
         (field) => field.name === name,
       );
       return spec === undefined ? null : (
-        <Visible key={name} form={form} spec={spec} locked={disabled} />
+        <Visible
+          key={name}
+          form={form}
+          spec={spec}
+          locked={disabled}
+          layout={layout}
+        />
       );
     });
   return model.description.sections.map((section) => (
@@ -702,6 +751,7 @@ export function FormFields<V extends FormValues>({
       form={form}
       section={section}
       locked={disabled}
+      layout={layout}
     />
   ));
 }

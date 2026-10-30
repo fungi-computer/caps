@@ -92,6 +92,8 @@ export function FormFooter({
 export type FormProps = {
   /** Disables every control while a submission is in flight. */
   busy?: boolean;
+  /** Opt-in label/control grid; the default field rhythm is unchanged. */
+  layout?: "columns" | undefined;
 } & FormHTMLAttributes<HTMLFormElement>;
 
 /**
@@ -99,7 +101,7 @@ export type FormProps = {
  * control and the form reports `aria-busy`; validation stays with the caller.
  */
 export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
-  { busy = false, children, className, ...props },
+  { busy = false, children, className, layout, ...props },
   ref,
 ) {
   return (
@@ -107,6 +109,7 @@ export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
       {...props}
       aria-busy={busy || undefined}
       className={cn("caps-form", className)}
+      data-layout={layout}
       ref={ref}
     >
       <fieldset className="caps-form-body" disabled={busy}>
@@ -120,6 +123,8 @@ export const Form = forwardRef<HTMLFormElement, FormProps>(function Form(
 export type FormSectionProps = {
   title: ReactNode;
   description?: ReactNode;
+  /** Opt-in label/control grid when used without a Form parent. */
+  layout?: "columns" | undefined;
   /** Heading level inside the page outline. */
   level?: 2 | 3 | 4;
   children: ReactNode;
@@ -130,7 +135,7 @@ const sectionHeadings = { 2: "h2", 3: "h3", 4: "h4" } as const;
 /** A titled group of fields; consecutive sections share one quiet rule. */
 export const FormSection = forwardRef<HTMLElement, FormSectionProps>(
   function FormSection(
-    { children, className, description, level = 3, title, ...props },
+    { children, className, description, layout, level = 3, title, ...props },
     ref,
   ) {
     const id = useId();
@@ -140,6 +145,7 @@ export const FormSection = forwardRef<HTMLElement, FormSectionProps>(
         {...props}
         aria-labelledby={`${id}-title`}
         className={cn("caps-form-section", className)}
+        data-layout={layout}
         ref={ref}
       >
         <header className="caps-form-section-copy">
@@ -159,7 +165,11 @@ export const FormSection = forwardRef<HTMLElement, FormSectionProps>(
 /** Props accepted by FieldSet. */
 export type FieldSetProps = {
   legend: ReactNode;
+  /** Full legend on hover when a columns form clips it to one line. */
+  legendTitle?: string;
   description?: ReactNode;
+  /** Opt-in label/control grid when used without a Form parent. */
+  layout?: "columns" | undefined;
   /** The group's announced error, such as "Choose at least one right". */
   error?: ReactNode;
   children: ReactNode;
@@ -171,7 +181,16 @@ export type FieldSetProps = {
  */
 export const FieldSet = forwardRef<HTMLFieldSetElement, FieldSetProps>(
   function FieldSet(
-    { children, className, description, error, legend, ...props },
+    {
+      children,
+      className,
+      description,
+      error,
+      layout,
+      legend,
+      legendTitle,
+      ...props
+    },
     ref,
   ) {
     const id = useId();
@@ -188,9 +207,12 @@ export const FieldSet = forwardRef<HTMLFieldSetElement, FieldSetProps>(
         aria-describedby={describedBy}
         aria-invalid={error ? true : props["aria-invalid"]}
         className={cn("caps-fieldset", className)}
+        data-layout={layout}
         ref={ref}
       >
-        <legend className="caps-fieldset-legend">{legend}</legend>
+        <legend className="caps-fieldset-legend" title={legendTitle}>
+          {legend}
+        </legend>
         {description ? (
           <p className="caps-fieldset-description" id={`${id}-description`}>
             {description}
@@ -217,6 +239,8 @@ export type FieldProps = {
    */
   icon?: ReactNode;
   label?: ReactNode;
+  /** Full label on hover when a columns form clips it to one line. */
+  labelTitle?: string;
   /**
    * `vertical` stacks label, control and error; `horizontal` puts the control
    * opposite its copy (settings rows); `inline` puts a checkbox or switch
@@ -266,6 +290,7 @@ export const Field = forwardRef<HTMLDivElement, FieldProps>(function Field(
     error,
     icon,
     label,
+    labelTitle,
     optional,
     orientation = "vertical",
     readout = false,
@@ -320,6 +345,7 @@ export const Field = forwardRef<HTMLDivElement, FieldProps>(function Field(
   const labelContent = label ? (
     <Label
       htmlFor={readout ? undefined : controlId}
+      title={labelTitle}
       // A choice's own label reads as body text; the group's legend carries weight.
       className={orientation === "inline" ? "font-normal" : undefined}
       {...(required === undefined ? {} : { required })}

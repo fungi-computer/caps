@@ -4,20 +4,26 @@ const regularUsd = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 });
-const subcentUsd = new Intl.NumberFormat("en-US", {
+const exactUsd = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   minimumFractionDigits: 2,
   maximumFractionDigits: 5,
 });
 
-/** Format USD with cents, preserving sub-cent precision without displaying non-zero amounts as zero. */
-export function formatMoney(amount: number): string {
+/**
+ * Format USD to cents, marking non-zero sub-cent amounts rather than rounding
+ * them to zero. Callers needing the supported five-decimal precision opt in
+ * with `precision: "exact"`.
+ */
+export function formatMoney(
+  amount: number,
+  options?: Readonly<{ precision: "exact" }>,
+): string {
   if (!Number.isFinite(amount))
     throw new RangeError("Money amount must be finite");
-  if (amount !== 0 && Math.abs(amount) < 0.00001)
+  const subcent = amount !== 0 && Math.abs(amount) < 0.01;
+  if (subcent && (options?.precision !== "exact" || Math.abs(amount) < 0.00001))
     return amount < 0 ? ">-$0.01" : "<$0.01";
-  return amount !== 0 && Math.abs(amount) < 0.01
-    ? subcentUsd.format(amount)
-    : regularUsd.format(amount);
+  return subcent ? exactUsd.format(amount) : regularUsd.format(amount);
 }

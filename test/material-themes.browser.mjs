@@ -20,11 +20,48 @@ for (const name of [
     ),
   );
   assert.ok(recipe.css['@import "@fungi.computer/stipe/styles.css"']);
-  assert.match(
-    JSON.stringify(recipe.css),
-    /--stipe-shadow-/u,
-    `${name}: registry includes material consumption`,
-  );
+  if (name === "button") {
+    // Stipe 255b84c0f38 (Levi, 2026-10-13) deliberately excludes Buttons
+    // from --stipe-shadow-raised so their own faint top highlight survives.
+    const material =
+      recipe.css["@layer utilities"][
+        ".caps-button-filled,.caps-button.btn-outline"
+      ];
+    const filled = recipe.css["@layer utilities"][".caps-button-filled"];
+    const outline = recipe.css["@layer utilities"][".caps-button.btn-outline"];
+    assert.deepEqual(
+      {
+        lip: material["--caps-key-lip"],
+        resting: material["--caps-key-rest-shadow"],
+        pressed: material["--caps-key-pressed-shadow"],
+        filledHighlight: filled["--caps-key-top-edge"],
+        filledDrop: filled["--caps-button-filled-drop"],
+        filledShadow: filled.boxShadow,
+        outlineShadow: outline.boxShadow,
+      },
+      {
+        lip: "calc(var(--depth) * 1px)",
+        resting:
+          "inset 0 1px 0\n        oklch(100% 0 0 / calc(var(--depth) * var(--caps-key-top-edge, 0.14))),\n      0 var(--caps-key-lip) 0\n        color-mix(\n          in oklab,\n          var(--caps-key-face),\n          var(--caps-key-lip-ink, var(--color-base-content)) 14%\n        )",
+        pressed:
+          "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)), 0 0 0 transparent",
+        filledHighlight: "0.06",
+        filledDrop:
+          "var(\n      --caps-button-drop,\n      var(--caps-key-rest-shadow)\n    )",
+        filledShadow: "var(--caps-button-filled-drop)",
+        outlineShadow:
+          "var(\n      --caps-button-outline-drop,\n      var(--caps-button-drop, var(--caps-key-rest-shadow))\n    )",
+      },
+      "button: registry preserves the exact independent key material",
+    );
+    assert.doesNotMatch(JSON.stringify(recipe.css), /--stipe-shadow-raised/u);
+  } else {
+    assert.match(
+      JSON.stringify(recipe.css),
+      /--stipe-shadow-/u,
+      `${name}: registry includes material consumption`,
+    );
+  }
 }
 const browser = await chromium.launch();
 try {
@@ -154,14 +191,12 @@ try {
       result.nestedMuted,
       `${theme}: root and nested muted ink agree`,
     );
+    // Stipe 255b84c0f38 (Levi, 2026-10-13) deliberately gives everyday
+    // palettes a 1px quiet-plastic rim; the flat themes already use 1px.
     assert.equal(
       result.frame,
-      theme === "phosphor" ||
-        theme === "codec" ||
-        theme === "field-guide" ||
-        theme === "field-guide-night"
-        ? "1px"
-        : "6px",
+      "1px",
+      `${theme}: surface keeps its hairline rim`,
     );
     if (theme === "field-guide") {
       assert.equal(result.depth, "0");

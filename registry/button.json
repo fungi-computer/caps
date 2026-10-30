@@ -90,7 +90,10 @@
         "borderWidth": "var(--caps-button-border-width, var(--border))",
         "fontWeight": "var(--caps-button-weight, 600)",
         "clipPath": "var(--caps-button-cut, none)",
-        "borderColor": "var(--caps-button-border-color, var(--btn-border))"
+        "borderColor": "var(--caps-button-border-color, var(--btn-border))",
+        "--caps-key-lip": "calc(var(--depth) * 1px)",
+        "--caps-key-rest-shadow": "inset 0 1px 0\n        oklch(100% 0 0 / calc(var(--depth) * var(--caps-key-top-edge, 0.14))),\n      0 var(--caps-key-lip) 0\n        color-mix(\n          in oklab,\n          var(--caps-key-face),\n          var(--caps-key-lip-ink, var(--color-base-content)) 14%\n        )",
+        "--caps-key-pressed-shadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)), 0 0 0 transparent"
       },
       ".caps-button-filled:not(.btn-circle),.caps-button.btn-outline:not(.btn-circle)": {
         "paddingInline": "var(--caps-button-padding, var(--btn-p))",
@@ -109,20 +112,24 @@
       ".caps-button.btn-outline": {
         "position": "var(--caps-button-outline-position, revert-layer)",
         "isolation": "var(--caps-button-outline-isolation, auto)",
-        "--btn-border": "color-mix(\n      in oklab,\n      var(--color-base-content) 24%,\n      transparent\n    )",
+        "--btn-border": "var(--stipe-linework)",
+        "--caps-key-face": "var(--caps-button-outline-face, var(--color-base-200))",
         "fontWeight": "var(--caps-button-weight, 500)",
-        "boxShadow": "var(--caps-button-outline-drop, var(--caps-button-drop, none))"
+        "boxShadow": "var(\n      --caps-button-outline-drop,\n      var(--caps-button-drop, var(--caps-key-rest-shadow))\n    )",
+        "transitionProperty": "background-color, border-color, box-shadow, translate",
+        "transitionDuration": "var(--stipe-motion-fast)",
+        "transitionTimingFunction": "ease-out"
       },
       ".caps-button.btn-outline:not(:disabled):not([aria-disabled=\"true\"])": {
-        "backgroundColor": "var(--caps-button-outline-face, revert-layer)",
-        "color": "var(--caps-button-outline-ink, revert-layer)"
+        "backgroundColor": "var(--caps-key-face)",
+        "color": "var(--caps-button-outline-ink, var(--color-base-content))"
       },
       ".caps-button.btn-outline:is(:disabled, [aria-disabled=\"true\"])": {
         "backgroundColor": "var(\n      --caps-button-outline-disabled-face,\n      var(--color-base-200)\n    )"
       },
       ".caps-button.btn-outline:not(:disabled):not([aria-disabled=\"true\"]):hover": {
-        "backgroundColor": "var(\n      --caps-button-outline-hover-face,\n      var(--caps-button-outline-face, revert-layer)\n    )",
-        "color": "var(\n      --caps-button-outline-hover-ink,\n      var(--caps-button-outline-ink, revert-layer)\n    )"
+        "backgroundColor": "var(\n      --caps-button-outline-hover-face,\n      var(--caps-keycap-hover-face, var(--caps-key-face))\n    )",
+        "color": "var(\n      --caps-button-outline-hover-ink,\n      var(--caps-button-outline-ink, var(--color-base-content))\n    )"
       },
       ".caps-button.btn-outline::before": {
         "content": "var(--caps-button-outline-inset-content, none)",
@@ -136,8 +143,8 @@
         "background": "var(--color-base-content)"
       },
       ".caps-button.btn-outline:not(:disabled):not([aria-disabled=\"true\"]):active": {
-        "translate": "0 var(--caps-button-press, var(--stipe-press-depth))",
-        "boxShadow": "var(\n      --caps-button-outline-drop,\n      var(--caps-button-drop-active, none)\n    )"
+        "translate": "0 var(--caps-button-press, var(--caps-key-lip))",
+        "boxShadow": "var(\n      --caps-button-outline-drop,\n      var(--caps-button-drop-active, var(--caps-key-pressed-shadow))\n    )"
       },
       ".caps-button.btn-ghost": { "fontWeight": 500 },
       ".caps-button-filled:not(.btn-circle)": {
@@ -145,8 +152,11 @@
       },
       ".caps-button-filled": {
         "--btn-bg": "var(--btn-color)",
-        "--caps-button-filled-edge": "var(\n      --caps-button-border-color,\n      color-mix(\n        in oklab,\n        color-mix(in oklab, var(--btn-bg), black calc(var(--depth) * 8%)),\n        var(--stipe-linework)\n          calc((1 - var(--depth)) * var(--caps-button-linework, 100%))\n      )\n    )",
-        "--caps-button-filled-drop": "var(\n      --caps-button-drop,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))\n    )",
+        "--caps-key-face": "var(--btn-color)",
+        "--caps-key-lip-ink": "black",
+        "--caps-key-top-edge": "0.06",
+        "--caps-button-filled-edge": "var(\n      --caps-button-border-color,\n      color-mix(\n        in oklab,\n        color-mix(in oklab, var(--btn-bg), black calc(var(--depth) * 6%)),\n        var(--stipe-linework)\n          calc((1 - var(--depth)) * var(--caps-button-linework, 100%))\n      )\n    )",
+        "--caps-button-filled-drop": "var(\n      --caps-button-drop,\n      var(--caps-key-rest-shadow)\n    )",
         "backgroundColor": "var(--btn-bg)",
         "color": "var(--btn-fg)",
         "backgroundImage": "none",
@@ -180,9 +190,9 @@
       },
       ".caps-button-filled:not(:disabled):not([aria-disabled=\"true\"]):is(\n      :active,\n      .btn-active\n    )": {
         "--btn-bg": "color-mix(in oklab, var(--btn-color) 92%, black)",
-        "translate": "0 var(--caps-button-press, var(--stipe-press-depth))",
+        "translate": "0 var(--caps-button-press, var(--caps-key-lip))",
         "scale": "var(--stipe-press-scale)",
-        "boxShadow": "var(\n      --caps-button-drop-active,\n      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))\n    )",
+        "boxShadow": "var(--caps-button-drop-active, var(--caps-key-pressed-shadow))",
         "transitionDuration": "var(--stipe-motion-squish)"
       },
       ".caps-button.caps-button-menubar": {
@@ -241,8 +251,9 @@
         "scale": "none"
       },
       ".caps-button-filled:not(:disabled):not([aria-disabled=\"true\"]):active": {
-        "translate": "var(--caps-button-press-reduced, none)"
-      }
+        "translate": "var(--caps-button-press-reduced, 0 var(--caps-key-lip))"
+      },
+      ".caps-button.btn-outline": { "transition": "none" }
     },
     "@property --caps-game-host-ink": {
       "syntax": "\"<color>\"",

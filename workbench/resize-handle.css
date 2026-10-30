@@ -1,0 +1,28 @@
+.caps-workbench-resize-stage {
+  position: relative;
+  display: grid;
+  height: 280px;
+  margin-block: var(--spacing-md);
+  grid-template-rows: var(--resize-pane) minmax(0, 1fr);
+  border: 1px solid var(--stipe-linework);
+  border-radius: var(--radius-field);
+}
+
+.caps-workbench-resize-stage[data-orientation="vertical"] {
+  grid-template-columns: var(--resize-pane) minmax(0, 1fr);
+  grid-template-rows: none;
+}
+
+.caps-workbench-resize-pane {
+  padding: var(--spacing-md);
+}
+
+.caps-workbench-resize-pane:first-child {
+  background: var(--color-base-200);
+  border-bottom: 1px solid var(--stipe-linework);
+}
+
+[data-orientation="vertical"] > .caps-workbench-resize-pane:first-child {
+  border-right: 1px solid var(--stipe-linework);
+  border-bottom: 0;
+}

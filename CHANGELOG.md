@@ -1,5 +1,24 @@
 # @fungi.computer/caps
 
+## 0.5.0
+
+### Minor Changes
+
+- Changes since 0.4.0:
+
+  - feat(repository): scope docs-only gates
+  - fix(caps): give menu labels the remaining row width
+  - fix(caps): align menu checks in a right-edge column
+  - fix(caps): render native checked menu indicators
+  - fix(composer): align native keys, empty Send and usage readouts
+  - fix(caps): preserve the documented Button key material
+  - fix(caps): keep opt-in columns consistent and fixed controls bounded
+  - fix(caps): keep workbench fixture type private
+  - fix(caps): finish one-row column proof and sync API docs
+  - feat(caps): add opt-in columns to schema forms
+  - feat(composer): finish native row controls and responsive parity
+  - fix(caps): centre the shared resize knob
+
 ## 0.4.0
 
 ### Minor Changes

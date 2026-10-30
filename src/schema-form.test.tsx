@@ -179,6 +179,14 @@ describe("schema forms", () => {
   it("keeps a clean form unsavable and offers Discard once dirty", async () => {
     const { container } = render(<KeyForm save={vi.fn()} />);
     expect(button(container, "Save key").disabled).toBe(true);
+    expect(container.querySelector("form")?.hasAttribute("data-layout")).toBe(
+      false,
+    );
+    expect(
+      container
+        .querySelector(".caps-form-section")
+        ?.hasAttribute("data-layout"),
+    ).toBe(false);
     await act(async () => {
       fireInput(input(container, "label"), "Research");
       await Promise.resolve();
@@ -241,6 +249,152 @@ describe("schema forms", () => {
       await Promise.resolve();
     });
     expect(key.hasAttribute("aria-invalid")).toBe(false);
+  });
+
+  it("shows a safe failure and logs the cause when a submit throws", async () => {
+    const cause = new Error("private provider detail");
+    const log = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    try {
+      const { container } = render(
+        <SchemaForm
+          schema={z.object({ name: z.string() })}
+          defaultValues={{ name: "old" }}
+          onSubmit={(): Promise<void> => Promise.reject(cause)}
+          failure="Couldn't add the server. Try again."
+        />,
+      );
+      await act(async () => {
+        fireInput(input(container, "name"), "new");
+        await Promise.resolve();
+      });
+      await submit(container);
+      expect(container.textContent).toContain(
+        "Couldn't add the server. Try again.",
+      );
+      expect(container.textContent).not.toContain("private provider detail");
+      expect(log).toHaveBeenCalledWith("SchemaForm submit failed", cause);
+      expect(input(container, "name").value).toBe("new");
+    } finally {
+      log.mockRestore();
+    }
+  });
+
+  it("cancels without submitting and calls onSaved with the new baseline", async () => {
+    const onCancel = vi.fn();
+    const onSaved = vi.fn();
+    const save = vi.fn(() => ({
+      kind: "saved" as const,
+      values: { name: "Stored" },
+    }));
+    const { container } = render(
+      <SchemaForm
+        schema={z.object({ name: z.string() })}
+        defaultValues={{ name: "old" }}
+        onSubmit={save}
+        onCancel={onCancel}
+        onSaved={onSaved}
+      />,
+    );
+    expect(
+      container
+        .querySelector(".caps-form-footer")
+        ?.getAttribute("data-divider"),
+    ).toBe("false");
+    await act(async () => {
+      button(container, "Cancel").click();
+      await Promise.resolve();
+    });
+    expect(onCancel).toHaveBeenCalledOnce();
+    expect(save).not.toHaveBeenCalled();
+    await act(async () => {
+      fireInput(input(container, "name"), "Draft");
+      await Promise.resolve();
+    });
+    await submit(container);
+    expect(onSaved).toHaveBeenCalledExactlyOnceWith({ name: "Stored" });
+    expect(input(container, "name").value).toBe("Stored");
+  });
+
+  it("lets an invalid inline add submit so it can show and focus its first error", async () => {
+    const save = vi.fn();
+    const { container } = render(
+      <SchemaForm
+        schema={z.object({
+          name: z.string().min(1, "Name is required."),
+          url: z
+            .string()
+            .pipe(z.url())
+            .meta(field({ kind: "url" })),
+        })}
+        defaultValues={{ name: "", url: "" }}
+        onCancel={() => undefined}
+        onSubmit={save}
+        submitLabel="Add server"
+      />,
+    );
+    expect(button(container, "Add server").disabled).toBe(false);
+    await submit(container);
+    expect(save).not.toHaveBeenCalled();
+    expect(input(container, "name").getAttribute("aria-invalid")).toBe("true");
+    await vi.waitFor(() => {
+      expect(document.activeElement).toBe(input(container, "name"));
+    });
+    expect(container.textContent).toContain("Name is required.");
+  });
+
+  it("opts columns in for only its own form, sections and groups", () => {
+    const { container } = render(
+      <SchemaForm
+        schema={keySchema}
+        defaultValues={defaults}
+        onSubmit={() => undefined}
+        layout="columns"
+      />,
+    );
+    expect(container.querySelector("form")?.getAttribute("data-layout")).toBe(
+      "columns",
+    );
+    expect(
+      container
+        .querySelector(".caps-form-section")
+        ?.getAttribute("data-layout"),
+    ).toBe("columns");
+    expect(
+      container.querySelector(".caps-fieldset")?.getAttribute("data-layout"),
+    ).toBe("columns");
+  });
+
+  it("uses the form's columns rhythm instead of mixing field layout hints", () => {
+    const schema = Schema.Struct({
+      name: Schema.String.annotate(
+        field({ label: "A very long settings label", layout: "stacked" }),
+      ),
+      budget: Schema.Number.annotate(
+        field({ label: "Monthly budget", layout: "row" }),
+      ),
+      internet: Schema.Boolean.annotate(field({ label: "Internet access" })),
+      backups: Schema.Boolean.annotate(
+        field({ label: "Nightly backups", kind: "checkbox" }),
+      ),
+    });
+    const { container } = render(
+      <SchemaForm
+        schema={schema}
+        defaultValues={{ name: "", budget: 25, internet: true, backups: false }}
+        onSubmit={() => undefined}
+        layout="columns"
+      />,
+    );
+    expect(
+      [...container.querySelectorAll(".caps-form-body > .caps-field")].map(
+        (entry) => entry.getAttribute("data-orientation"),
+      ),
+    ).toEqual(["vertical", "vertical", "horizontal", "horizontal"]);
+    expect(
+      container
+        .querySelector(".caps-field-copy > label")
+        ?.getAttribute("title"),
+    ).toBe("A very long settings label");
   });
 
   it("adopts the saved baseline so secrets clear after a save", async () => {

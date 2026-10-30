@@ -68,7 +68,7 @@ const maxAttachmentBytes = 1_048_576;
  * and sections all live on the schema. Kinds the type implies are inferred
  * (Boolean → switch, Number → number, literals → radio, select or combobox).
  */
-const settingsSchema = Schema.Struct({
+export const settingsSchema = Schema.Struct({
   name: Schema.Trim.check(
     Schema.isMinLength(1, { message: "Give the Computer a name." }),
   ).annotate(field({ required: true, section: "identity" })),
@@ -236,9 +236,7 @@ const settingsSchema = Schema.Struct({
     billing: { title: "Billing" },
   }),
 );
-type Settings = (typeof settingsSchema)["Encoded"];
-
-const settingsDefaults: Settings = {
+export const settingsDefaults: (typeof settingsSchema)["Encoded"] = {
   name: "Workbench",
   contact: "levi@example.com",
   notes: "",

@@ -2980,34 +2980,23 @@
   }
   .caps-resize-handle {
     display: grid;
-    width: 64px;
-    height: 22px;
+    width: 44px;
+    height: 24px;
+    grid-template-columns: minmax(0, 1fr);
     place-items: center;
-    border: var(--border) solid var(--stipe-linework);
+    border: 0;
     border-radius: var(--radius-field);
-    background: var(--color-base-200);
+    background: transparent;
     cursor: row-resize;
     touch-action: none;
     user-select: none;
   }
   .caps-resize-handle[aria-orientation="vertical"] {
-    width: 22px;
-    height: 64px;
+    width: 24px;
+    height: 44px;
     cursor: col-resize;
   }
-  .caps-resize-handle[data-resize-variant="notch"] {
-    border-radius: var(--radius-box) var(--radius-box) var(--radius-field)
-      var(--radius-field);
-    box-shadow:
-      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.55)),
-      0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)
-        color-mix(
-          in oklab,
-          var(--color-base-content) calc(var(--depth) * 12%),
-          transparent
-        );
-  }
-  .caps-resize-handle:is(:hover, :focus-visible) {
+  .caps-resize-handle:focus-visible {
     outline: 2px solid var(--color-info);
     outline-offset: 2px;
   }
@@ -3016,49 +3005,46 @@
   }
   .caps-resize-grip {
     position: relative;
-    width: 38px;
-    height: 8px;
+    width: 28px;
+    height: 6px;
     border-radius: var(--radius-button);
-    background-color: var(--color-neutral);
-    background-image: linear-gradient(
-      to bottom,
-      oklch(100% 0 0 / calc(var(--depth) * 0.08)),
-      transparent 50%,
-      oklch(0% 0 0 / calc(var(--depth) * 0.015))
-    );
-    box-shadow: var(
-      --stipe-shadow-raised,
-      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.6)),
-      inset 0 -2px 0 color-mix(in oklab, var(--color-neutral) 75%, black),
-      inset 0 0 0 1px
+    background-color: var(--color-base-200);
+    box-shadow:
+      0 0 0 1px
+        color-mix(in oklab, var(--stipe-linework) 80%, var(--color-base-200)),
+      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),
+      0 1px 0
         color-mix(
           in oklab,
-          var(--color-neutral),
-          black calc(var(--depth) * 14%)
-        )
-    );
+          var(--color-base-200),
+          var(--color-base-content) 14%
+        );
+  }
+  .caps-resize-handle:hover .caps-resize-grip {
+    background-color: var(--color-base-300);
   }
   .caps-resize-grip::after {
     content: "";
     position: absolute;
-    inset-inline: 7px;
+    left: 50%;
     top: 50%;
+    width: 2px;
     height: 2px;
-    transform: translateY(-50%);
-    border-radius: var(--radius-button);
-    background: linear-gradient(
-      to bottom,
-      oklch(100% 0 0 / calc(var(--depth) * 0.45)) 50%,
-      oklch(0% 0 0 / calc(var(--depth) * 0.28)) 50%
-    );
+    transform: translate(-50%, -50%);
+    border-radius: var(--radius-selector);
+    background: color-mix(in oklab, var(--color-base-content) 45%, transparent);
     box-shadow:
-      0 -3px 0 -0.5px oklch(100% 0 0 / calc(var(--depth) * 0.45)),
-      0 -2px 0 -0.5px oklch(0% 0 0 / calc(var(--depth) * 0.28)),
-      0 3px 0 -0.5px oklch(100% 0 0 / calc(var(--depth) * 0.45)),
-      0 4px 0 -0.5px oklch(0% 0 0 / calc(var(--depth) * 0.28));
+      -5px 0 0 color-mix(in oklab, var(--color-base-content) 45%, transparent),
+      5px 0 0 color-mix(in oklab, var(--color-base-content) 45%, transparent);
   }
   .caps-resize-handle[aria-orientation="vertical"] .caps-resize-grip {
-    transform: rotate(90deg);
+    width: 6px;
+    height: 28px;
+  }
+  .caps-resize-handle[aria-orientation="vertical"] .caps-resize-grip::after {
+    box-shadow:
+      0 -5px 0 color-mix(in oklab, var(--color-base-content) 45%, transparent),
+      0 5px 0 color-mix(in oklab, var(--color-base-content) 45%, transparent);
   }
   @media (prefers-reduced-motion: reduce) {
     .caps-scroll-thumb-surface {
@@ -3066,6 +3052,10 @@
     }
   }
   @media (forced-colors: active) {
+    .caps-resize-grip {
+      border: 1px solid ButtonText;
+      box-shadow: none;
+    }
     .caps-scroll-track {
       background: Canvas;
       box-shadow: none;
@@ -4663,6 +4653,232 @@
   }
   .caps-form-footer .caps-field-error {
     padding-bottom: var(--spacing-sm);
+  }
+
+  /* The label gutter belongs to an opted-in form. No default Field or Form
+     changes geometry, including the signed-off permissions panel. */
+  :is(.caps-form, .caps-form-section, .caps-fieldset)[data-layout="columns"] {
+    --caps-form-label-col: 9rem;
+  }
+  .caps-form[data-layout="columns"]
+    :is(.caps-form-body, .caps-form-section-fields) {
+    gap: var(--spacing-sm);
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    ) {
+    display: grid;
+    grid-template-columns: var(--caps-form-label-col) minmax(0, 1fr);
+    column-gap: var(--spacing-md);
+    row-gap: var(--spacing-2xs);
+    align-items: center;
+    justify-content: stretch;
+    --caps-field-control-width: 100%;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > .caps-field-copy {
+    display: contents;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > .caps-field-copy
+    > label {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .caps-fieldset[data-layout="columns"] > .caps-fieldset-legend {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > .caps-field-copy
+    > .caps-field-description {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal) {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    max-width: 30rem;
+  }
+  /* Grid controls fill the value column; a switch or checkbox is a fixed-size
+     key, never a stretched track spanning the next settings row. */
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > .caps-switch {
+    width: 40px;
+    justify-self: start;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > .caps-checkbox {
+    width: 24px;
+    justify-self: start;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    .caps-field[data-orientation="vertical"]
+    > .caps-field-lead {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    .caps-field[data-orientation="vertical"]
+    > .caps-field-error-reveal {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    .caps-field[data-orientation="horizontal"]
+    > .caps-field-row
+    > .caps-field-lead {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    .caps-field[data-orientation="horizontal"]
+    > .caps-field-error-reveal {
+    padding-inline-start: calc(var(--caps-form-label-col) + var(--spacing-md));
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    .caps-field:has(> .caps-field-error-reveal[data-open="true"])
+    .caps-field-description,
+  .caps-fieldset[data-layout="columns"]:has(
+      > .caps-field-error-reveal[data-open="true"]
+    )
+    > .caps-fieldset-description {
+    display: none;
+  }
+  .caps-fieldset[data-layout="columns"] {
+    display: grid;
+    grid-template-columns: var(--caps-form-label-col) minmax(0, 1fr);
+    column-gap: var(--spacing-md);
+    row-gap: var(--spacing-2xs);
+    align-items: start;
+  }
+  .caps-fieldset[data-layout="columns"] > .caps-fieldset-legend {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+  }
+  .caps-fieldset[data-layout="columns"] > .caps-fieldset-fields {
+    grid-column: 2;
+    grid-row: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  .caps-fieldset[data-layout="columns"]
+    > :is(.caps-fieldset-description, .caps-field-error-reveal) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .caps-form[data-layout="columns"] .caps-form-footer {
+    padding-inline-start: calc(var(--caps-form-label-col) + var(--spacing-md));
+    max-width: calc(var(--caps-form-label-col) + var(--spacing-md) + 30rem);
+  }
+  /* A short add form can share its one field row with the actions. */
+  @container (min-width: 36rem) {
+    .caps-form[data-layout="columns"]
+      .caps-form-body:has(> .caps-field:first-child:nth-last-child(2)) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+    }
+    .caps-form[data-layout="columns"]
+      .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))
+      > .caps-form-footer {
+      padding-inline-start: 0;
+      max-width: none;
+    }
+  }
+  /* Decide once per form: the 30rem example still has space for a 9rem label
+     and its control, while genuinely narrow phone forms stack every field. */
+  @container (max-width: 20rem) {
+    :is(.caps-form, .caps-form-section)[data-layout="columns"]
+      :is(
+        .caps-field[data-orientation="vertical"],
+        .caps-field[data-orientation="horizontal"] > .caps-field-row
+      ),
+    .caps-fieldset[data-layout="columns"] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    :is(.caps-form, .caps-form-section)[data-layout="columns"]
+      :is(
+        .caps-field[data-orientation="vertical"],
+        .caps-field[data-orientation="horizontal"] > .caps-field-row
+      )
+      > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal),
+    .caps-fieldset[data-layout="columns"] > .caps-fieldset-fields {
+      grid-column: 1;
+      grid-row: 2;
+      max-width: none;
+    }
+    :is(.caps-form, .caps-form-section)[data-layout="columns"]
+      :is(
+        .caps-field[data-orientation="vertical"],
+        .caps-field[data-orientation="horizontal"] > .caps-field-row
+      )
+      > .caps-field-copy
+      > .caps-field-description,
+    :is(.caps-form, .caps-form-section)[data-layout="columns"]
+      .caps-field[data-orientation="vertical"]
+      > .caps-field-error-reveal,
+    .caps-fieldset[data-layout="columns"]
+      > :is(.caps-fieldset-description, .caps-field-error-reveal) {
+      grid-column: 1;
+      grid-row: 3;
+    }
+    :is(.caps-form, .caps-form-section)[data-layout="columns"]
+      :is(
+        .caps-field[data-orientation="vertical"],
+        .caps-field[data-orientation="horizontal"] > .caps-field-row
+      )
+      > .caps-field-copy
+      > label,
+    .caps-fieldset[data-layout="columns"] > .caps-fieldset-legend {
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
+    :is(.caps-form, .caps-form-section)[data-layout="columns"]
+      .caps-field[data-orientation="horizontal"]
+      > .caps-field-error-reveal,
+    .caps-form[data-layout="columns"] .caps-form-footer {
+      padding-inline-start: 0;
+      max-width: none;
+    }
   }
 
   /* Choice cards: a RadioGroup option with room for a description and a

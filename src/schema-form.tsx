@@ -7,7 +7,7 @@ import {
   type ReactFormExtendedApi,
   type StandardSchemaV1,
 } from "@tanstack/react-form";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 
 import { Button, type ButtonProps } from "./components/button.js";
 import {
@@ -66,6 +66,10 @@ export type SchemaFormOptions<V extends FormValues, Out> = {
     | Promise<void>
     | SubmitResult<V>
     | undefined;
+  /** Called only after a saved result, with the new raw-value baseline. */
+  onSaved?: ((values: V) => void) | undefined;
+  /** Safe message for a thrown submit; the cause is logged, never shown. */
+  failure?: string | undefined;
 };
 
 /** The schema as TanStack validates it: raw values in, any output. */
@@ -104,6 +108,18 @@ export type SchemaFormModel<V extends FormValues> = {
 };
 
 const serverKey = "onServer";
+
+/** Keep the user's place when a submitted form reveals validation errors. */
+function focusFirstInvalid(form: HTMLFormElement | null) {
+  const invalid = form?.querySelector<HTMLElement>('[aria-invalid="true"]');
+  if (invalid?.matches("input, select, textarea, button, [tabindex]")) {
+    invalid.focus();
+  } else {
+    invalid
+      ?.querySelector<HTMLElement>("input, select, textarea, button")
+      ?.focus();
+  }
+}
 
 function hasServerError(field: AnyFieldApi): boolean {
   return field.state.meta.errorMap.onServer !== undefined;
@@ -179,9 +195,16 @@ export function useSchemaForm<V extends FormValues, Out>(
         setError(parsed.issues[0]?.message ?? "Check the form and try again.");
         return;
       }
-      const result = (await options.onSubmit(parsed.value, value)) ?? {
-        kind: "saved",
-      };
+      let result: SubmitResult<V>;
+      try {
+        result = (await options.onSubmit(parsed.value, value)) ?? {
+          kind: "saved",
+        };
+      } catch (cause) {
+        console.error("SchemaForm submit failed", cause);
+        setError(options.failure ?? "Couldn't save changes. Try again.");
+        return;
+      }
       if (result.kind === "refused") {
         setError(result.error ?? null);
         const wide: AnyFormApi = formApi;
@@ -194,6 +217,7 @@ export function useSchemaForm<V extends FormValues, Out>(
       setSavedBaseline(baseline);
       formApi.reset(baseline);
       setSaved(result.message ?? "Saved");
+      options.onSaved?.(baseline);
     },
   });
   return {
@@ -238,6 +262,9 @@ export type SchemaFormPresentation = {
   submitLabel?: ReactNode;
   /** Show a Discard action while there are unsaved changes. */
   discardLabel?: ReactNode;
+  /** A secondary exit action, shown even when clean; never submits or discards. */
+  onCancel?: () => void;
+  cancelLabel?: ReactNode;
   /** Keep the primary action available on a clean form (create forms). */
   allowClean?: boolean;
   /** Replaces the SaveBar, such as a footer with a retry key; `null` drops it. */
@@ -256,38 +283,58 @@ export type SchemaFormProps<
   V extends FormValues,
   Out,
 > = SchemaFormPresentation &
-  ({ model: SchemaFormModel<V> } | SchemaFormOptions<V, Out>);
+  (
+    | { model: SchemaFormModel<V>; onSaved?: never; failure?: never }
+    | SchemaFormOptions<V, Out>
+  );
 
 function BoundSchemaForm<V extends FormValues>({
   model,
   submitLabel = "Save changes",
   discardLabel,
+  onCancel,
+  cancelLabel,
   allowClean,
+  layout,
   footer,
   children,
   disabled = false,
   ...props
 }: SchemaFormPresentation & { model: SchemaFormModel<V> }) {
   const { submitting } = useSchemaFormStatus(model);
+  const formRef = useRef<HTMLFormElement>(null);
   return (
     <Form
       {...props}
+      ref={formRef}
+      layout={layout}
       busy={submitting}
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
-        if (!model.form.state.isSubmitting) void model.submit();
+        if (!model.form.state.isSubmitting)
+          void model.submit().then(() => {
+            // React commits field errors after TanStack completes validation.
+            setTimeout(() => {
+              focusFirstInvalid(formRef.current);
+            }, 0);
+          });
       }}
     >
-      {children ?? <FormFields model={model} disabled={disabled} />}
+      {children ?? (
+        <FormFields model={model} disabled={disabled} layout={layout} />
+      )}
       {footer !== undefined ? (
         footer
       ) : (
         <SaveBar
           model={model}
           label={submitLabel}
-          {...(discardLabel === undefined ? {} : { discardLabel })}
-          {...(allowClean === undefined ? {} : { allowClean })}
+          discardLabel={onCancel === undefined ? discardLabel : undefined}
+          onCancel={onCancel}
+          cancelLabel={cancelLabel}
+          allowClean={allowClean ?? onCancel !== undefined}
+          divider={onCancel === undefined}
         />
       )}
     </Form>
@@ -298,9 +345,17 @@ function OwnedSchemaForm<V extends FormValues, Out>({
   schema,
   defaultValues,
   onSubmit,
+  onSaved,
+  failure,
   ...props
 }: SchemaFormPresentation & SchemaFormOptions<V, Out>) {
-  const model = useSchemaForm({ schema, defaultValues, onSubmit });
+  const model = useSchemaForm({
+    schema,
+    defaultValues,
+    onSubmit,
+    onSaved,
+    failure,
+  });
   return <BoundSchemaForm {...props} model={model} />;
 }
 
@@ -326,6 +381,9 @@ export type SaveBarProps<V extends FormValues> = {
   label: ReactNode;
   /** Show a Discard action while there are unsaved changes. */
   discardLabel?: ReactNode;
+  /** A secondary exit action that never submits or resets the form. */
+  onCancel?: (() => void) | undefined;
+  cancelLabel?: ReactNode;
   /**
    * Keep the primary action available on a clean form (create forms that may
    * submit their defaults). By default a clean form has nothing to save.
@@ -347,12 +405,14 @@ export function SaveBar<V extends FormValues>({
   model,
   label,
   discardLabel,
+  onCancel,
+  cancelLabel = "Cancel",
   allowClean = false,
   dirtyLabel = "Unsaved changes",
   buttonProps,
   ...props
 }: SaveBarProps<V>) {
-  const { dirty, submitting, canSubmit } = useSchemaFormStatus(model);
+  const { dirty, submitting } = useSchemaFormStatus(model);
   const status = submitting ? null : model.saved && !dirty ? (
     <Status tone="success" size="compact" label={model.saved} />
   ) : dirty ? (
@@ -360,7 +420,16 @@ export function SaveBar<V extends FormValues>({
   ) : null;
   return (
     <FormFooter {...props} error={model.error} status={status}>
-      {discardLabel && dirty ? (
+      {onCancel ? (
+        <Button
+          type="button"
+          variant="ghost"
+          disabled={submitting}
+          onClick={onCancel}
+        >
+          {cancelLabel}
+        </Button>
+      ) : discardLabel && dirty ? (
         <Button
           type="button"
           variant="ghost"
@@ -374,7 +443,8 @@ export function SaveBar<V extends FormValues>({
         {...buttonProps}
         type="submit"
         loading={submitting}
-        disabled={submitting || !canSubmit || (!dirty && !allowClean)}
+        disabled={submitting || (!dirty && !allowClean)}
+        title={!dirty && !allowClean ? "No changes to save" : undefined}
       >
         {label}
       </Button>

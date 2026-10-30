@@ -4,6 +4,7 @@ import {
   useEffect,
   useId,
   useRef,
+  type ComponentPropsWithRef,
   type HTMLAttributes,
   type ReactNode,
 } from "react";
@@ -63,6 +64,13 @@ export type StatusTrayProps = Omit<HTMLAttributes<HTMLDivElement>, "title"> & {
   /** Trailing controls after the chips (Send, Expand, …). */
   trailing?: ReactNode;
   /**
+   * Compose a native button trigger, forwarding these attributes, children
+   * and ref. StatusTray still owns disclosure, dismissal and return focus.
+   * Omit to retain the default chip and its theme-owned finish.
+   */
+  renderTrigger?:
+    ((props: ComponentPropsWithRef<"button">) => ReactNode) | undefined;
+  /**
    * Structural seat. `housing` sits on the plastic below a screen; `screen`
    * sits inside a Display as flat, screen-native text (the wiki's screen
    * material rule); `host` means a host's own chrome draws the chips, so
@@ -85,6 +93,7 @@ export function StatusTray({
   onOpenChange,
   leading,
   trailing,
+  renderTrigger,
   placement = "housing",
   align = "end",
   hostInset,
@@ -178,44 +187,55 @@ export function StatusTray({
         <div className="caps-status-tray-row">
           {leading}
           <div className="caps-status-tray-chips">
-            {items.map((item) => (
-              <Fragment key={item.id}>
-                <button
-                  ref={(node) => {
-                    if (node) triggers.current.set(item.id, node);
-                    else triggers.current.delete(item.id);
-                  }}
-                  type="button"
-                  className="caps-status-tray-chip"
-                  aria-expanded={activeId === item.id}
-                  aria-controls={
-                    activeId === item.id ? `${scope}-${item.id}` : undefined
-                  }
-                  aria-label={item.accessibleLabel}
-                  disabled={item.disabled}
-                  title={item.disabled ? item.accessibleLabel : undefined}
-                  aria-haspopup="dialog"
-                  data-status-tray-chip={item.id}
-                  onClick={() => {
-                    onOpenChange(openId === item.id ? null : item.id);
-                  }}
-                >
-                  {item.tone ? (
-                    <Status
-                      size="compact"
-                      glyph={item.glyph ?? "dot"}
-                      motion={item.motion ?? "none"}
-                      tone={item.tone}
-                    />
-                  ) : null}
-                  <span className="caps-status-tray-label">{item.label}</span>
-                  {item.count !== undefined && item.count > 0 ? (
-                    <span className="caps-status-tray-count">{item.count}</span>
-                  ) : null}
-                </button>
-                {item.after}
-              </Fragment>
-            ))}
+            {items.map((item) => {
+              const trigger = {
+                ref: (node: HTMLButtonElement | null) => {
+                  if (node) triggers.current.set(item.id, node);
+                  else triggers.current.delete(item.id);
+                },
+                type: "button" as const,
+                className: renderTrigger ? undefined : "caps-status-tray-chip",
+                "aria-expanded": activeId === item.id,
+                "aria-controls":
+                  activeId === item.id ? `${scope}-${item.id}` : undefined,
+                "aria-label": item.accessibleLabel,
+                disabled: item.disabled,
+                title: item.disabled ? item.accessibleLabel : undefined,
+                "aria-haspopup": "dialog" as const,
+                "data-status-tray-chip": item.id,
+                onClick: () => {
+                  onOpenChange(openId === item.id ? null : item.id);
+                },
+                children: (
+                  <>
+                    {item.tone ? (
+                      <Status
+                        size="compact"
+                        glyph={item.glyph ?? "dot"}
+                        motion={item.motion ?? "none"}
+                        tone={item.tone}
+                      />
+                    ) : null}
+                    <span className="caps-status-tray-label">{item.label}</span>
+                    {item.count !== undefined && item.count > 0 ? (
+                      <span className="caps-status-tray-count">
+                        {item.count}
+                      </span>
+                    ) : null}
+                  </>
+                ),
+              };
+              return (
+                <Fragment key={item.id}>
+                  {renderTrigger ? (
+                    renderTrigger(trigger)
+                  ) : (
+                    <button {...trigger} />
+                  )}
+                  {item.after}
+                </Fragment>
+              );
+            })}
           </div>
           {trailing}
         </div>
