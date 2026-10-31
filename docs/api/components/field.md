@@ -79,6 +79,7 @@ Props accepted by FieldSet.
 | Name           | Type        | Description                                                       |
 | -------------- | ----------- | ----------------------------------------------------------------- |
 | `legend`       | `ReactNode` | -                                                                 |
+| `legendTitle?` | `string`    | Full legend on hover when a columns form clips it to one line.    |
 | `description?` | `ReactNode` | -                                                                 |
 | `layout?`      | `"columns"` | Opt-in label/control grid when used without a Form parent.        |
 | `error?`       | `ReactNode` | The group's announced error, such as "Choose at least one right". |
@@ -103,6 +104,7 @@ Props accepted by Field.
 | `error?`       | `ReactNode`                                  | -                                                                                                                                                                |
 | `icon?`        | `ReactNode`                                  | A decorative marker, such as a Sigil or App icon, before the label. It is hidden from assistive tech; the label stays the control's name.                        |
 | `label?`       | `ReactNode`                                  | -                                                                                                                                                                |
+| `labelTitle?`  | `string`                                     | Full label on hover when a columns form clips it to one line.                                                                                                    |
 | `orientation?` | `"horizontal"` \| `"inline"` \| `"vertical"` | `vertical` stacks label, control and error; `horizontal` puts the control opposite its copy (settings rows); `inline` puts a checkbox or switch before its copy. |
 | `optional?`    | `boolean`                                    | Marks an optional field in a mostly required form.                                                                                                               |
 | `readout?`     | `boolean`                                    | The child is a read-only readout, such as a Status, not a control: the label names the row and nothing is wired to the child.                                    |

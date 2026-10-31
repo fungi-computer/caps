@@ -24,6 +24,58 @@ import {
 
 afterEach(cleanup);
 
+it.each(
+  ([undefined, "default", "fill"] as const).flatMap((size) =>
+    [false, true].map((composed) => ({
+      size,
+      composed,
+    })),
+  ),
+)("keeps size=$size geometry (composed=$composed)", ({ size, composed }) => {
+  const content = <DialogTitle>Print preview</DialogTitle>;
+  const props = size === undefined ? {} : { size };
+  render(
+    <Dialog open>
+      {composed ? (
+        <DialogContent {...props}>{content}</DialogContent>
+      ) : (
+        <DialogPortal>
+          <DialogPopup {...props}>{content}</DialogPopup>
+        </DialogPortal>
+      )}
+    </Dialog>,
+  );
+  const popup = requireValue(
+    document.querySelector('[role="dialog"]'),
+    "sized popup",
+  );
+  expect(popup.getAttribute("data-size")).toBe(size ?? "default");
+  expect(popup.classList.contains("p-lg")).toBe(true);
+  expect(popup.classList.contains("rounded-box")).toBe(true);
+  expect(popup.classList.contains("bg-base-100")).toBe(true);
+  if (size === "fill") {
+    for (const token of [
+      "fixed",
+      "inset-0",
+      "h-full",
+      "w-full",
+      "max-w-none",
+    ]) {
+      expect(popup.classList.contains(token)).toBe(true);
+    }
+    expect(popup.className).not.toMatch(/translate|left-1\/2|top-1\/2/);
+    expect(popup.classList.contains("w-11/12")).toBe(false);
+    expect(popup.classList.contains("max-w-(--container-lg)")).toBe(false);
+  } else {
+    expect(popup.classList.contains("max-h-screen")).toBe(true);
+    expect(popup.classList.contains("w-11/12")).toBe(true);
+    expect(popup.classList.contains("max-w-(--container-lg)")).toBe(true);
+    expect(popup.classList.contains("inset-0")).toBe(false);
+    expect(popup.classList.contains("-translate-x-1/2")).toBe(composed);
+    expect(popup.classList.contains("-translate-y-1/2")).toBe(composed);
+  }
+});
+
 it("leaves body dialogs ranked by portal recency", () => {
   render(
     <Dialog open>
@@ -299,40 +351,77 @@ it("preserves event and trigger identity while exposing live flags", () => {
   expect(details.isPropagationAllowed).toBe(true);
 });
 
-it("local Escape closes once and restores the trigger focus", async () => {
-  const onOpenChange =
-    vi.fn<(open: boolean, details: DialogChangeDetails) => void>();
-  const view = render(
-    <Dialog onOpenChange={onOpenChange}>
-      <DialogTrigger>Open</DialogTrigger>
-      <DialogContent>
-        <DialogTitle>Title</DialogTitle>
-      </DialogContent>
-    </Dialog>,
-  );
-  const trigger = requireValue(
-    view.queryBySelector("button"),
-    "Escape-test Dialog trigger",
-  );
-  act(() => {
-    trigger.click();
-  });
-  const dialog = requireValue(
-    document.body.querySelector(".caps-dialog-popup"),
-    "Escape-test Dialog panel",
-  );
-  let event: KeyboardEvent | undefined;
-  await act(async () => {
-    event = fireKey(dialog, { key: "Escape" });
-    await new Promise((resolve) => setTimeout(resolve, 0));
-  });
-  expect(requireValue(event, "dispatched Escape event").defaultPrevented).toBe(
-    true,
-  );
-  expect(onOpenChange).toHaveBeenCalledTimes(2);
-  expect(onOpenChange.mock.calls.at(-1)?.[1].reason).toBe("escape-key");
-  expect(document.activeElement).toBe(trigger);
-});
+it.each(["default", "fill"] as const)(
+  "local Escape closes size=%s once and restores the trigger focus",
+  async (size) => {
+    const onOpenChange =
+      vi.fn<(open: boolean, details: DialogChangeDetails) => void>();
+    const view = render(
+      <Dialog onOpenChange={onOpenChange}>
+        <DialogTrigger>Open</DialogTrigger>
+        <DialogContent size={size}>
+          <DialogTitle>Title</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    );
+    const trigger = requireValue(
+      view.queryBySelector("button"),
+      "Escape-test Dialog trigger",
+    );
+    act(() => {
+      trigger.click();
+    });
+    const dialog = requireValue(
+      document.body.querySelector(".caps-dialog-popup"),
+      "Escape-test Dialog panel",
+    );
+    let event: KeyboardEvent | undefined;
+    await act(async () => {
+      event = fireKey(dialog, { key: "Escape" });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(
+      requireValue(event, "dispatched Escape event").defaultPrevented,
+    ).toBe(true);
+    expect(onOpenChange).toHaveBeenCalledTimes(2);
+    expect(onOpenChange.mock.calls.at(-1)?.[1].reason).toBe("escape-key");
+    expect(document.activeElement).toBe(trigger);
+  },
+);
+
+it.each(["default", "fill"] as const)(
+  "size=%s respects finalFocus=false",
+  async (size) => {
+    const view = render(
+      <Dialog>
+        <DialogTrigger>Open</DialogTrigger>
+        <DialogContent size={size} finalFocus={false}>
+          <DialogTitle>Print preview</DialogTitle>
+          <DialogClose>Close</DialogClose>
+        </DialogContent>
+      </Dialog>,
+    );
+    const trigger = requireValue(view.queryBySelector("button"), "trigger");
+    act(() => {
+      trigger.focus();
+    });
+    act(() => {
+      trigger.click();
+    });
+    await act(async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    });
+    const close = requireValue(
+      document.querySelector<HTMLButtonElement>(".caps-dialog-popup button"),
+      "close button",
+    );
+    await act(async () => {
+      close.click();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(document.activeElement).not.toBe(trigger);
+  },
+);
 
 it("host Escape suppresses the consumer close callback", async () => {
   const onOpenChange =

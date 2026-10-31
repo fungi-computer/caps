@@ -127,6 +127,13 @@ Caps owns interaction and chooses the semantic destination. A null destination
 waits for the shell root to mount, including during server rendering. Base UI
 menu, Combobox and dialog portals still accept explicit container overrides.
 
+`DialogContent` and the composed `DialogPopup` accept `size="fill"` for a
+full-window frame. It fills the portal's fixed-position containing block (the
+viewport by default), without centring or a maximum width, and retains Caps
+padding, radius and material. Omit `size` or use `size="default"` for the
+existing width-limited frame; `DialogContent` centres it. Focus targets and
+Escape ownership are unchanged.
+
 In body mode, isolate the App root so page controls cannot paint over portaled
 dialogs. Agar's `mountApp` does this. Dialogs and menus rank by portal order;
 tooltips and toasts use their Stipe layers.

@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.6.0
+
+### Minor Changes
+
+- Changes since 0.5.0:
+
+  - feat(caps): add full-window dialog size
+
 ## 0.5.0
 
 ### Minor Changes

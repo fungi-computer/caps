@@ -11,3 +11,4 @@ builds workspace dependencies; tests never rebuild shared package outputs.
 | `scroll-area.browser.mjs`     | Nightly: validates native scrollbar activity/idle behavior with and without reduced motion.                                                                       |
 | `display-density.browser.mjs` | Nightly: compares rendered default and compact Display gasket padding in Latte and Mocha.                                                                         |
 | `resize-handle.browser.mjs`   | Nightly: checks the real DPR2 Latte/Mocha resize knob in both orientations, caller placement, keyboard/focus, captured-pointer drag and forced-colour visibility. |
+| `dialog-fill.browser.mjs`     | Nightly: checks full-window dialog bounds, horizontal overflow, Escape and return focus at 1400 and 390 in Latte and Mocha.                                       |

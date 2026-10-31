@@ -62,10 +62,26 @@ Props accepted by Dialog.
 
 ---
 
+### DialogPopupProps
+
+```ts
+type DialogPopupProps = BaseDialog.Popup.Props & object;
+```
+
+Props accepted by DialogPopup.
+
+#### Type Declaration
+
+| Name    | Type                    | Description                                                               |
+| ------- | ----------------------- | ------------------------------------------------------------------------- |
+| `size?` | `"default"` \| `"fill"` | Fill the portal's positioning context instead of using the default width. |
+
+---
+
 ### DialogContentProps
 
 ```ts
-type DialogContentProps = BaseDialog.Popup.Props &
+type DialogContentProps = DialogPopupProps &
   Pick<BaseDialog.Portal.Props, "container" | "keepMounted">;
 ```
 

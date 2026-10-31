@@ -109,16 +109,29 @@ export const DialogBackdrop = forwardRef<
   );
 });
 
+/** Props accepted by DialogPopup. */
+export type DialogPopupProps = BaseDialog.Popup.Props & {
+  /** Fill the portal's positioning context instead of using the default width. */
+  size?: "default" | "fill";
+};
+
 /** The styled popup with Base UI composition and caller-controlled focus targets. */
-export const DialogPopup = forwardRef<HTMLDivElement, BaseDialog.Popup.Props>(
-  function DialogPopup({ className, finalFocus, ...props }, ref) {
+export const DialogPopup = forwardRef<HTMLDivElement, DialogPopupProps>(
+  function DialogPopup(
+    { className, finalFocus, size = "default", ...props },
+    ref,
+  ) {
     const dialog = useDialogContext();
     return (
       <BaseDialog.Popup
         {...props}
+        data-size={size}
         className={(state) =>
           cn(
-            "caps-dialog-popup max-h-screen w-11/12 max-w-(--container-lg) overflow-y-auto overscroll-contain rounded-box bg-base-100 p-lg text-base-content shadow-xl",
+            "caps-dialog-popup overflow-y-auto overscroll-contain rounded-box bg-base-100 p-lg text-base-content shadow-xl",
+            size === "fill"
+              ? "fixed inset-0 h-full w-full max-w-none"
+              : "max-h-screen w-11/12 max-w-(--container-lg)",
             resolveClassName(className, state),
           )
         }
@@ -132,7 +145,7 @@ export const DialogPopup = forwardRef<HTMLDivElement, BaseDialog.Popup.Props>(
 );
 
 /** Props accepted by DialogContent. */
-export type DialogContentProps = BaseDialog.Popup.Props &
+export type DialogContentProps = DialogPopupProps &
   Pick<BaseDialog.Portal.Props, "container" | "keepMounted">;
 
 /**
@@ -141,7 +154,7 @@ export type DialogContentProps = BaseDialog.Popup.Props &
  */
 export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
   function DialogContent(
-    { container, keepMounted = true, className, ...props },
+    { container, keepMounted = true, className, size = "default", ...props },
     ref,
   ) {
     const { modal } = useDialogContext();
@@ -150,9 +163,11 @@ export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
         {modal === true ? <DialogBackdrop /> : null}
         <DialogPopup
           {...props}
+          size={size}
           className={(state) =>
             cn(
-              "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+              size === "default" &&
+                "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
               resolveClassName(className, state),
             )
           }

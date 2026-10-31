@@ -29,6 +29,26 @@ import {
 export { Dialog, DropdownMenu, Tooltip } from "./examples.js";
 export { TooltipToolbar } from "./tooltip-toolbar.js";
 
+/** The Caps dialog frame filling an App's viewport, without caller geometry. */
+export const FillDialog: Story = () => (
+  <Dialog>
+    <DialogTrigger>Open full-window dialog</DialogTrigger>
+    <DialogContent size="fill" className="flex flex-col gap-lg">
+      <DialogHeader>
+        <DialogTitle>Full-window dialog</DialogTitle>
+        <DialogDescription>
+          Caps keeps the padding, rounded corners and material while the frame
+          fills the window.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="flex-1" />
+      <DialogFooter>
+        <DialogClose>Close</DialogClose>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+);
+
 export const WindowComposition: Story = () => {
   const [windowElement, setWindowElement] = useState<HTMLDivElement | null>(
     null,
