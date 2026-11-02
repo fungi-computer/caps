@@ -165,6 +165,11 @@ export const FormSection = forwardRef<HTMLElement, FormSectionProps>(
 /** Props accepted by FieldSet. */
 export type FieldSetProps = {
   legend: ReactNode;
+  /**
+   * A decorative Sigil or App icon before the legend, as a Field's `icon`
+   * marks its label. Hidden from assistive tech.
+   */
+  icon?: ReactNode;
   /** Full legend on hover when a columns form clips it to one line. */
   legendTitle?: string;
   description?: ReactNode;
@@ -186,6 +191,7 @@ export const FieldSet = forwardRef<HTMLFieldSetElement, FieldSetProps>(
       className,
       description,
       error,
+      icon,
       layout,
       legend,
       legendTitle,
@@ -211,6 +217,11 @@ export const FieldSet = forwardRef<HTMLFieldSetElement, FieldSetProps>(
         ref={ref}
       >
         <legend className="caps-fieldset-legend" title={legendTitle}>
+          {icon ? (
+            <span className="caps-field-icon" aria-hidden="true">
+              {icon}
+            </span>
+          ) : null}
           {legend}
         </legend>
         {description ? (

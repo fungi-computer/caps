@@ -5,6 +5,7 @@ import { URL } from "node:url";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { chromium } from "playwright";
+import { launchIsolatedChromium } from "../../../tooling/proof-runner/isolated-chromium.mjs";
 import { ChatBubble } from "../dist/components/chat-bubble.js";
 
 const styles = await readFile(
@@ -29,7 +30,7 @@ const content = renderToStaticMarkup(
     ),
   ),
 );
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, []);
 try {
   const page = await browser.newPage();
   await page.setContent(content);

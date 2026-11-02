@@ -1,12 +1,17 @@
 import assert from "node:assert/strict";
 import process from "node:process";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
-const browser = await chromium.launch();
+const origin = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61003";
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 try {
   const page = await browser.newPage();
   await page.goto(
-    `${process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61003"}/?story=checks--scroll-area--changing-content&mode=preview`,
+    `${origin}/?story=checks--scroll-area--changing-content&mode=preview`,
   );
   const viewport = page.getByRole("region", { name: "Changing collection" });
   const frame = page.locator(".caps-scroll-area");

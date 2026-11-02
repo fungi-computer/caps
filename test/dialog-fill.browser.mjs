@@ -3,12 +3,16 @@ import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import process from "node:process";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 const base = process.env.CAPS_WORKBENCH_URL;
 assert.ok(base, "CAPS_WORKBENCH_URL must point at the built Caps workbench");
 const shots = process.env.PRINTS_VIEWER_SHOTS;
 if (shots) await mkdir(shots, { recursive: true });
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(base));
 try {
   for (const width of [1400, 390]) {
     for (const theme of ["light", "dark"]) {

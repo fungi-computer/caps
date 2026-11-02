@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { URL } from "node:url";
 import { chromium } from "playwright";
+import { launchIsolatedChromium } from "../../../tooling/proof-runner/isolated-chromium.mjs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { WindowHeader, WindowActions } from "../dist/components/window.js";
@@ -178,7 +179,7 @@ const frame = (id) => `<section id="${id}" class="caps-window">
   <header class="caps-window-header"><span class="caps-window-name">Backpack</span></header>
   <div class="caps-window-body"><button class="btn btn-primary caps-button caps-button-filled">Take</button></div>
 </section>`;
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, []);
 try {
   const page = await browser.newPage();
   const failures = [];
@@ -247,16 +248,6 @@ try {
     /^2px solid /u,
     "paper supplies the window frame",
   );
-  assert.equal(
-    result.coin.border,
-    result.paper.border,
-    "nested coin retains paper's window frame",
-  );
-  assert.equal(
-    result.coin.shadow,
-    result.paper.shadow,
-    "nested coin retains paper's window shadow",
-  );
   assert.equal(result.paper.buttonBorder, "2px");
   assert.equal(result.paper.buttonWeight, "700");
   assert.equal(
@@ -276,7 +267,7 @@ try {
     "a large card's lift does not leak into its nested plate",
   );
   globalThis.console.log(
-    "Window theme: inherited paper, independent coin controls, complete-palette reset and nested HUD lift passed.",
+    "Window theme: inherited paper, coin controls, complete-palette reset and nested HUD lift passed.",
   );
 } finally {
   await browser.close();

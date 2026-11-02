@@ -5,6 +5,10 @@ import process from "node:process";
 import console from "node:console";
 import { fileURLToPath, URL } from "node:url";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 const origin = process.env.CAPS_WORKBENCH_URL;
 assert.ok(origin, "Run through the maintained workbench-proofs command");
@@ -17,7 +21,7 @@ const output =
     ),
   );
 await mkdir(output, { recursive: true });
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 const specimens = [];
 try {
   for (const theme of ["latte", "mocha"]) {

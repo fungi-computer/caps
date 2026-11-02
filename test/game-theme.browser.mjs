@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { URL } from "node:url";
 import { chromium } from "playwright";
+import { launchIsolatedChromium } from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 // Retained game palette values. Tape selects night values even within a day
 // game; the tint continues through the material boundary.
@@ -10,7 +11,7 @@ const primary = {
   ember: ["rgb(164, 70, 42)", "rgb(224, 132, 85)"],
   tide: ["rgb(47, 98, 115)", "rgb(134, 185, 194)"],
 };
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, []);
 try {
   const page = await browser.newPage();
   page.setDefaultTimeout(15_000);

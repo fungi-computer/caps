@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
 import process from "node:process";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 const origin = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61004";
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 try {
   const page = await browser.newPage({ reducedMotion: "reduce" });
   const errors = [];

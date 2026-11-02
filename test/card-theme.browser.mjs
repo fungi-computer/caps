@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { URL } from "node:url";
 import { chromium } from "playwright";
+import { launchIsolatedChromium } from "../../../tooling/proof-runner/isolated-chromium.mjs";
 import { createElement as h } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Card } from "../dist/components/card.js";
@@ -22,7 +23,7 @@ const css = await readFile(
 );
 const card = (id, props = {}) =>
   h(Card, { id, ...props }, h("a", { href: "#play" }, "Play"));
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, []);
 try {
   const context = await browser.newContext({ reducedMotion: "no-preference" });
   try {

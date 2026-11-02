@@ -4,6 +4,10 @@ import { resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath, URL } from "node:url";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 import { createServer } from "vite";
 
 const shots = process.env.CAPS_DISABLED_SHOTS;
@@ -17,7 +21,7 @@ const server = await createServer({
 await server.listen();
 const origin = server.resolvedUrls?.local[0];
 assert.ok(origin, "fixture server has an origin");
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 const face = async (button, opacity = "1") => {
   await button
     .page()

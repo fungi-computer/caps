@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 import process from "node:process";
 import { URL } from "node:url";
 import { readFile } from "node:fs/promises";
@@ -9,7 +13,7 @@ import { AppStatusBar } from "../dist/blocks/app-status-bar.js";
 import { KeycapButton } from "../dist/components/keycap.js";
 
 const origin = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61004";
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 try {
   const css = await readFile(
     new URL(import.meta.resolve("@fungi.computer/caps/styles.css")),

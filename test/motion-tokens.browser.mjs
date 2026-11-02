@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { URL } from "node:url";
 import { chromium } from "playwright";
+import { launchIsolatedChromium } from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 // The compiled public CSS, without Ladle: what a consumer actually ships.
 const css = await readFile(
@@ -9,7 +10,7 @@ const css = await readFile(
   "utf8",
 );
 
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, []);
 try {
   for (const reducedMotion of ["no-preference", "reduce"]) {
     const page = await browser.newPage({ reducedMotion });

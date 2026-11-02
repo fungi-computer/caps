@@ -5,6 +5,7 @@ import { readFile } from "node:fs/promises";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { chromium } from "playwright";
+import { launchIsolatedChromium } from "../../../tooling/proof-runner/isolated-chromium.mjs";
 import { StoreCard } from "../dist/components/store-card.js";
 
 const styles = await readFile(
@@ -32,7 +33,7 @@ const markup = renderToStaticMarkup(
     action: createElement("a", { href: "/play" }, "Play"),
   }),
 );
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, []);
 try {
   const page = await browser.newPage();
   await page.setContent(markup);

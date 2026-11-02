@@ -62,6 +62,11 @@ export type KeycapButtonProps = Omit<
   readout?: ReactNode;
   tone?: KeycapTone;
   /**
+   * `compact` is the details-panel key: 2.25rem high, centred `sm` label.
+   * It sizes to its legend in a row and fills its cell in a grid.
+   */
+  density?: "regular" | "compact";
+  /**
    * Toggle state for mode keys. `undefined` is a momentary key; a boolean adds
    * `aria-pressed` and lights the key's indicator.
    */
@@ -86,6 +91,7 @@ export const KeycapButton = forwardRef<HTMLButtonElement, KeycapButtonProps>(
       icon,
       readout,
       tone = "neutral",
+      density = "regular",
       pressed,
       expanded,
       className,
@@ -102,6 +108,7 @@ export const KeycapButton = forwardRef<HTMLButtonElement, KeycapButtonProps>(
         type={type}
         className={cn("caps-keycap-button", className)}
         data-tone={tone}
+        data-density={density === "compact" ? density : undefined}
         aria-pressed={pressed}
         aria-expanded={expanded}
         aria-keyshortcuts={props["aria-keyshortcuts"] ?? shortcut}

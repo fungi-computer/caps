@@ -18,7 +18,11 @@ import {
   FormSection,
   NumberField,
 } from "./components/field.js";
-import { IconCheckbox } from "./components/icon-checkbox.js";
+import {
+  CheckKey,
+  CheckKeys,
+  IconCheckbox,
+} from "./components/icon-checkbox.js";
 import { IconRadio } from "./components/icon-radio.js";
 import { Input } from "./components/input.js";
 import { InputGroup, InputGroupAddon } from "./components/input-group.js";
@@ -438,6 +442,7 @@ function SpecGroup({
     return (
       <FieldSet
         legend={legend}
+        icon={spec.icon}
         layout={layout}
         {...(layout === "columns" ? { legendTitle: legend } : {})}
         description={spec.help}
@@ -466,16 +471,16 @@ function SpecGroup({
             ))}
           </div>
         ) : (
-          spec.options.map((option) => (
-            <Field
-              key={option.value}
-              label={option.label}
-              description={option.description}
-              orientation="inline"
-            >
-              <Checkbox
+          // A short multi-select reads as one row of check keys.
+          <CheckKeys>
+            {spec.options.map((option) => (
+              <CheckKey
+                key={option.value}
                 name={spec.name}
                 value={option.value}
+                label={option.label}
+                icon={option.icon}
+                hint={option.description}
                 disabled={option.disabled}
                 checked={selected.includes(option.value)}
                 onBlur={field.handleBlur}
@@ -483,8 +488,8 @@ function SpecGroup({
                   toggle(option.value, event.currentTarget.checked);
                 }}
               />
-            </Field>
-          ))
+            ))}
+          </CheckKeys>
         )}
       </FieldSet>
     );
@@ -495,6 +500,7 @@ function SpecGroup({
   return (
     <FieldSet
       legend={legend}
+      icon={spec.icon}
       layout={layout}
       {...(layout === "columns" ? { legendTitle: legend } : {})}
       description={spec.help}

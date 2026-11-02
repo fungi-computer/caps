@@ -11,6 +11,10 @@ import {
   waitForMeta,
 } from "../scripts/workbench-process.mjs";
 import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
+import {
   assertMetaCoverage,
   readCoverage,
 } from "../scripts/workbench-coverage.mjs";
@@ -164,7 +168,11 @@ async function main() {
     assertMetaCoverage(meta, await readCoverage());
     const storyIds = Object.keys(meta.stories);
     const playwright = await importPlaywright();
-    browser = await playwright.chromium.launch({ headless: true });
+    browser = await launchIsolatedChromium(
+      playwright.chromium,
+      portsOf(baseUrl),
+      { headless: true },
+    );
     const failures = await visitAll(browser, baseUrl, storyIds);
     const summary = {
       stories: storyIds.length,

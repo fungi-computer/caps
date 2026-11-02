@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { fileURLToPath, URL } from "node:url";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 import { createServer } from "vite";
 
 const server = await createServer({
@@ -12,7 +16,7 @@ const server = await createServer({
 await server.listen();
 const origin = server.resolvedUrls?.local[0];
 assert.ok(origin);
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 try {
   for (const height of [844, 900]) {
     for (const material of ["", "surface", "surface&screen"]) {

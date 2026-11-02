@@ -3,10 +3,14 @@ import { mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import process from "node:process";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 const base = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61004";
 const shotDirectory = process.env.CAPS_DISPLAY_DENSITY_SHOT_DIR;
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(base));
 try {
   const page = await browser.newPage({
     viewport: { width: 1200, height: 800 },

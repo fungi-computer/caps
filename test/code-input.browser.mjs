@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
 import process from "node:process";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 const origin = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61004";
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 try {
   for (const width of [1440, 390]) {
     for (const reducedMotion of ["no-preference", "reduce"]) {
@@ -36,6 +40,9 @@ try {
           const slots = [
             ...field.parentElement.querySelectorAll(".caps-code-slot"),
           ];
+          // Read the settled edge, not a box-shadow transition's first frame.
+          for (const slot of slots)
+            for (const animation of slot.getAnimations()) animation.finish();
           const active = slots.findIndex(
             (slot) => slot.dataset.active === "true",
           );

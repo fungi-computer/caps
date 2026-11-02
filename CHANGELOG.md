@@ -1,5 +1,19 @@
 # @fungi.computer/caps
 
+## 0.7.0
+
+### Minor Changes
+
+- Changes since 0.6.0:
+
+  - feat(hub,caps): give the shared Print page the Prints viewer language
+  - feat(caps,tourtois,hub): check keys for short multi-selects
+  - fix(caps): keep 44px touch targets for switches, swatches and compact keys
+  - feat(caps,tourtois): tight Sigil-labelled keys, connectors and avatar
+    settings
+  - feat(caps,grove,tourtois,hub): tight Sigil-labelled Computer and Agent forms
+  - fix(caps): keep a held key when the pointer leaves the HoldButton
+
 ## 0.6.0
 
 ### Minor Changes

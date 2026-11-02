@@ -26,6 +26,9 @@ export type HoldButtonProps = {
 
 const confirmKeys = new Set(["Enter", " "]);
 
+/** What is holding the button: the confirm key, or one pointer by id. */
+type Holder = "key" | number;
+
 /**
  * For an action nothing can undo: press and hold (pointer, Space or Enter)
  * while a fill rises; let go early and it drops back; hold to the top and the
@@ -57,6 +60,7 @@ export const HoldButton = forwardRef<HTMLButtonElement, HoldButtonProps>(
     const fill = useRef<HTMLSpanElement>(null);
     const rising = useRef<Animation | null>(null);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const holder = useRef<Holder | null>(null);
     const confirm = useRef(onConfirm);
     const hint = useId();
     useEffect(() => {
@@ -73,6 +77,7 @@ export const HoldButton = forwardRef<HTMLButtonElement, HoldButtonProps>(
     const finish = () => {
       rising.current = null;
       timer.current = null;
+      holder.current = null;
       confirm.current();
       const element = fill.current;
       if (!element || !canAnimate(element)) return;
@@ -83,7 +88,7 @@ export const HoldButton = forwardRef<HTMLButtonElement, HoldButtonProps>(
       });
     };
 
-    const start = () => {
+    const start = (by: Holder) => {
       const element = fill.current;
       if (
         disabled === true ||
@@ -93,6 +98,7 @@ export const HoldButton = forwardRef<HTMLButtonElement, HoldButtonProps>(
         timer.current
       )
         return;
+      holder.current = by;
       if (!canAnimate(element)) {
         timer.current = setTimeout(finish, holdMs);
         return;
@@ -111,7 +117,12 @@ export const HoldButton = forwardRef<HTMLButtonElement, HoldButtonProps>(
       rising.current = animation;
     };
 
-    const release = () => {
+    // Each input ends only the hold it started: a mouse leaving the button
+    // (or the button moving away from a resting mouse) never cancels a held
+    // key. Blur and Escape end any hold.
+    const release = (by?: Holder) => {
+      if (by !== undefined && holder.current !== by) return;
+      holder.current = null;
       if (timer.current !== null) {
         clearTimeout(timer.current);
         timer.current = null;
@@ -153,32 +164,32 @@ export const HoldButton = forwardRef<HTMLButtonElement, HoldButtonProps>(
           }}
           onPointerDown={(event: PointerEvent<HTMLButtonElement>) => {
             onPointerDown?.(event);
-            if (event.button === 0) start();
+            if (event.button === 0) start(event.pointerId);
           }}
           onPointerUp={(event: PointerEvent<HTMLButtonElement>) => {
             onPointerUp?.(event);
-            release();
+            release(event.pointerId);
           }}
           onPointerLeave={(event: PointerEvent<HTMLButtonElement>) => {
             onPointerLeave?.(event);
-            release();
+            release(event.pointerId);
           }}
           onPointerCancel={(event: PointerEvent<HTMLButtonElement>) => {
             onPointerCancel?.(event);
-            release();
+            release(event.pointerId);
           }}
           onKeyDown={(event: KeyboardEvent<HTMLButtonElement>) => {
             onKeyDown?.(event);
             if (event.key === "Escape") release();
             if (!confirmKeys.has(event.key)) return;
             event.preventDefault();
-            if (!event.repeat) start();
+            if (!event.repeat) start("key");
           }}
           onKeyUp={(event: KeyboardEvent<HTMLButtonElement>) => {
             onKeyUp?.(event);
             if (!confirmKeys.has(event.key)) return;
             event.preventDefault();
-            release();
+            release("key");
           }}
         >
           <span ref={fill} aria-hidden="true" className="caps-hold-fill" />

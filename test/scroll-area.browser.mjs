@@ -2,14 +2,17 @@ import assert from "node:assert/strict";
 import process from "node:process";
 import console from "node:console";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
-const browser = await chromium.launch();
+const origin = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61003";
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 try {
   for (const reducedMotion of ["no-preference", "reduce"]) {
     const page = await browser.newPage({ reducedMotion });
-    await page.goto(
-      `${process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61003"}/?story=navigation--scrollbar&mode=preview`,
-    );
+    await page.goto(`${origin}/?story=navigation--scrollbar&mode=preview`);
     await page.locator(".caps-scroll-thumb-surface").waitFor();
     const samples = await page.evaluate(async () => {
       const viewport = globalThis.document.querySelector(

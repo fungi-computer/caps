@@ -3,6 +3,10 @@ import { readFile } from "node:fs/promises";
 import { URL } from "node:url";
 import process from "node:process";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 const base = process.env.CAPS_WORKBENCH_URL ?? "http://localhost:61007";
 for (const name of [
@@ -63,7 +67,7 @@ for (const name of [
     );
   }
 }
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(base));
 try {
   // Exercise the public compiled CSS without Ladle's source aliases or provider.
   const delivery = await browser.newPage();

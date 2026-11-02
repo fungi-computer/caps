@@ -3,10 +3,15 @@ import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import process from "node:process";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 const output = join(process.cwd(), ".botanical", "overlay-layer-shots");
 await mkdir(output, { recursive: true });
-const browser = await chromium.launch();
+const origin = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61004";
+const browser = await launchIsolatedChromium(chromium, portsOf(origin));
 async function hits(locator) {
   return locator.evaluate((element) => {
     const box = element.getBoundingClientRect();
@@ -26,7 +31,7 @@ try {
         reducedMotion: "reduce",
       });
       await page.goto(
-        `${process.env.CAPS_WORKBENCH_URL}/?story=overlays--window-composition&mode=preview&theme=${theme}`,
+        `${origin}/?story=overlays--window-composition&mode=preview&theme=${theme}`,
       );
       await page
         .getByRole("button", { name: "Window details", exact: true })
@@ -65,7 +70,7 @@ try {
       assert.equal(await hits(tooltip), true);
 
       await page.goto(
-        `${process.env.CAPS_WORKBENCH_URL}/?story=app-root-overlays--app-root&mode=preview&theme=${theme}`,
+        `${origin}/?story=app-root-overlays--app-root&mode=preview&theme=${theme}`,
       );
       await page
         .getByRole("button", { name: "Take over", exact: true })

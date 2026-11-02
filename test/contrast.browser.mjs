@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import process from "node:process";
 import { URL } from "node:url";
 import { chromium } from "playwright";
+import { launchIsolatedChromium } from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 // WCAG AA for normal text and for the 3:1 non-text focus indicator.
 const TEXT_AA = 4.5;
@@ -36,7 +37,7 @@ for (const palette of ["field-guide", "field-guide-night"]) {
 }
 combinations.push({ scheme: "light" }, { scheme: "dark" });
 
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, []);
 const failures = [];
 let measured = 0;
 try {

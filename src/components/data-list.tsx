@@ -33,6 +33,38 @@ export const DataRow = forwardRef<
   return <li {...props} className={cn("list-row", className)} ref={ref} />;
 });
 
+/** Props accepted by FactRow. */
+export type FactRowProps = Omit<LiHTMLAttributes<HTMLLIElement>, "children"> & {
+  /** A 16px Sigil before the label; decorative. */
+  icon?: ReactNode;
+  label: ReactNode;
+  /** The fact; long values wrap in their own column. */
+  children: ReactNode;
+};
+
+/**
+ * One details-panel fact in a compact DataList: a fixed label column (Sigil
+ * and quiet name) and a wrapping value, as in a Print's Image info.
+ */
+export const FactRow = forwardRef<HTMLLIElement, FactRowProps>(function FactRow(
+  { className, icon, label, children, ...props },
+  ref,
+) {
+  return (
+    <li {...props} className={cn("list-row caps-fact", className)} ref={ref}>
+      <span className="caps-fact-label">
+        {icon ? (
+          <span className="caps-fact-icon" aria-hidden="true">
+            {icon}
+          </span>
+        ) : null}
+        {label}
+      </span>
+      <span className="caps-fact-value">{children}</span>
+    </li>
+  );
+});
+
 /** Props accepted by DataListHeading. */
 export type DataListHeadingProps = HTMLAttributes<HTMLHeadingElement> & {
   /** Heading level; the host keeps its document outline. */

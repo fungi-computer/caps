@@ -1,6 +1,7 @@
 import { Card, CardContent } from "../src/components/card.js";
 import { SchemaForm, field } from "../src/form.js";
 import * as z from "zod";
+import { Sigil } from "@fungi.computer/sigils";
 import { settingsDefaults, settingsSchema } from "./form-library.js";
 import "./columns.css";
 
@@ -42,7 +43,18 @@ const remainingKinds = z.object({
       label: "Document access",
       kind: "checkboxes",
       help: "Choose the rights this form may grant.",
-      options: { read: "Read", write: "Write" },
+      options: {
+        read: {
+          label: "Read",
+          icon: <Sigil name="read" />,
+          description: "Open and copy",
+        },
+        write: {
+          label: "Write",
+          icon: <Sigil name="write" />,
+          description: "Edit and delete",
+        },
+      },
     }),
   ),
 });

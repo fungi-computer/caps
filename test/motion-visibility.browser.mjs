@@ -1,9 +1,13 @@
 import assert from "node:assert/strict";
 import process from "node:process";
 import { chromium } from "playwright";
+import {
+  launchIsolatedChromium,
+  portsOf,
+} from "../../../tooling/proof-runner/isolated-chromium.mjs";
 
 const base = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61005";
-const browser = await chromium.launch();
+const browser = await launchIsolatedChromium(chromium, portsOf(base));
 try {
   const page = await browser.newPage({ reducedMotion: "no-preference" });
   for (const [story, selector] of [
