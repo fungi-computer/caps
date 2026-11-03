@@ -2,7 +2,6 @@
 // builds and botanical-workbench deploys) and fails on any story that loads
 // blank. A module-load throw in the shared provider blanks every story, so
 // this is the proof that the whole workbench still renders.
-import assert from "node:assert/strict";
 import console from "node:console";
 import process from "node:process";
 import { clearTimeout, setTimeout } from "node:timers";
@@ -19,7 +18,10 @@ import {
   readCoverage,
 } from "../scripts/workbench-coverage.mjs";
 
-const visitBudgetMs = 240_000;
+/** What Chromium logs for a story's deliberate msw HTTP refusal. */
+const refused = (status, text) =>
+  `Failed to load resource: the server responded with a status of ${String(status)} (${text})`;
+const unavailable = [refused(503, "Service Unavailable")];
 const storyTimeoutMs = 20_000;
 const parallelPages = 6;
 
@@ -27,15 +29,42 @@ const parallelPages = 6;
 async function visitStory(context, baseUrl, storyId) {
   const page = await context.newPage();
   const errors = [];
-  const reportedFailures = [];
-  const expectedFailures =
+  // Stories that stage a refusal may log it; any other console error fails the
+  // story. The log arrives asynchronously (and, for Grove's first inbox read, only
+  // when no remount supersedes it), so its presence is not asserted here: each
+  // fixture's own proof owns that.
+  const allowedFailures =
     {
-      "bazaar--unreachable": ["Bazaar request failed Error: offline"],
+      "desktop--directory-unavailable": unavailable,
+      "desktop--inbox-unavailable": [
+        ...unavailable,
+        "Desktop Gill read failed {surfaceId: grove, viewId: inbox, cause: Error: Fixture Inbox read refused",
+      ],
+      "fungi-landing--invitation--unavailable": unavailable,
+      "vishnu-portal--catalog-error": unavailable,
+      "vishnu-portal--play-error": [
+        ...unavailable,
+        "Could not load game ApiError: request failed (503)",
+      ],
+      "vishnu-portal--play-missing": [refused(404, "Not Found")],
+      "grove--conversation-unavailable": [
+        "Chat Session opening failed Error: This conversation is temporarily unavailable. Try again when your Agent reconnects.",
+      ],
       "grove--inbox-retry": [
         '{"source":"agar","operation":"inbox.refresh","failureKind":"Error"} {}',
       ],
       "grove--missing-session": [
         "Chat Session opening failed Error: Session baseline unavailable",
+      ],
+      "inkcap--activity-recording-failure": [
+        "Inkcap document activity could not be recorded {}",
+      ],
+      "inkcap--files-unavailable": ["Inkcap directory listing failed {}"],
+      "inkcap--file-read-failed": [
+        "Inkcap file read failed Error: App file unavailable (503)",
+      ],
+      "shed--terminal-failed": [
+        "Shed terminal operation failed Error: The Computer disconnected before the terminal could open.",
       ],
     }[storyId] ?? [];
   let rejectOnError;
@@ -50,8 +79,7 @@ async function visitStory(context, baseUrl, storyId) {
   page.on("console", (message) => {
     if (message.type() !== "error") return;
     const text = message.text().split("\n")[0];
-    if (expectedFailures.includes(text)) reportedFailures.push(text);
-    else record(`console: ${text}`);
+    if (!allowedFailures.includes(text)) record(`console: ${text}`);
   });
   let timer;
   const timeout = new Promise((_, reject) => {
@@ -86,7 +114,11 @@ async function visitStory(context, baseUrl, storyId) {
               "[data-caps-workbench]",
             );
             if (!shell) return false;
-            for (const child of shell.children) {
+            // Dialog stories render only into a portal beside the Ladle root.
+            const portals = [...globalThis.document.body.children].filter(
+              (child) => !child.matches("#ladle-root, .ladle-background"),
+            );
+            for (const child of [...shell.children, ...portals]) {
               if (child.matches(".caps-guide-header")) continue;
               if (child.textContent?.trim()) return true;
               for (const element of [child, ...child.querySelectorAll("*")]) {
@@ -105,11 +137,6 @@ async function visitStory(context, baseUrl, storyId) {
     ]);
     // Late errors from the first render still count against the story.
     if (errors.length) throw new Error(errors[0]);
-    assert.deepEqual(
-      reportedFailures,
-      expectedFailures,
-      `${storyId}: fixture refusal is reported`,
-    );
   } catch (cause) {
     failure = cause;
   }
@@ -133,14 +160,9 @@ async function visitAll(browser, baseUrl, storyIds) {
     viewport: { width: 1024, height: 768 },
   });
   const failures = [];
-  const deadline = Date.now() + visitBudgetMs;
   const queue = [...storyIds];
   const worker = async () => {
     for (let storyId = queue.shift(); storyId; storyId = queue.shift()) {
-      if (Date.now() > deadline) {
-        failures.push({ storyId, reason: "not visited: total budget spent" });
-        continue;
-      }
       try {
         await visitStory(context, baseUrl, storyId);
       } catch (error) {

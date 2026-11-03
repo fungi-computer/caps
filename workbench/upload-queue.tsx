@@ -9,11 +9,16 @@ import "./status.css";
 import "./upload-queue.css";
 
 const names = ["desert-study.jpg", "alpine-light.jpg", "forest-canopy.jpg"];
-const photos = [
-  "photo-1509316785289-025f5b846b35",
-  "photo-1464822759023-fed622ff2c3b",
-  "photo-1448375240586-882707db888b",
-];
+/** Offline swatches: a story never hotlinks a photograph. */
+const swatches = [
+  ["#d9b38c", "#8c5a3c"],
+  ["#a9c4e0", "#4a6a8c"],
+  ["#8fb58f", "#2f5a3a"],
+] as const;
+const swatch = ([from, to]: readonly [string, string]) =>
+  `data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs><rect width="120" height="120" fill="url(#g)"/></svg>`,
+  )}`;
 function initialItems(): UploadQueueItem[] {
   return names.map((name, index) => {
     const item: UploadQueueItem = {
@@ -21,7 +26,7 @@ function initialItems(): UploadQueueItem[] {
       name,
       preview: {
         kind: "image",
-        url: `https://images.unsplash.com/${photos[index] ?? "photo-1509316785289-025f5b846b35"}?w=120&h=120&fit=crop`,
+        url: swatch(swatches[index] ?? swatches[0]),
       },
       progress: index === 0 ? 48 : index === 1 ? 100 : null,
       progressLabel: index === 0 ? "48%" : "",

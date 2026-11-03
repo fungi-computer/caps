@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.7.1
+
+### Patch Changes
+
+- Changes since 0.7.0:
+
+  - fix(workbench): repair the root browser proofs the nightly first ran
+
 ## 0.7.0
 
 ### Minor Changes
