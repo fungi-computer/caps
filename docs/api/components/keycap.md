@@ -70,6 +70,7 @@ Props accepted by KeycapButton.
 | `icon?`     | `ReactNode`                 | Decorative icon before the label.                                                                                                                   |
 | `readout?`  | `ReactNode`                 | Extra readout after the label, such as a PixelNumber count.                                                                                         |
 | `tone?`     | [`KeycapTone`](#keycaptone) | -                                                                                                                                                   |
+| `density?`  | `"regular"` \| `"compact"`  | `compact` is the details-panel key: 2.25rem high, centred `sm` label. It sizes to its legend in a row and fills its cell in a grid.                 |
 | `pressed?`  | `boolean`                   | Toggle state for mode keys. `undefined` is a momentary key; a boolean adds `aria-pressed` and lights the key's indicator.                           |
 | `expanded?` | `boolean`                   | Disclosure state for keys that open a palette or window. A boolean adds `aria-expanded` and lights the lamp; use it instead of `pressed` for menus. |
 

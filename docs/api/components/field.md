@@ -76,14 +76,15 @@ Props accepted by FieldSet.
 
 #### Type Declaration
 
-| Name           | Type        | Description                                                       |
-| -------------- | ----------- | ----------------------------------------------------------------- |
-| `legend`       | `ReactNode` | -                                                                 |
-| `legendTitle?` | `string`    | Full legend on hover when a columns form clips it to one line.    |
-| `description?` | `ReactNode` | -                                                                 |
-| `layout?`      | `"columns"` | Opt-in label/control grid when used without a Form parent.        |
-| `error?`       | `ReactNode` | The group's announced error, such as "Choose at least one right". |
-| `children`     | `ReactNode` | -                                                                 |
+| Name           | Type        | Description                                                                                                        |
+| -------------- | ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| `legend`       | `ReactNode` | -                                                                                                                  |
+| `icon?`        | `ReactNode` | A decorative Sigil or App icon before the legend, as a Field's `icon` marks its label. Hidden from assistive tech. |
+| `legendTitle?` | `string`    | Full legend on hover when a columns form clips it to one line.                                                     |
+| `description?` | `ReactNode` | -                                                                                                                  |
+| `layout?`      | `"columns"` | Opt-in label/control grid when used without a Form parent.                                                         |
+| `error?`       | `ReactNode` | The group's announced error, such as "Choose at least one right".                                                  |
+| `children`     | `ReactNode` | -                                                                                                                  |
 
 ---
 

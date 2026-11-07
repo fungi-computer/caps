@@ -21,11 +21,30 @@ Props accepted by IconRadio. Use it inside the existing RadioGroup.
 
 #### Type Declaration
 
-| Name       | Type        | Description                                                       |
-| ---------- | ----------- | ----------------------------------------------------------------- |
-| `label`    | `string`    | -                                                                 |
-| `icon`     | `ReactNode` | -                                                                 |
-| `caption?` | `string`    | A short visible legend; it does not replace the accessible label. |
+| Name       | Type                 | Description                                                                                                                                |
+| ---------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `label`    | `string`             | -                                                                                                                                          |
+| `icon`     | `ReactNode`          | -                                                                                                                                          |
+| `caption?` | `string`             | A short visible legend; it does not replace the accessible label.                                                                          |
+| `art?`     | `"dim"` \| `"color"` | `color` keeps an off key's art in full colour, for choices whose colour is the information (a character, a palette). Icons dim by default. |
+
+---
+
+### SwatchRadioProps
+
+```ts
+type SwatchRadioProps = object &
+  Omit<RadioGroupItemProps, "children" | "indicator">;
+```
+
+Props accepted by SwatchRadio. Use it inside the existing RadioGroup.
+
+#### Type Declaration
+
+| Name    | Type     | Description                                                  |
+| ------- | -------- | ------------------------------------------------------------ |
+| `label` | `string` | The colour's name: the accessible label and the hover title. |
+| `color` | `string` | Any CSS colour, drawn as the key's dot.                      |
 
 ## Variables
 
@@ -40,3 +59,18 @@ const IconRadio: ForwardRefExoticComponent<
 ```
 
 One icon choice in a native, mutually exclusive Caps RadioGroup.
+
+---
+
+### SwatchRadio
+
+```ts
+const SwatchRadio: ForwardRefExoticComponent<
+  object &
+    Omit<RadioGroupItemProps, "children" | "indicator"> &
+    RefAttributes<HTMLInputElement>
+>;
+```
+
+One colour choice: a small icon key whose dot keeps its colour while off, so
+every choice reads before it is picked. The lamp marks the choice.

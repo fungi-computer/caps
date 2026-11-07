@@ -26,6 +26,24 @@ Props accepted by DataList.
 
 ---
 
+### FactRowProps
+
+```ts
+type FactRowProps = Omit<LiHTMLAttributes<HTMLLIElement>, "children"> & object;
+```
+
+Props accepted by FactRow.
+
+#### Type Declaration
+
+| Name       | Type        | Description                                     |
+| ---------- | ----------- | ----------------------------------------------- |
+| `icon?`    | `ReactNode` | A 16px Sigil before the label; decorative.      |
+| `label`    | `ReactNode` | -                                               |
+| `children` | `ReactNode` | The fact; long values wrap in their own column. |
+
+---
+
 ### DataListHeadingProps
 
 ```ts
@@ -64,6 +82,21 @@ const DataRow: ForwardRefExoticComponent<
 ```
 
 A list row for a caller-provided label and value.
+
+---
+
+### FactRow
+
+```ts
+const FactRow: ForwardRefExoticComponent<
+  Omit<LiHTMLAttributes<HTMLLIElement>, "children"> &
+    object &
+    RefAttributes<HTMLLIElement>
+>;
+```
+
+One details-panel fact in a compact DataList: a fixed label column (Sigil and
+quiet name) and a wrapping value, as in a Print's Image info.
 
 ---
 

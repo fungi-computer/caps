@@ -27,6 +27,25 @@ Props accepted by IconCheckbox. The full label names the native input.
 | `caption?`    | `string`                   | A short visible legend; it does not replace the accessible label.     |
 | `appearance?` | `"default"` \| `"compact"` | Compact instruments show the icon and caption without a tile or lamp. |
 
+---
+
+### CheckKeyProps
+
+```ts
+type CheckKeyProps = object &
+  Omit<CheckboxProps, "children" | "indicator" | "appearance">;
+```
+
+Props accepted by CheckKey. The label names the native input.
+
+#### Type Declaration
+
+| Name    | Type        | Description                                                      |
+| ------- | ----------- | ---------------------------------------------------------------- |
+| `label` | `string`    | -                                                                |
+| `icon?` | `ReactNode` | A Sigil or App icon before the label; decorative.                |
+| `hint?` | `ReactNode` | One quiet line under the label, read as the input's description. |
+
 ## Variables
 
 ### IconCheckbox
@@ -40,3 +59,39 @@ const IconCheckbox: ForwardRefExoticComponent<
 ```
 
 An independent icon choice composed from the native Caps Checkbox.
+
+---
+
+### CheckKey
+
+```ts
+const CheckKey: ForwardRefExoticComponent<
+  object &
+    Omit<CheckboxProps, "children" | "appearance" | "indicator"> &
+    RefAttributes<HTMLInputElement>
+>;
+```
+
+One choice in a short multi-select, drawn as a wide Caps key: Sigil, label and
+an optional hint, a lit lamp and selected face when checked. The native checkbox
+covers the whole key, so it keeps form submission, keyboard and focus behaviour.
+
+## Functions
+
+### CheckKeys()
+
+```ts
+function CheckKeys(__namedParameters): Element;
+```
+
+Lays out a group of CheckKeys: a wrapping grid of equal keys.
+
+#### Parameters
+
+| Parameter           | Type                                 |
+| ------------------- | ------------------------------------ |
+| `__namedParameters` | `HTMLAttributes`\<`HTMLDivElement`\> |
+
+#### Returns
+
+`Element`
