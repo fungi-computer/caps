@@ -63,6 +63,22 @@ describe("SetupNotice", () => {
   );
 });
 
+describe("SetupNotice visual", () => {
+  it("shows the App's own glyph instead of the warning bead in a panel", () => {
+    const view = render(
+      <SetupNotice
+        cause="c"
+        fix={{ label: "Fix", onSelect: () => undefined }}
+        need="n"
+        variant="panel"
+        visual={<svg data-testid="own" />}
+      />,
+    );
+    expect(view.container.querySelector("[data-testid=own]")).toBeTruthy();
+    expect(view.container.querySelector(".caps-setup-notice-dot")).toBeNull();
+  });
+});
+
 describe("FailureLine", () => {
   it("renders one line with labelled Retry and Dismiss and no bang", () => {
     const onRetry = vi.fn();

@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.10.0
+
+### Minor Changes
+
+- Changes since 0.9.0:
+
+  - feat(caps): let a setup notice panel show the app's own glyph
+
 ## 0.9.0
 
 ### Minor Changes

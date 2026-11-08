@@ -50,15 +50,16 @@ Props accepted by SetupNotice.
 
 #### Type Declaration
 
-| Name          | Type                                      | Description                                                                     |
-| ------------- | ----------------------------------------- | ------------------------------------------------------------------------------- |
-| `need`        | `ReactNode`                               | The title, such as "Connect a model to start chatting".                         |
-| `cause`       | `ReactNode`                               | One sentence naming the real cause.                                             |
-| `fix`         | [`SetupNoticeFix`](#setupnoticefix)       | The one primary fix; never a dead CTA.                                          |
-| `secondary?`  | [`SetupNoticeAction`](#setupnoticeaction) | -                                                                               |
-| `available?`  | `ReactNode`                               | What still works meanwhile, such as "Uploads work now".                         |
-| `waitingFor?` | `string`                                  | Names what is awaited while pending, after "Waiting for".                       |
-| `variant`     | `"panel"` \| `"inline"` \| `"banner"`     | `panel` replaces an empty state; `banner` and `inline` sit above or in content. |
+| Name          | Type                                      | Description                                                                                              |
+| ------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `need`        | `ReactNode`                               | The title, such as "Connect a model to start chatting".                                                  |
+| `cause`       | `ReactNode`                               | One sentence naming the real cause.                                                                      |
+| `fix`         | [`SetupNoticeFix`](#setupnoticefix)       | The one primary fix; never a dead CTA.                                                                   |
+| `secondary?`  | [`SetupNoticeAction`](#setupnoticeaction) | -                                                                                                        |
+| `available?`  | `ReactNode`                               | What still works meanwhile, such as "Uploads work now".                                                  |
+| `visual?`     | `Exclude`\<`ReactNode`, `string`\>        | The panel's own glyph (an App icon, say) in place of the warning bead; ignored by `banner` and `inline`. |
+| `waitingFor?` | `string`                                  | Names what is awaited while pending, after "Waiting for".                                                |
+| `variant`     | `"panel"` \| `"inline"` \| `"banner"`     | `panel` replaces an empty state; `banner` and `inline` sit above or in content.                          |
 
 ## Functions
 

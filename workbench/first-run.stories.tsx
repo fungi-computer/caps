@@ -3,6 +3,7 @@ import { createSprite } from "@fungi.computer/sprite";
 import { Sprite } from "@fungi.computer/sprite/react";
 import {
   Gamepad2,
+  GitBranch,
   Image,
   MessagesSquare,
   PenTool,
@@ -11,6 +12,7 @@ import {
 import { EmptyState } from "../src/blocks/empty-state.js";
 import { SetupNotice } from "../src/blocks/setup-notice.js";
 import { FailureLine } from "../src/components/failure-line.js";
+import { Markdown } from "../src/components/markdown.js";
 import { LoadingState } from "../src/blocks/loading-state.js";
 import { ResultState } from "../src/blocks/result-state.js";
 import { AppGrid, SectionGrid } from "../src/blocks/launcher-grid.js";
@@ -314,6 +316,16 @@ export const SetupNoticeVariants = () => (
   </SectionGrid>
 );
 
+export const SetupNoticeOwnVisual = () => (
+  <SetupNotice
+    variant="panel"
+    visual={<GitBranch />}
+    need="Approve Git access"
+    cause="Bonsai needs Git access to show your repositories."
+    fix={{ label: "Approve Git access", onSelect: () => undefined }}
+  />
+);
+
 export const SetupNoticePending = () => (
   <SectionGrid>
     <SetupNotice
@@ -366,6 +378,26 @@ export const FailureLines = () => (
       </div>
     </SectionCard>
   </SectionGrid>
+);
+
+const readme = `# Koi pond
+
+A tiny repository for the koi pond game.
+
+## Getting started
+
+Clone the repository and run the game.
+
+### Notes
+
+- Heading text should align with this body text.
+- So should list items.
+`;
+
+export const ProseHeadings = () => (
+  <SectionCard heading="README tile">
+    <Markdown>{readme}</Markdown>
+  </SectionCard>
 );
 
 export const KeycapHint = () => (

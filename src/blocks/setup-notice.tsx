@@ -31,6 +31,8 @@ export type SetupNoticeProps = Omit<
   secondary?: SetupNoticeAction;
   /** What still works meanwhile, such as "Uploads work now". */
   available?: ReactNode;
+  /** The panel's own glyph (an App icon, say) in place of the warning bead; ignored by `banner` and `inline`. */
+  visual?: Exclude<ReactNode, string>;
   /** Names what is awaited while pending, after "Waiting for". */
   waitingFor?: string;
   /** `panel` replaces an empty state; `banner` and `inline` sit above or in content. */
@@ -49,6 +51,7 @@ export function SetupNotice({
   need,
   secondary,
   variant,
+  visual,
   waitingFor = "setup",
   ...props
 }: SetupNoticeProps) {
@@ -83,11 +86,13 @@ export function SetupNotice({
         title={need}
         variant="panel"
         visual={
-          <Status
-            className="caps-setup-notice-dot"
-            glyph="dot"
-            tone="warning"
-          />
+          visual ?? (
+            <Status
+              className="caps-setup-notice-dot"
+              glyph="dot"
+              tone="warning"
+            />
+          )
         }
       />
     );
