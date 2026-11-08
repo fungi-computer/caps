@@ -28,12 +28,14 @@ A deliberate hold, or an exact phrase before a destructive action.
 
 #### Type Declaration
 
-| Name           | Type                      | Description                                                                        |
-| -------------- | ------------------------- | ---------------------------------------------------------------------------------- |
-| `label`        | `string`                  | The action's trigger label and dialog title.                                       |
-| `confirmLabel` | `string`                  | The destructive key's label (and the hold gesture's instruction).                  |
-| `onConfirm()`  | () => `Promise`\<`void`\> | Resolve on success; reject on failure. The component prevents concurrent calls.    |
-| `error?`       | `string`                  | Caller-owned, safe-to-display failure copy; rejection details are never displayed. |
+| Name           | Type                                       | Description                                                                        |
+| -------------- | ------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `label`        | `string`                                   | The action's trigger label and dialog title.                                       |
+| `confirmLabel` | `string`                                   | The destructive key's label (and the hold gesture's instruction).                  |
+| `onConfirm()`  | () => `Promise`\<`void`\>                  | Resolve on success; reject on failure. The component prevents concurrent calls.    |
+| `error?`       | `string`                                   | Caller-owned, safe-to-display failure copy; rejection details are never displayed. |
+| `variant?`     | [`ButtonVariant`](button.md#buttonvariant) | The trigger key's look; destructive by default, quiet where a toolbar needs it.    |
+| `size?`        | [`ButtonSize`](button.md#buttonsize)       | The trigger key's size.                                                            |
 
 ## Functions
 

@@ -8,7 +8,40 @@
 
 # blocks/loading-state
 
+## Type Aliases
+
+### LoadingStateProps
+
+```ts
+type LoadingStateProps = HTMLAttributes<HTMLDivElement> & object;
+```
+
+Props accepted by LoadingState.
+
+#### Type Declaration
+
+| Name           | Type                                                     | Description                                                                                                                             |
+| -------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `message`      | `ReactNode`                                              | -                                                                                                                                       |
+| `framed?`      | `boolean`                                                | `false` drops the frame (border, plate, padding) for a window-opening state that fills its pane.                                        |
+| `icon?`        | `ReactNode`                                              | An App icon shown above the loader, for an App opening state.                                                                           |
+| `detail?`      | `ReactNode`                                              | A second, quieter line under the message.                                                                                               |
+| `size?`        | `"sm"` \| `"md"` \| `"lg"`                               | Blob size; `md` is the default for a window or pane.                                                                                    |
+| `variant?`     | [`LoaderVariant`](../components/loader.md#loadervariant) | Which formation moves; pick one per moment (see the Caps README).                                                                       |
+| `slowAfterMs?` | `number`                                                 | Milliseconds before the wait is called slow: "Still working…" is added and `onRetry`, if given, offers a Retry. Infinity never says so. |
+| `onRetry()?`   | () => `void`                                             | Called when Retry is chosen; Retry only appears once the wait is slow.                                                                  |
+
 ## Variables
+
+### LOADING\_SLOW\_AFTER\_MS
+
+```ts
+const LOADING_SLOW_AFTER_MS: 8000 = 8000;
+```
+
+How long a wait runs before LoadingState admits it is slow.
+
+---
 
 ### LoadingState
 

@@ -20,6 +20,16 @@ Fluid motion formations, sharing one material.
 
 ---
 
+### LoaderPace
+
+```ts
+type LoaderPace = "working" | "idle";
+```
+
+How briskly a formation cycles: `working` for a wait, `idle` for art.
+
+---
+
 ### LoaderProps
 
 ```ts
@@ -30,13 +40,14 @@ Props accepted by Loader.
 
 #### Type Declaration
 
-| Name          | Type                                                    | Description                                                              |
-| ------------- | ------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `decorative?` | `boolean`                                               | -                                                                        |
-| `label?`      | `ReactNode`                                             | -                                                                        |
-| `size?`       | `"sm"` \| `"md"` \| `"lg"` \| `"fill"`                  | `fill` grows the formation to its container, as a full-tile placeholder. |
-| `variant?`    | [`LoaderVariant`](#loadervariant)                       | -                                                                        |
-| `tone?`       | `"neutral"` \| `"accent"` \| `"primary"` \| `"success"` | -                                                                        |
+| Name          | Type                                                                   | Description                                                              |
+| ------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `decorative?` | `boolean`                                                              | -                                                                        |
+| `label?`      | `ReactNode`                                                            | -                                                                        |
+| `size?`       | `"sm"` \| `"md"` \| `"lg"` \| `"fill"`                                 | `fill` grows the formation to its container, as a full-tile placeholder. |
+| `variant?`    | [`LoaderVariant`](#loadervariant)                                      | -                                                                        |
+| `pace?`       | [`LoaderPace`](#loaderpace)                                            | `idle` slows the cycle for decorative art such as an empty state.        |
+| `tone?`       | `"neutral"` \| `"accent"` \| `"primary"` \| `"success"` \| `"current"` | -                                                                        |
 
 ## Variables
 

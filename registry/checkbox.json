@@ -53,6 +53,12 @@
   "css": {
     "@import \"@fungi.computer/stipe/styles.css\"": {},
     "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-checkbox": {
+        "width": "24px",
+        "justifySelf": "start"
+      }
+    },
     "@layer components": {
       ".caps-checkbox": {
         "display": "inline-grid",
@@ -71,6 +77,7 @@
         "height": "100%",
         "borderRadius": "var(--radius-field)"
       },
+      ".caps-check-key > .caps-checkbox": { "minHeight": "2.25rem" },
       ".caps-checkbox:not([data-state=\"unchecked\"])": {
         "color": "var(--caps-control-ink, var(--color-success))"
       },
@@ -141,6 +148,9 @@
         ".caps-checkbox-input": {
           "placeSelf": "center stretch",
           "height": "max(100%, var(--caps-touch-target))"
+        },
+        ".caps-check-key > .caps-checkbox": {
+          "minHeight": "var(--caps-touch-target)"
         }
       }
     }

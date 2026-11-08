@@ -100,7 +100,15 @@ windows: readonly AppBarItem[];
 launchers: readonly AppBarItem[];
 ```
 
-Team Apps available to launch from the speed dial.
+Apps available to launch from the speed dial.
+
+##### appsLabel?
+
+```ts
+optional appsLabel?: string;
+```
+
+The Apps section heading and its launcher name; the host owns the wording.
 
 ##### sessions?
 

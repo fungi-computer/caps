@@ -8,7 +8,7 @@ import {
   GooeySurfaceDefinition,
   STATUS_GOOEY_FILTER,
 } from "./gooey.js";
-import type { LoaderVariant } from "./loader.js";
+import type { LoaderPace, LoaderVariant } from "./loader.js";
 import { observeMotionVisibility } from "./motion-visibility.js";
 
 type BlobPose = { cx: number; cy: number; rx: number; ry: number };
@@ -108,8 +108,17 @@ const durations = {
   bloom: 2800,
 };
 
+// Idle art breathes at roughly half speed so it never competes with real work.
+const IDLE_SLOWDOWN = 2;
+
 /** @internal Animate only the silhouette; lighting never overlaps at joins. */
-export function LoaderBlobs({ variant }: { variant: LoaderVariant }) {
+export function LoaderBlobs({
+  variant,
+  pace = "working",
+}: {
+  variant: LoaderVariant;
+  pace?: LoaderPace;
+}) {
   const id = `caps-loader-${useId().replaceAll(":", "")}`;
   const geometry = useRef<SVGGElement>(null);
   const visual = useRef<SVGSVGElement>(null);
@@ -131,7 +140,11 @@ export function LoaderBlobs({ variant }: { variant: LoaderVariant }) {
         animate(blob, {
           keyframes: Array.from({ length: 48 }, (_, step) => ({
             ...pose(variant, index, (step + 1) / 48),
-            duration: motionTime(timing, durations[variant]) / 48,
+            duration:
+              motionTime(
+                timing,
+                durations[variant] * (pace === "idle" ? IDLE_SLOWDOWN : 1),
+              ) / 48,
           })),
           ease: "linear",
           loop: true,
@@ -147,7 +160,7 @@ export function LoaderBlobs({ variant }: { variant: LoaderVariant }) {
       stopObserving();
       for (const loop of loops) loop.revert();
     };
-  }, [variant, reduced, timing]);
+  }, [variant, pace, reduced, timing]);
 
   return (
     <svg

@@ -34,6 +34,11 @@
   "css": {
     "@import \"@fungi.computer/stipe/styles.css\"": {},
     "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+        "--caps-fieldset-legend-line": "3.25rem"
+      }
+    },
     "@layer components": {
       ".caps-icon-choice": {
         "display": "inline-grid",
@@ -162,6 +167,21 @@
       ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-lamp": {
         "display": "none"
       },
+      ".caps-icon-choice[data-swatch]": {
+        "minWidth": "2.25rem",
+        "minHeight": "2.25rem"
+      },
+      ".caps-icon-choice[data-swatch] .caps-icon-choice-mark": {
+        "padding": "var(--spacing-xs)"
+      },
+      ".caps-icon-choice[data-art=\"color\"] .caps-icon-choice-art": {
+        "filter": "none",
+        "opacity": 1
+      },
+      ".caps-icon-choice[data-swatch] .caps-icon-choice-art": {
+        "width": "1rem",
+        "height": "1rem"
+      },
       ".caps-icon-choice:has(.caps-icon-choice-input:disabled)": {
         "cursor": "not-allowed"
       }
@@ -170,6 +190,15 @@
       "syntax": "\"<color>\"",
       "inherits": "true",
       "initialValue": "black"
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
+          "placeSelf": "center",
+          "width": "max(100%, var(--caps-touch-target))",
+          "height": "max(100%, var(--caps-touch-target))"
+        }
+      }
     }
   }
 }

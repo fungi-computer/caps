@@ -13,8 +13,11 @@ import { cn } from "../lib/cn.js";
  */
 export type KeycapTone =
   "neutral" | "primary" | "accent" | "inverse" | "destructive";
-/** Keycap sizes: a legend chip, a dock key and a big face key. */
-export type KeycapSize = "sm" | "md" | "lg";
+/**
+ * Keycap sizes: `hint` is a muted inline shortcut caption (caption height, no
+ * plastic), then a legend chip, a dock key and a big face key.
+ */
+export type KeycapSize = "hint" | "sm" | "md" | "lg";
 
 /** Props accepted by Keycap. */
 export type KeycapProps = HTMLAttributes<HTMLElement> & {
@@ -22,6 +25,11 @@ export type KeycapProps = HTMLAttributes<HTMLElement> & {
   size?: KeycapSize;
   /** Show the key held down. Presentation only; the host owns input. */
   pressed?: boolean;
+  /**
+   * `hide` drops a keyboard legend on touch-first devices (`pointer: coarse`),
+   * where no one presses it.
+   */
+  touch?: "hide";
 };
 
 /**
@@ -29,7 +37,14 @@ export type KeycapProps = HTMLAttributes<HTMLElement> & {
  * The key sits on its own travel so pressed and resting keys take the same room.
  */
 export const Keycap = forwardRef<HTMLElement, KeycapProps>(function Keycap(
-  { tone = "neutral", size = "md", pressed = false, className, ...props },
+  {
+    tone = "neutral",
+    size = "md",
+    pressed = false,
+    touch,
+    className,
+    ...props
+  },
   ref,
 ) {
   return (
@@ -40,6 +55,7 @@ export const Keycap = forwardRef<HTMLElement, KeycapProps>(function Keycap(
       data-tone={tone}
       data-size={size}
       data-pressed={pressed}
+      data-touch={touch}
     />
   );
 });
@@ -130,7 +146,7 @@ export const KeycapButton = forwardRef<HTMLButtonElement, KeycapButtonProps>(
         )}
         {readout}
         {shortcut ? (
-          <Keycap size="sm" tone="neutral" aria-hidden="true">
+          <Keycap size="sm" tone="neutral" touch="hide" aria-hidden="true">
             {shortcut}
           </Keycap>
         ) : null}

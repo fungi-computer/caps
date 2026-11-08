@@ -32,6 +32,9 @@ const variants = new Set([
   "segmented",
   "plain",
   "panel",
+  // SetupNotice placements: where the notice sits, not what it is made of.
+  "banner",
+  "inline",
   "speech",
   "hint",
   "initial",

@@ -271,3 +271,31 @@ it("requires a complete hold, allows Escape to interrupt, and blocks repeat work
   });
   expect(confirm).toHaveBeenCalledTimes(3);
 });
+
+it("lets the host choose the trigger variant and size", () => {
+  render(
+    <ConfirmAction
+      confirmLabel="Hold to arrange"
+      label="Arrange"
+      mode="hold"
+      onConfirm={() => Promise.resolve()}
+      size="sm"
+      variant="outline"
+    />,
+  );
+  const trigger = button("Arrange");
+  expect(trigger.className).toContain("btn-outline");
+  expect(trigger.className).toContain("btn-sm");
+});
+
+it("stays destructive by default", () => {
+  render(
+    <ConfirmAction
+      confirmLabel="Hold to delete"
+      label="Delete"
+      mode="hold"
+      onConfirm={() => Promise.resolve()}
+    />,
+  );
+  expect(button("Delete").className).toContain("btn-error");
+});

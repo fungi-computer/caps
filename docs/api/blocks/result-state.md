@@ -10,6 +10,26 @@
 
 ## Type Aliases
 
+### ResultStateHeadingLevel
+
+```ts
+type ResultStateHeadingLevel = 2 | 3 | 4;
+```
+
+The document heading level of a ResultState title.
+
+---
+
+### ResultStateTone
+
+```ts
+type ResultStateTone = "failed" | "done" | "neutral";
+```
+
+What happened: `failed` is the failure card, `done` a finished result.
+
+---
+
 ### ResultStateProps
 
 ```ts
@@ -20,12 +40,16 @@ Props accepted by ResultState.
 
 #### Type Declaration
 
-| Name          | Type        |
-| ------------- | ----------- |
-| `actions?`    | `ReactNode` |
-| `description` | `ReactNode` |
-| `icon?`       | `ReactNode` |
-| `title`       | `ReactNode` |
+| Name            | Type                                                  | Description                                                     |
+| --------------- | ----------------------------------------------------- | --------------------------------------------------------------- |
+| `actions?`      | `ReactNode`                                           | One primary action, then secondary ones.                        |
+| `description`   | `ReactNode`                                           | -                                                               |
+| `headingLevel?` | [`ResultStateHeadingLevel`](#resultstateheadinglevel) | -                                                               |
+| `icon?`         | `ReactNode`                                           | -                                                               |
+| `steps?`        | readonly `ReactNode`[]                                | Up to three numbered next steps; extra steps are not shown.     |
+| `title`         | `ReactNode`                                           | -                                                               |
+| `tone?`         | [`ResultStateTone`](#resultstatetone)                 | -                                                               |
+| `visual?`       | `ReactNode`                                           | Larger decorative art above the title, such as an illustration. |
 
 ## Variables
 

@@ -167,7 +167,30 @@ describe("AppBar", () => {
     );
   });
 
-  it("groups Team Apps and recent Sessions in the keyboard reachable dial", () => {
+  it("names the Apps section with the host's label", () => {
+    const { container } = render(
+      <AppBar
+        appsLabel="Team Apps"
+        windows={[]}
+        launchers={[{ id: "grove", label: "Grove", onSelect: vi.fn() }]}
+        launcher={{ label: "Open apps and sessions" }}
+      />,
+    );
+    act(() => {
+      button(container, "Open apps and sessions").click();
+    });
+    expect(
+      document.body.querySelector('[aria-label="Team Apps"]'),
+    ).toBeTruthy();
+    expect(document.body.textContent).toContain("Team Apps");
+    expect(
+      document.body.querySelector(
+        '[aria-label="Team Apps and Sessions launcher"]',
+      ),
+    ).toBeTruthy();
+  });
+
+  it("groups Apps and recent Sessions in the keyboard reachable dial", () => {
     const selectSession = vi.fn();
     const { container } = render(
       <AppBar
@@ -182,9 +205,7 @@ describe("AppBar", () => {
     act(() => {
       button(container, "Open apps and sessions").click();
     });
-    expect(
-      document.body.querySelector('[aria-label="Team Apps"]'),
-    ).toBeTruthy();
+    expect(document.body.querySelector('[aria-label="Apps"]')).toBeTruthy();
     expect(
       document.body.querySelector('[aria-label="Recent Sessions"]'),
     ).toBeTruthy();

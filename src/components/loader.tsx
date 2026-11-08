@@ -16,10 +16,15 @@ const toneClasses = {
   accent: "text-accent",
   primary: "text-primary",
   success: "text-success",
+  /** The surrounding ink, for a loader inside a button. */
+  current: "text-current",
 } as const;
 
 /** Fluid motion formations, sharing one material. */
 export type LoaderVariant = "line" | "wander" | "square" | "donut" | "bloom";
+
+/** How briskly a formation cycles: `working` for a wait, `idle` for art. */
+export type LoaderPace = "working" | "idle";
 
 /** Props accepted by Loader. */
 export type LoaderProps = {
@@ -28,7 +33,9 @@ export type LoaderProps = {
   /** `fill` grows the formation to its container, as a full-tile placeholder. */
   size?: "sm" | "md" | "lg" | "fill";
   variant?: LoaderVariant;
-  tone?: "neutral" | "accent" | "primary" | "success";
+  /** `idle` slows the cycle for decorative art such as an empty state. */
+  pace?: LoaderPace;
+  tone?: "neutral" | "accent" | "primary" | "success" | "current";
 } & HTMLAttributes<HTMLSpanElement>;
 
 /** Connecting gooey beads, with a static silhouette for reduced motion. */
@@ -41,6 +48,7 @@ export const Loader = forwardRef<HTMLSpanElement, LoaderProps>(function Loader(
     label = "Loading",
     size = "md",
     variant = "line",
+    pace = "working",
     tone = "neutral",
     ...props
   },
@@ -66,10 +74,11 @@ export const Loader = forwardRef<HTMLSpanElement, LoaderProps>(function Loader(
         className,
       )}
       data-variant={variant}
+      data-pace={pace}
       role={decorative ? undefined : "status"}
       ref={ref}
     >
-      <LoaderBlobs variant={variant} />
+      <LoaderBlobs variant={variant} pace={pace} />
       {ownsLabel ? <VisuallyHidden id={labelId}>{label}</VisuallyHidden> : null}
     </span>
   );

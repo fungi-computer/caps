@@ -76,7 +76,7 @@ describe("Caps primitives SSR", () => {
     );
     expect(html).toContain("Save");
     expect(html).toContain('aria-busy="true"');
-    expect(html).toContain('data-variant="line"');
+    expect(html).toContain('data-variant="wander"');
     expect(html).toContain('aria-hidden="true"');
     expect(html).not.toContain("loading-spinner");
     expect(html).toContain("aria-labelledby");

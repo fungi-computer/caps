@@ -53,10 +53,28 @@ What a visual is told while the EmptyState is on screen.
 type EmptyStateSuggestion = Readonly<{
   label: string;
   onSelect: () => void;
+  pending?: boolean;
+  disabled?: boolean;
 }>;
 ```
 
 A suggested next step, shown as a chip the host acts on.
+
+---
+
+### EmptyStatePrimaryAction
+
+```ts
+type EmptyStatePrimaryAction = Readonly<{
+  label: string;
+  onSelect: () => void;
+  pending?: boolean;
+  disabled?: boolean;
+  disabledReason?: string;
+}>;
+```
+
+The one main step a first-run state invites; at most one per state.
 
 ---
 
@@ -70,17 +88,18 @@ Props accepted by EmptyState.
 
 #### Type Declaration
 
-| Name              | Type                                                       | Description                                                                 |
-| ----------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `actions?`        | `ReactNode`                                                | -                                                                           |
-| `description`     | `ReactNode`                                                | -                                                                           |
-| `suggestions?`    | readonly [`EmptyStateSuggestion`](#emptystatesuggestion)[] | Chips that offer a starting point, such as a prompt to try.                 |
-| `thinking?`       | `boolean`                                                  | The host is working on something, such as creating what this state invites. |
-| `title`           | `ReactNode`                                                | -                                                                           |
-| `headingLevel?`   | [`EmptyStateHeadingLevel`](#emptystateheadinglevel)        | Heading level for the title; use one below the heading it sits under.       |
-| `visual?`         | `ReactNode`                                                | Static art.                                                                 |
-| `renderVisual()?` | (`state`) => `ReactNode`                                   | Render a visual from the current speaking and thinking state.               |
-| `variant?`        | [`EmptyStateVariant`](#emptystatevariant)                  | -                                                                           |
+| Name              | Type                                                       | Description                                                                             |
+| ----------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `actions?`        | `ReactNode`                                                | Secondary actions only; the main step goes in `primaryAction`.                          |
+| `primaryAction?`  | [`EmptyStatePrimaryAction`](#emptystateprimaryaction)      | The one main step, rendered as a primary Button before the chips.                       |
+| `description`     | `ReactNode`                                                | -                                                                                       |
+| `suggestions?`    | readonly [`EmptyStateSuggestion`](#emptystatesuggestion)[] | Chips that offer a starting point, such as a prompt to try.                             |
+| `thinking?`       | `boolean`                                                  | The host is working on something, such as creating what this state invites.             |
+| `title`           | `ReactNode`                                                | -                                                                                       |
+| `headingLevel?`   | [`EmptyStateHeadingLevel`](#emptystateheadinglevel)        | Heading level for the title; use one below the heading it sits under.                   |
+| `visual?`         | `Exclude`\<`ReactNode`, `string`\> \| `"blobs"`            | Static art. `"blobs"` is the living idle Loader; a `panel` with no visual shows it too. |
+| `renderVisual()?` | (`state`) => `ReactNode`                                   | Render a visual from the current speaking and thinking state.                           |
+| `variant?`        | [`EmptyStateVariant`](#emptystatevariant)                  | -                                                                                       |
 
 ## Variables
 

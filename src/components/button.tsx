@@ -143,7 +143,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {result === undefined && resultLabel === undefined ? (
           <>
             {loading ? (
-              <Loader className="size-3" decorative size="sm" />
+              <Loader decorative size="sm" tone="current" variant="wander" />
             ) : null}
             {children}
           </>
@@ -417,7 +417,7 @@ function ResultFaces({
         aria-hidden={showing ? true : undefined}
       >
         {loading || showing ? (
-          <Loader className="size-3" decorative size="sm" />
+          <Loader decorative size="sm" tone="current" variant="wander" />
         ) : null}
         {children}
       </span>

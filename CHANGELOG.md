@@ -1,5 +1,35 @@
 # @fungi.computer/caps
 
+## 0.8.0
+
+### Minor Changes
+
+- Changes since 0.7.1:
+
+  - fix(caps): allow setup notice banner and inline placements in theme guard
+  - feat(caps): add apps label prop to app bar and hint size for keycap
+  - fix(caps): readable toast description and title-aligned icon
+  - fix(caps): one toast close and error look, centred failure tile dot
+  - feat(caps): let loading state drop its frame
+  - fix(caps): warning setup notice, themed toast icons and font, confirm action
+    variant
+  - feat(caps): theme the toaster and polish setup notice
+  - feat(caps): add setup notice and failure line blocks
+  - fix(caps): permission grid group labels, busy ghost ink, loading state icon
+  - fix(caps): make registry:check pass again
+  - fix(caps): polish first-run kit states, quiet hairline, permission grid
+    layout
+  - fix(oyster): group App permissions by scope and lead with what needs
+    approval
+  - feat(caps): first-run kit part 1 for EmptyState, ResultState, LoadingState,
+    Loader
+  - feat(oyster): compose the App permissions page from Caps PermissionGrid
+
+### Patch Changes
+
+- Updated dependencies
+  - @fungi.computer/stipe@0.1.1
+
 ## 0.7.1
 
 ### Patch Changes

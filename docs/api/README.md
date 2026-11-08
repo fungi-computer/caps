@@ -30,6 +30,7 @@
 | [blocks/result-state](blocks/result-state.md)                                       | -           |
 | [blocks/section-card](blocks/section-card.md)                                       | -           |
 | [blocks/section-heading](blocks/section-heading.md)                                 | -           |
+| [blocks/setup-notice](blocks/setup-notice.md)                                       | -           |
 | [blocks/spec-sheet](blocks/spec-sheet.md)                                           | -           |
 | [blocks/status-tray](blocks/status-tray.md)                                         | -           |
 | [blocks/upload-queue](blocks/upload-queue.md)                                       | -           |
@@ -53,6 +54,7 @@
 | [components/diff-view](components/diff-view.md)                                     | -           |
 | [components/disclosure](components/disclosure.md)                                   | -           |
 | [components/dropdown-menu](components/dropdown-menu.md)                             | -           |
+| [components/failure-line](components/failure-line.md)                               | -           |
 | [components/field-guide](components/field-guide.md)                                 | -           |
 | [components/field](components/field.md)                                             | -           |
 | [components/game-feedback](components/game-feedback.md)                             | -           |

@@ -16,7 +16,7 @@
       "path": "../src/components/icon-checkbox.tsx",
       "type": "registry:ui",
       "target": "@ui/icon-checkbox.tsx",
-      "content": "import { forwardRef, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/cn\";\nimport { Checkbox, type CheckboxProps } from \"./checkbox.js\";\nimport { IconChoiceMark } from \"./icon-choice-mark.js\";\n\n/** Props accepted by IconCheckbox. The full label names the native input. */\nexport type IconCheckboxProps = {\n  label: string;\n  icon: ReactNode;\n  /** A short visible legend; it does not replace the accessible label. */\n  caption?: string;\n  /** Compact instruments show the icon and caption without a tile or lamp. */\n  appearance?: \"default\" | \"compact\";\n} & Omit<CheckboxProps, \"children\" | \"indicator\">;\n\n/** An independent icon choice composed from the native Caps Checkbox. */\nexport const IconCheckbox = forwardRef<HTMLInputElement, IconCheckboxProps>(\n  function IconCheckbox(\n    { label, icon, caption, appearance, className, ...props },\n    ref,\n  ) {\n    return (\n      <label\n        className=\"caps-icon-choice\"\n        data-appearance={appearance === \"compact\" ? appearance : undefined}\n      >\n        <Checkbox\n          {...props}\n          appearance={appearance ?? \"default\"}\n          aria-label={label}\n          className={cn(\"caps-icon-choice-input\", className)}\n          indicator={<IconChoiceMark icon={icon} caption={caption} />}\n          ref={ref}\n        />\n      </label>\n    );\n  },\n);\n"
+      "content": "import { forwardRef, useId, type HTMLAttributes, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/cn\";\nimport { Checkbox, type CheckboxProps } from \"./checkbox.js\";\nimport { IconChoiceMark } from \"./icon-choice-mark.js\";\n\n/** Props accepted by IconCheckbox. The full label names the native input. */\nexport type IconCheckboxProps = {\n  label: string;\n  icon: ReactNode;\n  /** A short visible legend; it does not replace the accessible label. */\n  caption?: string;\n  /** Compact instruments show the icon and caption without a tile or lamp. */\n  appearance?: \"default\" | \"compact\";\n} & Omit<CheckboxProps, \"children\" | \"indicator\">;\n\n/** An independent icon choice composed from the native Caps Checkbox. */\nexport const IconCheckbox = forwardRef<HTMLInputElement, IconCheckboxProps>(\n  function IconCheckbox(\n    { label, icon, caption, appearance, className, ...props },\n    ref,\n  ) {\n    return (\n      <label\n        className=\"caps-icon-choice\"\n        data-appearance={appearance === \"compact\" ? appearance : undefined}\n      >\n        <Checkbox\n          {...props}\n          appearance={appearance ?? \"default\"}\n          aria-label={label}\n          className={cn(\"caps-icon-choice-input\", className)}\n          indicator={<IconChoiceMark icon={icon} caption={caption} />}\n          ref={ref}\n        />\n      </label>\n    );\n  },\n);\n\n/** Props accepted by CheckKey. The label names the native input. */\nexport type CheckKeyProps = {\n  label: string;\n  /** A Sigil or App icon before the label; decorative. */\n  icon?: ReactNode;\n  /** One quiet line under the label, read as the input's description. */\n  hint?: ReactNode;\n} & Omit<CheckboxProps, \"children\" | \"indicator\" | \"appearance\">;\n\n/**\n * One choice in a short multi-select, drawn as a wide Caps key: Sigil, label\n * and an optional hint, a lit lamp and selected face when checked. The native\n * checkbox covers the whole key, so it keeps form submission, keyboard and\n * focus behaviour.\n */\nexport const CheckKey = forwardRef<HTMLInputElement, CheckKeyProps>(\n  function CheckKey({ label, icon, hint, className, ...props }, ref) {\n    const hintId = useId();\n    const describedBy =\n      [props[\"aria-describedby\"], hint ? hintId : null]\n        .filter(Boolean)\n        .join(\" \") || undefined;\n    return (\n      <label className=\"caps-check-key\">\n        <Checkbox\n          {...props}\n          aria-label={label}\n          aria-describedby={describedBy}\n          className={cn(\"caps-check-key-input\", className)}\n          indicator={\n            <span className=\"caps-check-key-face\" aria-hidden=\"true\">\n              {icon ? (\n                <span className=\"caps-check-key-icon\">{icon}</span>\n              ) : null}\n              <span className=\"caps-check-key-copy\">\n                <span className=\"caps-check-key-label\">{label}</span>\n                {hint ? (\n                  <span className=\"caps-check-key-hint\" id={hintId}>\n                    {hint}\n                  </span>\n                ) : null}\n              </span>\n              <span className=\"caps-check-key-lamp\" />\n            </span>\n          }\n          ref={ref}\n        />\n      </label>\n    );\n  },\n);\n\n/** Lays out a group of CheckKeys: a wrapping grid of equal keys. */\nexport function CheckKeys({\n  className,\n  ...props\n}: HTMLAttributes<HTMLDivElement>) {\n  return <div {...props} className={cn(\"caps-check-keys\", className)} />;\n}\n"
     },
     {
       "path": "../src/components/icon-choice-mark.tsx",
@@ -34,6 +34,11 @@
   "css": {
     "@import \"@fungi.computer/stipe/styles.css\"": {},
     "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+        "--caps-fieldset-legend-line": "3.25rem"
+      }
+    },
     "@layer components": {
       ".caps-icon-choice": {
         "display": "inline-grid",
@@ -149,6 +154,21 @@
       ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-lamp": {
         "display": "none"
       },
+      ".caps-icon-choice[data-swatch]": {
+        "minWidth": "2.25rem",
+        "minHeight": "2.25rem"
+      },
+      ".caps-icon-choice[data-swatch] .caps-icon-choice-mark": {
+        "padding": "var(--spacing-xs)"
+      },
+      ".caps-icon-choice[data-art=\"color\"] .caps-icon-choice-art": {
+        "filter": "none",
+        "opacity": 1
+      },
+      ".caps-icon-choice[data-swatch] .caps-icon-choice-art": {
+        "width": "1rem",
+        "height": "1rem"
+      },
       ".caps-icon-choice:has(.caps-icon-choice-input:disabled)": {
         "cursor": "not-allowed"
       }
@@ -157,6 +177,15 @@
       "syntax": "\"<color>\"",
       "inherits": "true",
       "initialValue": "black"
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
+          "placeSelf": "center",
+          "width": "max(100%, var(--caps-touch-target))",
+          "height": "max(100%, var(--caps-touch-target))"
+        }
+      }
     }
   }
 }

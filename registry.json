@@ -438,7 +438,8 @@
         "@shiit/icon-button",
         "@shiit/button",
         "@shiit/status",
-        "@shiit/dropdown-menu"
+        "@shiit/dropdown-menu",
+        "@shiit/tooltip"
       ],
       "files": [
         {
@@ -1608,6 +1609,19 @@
             }
           },
           ".list-row > .caps-field": { "gridColumn": "1 / -1" },
+          ".list.list-sm > .list-row > .caps-field": {
+            "--caps-field-icon-size": "1rem"
+          },
+          ".list.list-sm > .list-row > .caps-field .caps-field-lead": {
+            "alignItems": "flex-start",
+            "gap": "var(--spacing-xs)"
+          },
+          ".list.list-sm > .list-row > .caps-field .caps-field-icon": {
+            "height": "calc(var(--caps-control-label-size, var(--text-sm)) * 1.5)"
+          },
+          ".list.list-sm\n    > .list-row\n    > .caps-field:has(> .caps-field-row > .caps-field-lead)\n    > .caps-field-error-reveal": {
+            "paddingInlineStart": "calc(var(--caps-field-icon-size) + var(--spacing-xs))"
+          },
           ".caps-field:has(> .caps-field-row > .caps-field-lead)\n    > .caps-field-error-reveal": {
             "paddingInlineStart": "calc(var(--caps-field-icon-size) + var(--spacing-sm))"
           },
@@ -1642,6 +1656,15 @@
             "lineHeight": 1.5,
             "color": "var(--color-base-content)"
           },
+          ".caps-fieldset-legend:has(> .caps-field-icon)": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": "var(--spacing-xs)"
+          },
+          ".caps-fieldset-legend > .caps-field-icon": {
+            "width": "1rem",
+            "height": "1rem"
+          },
           ".caps-fieldset-description": {
             "margin": "0",
             "fontSize": "var(--text-xs)",
@@ -1660,6 +1683,171 @@
           },
           ".caps-form-footer .caps-field-error": {
             "paddingBottom": "var(--spacing-sm)"
+          },
+          ":is(.caps-form, .caps-form-section, .caps-fieldset)[data-layout=\"columns\"]": {
+            "--caps-form-label-col": "7rem"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )": {
+            "display": "grid",
+            "gridTemplateColumns": "var(--caps-form-label-col) minmax(0, 1fr)",
+            "columnGap": "var(--spacing-md)",
+            "rowGap": "var(--spacing-2xs)",
+            "alignItems": "center",
+            "justifyContent": "stretch",
+            "--caps-field-control-width": "100%"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy": {
+            "display": "contents"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > label": {
+            "gridColumn": "1",
+            "gridRow": "1",
+            "minWidth": "0",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap"
+          },
+          ".caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
+            "minWidth": "0",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "gridColumn": "1",
+            "gridRow": "1",
+            "margin": "0",
+            "cssFloat": "left",
+            "alignSelf": "start",
+            "minHeight": "var(--caps-fieldset-legend-line, 2.25rem)",
+            "alignContent": "center"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > .caps-field-description": {
+            "gridColumn": "2",
+            "gridRow": "2"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal)": {
+            "gridColumn": "2",
+            "gridRow": "1",
+            "width": "100%",
+            "maxWidth": "30rem"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-switch": {
+            "width": "40px",
+            "justifySelf": "start"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-checkbox": {
+            "width": "24px",
+            "justifySelf": "start"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"vertical\"]\n    > .caps-field-lead": {
+            "gridColumn": "1",
+            "gridRow": "1",
+            "margin": "0"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"vertical\"]\n    > .caps-field-error-reveal": {
+            "gridColumn": "2",
+            "gridRow": "2"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-lead": {
+            "gridColumn": "1",
+            "gridRow": "1"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-error-reveal": {
+            "paddingInlineStart": "calc(var(--caps-form-label-col) + var(--spacing-md))"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field:has(> .caps-field-error-reveal[data-open=\"true\"])\n    .caps-field-description,.caps-fieldset[data-layout=\"columns\"]:has(\n      > .caps-field-error-reveal[data-open=\"true\"]\n    )\n    > .caps-fieldset-description": {
+            "display": "none"
+          },
+          ".caps-fieldset[data-layout=\"columns\"]": {
+            "display": "grid",
+            "gridTemplateColumns": "var(--caps-form-label-col) minmax(0, 1fr)",
+            "columnGap": "var(--spacing-md)",
+            "rowGap": "var(--spacing-2xs)",
+            "alignItems": "start"
+          },
+          ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+            "--caps-fieldset-legend-line": "3.25rem"
+          },
+          ".caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-fields": {
+            "gridColumn": "2",
+            "gridRow": "1",
+            "flexDirection": "row",
+            "flexWrap": "wrap",
+            "margin": "0",
+            "maxWidth": "30rem"
+          },
+          ".caps-fieldset[data-layout=\"columns\"]\n    > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
+            "gridColumn": "2",
+            "gridRow": "2"
+          },
+          "@container (min-width: 36rem)": {
+            ".caps-form[data-layout=\"columns\"]\n      .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))": {
+              "display": "grid",
+              "gridTemplateColumns": "minmax(0, 1fr) auto",
+              "alignItems": "start"
+            },
+            ".caps-form[data-layout=\"columns\"]\n      .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))\n      > .caps-form-footer": {
+              "paddingInlineStart": "0",
+              "maxWidth": "none"
+            }
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead": {
+            "display": "contents"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy": {
+            "display": "contents"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-icon": {
+            "gridColumn": "1",
+            "gridRow": "1",
+            "justifySelf": "start"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > label": {
+            "gridColumn": "1",
+            "gridRow": "1",
+            "minWidth": "0",
+            "paddingInlineStart": "calc(var(--caps-field-icon-size) + var(--spacing-xs))",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > .caps-field-description": {
+            "gridColumn": "2",
+            "gridRow": "2"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"] .caps-field,.caps-fieldset[data-layout=\"columns\"]": {
+            "--caps-field-icon-size": "1rem"
+          },
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field\n    :is(.caps-field-copy > label, .caps-field-icon),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
+            "color": "var(--stipe-fg-muted)",
+            "fontWeight": 400
+          },
+          "@container (max-width: 24rem)": {
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      ),.caps-fieldset[data-layout=\"columns\"]": {
+              "gridTemplateColumns": "minmax(0, 1fr)"
+            },
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-fields": {
+              "gridColumn": "1",
+              "gridRow": "2",
+              "maxWidth": "none"
+            },
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-copy\n      > .caps-field-description,:is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      .caps-field[data-orientation=\"vertical\"]\n      > .caps-field-error-reveal,.caps-fieldset[data-layout=\"columns\"]\n      > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
+              "gridColumn": "1",
+              "gridRow": "3"
+            },
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-copy\n      > label,.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
+              "overflow": "visible",
+              "textOverflow": "clip",
+              "whiteSpace": "normal",
+              "minHeight": "0"
+            },
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      .caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-error-reveal": {
+              "paddingInlineStart": "0",
+              "maxWidth": "none"
+            },
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-lead\n      > .caps-field-copy\n      > .caps-field-description": {
+              "gridColumn": "1",
+              "gridRow": "3"
+            }
           },
           "@media (prefers-reduced-motion: reduce)": {
             ".caps-field-error-reveal,.caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n      > .caps-collapse-clip": {
@@ -2064,7 +2252,12 @@
       "type": "registry:block",
       "title": "Composer",
       "description": "One composer surface: attachments, text typed straight onto the host region, and a bottom row of caller-owned toolbar and action slots.",
-      "dependencies": ["@fungi.computer/stipe", "cn", "react"],
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "react"
+      ],
       "registryDependencies": [],
       "files": [
         {
@@ -4571,6 +4764,11 @@
             "height": "var(--caps-status-tray-key-height)",
             "minHeight": "var(--caps-status-tray-key-height)"
           },
+          ".caps-keycap-button": {
+            "--caps-key-lip": "calc(var(--depth) * 1px)",
+            "--caps-key-rest-shadow": "inset 0 1px 0\n        oklch(100% 0 0 / calc(var(--depth) * var(--caps-key-top-edge, 0.14))),\n      0 var(--caps-key-lip) 0\n        color-mix(\n          in oklab,\n          var(--caps-key-face),\n          var(--caps-key-lip-ink, var(--color-base-content)) 14%\n        )",
+            "--caps-key-pressed-shadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)), 0 0 0 transparent"
+          },
           ".caps-keycap-button:is(:disabled, [aria-disabled=\"true\"])": {
             "opacity": "var(--caps-button-disabled-opacity, 0.45)"
           }
@@ -4663,8 +4861,22 @@
           "initialValue": "black"
         },
         "@layer caps-game": {
+          ".caps-keycap-button[data-density=\"compact\"]": {
+            "--caps-keycap-height": "2.25rem",
+            "--caps-keycap-width": "auto",
+            "--caps-keycap-justify": "center",
+            "--caps-keycap-font-size": "var(--text-sm)",
+            "--caps-keycap-font-weight": "600"
+          },
+          "@media (max-width: 640px), (any-pointer: coarse)": {
+            ".caps-keycap-button[data-density=\"compact\"]": {
+              "--caps-keycap-height": "var(--caps-touch-target)"
+            }
+          },
           ".caps-keycap-button": {
-            "--caps-keycap-lip": "calc(var(--depth) * 1px)",
+            "--caps-key-face": "var(--caps-keycap-face, var(--color-base-200))",
+            "--caps-keycap-rest-shadow": "inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),\n      0 var(--caps-key-lip) 0\n        color-mix(in oklab, var(--caps-key-face), var(--color-base-content) 14%),\n      0 var(--caps-key-lip) calc(var(--depth) * 2px)\n        oklch(0% 0 0 / calc(var(--depth) * 0.15))",
+            "--caps-keycap-pressed-shadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n      0 0 0 transparent, 0 0 0 transparent",
             "display": "flex",
             "width": "var(--caps-keycap-width, 100%)",
             "minWidth": "var(--caps-keycap-min-width, 0)",
@@ -4673,15 +4885,15 @@
             "justifyContent": "var(--caps-keycap-justify, space-between)",
             "gap": "var(--spacing-sm)",
             "padding": "var(--caps-keycap-padding, var(--spacing-xs) var(--spacing-sm))",
-            "border": "var(\n      --caps-keycap-context-border,\n      var(--border) solid var(--caps-keycap-edge, var(--stipe-linework))\n    )",
+            "border": "var(\n      --caps-keycap-context-border,\n      var(--border) solid\n        var(\n          --caps-keycap-edge,\n          color-mix(in oklab, var(--stipe-linework) 80%, var(--caps-key-face))\n        )\n    )",
             "fontSize": "var(--caps-keycap-font-size, inherit)",
             "fontWeight": "var(\n      --caps-keycap-context-weight,\n      var(--caps-keycap-font-weight, inherit)\n    )",
             "borderRadius": "var(--radius-field)",
             "--caps-keycap-painted-face": "var(\n      --caps-keycap-context-face,\n      var(--caps-keycap-face, var(--color-base-200))\n    )",
             "backgroundColor": "var(--caps-keycap-painted-face)",
-            "--caps-keycap-default-image": "none",
+            "--caps-keycap-default-image": "linear-gradient(\n      to bottom,\n      color-mix(\n        in oklab,\n        var(--caps-keycap-painted-face),\n        white calc(var(--depth) * 3%)\n      ),\n      color-mix(\n        in oklab,\n        var(--caps-keycap-painted-face),\n        black calc(var(--depth) * 3%)\n      )\n    )",
             "backgroundImage": "var(\n      --caps-keycap-context-image,\n      var(--caps-keycap-default-image)\n    )",
-            "boxShadow": "var(\n      --caps-keycap-context-shadow,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.14)),\n      0 var(--caps-keycap-lip) 0\n        color-mix(\n          in oklab,\n          var(--caps-keycap-face, var(--color-base-200)),\n          var(--color-base-content) 14%\n        )\n    )",
+            "boxShadow": "var(\n      --caps-keycap-context-shadow,\n      var(--caps-keycap-rest-shadow)\n    )",
             "color": "var(--caps-keycap-ink, var(--color-base-content))",
             "textAlign": "left",
             "cursor": "pointer",
@@ -4690,8 +4902,8 @@
             "transitionTimingFunction": "ease-out"
           },
           ".caps-keycap-button:active": {
-            "translate": "0 var(--caps-keycap-context-travel, var(--caps-keycap-lip))",
-            "boxShadow": "var(\n      --caps-keycap-active-shadow,\n      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n      0 0 0 transparent\n    )"
+            "translate": "0 var(--caps-keycap-context-travel, var(--caps-key-lip))",
+            "boxShadow": "var(\n      --caps-keycap-active-shadow,\n      var(--caps-keycap-pressed-shadow)\n    )"
           },
           ".caps-keycap-button:focus-visible": {
             "outline": "2px solid var(--caps-keycap-focus-ink, var(--color-base-content))",
@@ -5146,6 +5358,12 @@
       "css": {
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
+        "@layer utilities": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-checkbox": {
+            "width": "24px",
+            "justifySelf": "start"
+          }
+        },
         "@layer components": {
           ".caps-checkbox": {
             "display": "inline-grid",
@@ -5164,6 +5382,7 @@
             "height": "100%",
             "borderRadius": "var(--radius-field)"
           },
+          ".caps-check-key > .caps-checkbox": { "minHeight": "2.25rem" },
           ".caps-checkbox:not([data-state=\"unchecked\"])": {
             "color": "var(--caps-control-ink, var(--color-success))"
           },
@@ -5234,6 +5453,9 @@
             ".caps-checkbox-input": {
               "placeSelf": "center stretch",
               "height": "max(100%, var(--caps-touch-target))"
+            },
+            ".caps-check-key > .caps-checkbox": {
+              "minHeight": "var(--caps-touch-target)"
             }
           }
         }
@@ -5405,6 +5627,12 @@
       "css": {
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
+        "@layer utilities": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-switch": {
+            "width": "40px",
+            "justifySelf": "start"
+          }
+        },
         "@layer components": {
           ".caps-gooey-motion": {
             "--caps-gooey-duration": "var(--stipe-motion-spring-duration)",
@@ -5470,8 +5698,9 @@
         "@layer caps-touch-targets": {
           "@media (max-width: 640px), (any-pointer: coarse)": {
             ".caps-switch-input": {
-              "placeSelf": "center stretch",
-              "height": "max(100%, var(--caps-touch-target))"
+              "placeSelf": "center",
+              "height": "max(100%, var(--caps-touch-target))",
+              "width": "max(100%, var(--caps-touch-target))"
             }
           }
         }
@@ -6477,6 +6706,11 @@
       "css": {
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
+        "@layer utilities": {
+          ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+            "--caps-fieldset-legend-line": "3.25rem"
+          }
+        },
         "@layer components": {
           ".caps-icon-choice": {
             "display": "inline-grid",
@@ -6592,6 +6826,21 @@
           ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-lamp": {
             "display": "none"
           },
+          ".caps-icon-choice[data-swatch]": {
+            "minWidth": "2.25rem",
+            "minHeight": "2.25rem"
+          },
+          ".caps-icon-choice[data-swatch] .caps-icon-choice-mark": {
+            "padding": "var(--spacing-xs)"
+          },
+          ".caps-icon-choice[data-art=\"color\"] .caps-icon-choice-art": {
+            "filter": "none",
+            "opacity": 1
+          },
+          ".caps-icon-choice[data-swatch] .caps-icon-choice-art": {
+            "width": "1rem",
+            "height": "1rem"
+          },
           ".caps-icon-choice:has(.caps-icon-choice-input:disabled)": {
             "cursor": "not-allowed"
           }
@@ -6600,6 +6849,15 @@
           "syntax": "\"<color>\"",
           "inherits": "true",
           "initialValue": "black"
+        },
+        "@layer caps-touch-targets": {
+          "@media (max-width: 640px), (any-pointer: coarse)": {
+            ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
+              "placeSelf": "center",
+              "width": "max(100%, var(--caps-touch-target))",
+              "height": "max(100%, var(--caps-touch-target))"
+            }
+          }
         }
       }
     },
@@ -6635,6 +6893,11 @@
       "css": {
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
+        "@layer utilities": {
+          ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+            "--caps-fieldset-legend-line": "3.25rem"
+          }
+        },
         "@layer components": {
           ".caps-icon-choice": {
             "display": "inline-grid",
@@ -6763,6 +7026,21 @@
           ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-lamp": {
             "display": "none"
           },
+          ".caps-icon-choice[data-swatch]": {
+            "minWidth": "2.25rem",
+            "minHeight": "2.25rem"
+          },
+          ".caps-icon-choice[data-swatch] .caps-icon-choice-mark": {
+            "padding": "var(--spacing-xs)"
+          },
+          ".caps-icon-choice[data-art=\"color\"] .caps-icon-choice-art": {
+            "filter": "none",
+            "opacity": 1
+          },
+          ".caps-icon-choice[data-swatch] .caps-icon-choice-art": {
+            "width": "1rem",
+            "height": "1rem"
+          },
           ".caps-icon-choice:has(.caps-icon-choice-input:disabled)": {
             "cursor": "not-allowed"
           }
@@ -6771,6 +7049,15 @@
           "syntax": "\"<color>\"",
           "inherits": "true",
           "initialValue": "black"
+        },
+        "@layer caps-touch-targets": {
+          "@media (max-width: 640px), (any-pointer: coarse)": {
+            ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
+              "placeSelf": "center",
+              "width": "max(100%, var(--caps-touch-target))",
+              "height": "max(100%, var(--caps-touch-target))"
+            }
+          }
         }
       }
     },
@@ -6806,6 +7093,11 @@
       "css": {
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
+        "@layer utilities": {
+          ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+            "--caps-fieldset-legend-line": "3.25rem"
+          }
+        },
         "@layer components": {
           ".caps-icon-choice": {
             "display": "inline-grid",
@@ -6921,6 +7213,21 @@
           ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-lamp": {
             "display": "none"
           },
+          ".caps-icon-choice[data-swatch]": {
+            "minWidth": "2.25rem",
+            "minHeight": "2.25rem"
+          },
+          ".caps-icon-choice[data-swatch] .caps-icon-choice-mark": {
+            "padding": "var(--spacing-xs)"
+          },
+          ".caps-icon-choice[data-art=\"color\"] .caps-icon-choice-art": {
+            "filter": "none",
+            "opacity": 1
+          },
+          ".caps-icon-choice[data-swatch] .caps-icon-choice-art": {
+            "width": "1rem",
+            "height": "1rem"
+          },
           ".caps-icon-choice:has(.caps-icon-choice-input:disabled)": {
             "cursor": "not-allowed"
           }
@@ -6929,6 +7236,15 @@
           "syntax": "\"<color>\"",
           "inherits": "true",
           "initialValue": "black"
+        },
+        "@layer caps-touch-targets": {
+          "@media (max-width: 640px), (any-pointer: coarse)": {
+            ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
+              "placeSelf": "center",
+              "width": "max(100%, var(--caps-touch-target))",
+              "height": "max(100%, var(--caps-touch-target))"
+            }
+          }
         }
       }
     },
@@ -7023,7 +7339,13 @@
       "type": "registry:ui",
       "title": "Send action",
       "description": "A composer's one send key on the Caps keycap: wakes when ready, launches while busy, turns into stop.",
-      "dependencies": ["@fungi.computer/stipe", "cn", "lucide-react", "react"],
+      "dependencies": [
+        "@fungi.computer/stipe",
+        "class-variance-authority",
+        "cn",
+        "lucide-react",
+        "react"
+      ],
       "registryDependencies": ["@shiit/keycap", "@shiit/loader"],
       "files": [
         {

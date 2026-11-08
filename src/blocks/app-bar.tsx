@@ -38,8 +38,10 @@ export type AppBarProps = {
   /** Portal container for the App dial; defaults to the document body. */
   container?: HTMLElement | null;
   windows: readonly AppBarItem[];
-  /** Team Apps available to launch from the speed dial. */
+  /** Apps available to launch from the speed dial. */
   launchers: readonly AppBarItem[];
+  /** The Apps section heading and its launcher name; the host owns the wording. */
+  appsLabel?: string;
   /** Recent Sessions supplied by the shell's session owner. */
   sessions?: readonly AppBarItem[];
   /** Keep long launcher names readable instead of truncating them. */
@@ -161,6 +163,7 @@ export function AppBar({
   windows,
   launchers,
   sessions = [],
+  appsLabel = "Apps",
   launcherLabels = "truncate",
   alwaysExpanded = false,
   isOpen,
@@ -404,7 +407,7 @@ export function AppBar({
         ref={root}
         style={appBarStyle}
         className="caps-app-bar"
-        aria-label="Team Apps and Sessions launcher"
+        aria-label={`${appsLabel} and Sessions launcher`}
         data-open={expanded ? "true" : "false"}
       >
         <div
@@ -462,10 +465,10 @@ export function AppBar({
                   <div
                     className="caps-app-bar-section"
                     role="group"
-                    aria-label="Team Apps"
+                    aria-label={appsLabel}
                   >
                     <span className="caps-app-bar-section-label">
-                      Team Apps
+                      {appsLabel}
                     </span>
                     <div className="caps-app-bar-app-list">
                       {launchers.map((item) => renderItem(item, true))}

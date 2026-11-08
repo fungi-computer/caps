@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import { Button } from "../components/button.js";
+import { Loader } from "../components/loader.js";
 import { useMotion, motionTime, type Motion } from "../lib/motion.js";
 import { cn } from "../lib/cn.js";
 
@@ -40,6 +41,22 @@ export type EmptyStateSuggestion = Readonly<{
   label: string;
   /** Called when the chip is chosen. */
   onSelect: () => void;
+  /** Running what this chip starts; shows a loader in the chip. */
+  pending?: boolean;
+  disabled?: boolean;
+}>;
+
+/** The one main step a first-run state invites; at most one per state. */
+export type EmptyStatePrimaryAction = Readonly<{
+  /** A verb plus an object, such as "New repository". */
+  label: string;
+  /** Called when the action is chosen. */
+  onSelect: () => void;
+  /** Running the action; shows a loader in the button and blocks a repeat. */
+  pending?: boolean;
+  disabled?: boolean;
+  /** Why the action is unavailable; shown under the button when disabled. */
+  disabledReason?: string;
 }>;
 
 function useSpeaking(enabled: boolean, timing: Motion): boolean {
@@ -62,7 +79,10 @@ function useSpeaking(enabled: boolean, timing: Motion): boolean {
 
 /** Props accepted by EmptyState. */
 export type EmptyStateProps = Omit<HTMLAttributes<HTMLElement>, "title"> & {
+  /** Secondary actions only; the main step goes in `primaryAction`. */
   actions?: ReactNode;
+  /** The one main step, rendered as a primary Button before the chips. */
+  primaryAction?: EmptyStatePrimaryAction;
   description: ReactNode;
   /** Chips that offer a starting point, such as a prompt to try. */
   suggestions?: readonly EmptyStateSuggestion[];
@@ -71,12 +91,19 @@ export type EmptyStateProps = Omit<HTMLAttributes<HTMLElement>, "title"> & {
   title: ReactNode;
   /** Heading level for the title; use one below the heading it sits under. */
   headingLevel?: EmptyStateHeadingLevel;
-  /** Static art. */
-  visual?: ReactNode;
+  /**
+   * Static art. `"blobs"` is the living idle Loader; a `panel` with no visual
+   * shows it too.
+   */
+  visual?: Exclude<ReactNode, string> | "blobs";
   /** Render a visual from the current speaking and thinking state. */
   renderVisual?: (state: EmptyStateVisualState) => ReactNode;
   variant?: EmptyStateVariant;
 };
+
+const blobs = (
+  <Loader decorative pace="idle" size="md" tone="primary" variant="wander" />
+);
 
 /** Product-neutral absence presentation; hosts supply copy, art, and actions. */
 export const EmptyState = forwardRef<HTMLElement, EmptyStateProps>(
@@ -86,6 +113,7 @@ export const EmptyState = forwardRef<HTMLElement, EmptyStateProps>(
       className,
       description,
       headingLevel = 2,
+      primaryAction,
       suggestions,
       thinking = false,
       title,
@@ -101,7 +129,13 @@ export const EmptyState = forwardRef<HTMLElement, EmptyStateProps>(
     const timing = useMotion(heading);
     const speaking = useSpeaking(variant === "speech", timing) && !thinking;
     const Heading = headingTags[headingLevel];
-    const art = renderVisual ? renderVisual({ speaking, thinking }) : visual;
+    const chosen = visual ?? (variant === "panel" ? "blobs" : undefined);
+    const art = renderVisual
+      ? renderVisual({ speaking, thinking })
+      : chosen === "blobs"
+        ? blobs
+        : chosen;
+    const disabledReasonId = `${titleId}-reason`;
     const copy = (
       <>
         <Heading
@@ -112,11 +146,35 @@ export const EmptyState = forwardRef<HTMLElement, EmptyStateProps>(
           {title}
         </Heading>
         <p>{description}</p>
+        {primaryAction ? (
+          <div className="empty-state-primary">
+            <Button
+              aria-describedby={
+                primaryAction.disabled && primaryAction.disabledReason
+                  ? disabledReasonId
+                  : undefined
+              }
+              disabled={primaryAction.disabled}
+              loading={primaryAction.pending === true}
+              onClick={primaryAction.onSelect}
+              variant="primary"
+            >
+              {primaryAction.label}
+            </Button>
+            {primaryAction.disabled && primaryAction.disabledReason ? (
+              <span className="empty-state-reason" id={disabledReasonId}>
+                {primaryAction.disabledReason}
+              </span>
+            ) : null}
+          </div>
+        ) : null}
         {suggestions && suggestions.length > 0 ? (
           <ul aria-label="Try one of these" className="empty-state-suggestions">
-            {suggestions.map((suggestion) => (
-              <li key={suggestion.label}>
+            {suggestions.map((suggestion, index) => (
+              <li key={`${String(index)}:${suggestion.label}`}>
                 <Button
+                  disabled={suggestion.disabled}
+                  loading={suggestion.pending === true}
                   size="sm"
                   variant="outline"
                   onClick={suggestion.onSelect}

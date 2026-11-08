@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-import { Button } from "./button.js";
+import { Button, type ButtonSize, type ButtonVariant } from "./button.js";
 import {
   Dialog,
   DialogClose,
@@ -24,6 +24,10 @@ export type ConfirmActionProps = {
   onConfirm: () => Promise<void>;
   /** Caller-owned, safe-to-display failure copy; rejection details are never displayed. */
   error?: string;
+  /** The trigger key's look; destructive by default, quiet where a toolbar needs it. */
+  variant?: ButtonVariant;
+  /** The trigger key's size. */
+  size?: ButtonSize;
 } & ({ mode: "hold"; phrase?: never } | { mode: "type"; phrase: string });
 
 /**
@@ -36,6 +40,8 @@ export function ConfirmAction({
   confirmLabel,
   onConfirm,
   error,
+  variant = "destructive",
+  size,
   mode,
   phrase,
 }: ConfirmActionProps) {
@@ -77,7 +83,8 @@ export function ConfirmAction({
     return (
       <div className="grid gap-sm">
         <HoldButton
-          variant="destructive"
+          variant={variant}
+          {...(size === undefined ? {} : { size })}
           loading={busy}
           result={result}
           holdHint={confirmLabel}
@@ -103,7 +110,11 @@ export function ConfirmAction({
         setState("idle");
       }}
     >
-      <DialogTrigger render={<Button variant="destructive" />}>
+      <DialogTrigger
+        render={
+          <Button variant={variant} {...(size === undefined ? {} : { size })} />
+        }
+      >
         {label}
       </DialogTrigger>
       <DialogContent initialFocus={input}>

@@ -1226,6 +1226,11 @@
         "height": "var(--caps-status-tray-key-height)",
         "minHeight": "var(--caps-status-tray-key-height)"
       },
+      ".caps-keycap-button": {
+        "--caps-key-lip": "calc(var(--depth) * 1px)",
+        "--caps-key-rest-shadow": "inset 0 1px 0\n        oklch(100% 0 0 / calc(var(--depth) * var(--caps-key-top-edge, 0.14))),\n      0 var(--caps-key-lip) 0\n        color-mix(\n          in oklab,\n          var(--caps-key-face),\n          var(--caps-key-lip-ink, var(--color-base-content)) 14%\n        )",
+        "--caps-key-pressed-shadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)), 0 0 0 transparent"
+      },
       ".caps-keycap-button:is(:disabled, [aria-disabled=\"true\"])": {
         "opacity": "var(--caps-button-disabled-opacity, 0.45)"
       }
@@ -1318,8 +1323,22 @@
       "initialValue": "black"
     },
     "@layer caps-game": {
+      ".caps-keycap-button[data-density=\"compact\"]": {
+        "--caps-keycap-height": "2.25rem",
+        "--caps-keycap-width": "auto",
+        "--caps-keycap-justify": "center",
+        "--caps-keycap-font-size": "var(--text-sm)",
+        "--caps-keycap-font-weight": "600"
+      },
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-keycap-button[data-density=\"compact\"]": {
+          "--caps-keycap-height": "var(--caps-touch-target)"
+        }
+      },
       ".caps-keycap-button": {
-        "--caps-keycap-lip": "calc(var(--depth) * 1px)",
+        "--caps-key-face": "var(--caps-keycap-face, var(--color-base-200))",
+        "--caps-keycap-rest-shadow": "inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),\n      0 var(--caps-key-lip) 0\n        color-mix(in oklab, var(--caps-key-face), var(--color-base-content) 14%),\n      0 var(--caps-key-lip) calc(var(--depth) * 2px)\n        oklch(0% 0 0 / calc(var(--depth) * 0.15))",
+        "--caps-keycap-pressed-shadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n      0 0 0 transparent, 0 0 0 transparent",
         "display": "flex",
         "width": "var(--caps-keycap-width, 100%)",
         "minWidth": "var(--caps-keycap-min-width, 0)",
@@ -1328,15 +1347,15 @@
         "justifyContent": "var(--caps-keycap-justify, space-between)",
         "gap": "var(--spacing-sm)",
         "padding": "var(--caps-keycap-padding, var(--spacing-xs) var(--spacing-sm))",
-        "border": "var(\n      --caps-keycap-context-border,\n      var(--border) solid var(--caps-keycap-edge, var(--stipe-linework))\n    )",
+        "border": "var(\n      --caps-keycap-context-border,\n      var(--border) solid\n        var(\n          --caps-keycap-edge,\n          color-mix(in oklab, var(--stipe-linework) 80%, var(--caps-key-face))\n        )\n    )",
         "fontSize": "var(--caps-keycap-font-size, inherit)",
         "fontWeight": "var(\n      --caps-keycap-context-weight,\n      var(--caps-keycap-font-weight, inherit)\n    )",
         "borderRadius": "var(--radius-field)",
         "--caps-keycap-painted-face": "var(\n      --caps-keycap-context-face,\n      var(--caps-keycap-face, var(--color-base-200))\n    )",
         "backgroundColor": "var(--caps-keycap-painted-face)",
-        "--caps-keycap-default-image": "none",
+        "--caps-keycap-default-image": "linear-gradient(\n      to bottom,\n      color-mix(\n        in oklab,\n        var(--caps-keycap-painted-face),\n        white calc(var(--depth) * 3%)\n      ),\n      color-mix(\n        in oklab,\n        var(--caps-keycap-painted-face),\n        black calc(var(--depth) * 3%)\n      )\n    )",
         "backgroundImage": "var(\n      --caps-keycap-context-image,\n      var(--caps-keycap-default-image)\n    )",
-        "boxShadow": "var(\n      --caps-keycap-context-shadow,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.14)),\n      0 var(--caps-keycap-lip) 0\n        color-mix(\n          in oklab,\n          var(--caps-keycap-face, var(--color-base-200)),\n          var(--color-base-content) 14%\n        )\n    )",
+        "boxShadow": "var(\n      --caps-keycap-context-shadow,\n      var(--caps-keycap-rest-shadow)\n    )",
         "color": "var(--caps-keycap-ink, var(--color-base-content))",
         "textAlign": "left",
         "cursor": "pointer",
@@ -1345,8 +1364,8 @@
         "transitionTimingFunction": "ease-out"
       },
       ".caps-keycap-button:active": {
-        "translate": "0 var(--caps-keycap-context-travel, var(--caps-keycap-lip))",
-        "boxShadow": "var(\n      --caps-keycap-active-shadow,\n      inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n      0 0 0 transparent\n    )"
+        "translate": "0 var(--caps-keycap-context-travel, var(--caps-key-lip))",
+        "boxShadow": "var(\n      --caps-keycap-active-shadow,\n      var(--caps-keycap-pressed-shadow)\n    )"
       },
       ".caps-keycap-button:focus-visible": {
         "outline": "2px solid var(--caps-keycap-focus-ink, var(--color-base-content))",

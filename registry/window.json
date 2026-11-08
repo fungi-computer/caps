@@ -15,7 +15,8 @@
     "@shiit/icon-button",
     "@shiit/button",
     "@shiit/status",
-    "@shiit/dropdown-menu"
+    "@shiit/dropdown-menu",
+    "@shiit/tooltip"
   ],
   "files": [
     {

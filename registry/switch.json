@@ -53,6 +53,12 @@
   "css": {
     "@import \"@fungi.computer/stipe/styles.css\"": {},
     "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-switch": {
+        "width": "40px",
+        "justifySelf": "start"
+      }
+    },
     "@layer components": {
       ".caps-gooey-motion": {
         "--caps-gooey-duration": "var(--stipe-motion-spring-duration)",
@@ -114,8 +120,9 @@
     "@layer caps-touch-targets": {
       "@media (max-width: 640px), (any-pointer: coarse)": {
         ".caps-switch-input": {
-          "placeSelf": "center stretch",
-          "height": "max(100%, var(--caps-touch-target))"
+          "placeSelf": "center",
+          "height": "max(100%, var(--caps-touch-target))",
+          "width": "max(100%, var(--caps-touch-target))"
         }
       }
     }

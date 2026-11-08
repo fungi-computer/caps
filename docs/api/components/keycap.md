@@ -24,10 +24,11 @@ until hovered or focused; the rest follow the theme.
 ### KeycapSize
 
 ```ts
-type KeycapSize = "sm" | "md" | "lg";
+type KeycapSize = "hint" | "sm" | "md" | "lg";
 ```
 
-Keycap sizes: a legend chip, a dock key and a big face key.
+Keycap sizes: `hint` is a muted inline shortcut caption (caption height, no
+plastic), then a legend chip, a dock key and a big face key.
 
 ---
 
@@ -41,11 +42,12 @@ Props accepted by Keycap.
 
 #### Type Declaration
 
-| Name       | Type                        | Description                                                     |
-| ---------- | --------------------------- | --------------------------------------------------------------- |
-| `tone?`    | [`KeycapTone`](#keycaptone) | -                                                               |
-| `size?`    | [`KeycapSize`](#keycapsize) | -                                                               |
-| `pressed?` | `boolean`                   | Show the key held down. Presentation only; the host owns input. |
+| Name       | Type                        | Description                                                                                         |
+| ---------- | --------------------------- | --------------------------------------------------------------------------------------------------- |
+| `tone?`    | [`KeycapTone`](#keycaptone) | -                                                                                                   |
+| `size?`    | [`KeycapSize`](#keycapsize) | -                                                                                                   |
+| `pressed?` | `boolean`                   | Show the key held down. Presentation only; the host owns input.                                     |
+| `touch?`   | `"hide"`                    | `hide` drops a keyboard legend on touch-first devices (`pointer: coarse`), where no one presses it. |
 
 ---
 

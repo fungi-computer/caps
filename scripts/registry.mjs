@@ -311,22 +311,13 @@ const adaptSourceImports = (content) =>
       'from "@/lib/tanstack-highlight"',
     )
     .replaceAll("@shiit/stipe", stipePackage)
-    .replaceAll('from "../components/card.js"', 'from "@/components/ui/card"')
-    .replaceAll("from '../components/card.js'", "from '@/components/ui/card'")
-    .replaceAll(
-      'from "../components/icon-button.js"',
-      'from "@/components/ui/icon-button"',
+    // A block reaches a sibling UI component through ../components; every
+    // installed component lives under components/ui. Selectable is shared
+    // outside ui, so it keeps its own rule below.
+    .replace(
+      /from (["'])\.\.\/components\/(?!selectable\.js)([a-z0-9-]+)\.js\1/g,
+      "from $1@/components/ui/$2$1",
     )
-    .replaceAll(
-      'from "../components/progress.js"',
-      'from "@/components/ui/progress"',
-    )
-    .replaceAll('from "../components/gooey.js"', 'from "@/components/ui/gooey"')
-    .replaceAll(
-      'from "../components/button.js"',
-      'from "@/components/ui/button"',
-    )
-    .replaceAll('from "../components/input.js"', 'from "@/components/ui/input"')
     .replaceAll('from "../lib/cn.js"', 'from "@/lib/cn"')
     .replaceAll("from '../lib/cn.js'", "from '@/lib/cn'")
     .replaceAll('from "../lib/ime.js"', 'from "@/lib/ime"')
@@ -341,14 +332,6 @@ const adaptSourceImports = (content) =>
     .replaceAll(
       "from '../components/selectable.js'",
       "from '@/components/selectable'",
-    )
-    .replaceAll(
-      'from "../components/combobox.js"',
-      'from "@/components/ui/combobox"',
-    )
-    .replaceAll(
-      "from '../components/combobox.js'",
-      "from '@/components/ui/combobox'",
     );
 
 async function capsCssFor(name) {

@@ -80,10 +80,14 @@ export function PermissionGrid({
               #
             </th>
             <th scope="col">{headings.capability}</th>
-            <th scope="col">{headings.state}</th>
-            <th scope="col">{headings.scope}</th>
+            <th scope="col" className="caps-permission-grid-col-state">
+              {headings.state}
+            </th>
+            <th scope="col" className="caps-permission-grid-col-scope">
+              {headings.scope}
+            </th>
             {hasControls ? (
-              <th scope="col">
+              <th scope="col" className="caps-permission-grid-col-control">
                 {headings.control ?? <span className="sr-only">Change</span>}
               </th>
             ) : null}
@@ -95,7 +99,10 @@ export function PermissionGrid({
               <td className="caps-permission-grid-index">
                 <span>{index(position)}</span>
                 {row.group === undefined ? null : (
-                  <span className="caps-permission-grid-group">
+                  <span
+                    className="caps-permission-grid-group"
+                    title={row.group}
+                  >
                     {row.group}
                   </span>
                 )}

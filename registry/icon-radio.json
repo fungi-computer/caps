@@ -16,7 +16,7 @@
       "path": "../src/components/icon-radio.tsx",
       "type": "registry:ui",
       "target": "@ui/icon-radio.tsx",
-      "content": "import { forwardRef, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/cn\";\nimport { RadioGroupItem, type RadioGroupItemProps } from \"./radio-group.js\";\nimport { IconChoiceMark } from \"./icon-choice-mark.js\";\n\n/** Props accepted by IconRadio. Use it inside the existing RadioGroup. */\nexport type IconRadioProps = {\n  label: string;\n  icon: ReactNode;\n  /** A short visible legend; it does not replace the accessible label. */\n  caption?: string;\n} & Omit<RadioGroupItemProps, \"children\" | \"indicator\">;\n\n/** One icon choice in a native, mutually exclusive Caps RadioGroup. */\nexport const IconRadio = forwardRef<HTMLInputElement, IconRadioProps>(\n  function IconRadio({ label, icon, caption, className, ...props }, ref) {\n    return (\n      <label className=\"caps-icon-choice\">\n        <RadioGroupItem\n          {...props}\n          aria-label={label}\n          className={cn(\"caps-icon-choice-input\", className)}\n          indicator={<IconChoiceMark icon={icon} caption={caption} />}\n          ref={ref}\n        />\n      </label>\n    );\n  },\n);\n"
+      "content": "import { forwardRef, type ReactNode } from \"react\";\nimport { cn } from \"@/lib/cn\";\nimport { RadioGroupItem, type RadioGroupItemProps } from \"./radio-group.js\";\nimport { IconChoiceMark } from \"./icon-choice-mark.js\";\n\n/** Props accepted by IconRadio. Use it inside the existing RadioGroup. */\nexport type IconRadioProps = {\n  label: string;\n  icon: ReactNode;\n  /** A short visible legend; it does not replace the accessible label. */\n  caption?: string;\n  /**\n   * `color` keeps an off key's art in full colour, for choices whose colour\n   * is the information (a character, a palette). Icons dim by default.\n   */\n  art?: \"dim\" | \"color\";\n} & Omit<RadioGroupItemProps, \"children\" | \"indicator\">;\n\n/** One icon choice in a native, mutually exclusive Caps RadioGroup. */\nexport const IconRadio = forwardRef<HTMLInputElement, IconRadioProps>(\n  function IconRadio(\n    { label, icon, caption, art = \"dim\", className, ...props },\n    ref,\n  ) {\n    return (\n      <label\n        className=\"caps-icon-choice\"\n        data-art={art === \"color\" ? art : undefined}\n      >\n        <RadioGroupItem\n          {...props}\n          aria-label={label}\n          className={cn(\"caps-icon-choice-input\", className)}\n          indicator={<IconChoiceMark icon={icon} caption={caption} />}\n          ref={ref}\n        />\n      </label>\n    );\n  },\n);\n\n/** Props accepted by SwatchRadio. Use it inside the existing RadioGroup. */\nexport type SwatchRadioProps = {\n  /** The colour's name: the accessible label and the hover title. */\n  label: string;\n  /** Any CSS colour, drawn as the key's dot. */\n  color: string;\n} & Omit<RadioGroupItemProps, \"children\" | \"indicator\">;\n\n/**\n * One colour choice: a small icon key whose dot keeps its colour while off,\n * so every choice reads before it is picked. The lamp marks the choice.\n */\nexport const SwatchRadio = forwardRef<HTMLInputElement, SwatchRadioProps>(\n  function SwatchRadio({ label, color, className, ...props }, ref) {\n    return (\n      <label\n        className=\"caps-icon-choice\"\n        data-art=\"color\"\n        data-swatch=\"\"\n        title={label}\n      >\n        <RadioGroupItem\n          {...props}\n          aria-label={label}\n          className={cn(\"caps-icon-choice-input\", className)}\n          indicator={\n            <IconChoiceMark\n              icon={\n                <span\n                  className=\"caps-swatch-dot\"\n                  style={{ backgroundColor: color }}\n                />\n              }\n            />\n          }\n          ref={ref}\n        />\n      </label>\n    );\n  },\n);\n"
     },
     {
       "path": "../src/components/icon-choice-mark.tsx",
@@ -34,6 +34,11 @@
   "css": {
     "@import \"@fungi.computer/stipe/styles.css\"": {},
     "@plugin \"@tailwindcss/typography\"": {},
+    "@layer utilities": {
+      ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+        "--caps-fieldset-legend-line": "3.25rem"
+      }
+    },
     "@layer components": {
       ".caps-icon-choice": {
         "display": "inline-grid",
@@ -149,6 +154,21 @@
       ".caps-icon-choice[data-appearance=\"compact\"] .caps-icon-choice-lamp": {
         "display": "none"
       },
+      ".caps-icon-choice[data-swatch]": {
+        "minWidth": "2.25rem",
+        "minHeight": "2.25rem"
+      },
+      ".caps-icon-choice[data-swatch] .caps-icon-choice-mark": {
+        "padding": "var(--spacing-xs)"
+      },
+      ".caps-icon-choice[data-art=\"color\"] .caps-icon-choice-art": {
+        "filter": "none",
+        "opacity": 1
+      },
+      ".caps-icon-choice[data-swatch] .caps-icon-choice-art": {
+        "width": "1rem",
+        "height": "1rem"
+      },
       ".caps-icon-choice:has(.caps-icon-choice-input:disabled)": {
         "cursor": "not-allowed"
       }
@@ -157,6 +177,15 @@
       "syntax": "\"<color>\"",
       "inherits": "true",
       "initialValue": "black"
+    },
+    "@layer caps-touch-targets": {
+      "@media (max-width: 640px), (any-pointer: coarse)": {
+        ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
+          "placeSelf": "center",
+          "width": "max(100%, var(--caps-touch-target))",
+          "height": "max(100%, var(--caps-touch-target))"
+        }
+      }
     }
   }
 }

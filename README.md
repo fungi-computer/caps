@@ -812,6 +812,64 @@ closes the disclosure and returns focus to the launcher. Reduced motion settles
 immediately. Available-app and primary-action buttons do not claim toggle state.
 `alwaysExpanded` keeps the disclosure open for dock layouts.
 
+### First-run kit
+
+Compose these for an App's first ten seconds; Caps owns the presentation and
+your App owns the words.
+
+- `EmptyState` takes `primaryAction` (`label`, `onSelect`, `pending`,
+  `disabled`, `disabledReason`): at most one primary per state. Put secondary
+  buttons in `actions`. `suggestions` chips accept `pending` and `disabled`.
+  `visual="blobs"` is the living idle Loader and is what a `panel` shows when
+  you pass no visual; `speech` keeps the mascot.
+- `ResultState` is the failure card: `tone` (`failed`, `done`, `neutral`), up to
+  three numbered `steps`, `visual` art, and `headingLevel`.
+- `LoadingState` takes `size`, `variant`, `detail`, and `slowAfterMs`
+  (default 8000) with `onRetry`; after that it adds "Still working…" and a
+  Retry. Formations by moment: `line` opening a window, `wander` connecting,
+  `square` installing, `bloom` a run in progress. `Loader pace="idle"` slows a
+  formation for decorative art. Reduced motion shows the static silhouette.
+- `Keycap touch="hide"` drops a keyboard legend on touch-first devices;
+  `KeycapButton` hides its `shortcut` legend that way.
+
+- `SetupNotice` (`blocks/setup-notice`) names a missing setup with its one fix:
+  `need` (title), `cause` (one sentence), required `fix`, optional `secondary`
+  and `available` (what still works), and `variant` `panel` (an EmptyState
+  panel), `banner` or `inline` (a warning Alert). While `fix.pending` the button
+  shows the Loader and reads "Waiting for {waitingFor}…". Render it only while
+  the setup is missing; the host unmounts it when the fact turns ready. One
+  notice per window, and the notice is the call to action.
+- `FailureLine` (`components/failure-line`) is the item failure: an error dot,
+  one plain line, labelled `Retry` / `Dismiss`, and "Failed {n} times" once when
+  `count` is above 1. `density` is `row` or `tile`. Never use the `bang` glyph.
+
+Which key and which status light:
+
+| Need                                                                | Use                     |
+| ------------------------------------------------------------------- | ----------------------- |
+| An action button in an App, game dock or toy panel                  | `KeycapButton`          |
+| A keyboard legend beside copy or inside a key                       | `Keycap` (native `kbd`) |
+| State of an App row, chip or toolbar                                | `Status` (gooey bead)   |
+| An editorial or field-guide progress mark (ring, arc, check, cross) | `StatusMark`            |
+
+`bang` is for unread beads only. Never put it in a button or chip; use a dot.
+
+### Toaster CSS placement
+
+`Toaster` wraps Sonner, which injects its own unlayered stylesheet at runtime.
+Anything inside a cascade layer loses to it, so the toast rules (Stipe token
+variables, font, close button, icons) live unlayered near the top of
+`src/styles.css`, with raised specificity. Keep new toast rules there, not in
+`first-run.css` or a layer.
+
+### Hairlines
+
+`--stipe-hairline` (about 22%) outlines controls: Keycap, Button and chips keep
+it, and the plastic look stays. `--stipe-hairline-quiet` (about 10%, an additive
+Stipe token) draws separators inside a surface: table row lines, list and panel
+dividers, prose rules. Use fewer frames, not lighter ones: never put a framed
+box inside a framed box, and never change a control outline to the quiet token.
+
 ### Status beads and dashboard controls
 
 `Status` is a gooey SVG bead. Set `glyph` (`dot`, `pill` or `bang`), `tone`, and

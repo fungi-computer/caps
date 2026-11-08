@@ -1,6 +1,6 @@
 {
   "name": "@fungi.computer/caps",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "author": "Levi <levi@technomancy.dev>",
   "description": "Product-neutral React primitives and blocks for Fungi interfaces",
   "type": "module",
@@ -242,6 +242,10 @@
       "types": "./dist/components/alert.d.ts",
       "import": "./dist/components/alert.js"
     },
+    "./components/failure-line": {
+      "types": "./dist/components/failure-line.d.ts",
+      "import": "./dist/components/failure-line.js"
+    },
     "./components/status": {
       "types": "./dist/components/status.d.ts",
       "import": "./dist/components/status.js"
@@ -337,6 +341,10 @@
     "./blocks/async-state": {
       "types": "./dist/blocks/async-state.d.ts",
       "import": "./dist/blocks/async-state.js"
+    },
+    "./blocks/setup-notice": {
+      "types": "./dist/blocks/setup-notice.d.ts",
+      "import": "./dist/blocks/setup-notice.js"
     },
     "./blocks/loading-state": {
       "types": "./dist/blocks/loading-state.d.ts",
@@ -465,7 +473,8 @@
     "src/fonts-display.css",
     "src/fonts-mono.css",
     "src/status-tray.css",
-    "src/app-status-bar.css"
+    "src/app-status-bar.css",
+    "src/first-run.css"
   ],
   "scripts": {
     "clean": "node --input-type=module --eval \"import { rm } from 'node:fs/promises'; await rm('dist', { recursive: true, force: true });\"",

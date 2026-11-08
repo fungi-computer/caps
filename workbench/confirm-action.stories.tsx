@@ -53,6 +53,18 @@ export function ConfirmActions() {
           onConfirm={confirm}
         />
       </section>
+      <section className="grid gap-md" aria-label="Quiet hold confirmation">
+        <h2>Reset the layout</h2>
+        <p>A quiet, small hold-to-confirm for toolbars.</p>
+        <ConfirmAction
+          mode="hold"
+          label="Reset layout"
+          confirmLabel="Press and hold to reset the layout."
+          onConfirm={confirm}
+          size="sm"
+          variant="outline"
+        />
+      </section>
       <p role="status">Completed actions: {completed}</p>
     </main>
   );

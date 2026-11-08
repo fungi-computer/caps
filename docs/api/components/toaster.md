@@ -17,6 +17,8 @@ function Toaster(__namedParameters): ReactPortal | null;
 ```
 
 Sonner owns gestures, stacking, focus and lifetime; Caps owns the surface.
+Colors come from the Stipe tokens in the cascade, so a `data-theme` switch
+restyles open toasts; Sonner's own light and dark palettes are overridden.
 
 #### Parameters
 
