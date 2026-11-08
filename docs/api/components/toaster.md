@@ -10,6 +10,28 @@
 
 ## Functions
 
+### showNotice()
+
+```ts
+function showNotice(notice, toasterId): void;
+```
+
+Show a notice a hosted App asked for, on one named Toaster, with the notice's
+tone choosing the Caps status dot.
+
+#### Parameters
+
+| Parameter   | Type                                                                                                   |
+| ----------- | ------------------------------------------------------------------------------------------------------ |
+| `notice`    | `Readonly`\<\{ `message`: `string`; `tone?`: `"error"` \| `"info"` \| `"success"` \| `"warning"`; \}\> |
+| `toasterId` | `string`                                                                                               |
+
+#### Returns
+
+`void`
+
+---
+
 ### Toaster()
 
 ```ts

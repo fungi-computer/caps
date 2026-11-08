@@ -1,5 +1,15 @@
 # @fungi.computer/caps
 
+## 0.10.1
+
+### Patch Changes
+
+- Changes since 0.10.0:
+
+  - fix(caps): focus a form's first error when React renders it, not on a timer
+  - fix(hosts): an App's toast shows as a Caps notice in Oyster, Tourtois and
+    Hub (#351)
+
 ## 0.10.0
 
 ### Minor Changes

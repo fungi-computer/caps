@@ -7,7 +7,7 @@ import {
   type ReactFormExtendedApi,
   type StandardSchemaV1,
 } from "@tanstack/react-form";
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { Button, type ButtonProps } from "./components/button.js";
 import {
@@ -110,15 +110,35 @@ export type SchemaFormModel<V extends FormValues> = {
 const serverKey = "onServer";
 
 /** Keep the user's place when a submitted form reveals validation errors. */
-function focusFirstInvalid(form: HTMLFormElement | null) {
-  const invalid = form?.querySelector<HTMLElement>('[aria-invalid="true"]');
-  if (invalid?.matches("input, select, textarea, button, [tabindex]")) {
-    invalid.focus();
-  } else {
-    invalid
-      ?.querySelector<HTMLElement>("input, select, textarea, button")
-      ?.focus();
-  }
+function focusFirstInvalid(form: HTMLFormElement): boolean {
+  const invalid = form.querySelector<HTMLElement>('[aria-invalid="true"]');
+  const target = invalid?.matches("input, select, textarea, button, [tabindex]")
+    ? invalid
+    : invalid?.querySelector<HTMLElement>("input, select, textarea, button");
+  target?.focus();
+  return target != null;
+}
+
+/**
+ * Focus the first error once React has rendered it. TanStack settles the
+ * errors before React commits them, and a timer cannot know when that commit
+ * lands: on a loaded machine it ran first and focus never moved. The
+ * observer reacts to the committed `aria-invalid` itself.
+ */
+function focusFirstInvalidWhenRendered(form: HTMLFormElement): () => void {
+  if (focusFirstInvalid(form)) return () => undefined;
+  const observer = new MutationObserver(() => {
+    if (focusFirstInvalid(form)) observer.disconnect();
+  });
+  observer.observe(form, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ["aria-invalid"],
+  });
+  return () => {
+    observer.disconnect();
+  };
 }
 
 function hasServerError(field: AnyFieldApi): boolean {
@@ -303,6 +323,13 @@ function BoundSchemaForm<V extends FormValues>({
 }: SchemaFormPresentation & { model: SchemaFormModel<V> }) {
   const { submitting } = useSchemaFormStatus(model);
   const formRef = useRef<HTMLFormElement>(null);
+  const stopFocusing = useRef<() => void>(() => undefined);
+  useEffect(
+    () => () => {
+      stopFocusing.current();
+    },
+    [],
+  );
   return (
     <Form
       {...props}
@@ -314,10 +341,10 @@ function BoundSchemaForm<V extends FormValues>({
         event.preventDefault();
         if (!model.form.state.isSubmitting)
           void model.submit().then(() => {
-            // React commits field errors after TanStack completes validation.
-            setTimeout(() => {
-              focusFirstInvalid(formRef.current);
-            }, 0);
+            stopFocusing.current();
+            const form = formRef.current;
+            if (form !== null && !model.form.state.isValid)
+              stopFocusing.current = focusFirstInvalidWhenRendered(form);
           });
       }}
     >

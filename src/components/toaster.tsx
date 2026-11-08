@@ -6,7 +6,25 @@ import { Status } from "./status.js";
 import { createPortal } from "react-dom";
 import { useOverlayRoot } from "./overlay-root.js";
 
-export { toast } from "sonner";
+import { toast } from "sonner";
+
+export { toast };
+
+/**
+ * Show a notice a hosted App asked for, on one named Toaster, with the
+ * notice's tone choosing the Caps status dot.
+ */
+export function showNotice(
+  notice: Readonly<{
+    message: string;
+    tone?: "error" | "info" | "success" | "warning";
+  }>,
+  toasterId: string,
+): void {
+  const options = { toasterId, closeButton: true };
+  if (notice.tone === undefined) toast(notice.message, options);
+  else toast[notice.tone](notice.message, options);
+}
 
 /**
  * Sonner owns gestures, stacking, focus and lifetime; Caps owns the surface.
