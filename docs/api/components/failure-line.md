@@ -21,16 +21,18 @@ Props accepted by FailureLine.
 
 #### Type Declaration
 
-| Name            | Type                    | Description                                                                          |
-| --------------- | ----------------------- | ------------------------------------------------------------------------------------ |
-| `message`       | `ReactNode`             | One plain line naming the real cause; never a raw code.                              |
-| `onRetry()?`    | () => `void`            | Called when Retry is chosen; without it no Retry button shows.                       |
-| `onDismiss()?`  | () => `void`            | Called when Dismiss is chosen; without it no Dismiss button shows.                   |
-| `retryLabel?`   | `string`                | -                                                                                    |
-| `dismissLabel?` | `string`                | -                                                                                    |
-| `count?`        | `number`                | How many times it failed; above 1 the line adds a "Failed" line with the count once. |
-| `density?`      | `"row"` \| `"tile"`     | `row` sits in a list or under a control; `tile` fills a media tile.                  |
-| `role?`         | `"status"` \| `"alert"` | `status` is polite; use `alert` only for a single, urgent failure.                   |
+| Name                | Type                    | Description                                                                          |
+| ------------------- | ----------------------- | ------------------------------------------------------------------------------------ |
+| `message`           | `ReactNode`             | One plain line naming the real cause; never a raw code.                              |
+| `onRetry()?`        | () => `void`            | Called when Retry is chosen; without it no Retry button shows.                       |
+| `onDismiss()?`      | () => `void`            | Called when Dismiss is chosen; without it no Dismiss button shows.                   |
+| `retryLabel?`       | `string`                | -                                                                                    |
+| `dismissLabel?`     | `string`                | -                                                                                    |
+| `retryAriaLabel?`   | `string`                | A more specific accessible name for Retry, such as "Retry prompt".                   |
+| `dismissAriaLabel?` | `string`                | A more specific accessible name for Dismiss.                                         |
+| `count?`            | `number`                | How many times it failed; above 1 the line adds a "Failed" line with the count once. |
+| `density?`          | `"row"` \| `"tile"`     | `row` sits in a list or under a control; `tile` fills a media tile.                  |
+| `role?`             | `"status"` \| `"alert"` | `status` is polite; use `alert` only for a single, urgent failure.                   |
 
 ## Variables
 

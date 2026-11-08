@@ -17,6 +17,10 @@ export type FailureLineProps = Omit<
   onDismiss?: () => void;
   retryLabel?: string;
   dismissLabel?: string;
+  /** A more specific accessible name for Retry, such as "Retry prompt". */
+  retryAriaLabel?: string;
+  /** A more specific accessible name for Dismiss. */
+  dismissAriaLabel?: string;
   /** How many times it failed; above 1 the line adds a "Failed" line with the count once. */
   count?: number;
   /** `row` sits in a list or under a control; `tile` fills a media tile. */
@@ -35,10 +39,12 @@ export const FailureLine = forwardRef<HTMLDivElement, FailureLineProps>(
       className,
       count,
       density = "row",
+      dismissAriaLabel,
       dismissLabel = "Dismiss",
       message,
       onDismiss,
       onRetry,
+      retryAriaLabel,
       retryLabel = "Retry",
       role = "status",
       ...props
@@ -65,12 +71,22 @@ export const FailureLine = forwardRef<HTMLDivElement, FailureLineProps>(
         {onRetry || onDismiss ? (
           <span className="caps-failure-line-actions">
             {onRetry ? (
-              <Button size="sm" variant="ghost" onClick={onRetry}>
+              <Button
+                aria-label={retryAriaLabel}
+                size="sm"
+                variant="outline"
+                onClick={onRetry}
+              >
                 {retryLabel}
               </Button>
             ) : null}
             {onDismiss ? (
-              <Button size="sm" variant="ghost" onClick={onDismiss}>
+              <Button
+                aria-label={dismissAriaLabel}
+                size="sm"
+                variant="ghost"
+                onClick={onDismiss}
+              >
                 {dismissLabel}
               </Button>
             ) : null}

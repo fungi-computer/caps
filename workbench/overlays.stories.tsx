@@ -49,6 +49,25 @@ export const FillDialog: Story = () => (
   </Dialog>
 );
 
+/** A default dialog on a phone keeps a 16px gutter (safe-area aware) on each side. */
+export const PhoneGutterDialog: Story = () => (
+  <Dialog defaultOpen>
+    <DialogTrigger>Open dialog</DialogTrigger>
+    <DialogContent className="flex flex-col gap-lg">
+      <DialogHeader>
+        <DialogTitle>Rename this Agent</DialogTitle>
+        <DialogDescription>
+          On a phone the dialog sits 16px from each screen edge, more where the
+          device has a safe-area inset.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
+        <DialogClose>Cancel</DialogClose>
+      </DialogFooter>
+    </DialogContent>
+  </Dialog>
+);
+
 export const WindowComposition: Story = () => {
   const [windowElement, setWindowElement] = useState<HTMLDivElement | null>(
     null,

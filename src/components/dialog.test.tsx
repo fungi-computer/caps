@@ -67,9 +67,7 @@ it.each(
     expect(popup.classList.contains("w-11/12")).toBe(false);
     expect(popup.classList.contains("max-w-(--container-lg)")).toBe(false);
   } else {
-    expect(popup.classList.contains("max-h-screen")).toBe(true);
-    expect(popup.classList.contains("w-11/12")).toBe(true);
-    expect(popup.classList.contains("max-w-(--container-lg)")).toBe(true);
+    expect(popup.classList.contains("caps-dialog-popup-default")).toBe(true);
     expect(popup.classList.contains("inset-0")).toBe(false);
     expect(popup.classList.contains("-translate-x-1/2")).toBe(composed);
     expect(popup.classList.contains("-translate-y-1/2")).toBe(composed);

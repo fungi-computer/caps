@@ -1697,6 +1697,22 @@
   .caps-shortcuts dd {
     margin: 0;
   }
+  /* A default dialog keeps a 16px gutter on each side (more where the device
+     has a safe-area inset) and never outgrows the screen vertically. */
+  .caps-dialog-popup-default {
+    width: min(
+      var(--container-lg),
+      calc(
+        100% - max(1rem, env(safe-area-inset-left)) -
+          max(1rem, env(safe-area-inset-right))
+      )
+    );
+    max-width: none;
+    max-height: calc(
+      100dvh - max(1rem, env(safe-area-inset-top)) -
+        max(1rem, env(safe-area-inset-bottom))
+    );
+  }
   dialog.caps-surface {
     color: inherit;
   }

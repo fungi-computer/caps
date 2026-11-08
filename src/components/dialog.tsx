@@ -131,7 +131,7 @@ export const DialogPopup = forwardRef<HTMLDivElement, DialogPopupProps>(
             "caps-dialog-popup overflow-y-auto overscroll-contain rounded-box bg-base-100 p-lg text-base-content shadow-xl",
             size === "fill"
               ? "fixed inset-0 h-full w-full max-w-none"
-              : "max-h-screen w-11/12 max-w-(--container-lg)",
+              : "caps-dialog-popup-default",
             resolveClassName(className, state),
           )
         }

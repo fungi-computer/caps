@@ -1,5 +1,15 @@
 # @fungi.computer/caps
 
+## 0.9.0
+
+### Minor Changes
+
+- Changes since 0.8.0:
+
+  - feat(parakeet): connect-a-model panel up front, specific Retry name
+  - fix(prints): make Retry the one real button
+  - fix(caps): keep a 16px safe-area gutter around phone dialogs
+
 ## 0.8.0
 
 ### Minor Changes
