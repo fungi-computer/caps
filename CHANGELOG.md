@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.10.2
+
+### Patch Changes
+
+- Changes since 0.10.1:
+
+  - fix(caps): keep phone window commands and controls together
+
 ## 0.10.1
 
 ### Patch Changes

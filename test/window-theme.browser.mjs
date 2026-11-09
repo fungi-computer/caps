@@ -7,7 +7,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { WindowHeader, WindowActions } from "../dist/components/window.js";
 
-async function statusPointerProof(page, view) {
+async function statusPointerProof(page, view, published = false) {
   await page.setViewportSize({ width: 390, height: 844 });
   // Render the real components and their SVG geometry, not a hand-drawn bead.
   // Browser hit testing is the claim; the component suite owns tooltip behavior.
@@ -49,10 +49,12 @@ async function statusPointerProof(page, view) {
       onCrumb: renderOnly,
       primary:
         view === "editor"
-          ? [
-              { id: "run", label: "Run", icon: "play" },
-              { id: "publish", label: "Publish", variant: "primary" },
-            ]
+          ? published
+            ? [{ id: "run", label: "Run", variant: "primary" }]
+            : [
+                { id: "run", label: "Run", icon: "play" },
+                { id: "publish", label: "Publish", variant: "primary" },
+              ]
           : [],
       menu: [{ id: "fork", label: "Fork" }],
       status:
@@ -87,6 +89,13 @@ async function statusPointerProof(page, view) {
       "utf8",
     ),
   });
+  const commandBox = await page.locator(".caps-window-commands").boundingBox();
+  const actionBox = await page.locator(".caps-window-actions").boundingBox();
+  assert.ok(commandBox && actionBox);
+  assert.ok(
+    Math.abs(commandBox.y - actionBox.y) < 1,
+    "phone commands and window controls share a row",
+  );
   const ids = view === "editor" ? ["tool", "version"] : ["scope", "tool"];
   for (const id of ids) {
     const crumb = page.locator(`[data-caps-window-crumb="${id}"]`);
@@ -189,6 +198,11 @@ try {
     } catch (cause) {
       failures.push(cause);
     }
+  }
+  try {
+    await statusPointerProof(page, "editor", true);
+  } catch (cause) {
+    failures.push(cause);
   }
   if (failures.length)
     throw new AggregateError(failures, "Window header hit-routing failures");

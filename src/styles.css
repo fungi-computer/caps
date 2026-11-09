@@ -6647,6 +6647,28 @@
     .caps-window-header:has(.caps-window-crumbs) {
       flex-wrap: wrap;
     }
+    /* Keep commands and window controls together below a phone's path.
+       Otherwise one short command fits beside the path and strands the
+       close/minimize controls on their own line. */
+    .caps-window-header:has(
+        .caps-window-crumb-item[data-caps-crumb-position="parent"]
+      ):has(.caps-window-commands)::after {
+      content: "";
+      flex-basis: 100%;
+      order: 1;
+    }
+    .caps-window-header:has(
+        .caps-window-crumb-item[data-caps-crumb-position="parent"]
+      )
+      > :is(.caps-window-commands, .caps-window-actions) {
+      order: 2;
+    }
+    .caps-window-header:has(
+        .caps-window-crumb-item[data-caps-crumb-position="parent"]
+      )
+      > .caps-window-commands {
+      margin-inline-end: auto;
+    }
     .caps-window-crumbs {
       min-width: min-content;
       flex-shrink: 0;
