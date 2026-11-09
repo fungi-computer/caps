@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.10.3
+
+### Patch Changes
+
+- Changes since 0.10.2:
+
+  - fix(tourtois): pulse pending loaders with reduced motion
+
 ## 0.10.2
 
 ### Patch Changes

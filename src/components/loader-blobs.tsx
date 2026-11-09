@@ -134,22 +134,34 @@ export function LoaderBlobs({
           : 3;
 
   useLayoutEffect(() => {
-    if (reduced || !geometry.current || !visual.current) return;
-    const loops = [...geometry.current.querySelectorAll("ellipse")].map(
-      (blob, index) =>
-        animate(blob, {
-          keyframes: Array.from({ length: 48 }, (_, step) => ({
-            ...pose(variant, index, (step + 1) / 48),
-            duration:
-              motionTime(
-                timing,
-                durations[variant] * (pace === "idle" ? IDLE_SLOWDOWN : 1),
-              ) / 48,
-          })),
-          ease: "linear",
-          loop: true,
-        }),
-    );
+    if (!geometry.current || !visual.current) return;
+    // Reduced motion keeps the formation still, but working feedback must stay
+    // visibly alive. Pulse its alpha slowly rather than moving any beads.
+    if (reduced && pace === "idle") return;
+    const loops = reduced
+      ? [
+          animate(geometry.current, {
+            opacity: [0.55, 1],
+            duration: timing.slow * 10,
+            ease: "inOutSine",
+            alternate: true,
+            loop: true,
+          }),
+        ]
+      : [...geometry.current.querySelectorAll("ellipse")].map((blob, index) =>
+          animate(blob, {
+            keyframes: Array.from({ length: 48 }, (_, step) => ({
+              ...pose(variant, index, (step + 1) / 48),
+              duration:
+                motionTime(
+                  timing,
+                  durations[variant] * (pace === "idle" ? IDLE_SLOWDOWN : 1),
+                ) / 48,
+            })),
+            ease: "linear",
+            loop: true,
+          }),
+        );
     const stopObserving = observeMotionVisibility(visual.current, (visible) => {
       for (const loop of loops) {
         if (visible) loop.resume();

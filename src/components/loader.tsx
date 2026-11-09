@@ -38,7 +38,7 @@ export type LoaderProps = {
   tone?: "neutral" | "accent" | "primary" | "success" | "current";
 } & HTMLAttributes<HTMLSpanElement>;
 
-/** Connecting gooey beads, with a static silhouette for reduced motion. */
+/** Connecting gooey beads; working feedback gently pulses under reduced motion. */
 export const Loader = forwardRef<HTMLSpanElement, LoaderProps>(function Loader(
   {
     "aria-label": ariaLabel,

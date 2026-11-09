@@ -59,4 +59,4 @@ const Loader: ForwardRefExoticComponent<
 >;
 ```
 
-Connecting gooey beads, with a static silhouette for reduced motion.
+Connecting gooey beads; working feedback gently pulses under reduced motion.

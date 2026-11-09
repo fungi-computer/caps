@@ -828,7 +828,8 @@ your App owns the words.
   (default 8000) with `onRetry`; after that it adds "Still working…" and a
   Retry. Formations by moment: `line` opening a window, `wander` connecting,
   `square` installing, `bloom` a run in progress. `Loader pace="idle"` slows a
-  formation for decorative art. Reduced motion shows the static silhouette.
+  formation for decorative art. Under reduced motion, working loaders gently
+  pulse without moving; idle art keeps a static silhouette.
 - `Keycap touch="hide"` drops a keyboard legend on touch-first devices;
   `KeycapButton` hides its `shortcut` legend that way.
 

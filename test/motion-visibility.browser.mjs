@@ -10,10 +10,12 @@ const base = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61005";
 const browser = await launchIsolatedChromium(chromium, portsOf(base));
 try {
   const page = await browser.newPage({ reducedMotion: "no-preference" });
-  for (const [story, selector] of [
-    ["status", "[data-status-preview] svg"],
-    ["loader", '.caps-loader[data-variant="bloom"] svg'],
+  for (const [story, selector, reducedMotion] of [
+    ["status", "[data-status-preview] svg", "no-preference"],
+    ["loader", '.caps-loader[data-variant="bloom"] svg', "no-preference"],
+    ["loader", '.caps-loader[data-variant="bloom"] svg', "reduce"],
   ]) {
+    await page.emulateMedia({ reducedMotion });
     await page.goto(`${base}/?story=feedback--${story}&mode=preview`);
     if (story === "status")
       await page.getByRole("button", { name: "bounce", exact: true }).click();
@@ -90,7 +92,9 @@ try {
     assert.ok(counts.resumed > 0, `${story}: unhidden motion resumes`);
     assert.equal(counts.offscreen, 0, `${story}: scrolled-out motion pauses`);
     assert.ok(counts.returned > 0, `${story}: scrolled-in motion resumes`);
-    globalThis.console.log(`${story}: ${JSON.stringify(counts)}`);
+    globalThis.console.log(
+      `${story}/${reducedMotion}: ${JSON.stringify(counts)}`,
+    );
   }
 } finally {
   await browser.close();

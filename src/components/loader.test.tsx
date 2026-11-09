@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 describe("Loader and Keycap additions", () => {
-  it("marks pace and renders a static silhouette under reduced motion", () => {
+  it("marks idle pace and renders its still silhouette under reduced motion", () => {
     vi.stubGlobal("matchMedia", () => ({
       matches: true,
       addEventListener: () => undefined,

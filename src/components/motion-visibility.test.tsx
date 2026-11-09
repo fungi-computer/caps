@@ -70,13 +70,21 @@ afterEach(() => {
 
 describe("decorative motion visibility", () => {
   it.each([
-    ["status", <Status key="status" motion="bounce" />],
-    ["loader", <Loader key="loader" variant="bloom" />],
+    ["status", <Status key="status" motion="bounce" />, false],
+    ["loader", <Loader key="loader" variant="bloom" />, false],
+    ["reduced-motion loader", <Loader key="reduced" variant="square" />, true],
   ])(
     "pauses %s loops outside the viewport and resumes the same phase",
-    async (_, visual) => {
+    async (_, visual, reduced) => {
+      vi.stubGlobal("matchMedia", () => ({
+        matches: reduced,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      }));
       const view = render(visual);
-      const observer = observers[0];
+      // Hydration starts reduced, then resolves the element's real tokens.
+      // Exercise the current observer, not a disconnected first render.
+      const observer = observers.at(-1);
       if (!observer) throw new Error("Missing visibility observer");
       const initial = view.container.innerHTML;
       await expect.poll(() => view.container.innerHTML).not.toBe(initial);
