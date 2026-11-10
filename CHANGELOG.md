@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.10.5
+
+### Patch Changes
+
+- Changes since 0.10.4:
+
+  - fix(tourtois): compact phone chrome and desktop widgets
+  - fix(tourtois): compact phone chrome and desktop widgets
+
 ## 0.10.4
 
 ### Patch Changes

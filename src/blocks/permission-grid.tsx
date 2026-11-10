@@ -118,7 +118,7 @@ export function PermissionGrid({
                   <span>{row.label}</span>
                 </span>
               </th>
-              <td>
+              <td className="caps-permission-grid-state-cell">
                 <span
                   className="caps-permission-grid-state"
                   data-state={row.state}
@@ -127,7 +127,13 @@ export function PermissionGrid({
                 </span>
               </td>
               <td className="caps-permission-grid-scope">{row.scope}</td>
-              {hasControls ? <td>{row.control ?? null}</td> : null}
+              {hasControls ? (
+                <td className="caps-permission-grid-control-cell">
+                  <span className="caps-permission-grid-control">
+                    {row.control ?? null}
+                  </span>
+                </td>
+              ) : null}
             </tr>
           ))}
         </tbody>
