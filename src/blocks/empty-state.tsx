@@ -79,8 +79,10 @@ function useSpeaking(enabled: boolean, timing: Motion): boolean {
 
 /** Props accepted by EmptyState. */
 export type EmptyStateProps = Omit<HTMLAttributes<HTMLElement>, "title"> & {
-  /** Secondary actions only; the main step goes in `primaryAction`. */
+  /** Supporting actions or hints below the invitation. */
   actions?: ReactNode;
+  /** One secondary action beside the primary action, such as creating a new file. */
+  secondaryAction?: ReactNode;
   /** The one main step, rendered as a primary Button before the chips. */
   primaryAction?: EmptyStatePrimaryAction;
   description: ReactNode;
@@ -110,6 +112,7 @@ export const EmptyState = forwardRef<HTMLElement, EmptyStateProps>(
   function EmptyState(
     {
       actions,
+      secondaryAction,
       className,
       description,
       headingLevel = 2,
@@ -148,19 +151,22 @@ export const EmptyState = forwardRef<HTMLElement, EmptyStateProps>(
         <p>{description}</p>
         {primaryAction ? (
           <div className="empty-state-primary">
-            <Button
-              aria-describedby={
-                primaryAction.disabled && primaryAction.disabledReason
-                  ? disabledReasonId
-                  : undefined
-              }
-              disabled={primaryAction.disabled}
-              loading={primaryAction.pending === true}
-              onClick={primaryAction.onSelect}
-              variant="primary"
-            >
-              {primaryAction.label}
-            </Button>
+            <div className="empty-state-action-row">
+              <Button
+                aria-describedby={
+                  primaryAction.disabled && primaryAction.disabledReason
+                    ? disabledReasonId
+                    : undefined
+                }
+                disabled={primaryAction.disabled}
+                loading={primaryAction.pending === true}
+                onClick={primaryAction.onSelect}
+                variant="primary"
+              >
+                {primaryAction.label}
+              </Button>
+              {secondaryAction}
+            </div>
             {primaryAction.disabled && primaryAction.disabledReason ? (
               <span className="empty-state-reason" id={disabledReasonId}>
                 {primaryAction.disabledReason}

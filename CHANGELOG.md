@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.10.4
+
+### Patch Changes
+
+- Changes since 0.10.3:
+
+  - fix(caps): keep paired empty-state actions explicit
+  - fix(ui): restore consistent first-use empty state panels
+
 ## 0.10.3
 
 ### Patch Changes

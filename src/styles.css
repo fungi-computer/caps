@@ -8227,6 +8227,13 @@
   .empty-state-panel .empty-state-primary {
     justify-items: center;
   }
+  .empty-state-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
   .empty-state-reason {
     color: var(--stipe-fg-muted);
     font-size: var(--text-sm);

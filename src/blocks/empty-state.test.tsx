@@ -3,6 +3,7 @@ import { act } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { cleanup, render, requireValue } from "../test-utils/index.js";
+import { Button } from "../components/button.js";
 import { EmptyState } from "./empty-state.js";
 
 afterEach(() => {
@@ -21,6 +22,40 @@ function stubMotionPreference(reduce: boolean) {
 }
 
 describe("EmptyState", () => {
+  it("keeps the secondary action available when the primary action is unavailable", () => {
+    const open = vi.fn();
+    const create = vi.fn();
+    const view = render(
+      <EmptyState
+        title="Open a saved file"
+        description="Choose a file to keep working."
+        variant="panel"
+        primaryAction={{
+          label: "Open notes.md",
+          onSelect: open,
+          disabled: true,
+          disabledReason: "The file is unavailable.",
+        }}
+        secondaryAction={<Button onClick={create}>New file</Button>}
+      />,
+    );
+    const buttons = view.container.querySelectorAll("button");
+    const primary = requireValue(buttons[0], "primary action");
+    const secondary = requireValue(buttons[1], "secondary action");
+    expect(primary.disabled).toBe(true);
+    const reason = primary.getAttribute("aria-describedby");
+    expect(reason).not.toBeNull();
+    expect(document.getElementById(reason ?? "")?.textContent).toBe(
+      "The file is unavailable.",
+    );
+    act(() => {
+      primary.click();
+      secondary.click();
+    });
+    expect(open).not.toHaveBeenCalled();
+    expect(create).toHaveBeenCalledOnce();
+  });
+
   it("tells a speech visual it is speaking for a moment, then settles", () => {
     vi.useFakeTimers();
     stubMotionPreference(false);
