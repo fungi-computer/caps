@@ -40,6 +40,80 @@
         ".caps-toaster[data-sonner-toaster]": {
           "zIndex": "var(--stipe-layer-toast)"
         },
+        ".caps-toaster[data-sonner-toaster][data-sonner-theme]": {
+          "fontFamily": "inherit",
+          "--border-radius": "var(--radius-box)",
+          "--normal-bg": "var(--stipe-surface-raised)",
+          "--normal-bg-hover": "var(--color-base-200)",
+          "--normal-border": "var(--stipe-hairline-quiet)",
+          "--normal-border-hover": "var(--stipe-hairline)",
+          "--normal-text": "var(--color-base-content)",
+          "--success-bg": "color-mix(\n    in oklab,\n    var(--color-success) 10%,\n    var(--stipe-surface-raised)\n  )",
+          "--success-border": "color-mix(in oklab, var(--color-success) 35%, transparent)",
+          "--success-text": "var(--color-base-content)",
+          "--info-bg": "color-mix(\n    in oklab,\n    var(--color-info) 10%,\n    var(--stipe-surface-raised)\n  )",
+          "--info-border": "color-mix(in oklab, var(--color-info) 35%, transparent)",
+          "--info-text": "var(--color-base-content)",
+          "--warning-bg": "color-mix(\n    in oklab,\n    var(--color-warning) 12%,\n    var(--stipe-surface-raised)\n  )",
+          "--warning-border": "color-mix(in oklab, var(--color-warning) 40%, transparent)",
+          "--warning-text": "var(--color-base-content)",
+          "--error-bg": "color-mix(\n    in oklab,\n    var(--color-error) 10%,\n    var(--stipe-surface-raised)\n  )",
+          "--error-border": "color-mix(in oklab, var(--color-error) 40%, transparent)",
+          "--error-text": "var(--color-base-content)"
+        },
+        ".caps-toaster[data-sonner-toaster] [data-sonner-toast][data-styled=\"true\"]": {
+          "fontSize": "var(--text-sm)",
+          "lineHeight": 1.35,
+          "boxShadow": "0 0.25rem 0.75rem\n    color-mix(\n      in oklab,\n      var(--color-base-content) calc(var(--depth) * 14%),\n      transparent\n    )"
+        },
+        ".caps-toaster[data-sonner-toaster] [data-sonner-toast][data-styled]": {
+          "alignItems": "flex-start",
+          "fontFamily": "inherit"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-icon]": {
+          "alignItems": "center",
+          "height": "calc(var(--text-sm) * 1.35)",
+          "margin": "0",
+          "color": "var(--color-base-content)"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-description]": {
+          "color": "color-mix(in oklab, var(--color-base-content) 78%, transparent)"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-close-button]": {
+          "position": "static",
+          "order": 99,
+          "alignSelf": "flex-start",
+          "marginInlineStart": "auto",
+          "transform": "none",
+          "flex": "none",
+          "width": "1.25rem",
+          "height": "1.25rem",
+          "color": "var(--color-base-content)",
+          "background": "var(--stipe-surface-raised)",
+          "border": "var(--border) solid var(--stipe-hairline)",
+          "transitionDuration": "var(--stipe-motion-fast)"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled][data-type=\"success\"]\n  [data-icon]": {
+          "color": "var(--color-success)"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled][data-type=\"error\"]\n  [data-icon]": {
+          "color": "var(--color-error)"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled][data-type=\"warning\"]\n  [data-icon]": {
+          "color": "var(--color-warning)"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled][data-type=\"info\"]\n  [data-icon]": {
+          "color": "var(--color-info)"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-close-button]:hover": {
+          "background": "var(--color-base-200)",
+          "borderColor": "var(--stipe-hairline)"
+        },
+        ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-close-button]:focus-visible": {
+          "outline": "2px solid var(--caps-focus-ring)",
+          "outlineOffset": "1px",
+          "boxShadow": "none"
+        },
         "@layer utilities": {
           ".caps-toaster": { "maxWidth": "calc(100% - var(--spacing-xl))" },
           ".caps-toaster[data-sonner-toaster]": { "fontFamily": "inherit" },
@@ -514,7 +588,7 @@
             "minHeight": "32px",
             "textAlign": "left",
             "padding": "var(--spacing-xs) var(--spacing-md)",
-            "fontSize": "11px",
+            "fontSize": "var(--caps-window-path-size, 11px)",
             "fontWeight": 600,
             "color": "inherit",
             "background": "transparent",
@@ -615,7 +689,7 @@
             "minWidth": "0",
             "flexShrink": 1,
             "fontFamily": "var(--caps-label-font, inherit)",
-            "fontSize": "11px",
+            "fontSize": "var(--caps-window-path-size, 11px)",
             "fontWeight": 500
           },
           ".caps-window-crumb-item[data-caps-crumb-position=\"current\"]": {
@@ -666,6 +740,17 @@
             ".caps-window-header:has(.caps-window-crumbs)": {
               "flexWrap": "wrap"
             },
+            ".caps-window-header:has(\n        .caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      ):has(.caps-window-commands)::after": {
+              "content": "\"\"",
+              "flexBasis": "100%",
+              "order": 1
+            },
+            ".caps-window-header:has(\n        .caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      )\n      > :is(.caps-window-commands, .caps-window-actions)": {
+              "order": 2
+            },
+            ".caps-window-header:has(\n        .caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      )\n      > .caps-window-commands": {
+              "marginInlineEnd": "auto"
+            },
             ".caps-window-crumbs": {
               "minWidth": "min-content",
               "flexShrink": 0
@@ -688,6 +773,41 @@
             },
             ".caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      .caps-window-crumb-separator": {
               "display": "none"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"]": {
+              "--caps-window-path-size": "0.75rem",
+              "flexWrap": "nowrap"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"]::after": {
+              "display": "none"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"] > .caps-window-icon": {
+              "display": "none"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"] > .caps-window-crumbs": {
+              "flex": 1,
+              "minWidth": "0",
+              "maxWidth": "none"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"] .caps-window-crumb-item": {
+              "flexShrink": 1,
+              "overflow": "hidden"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"]\n      .caps-window-crumb-item[data-caps-crumb-position=\"current\"]": {
+              "flexShrink": 0,
+              "maxWidth": "50%"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"] .caps-window-crumb": {
+              "flexShrink": 1,
+              "overflow": "hidden"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"]\n      > .caps-window-crumbs\n      + .caps-window-title": {
+              "flex": 0,
+              "paddingInline": "0"
+            },
+            ".caps-window-header[data-phone-compact=\"true\"] > .caps-window-commands": {
+              "order": 0,
+              "marginInlineEnd": "0"
             }
           },
           ".caps-window-body": {
@@ -764,6 +884,10 @@
             "outline": "none",
             "boxShadow": "none"
           },
+          ".caps-button.btn-ghost[aria-busy=\"true\"]:is(\n      :disabled,\n      [aria-disabled=\"true\"]\n    )": {
+            "--btn-fg": "var(--color-base-content)",
+            "color": "var(--color-base-content)"
+          },
           ".caps-game-share-action.caps-button": {
             "width": "100%",
             "minHeight": "3rem",
@@ -803,6 +927,26 @@
             "color": "var(--color-error)"
           },
           ".caps-button:disabled": { "opacity": 1 },
+          ".caps-button[aria-busy=\"true\"]:is(:disabled, [aria-disabled=\"true\"])": {
+            "cursor": "progress"
+          },
+          ".caps-button > .caps-loader": {
+            "width": "1.25rem",
+            "height": "1.25rem",
+            "marginInlineEnd": "calc(var(--spacing-xs) * -0.5)"
+          },
+          ".caps-button-filled[aria-busy=\"true\"]:is(:disabled, [aria-disabled=\"true\"])": {
+            "opacity": 1,
+            "backgroundColor": "var(--btn-bg)",
+            "color": "var(--btn-fg)",
+            "borderColor": "var(--caps-button-filled-edge)",
+            "boxShadow": "var(--caps-button-filled-drop)"
+          },
+          ".caps-button.btn-outline[aria-busy=\"true\"]:is(\n      :disabled,\n      [aria-disabled=\"true\"]\n    )": {
+            "backgroundColor": "var(--caps-key-face)",
+            "color": "var(--caps-button-outline-ink, var(--color-base-content))",
+            "outline": "none"
+          },
           ".caps-button-filled,.caps-button.btn-outline": {
             "borderWidth": "var(--caps-button-border-width, var(--border))",
             "fontWeight": "var(--caps-button-weight, 600)",
@@ -972,6 +1116,18 @@
           },
           ".caps-button.btn-outline": { "transition": "none" }
         },
+        "@layer caps-app-bar": {
+          ".empty-state-suggestions .caps-button": {
+            "minHeight": "2rem",
+            "height": "2rem",
+            "fontSize": "var(--text-xs)"
+          },
+          ".empty-state-suggestions\n    .caps-button:is(:disabled, [aria-disabled=\"true\"]):not([aria-busy=\"true\"])": {
+            "opacity": 0.5,
+            "outline": "none",
+            "boxShadow": "none"
+          }
+        },
         "@property --caps-game-host-ink": {
           "syntax": "\"<color>\"",
           "inherits": "true",
@@ -1091,7 +1247,7 @@
             "--caps-input-edge-width": "0px",
             "background": "var(--caps-input-floor)",
             "color": "var(--color-base-content)",
-            "border": "var(--border) solid\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      )",
+            "border": "var(--border) solid\n      light-dark(\n        color-mix(\n          in oklab,\n          var(--stipe-linework),\n          transparent calc(var(--depth) * 100%)\n        ),\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          var(--stipe-linework)\n        )\n      )",
             "paddingInline": "var(--spacing-lg)",
             "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n      inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
             "transition": "border-color var(--stipe-motion-fast) ease,\n      box-shadow var(--stipe-motion-fast) ease"
@@ -1548,7 +1704,11 @@
             "fontSize": "var(--text-xs)",
             "lineHeight": 1.5
           },
-          ".caps-field-description": { "color": "var(--stipe-fg-muted)" },
+          ".caps-field-description": {
+            "minWidth": "0",
+            "maxWidth": "var(--caps-field-control-width, 100%)",
+            "color": "var(--stipe-fg-muted)"
+          },
           ".caps-field-error": {
             "color": "var(--color-error)",
             "minWidth": "0",
@@ -1722,7 +1882,8 @@
           },
           ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > .caps-field-description": {
             "gridColumn": "2",
-            "gridRow": "2"
+            "gridRow": "2",
+            "maxWidth": "30rem"
           },
           ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal)": {
             "gridColumn": "2",
@@ -1812,7 +1973,8 @@
           },
           ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > .caps-field-description": {
             "gridColumn": "2",
-            "gridRow": "2"
+            "gridRow": "2",
+            "maxWidth": "30rem"
           },
           ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"] .caps-field,.caps-fieldset[data-layout=\"columns\"]": {
             "--caps-field-icon-size": "1rem"
@@ -2437,7 +2599,7 @@
             "--caps-input-edge-width": "0px",
             "background": "var(--caps-input-floor)",
             "color": "var(--color-base-content)",
-            "border": "var(--border) solid\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      )",
+            "border": "var(--border) solid\n      light-dark(\n        color-mix(\n          in oklab,\n          var(--stipe-linework),\n          transparent calc(var(--depth) * 100%)\n        ),\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          var(--stipe-linework)\n        )\n      )",
             "paddingInline": "var(--spacing-lg)",
             "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n      inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
             "transition": "border-color var(--stipe-motion-fast) ease,\n      box-shadow var(--stipe-motion-fast) ease"
@@ -3083,7 +3245,7 @@
             "borderTop": "calc(var(--border) * 2) solid var(--color-base-content)"
           },
           ".caps-spec-faq-item": {
-            "borderBottom": "var(--border) solid var(--stipe-hairline)"
+            "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
           },
           ".caps-spec-faq-question": {
             "display": "grid",
@@ -3298,7 +3460,7 @@
           },
           ".caps-pricing-card-banded .caps-pricing-card-description": {
             "paddingBottom": "var(--spacing-md)",
-            "borderBottom": "var(--border) solid var(--stipe-hairline)",
+            "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)",
             "color": "var(--color-base-content)",
             "fontSize": "var(--text-base)"
           },
@@ -3364,19 +3526,20 @@
             "minWidth": "0",
             "width": "100%",
             "maxWidth": "100%",
-            "overflowX": ["auto", "auto"],
+            "overflowX": "auto",
             "margin": "0",
             "color": "var(--color-base-content)",
             "border": "var(--border) solid\n      color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))",
             "borderRadius": "var(--radius-box)",
-            "background": "var(--color-base-100)"
+            "background": "var(--color-base-100)",
+            "containerType": "inline-size"
           },
           ".caps-permission-grid-caption": {
             "display": "flex",
             "flexDirection": "column",
             "gap": "var(--spacing-2xs)",
             "padding": "var(--spacing-sm) var(--spacing-md)",
-            "borderBottom": "var(--border) solid\n      color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))"
+            "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
           },
           ".caps-permission-grid-title": {
             "fontFamily": "var(--font-mono)",
@@ -3392,8 +3555,12 @@
           ".caps-permission-grid table": {
             "width": "100%",
             "borderCollapse": "collapse",
+            "tableLayout": "fixed",
             "fontSize": "0.875rem"
           },
+          ".caps-permission-grid-col-state": { "width": "5rem" },
+          ".caps-permission-grid-col-scope": { "width": "28%" },
+          ".caps-permission-grid-col-control": { "width": "5.5rem" },
           ".caps-permission-grid thead th": {
             "padding": "var(--spacing-xs) var(--spacing-md)",
             "fontFamily": "var(--font-mono)",
@@ -3403,27 +3570,30 @@
             "textAlign": "start",
             "textTransform": "uppercase",
             "opacity": 0.7,
-            "borderBottom": "var(--border) solid\n      color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))"
+            "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
           },
           ".caps-permission-grid tbody td,.caps-permission-grid tbody th": {
             "padding": "var(--spacing-xs) var(--spacing-md)",
             "textAlign": "start",
             "verticalAlign": "middle",
             "fontWeight": 400,
-            "borderBottom": "var(--border) dashed\n      color-mix(in oklch, var(--color-base-content) 14%, var(--color-base-100))"
+            "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
           },
           ".caps-permission-grid tbody tr:last-child > *": {
             "borderBottom": "0"
           },
           ".caps-permission-grid-index": {
-            "width": "1%",
+            "width": "5.5rem",
             "whiteSpace": "nowrap",
             "fontFamily": "var(--font-mono)",
             "fontSize": "0.75rem",
-            "fontVariantNumeric": "tabular-nums"
+            "fontVariantNumeric": "tabular-nums",
+            "overflow": "hidden"
           },
           ".caps-permission-grid-index > span": { "display": "block" },
           ".caps-permission-grid-group": {
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
             "fontSize": "0.625rem",
             "letterSpacing": "0.08em",
             "textTransform": "uppercase",
@@ -3470,6 +3640,73 @@
             "fontFamily": "var(--font-mono)",
             "fontSize": "0.75rem",
             "opacity": 0.8
+          },
+          "@container (width <= 30rem)": {
+            ".caps-permission-grid thead": {
+              "position": "absolute",
+              "width": "1px",
+              "height": "1px",
+              "overflow": "hidden",
+              "clipPath": "inset(50%)"
+            },
+            ".caps-permission-grid table,.caps-permission-grid tbody": {
+              "display": "block"
+            },
+            ".caps-permission-grid tbody tr": {
+              "display": "grid",
+              "gridTemplateColumns": "minmax(0, 1fr) auto auto",
+              "columnGap": "var(--spacing-sm)",
+              "alignItems": "center",
+              "padding": "var(--spacing-sm) var(--spacing-md)",
+              "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
+            },
+            ".caps-permission-grid tbody tr:last-child": {
+              "borderBottom": "0"
+            },
+            ".caps-permission-grid tbody tr > :is(th, td)": {
+              "minWidth": "0",
+              "padding": "0",
+              "border": "0"
+            },
+            ".caps-permission-grid-index": { "display": "none" },
+            ".caps-permission-grid tbody th": {
+              "gridColumn": "1",
+              "gridRow": "1"
+            },
+            ".caps-permission-grid tbody .caps-permission-grid-scope": {
+              "gridColumn": "1",
+              "gridRow": "2",
+              "paddingTop": "var(--spacing-2xs)",
+              "paddingInlineStart": "var(--spacing-2xl)",
+              "overflowWrap": "anywhere"
+            },
+            ".caps-permission-grid-state-cell": {
+              "gridColumn": "2",
+              "gridRow": "1 / span 2"
+            },
+            ".caps-permission-grid-control-cell": {
+              "gridColumn": "3",
+              "gridRow": "1 / span 2"
+            },
+            ".caps-permission-grid-mark": {
+              "width": "1.5rem",
+              "height": "1.5rem"
+            },
+            ".caps-permission-grid-title,.caps-permission-grid-state,.caps-permission-grid-scope": {
+              "fontFamily": "inherit",
+              "fontSize": "0.75rem",
+              "letterSpacing": "normal",
+              "textTransform": "none"
+            },
+            ".caps-permission-grid-title": {
+              "fontSize": "0.875rem",
+              "fontWeight": 600
+            },
+            ".caps-permission-grid-control": {
+              "display": "inline-flex",
+              "alignItems": "center",
+              "minHeight": "var(--caps-touch-target, 2.75rem)"
+            }
           }
         },
         "@property --caps-game-host-ink": {
@@ -3702,6 +3939,9 @@
           ".caps-margin-note": {
             "color": "var(--marginalia-ink)",
             "fontSize": "0.875em"
+          },
+          "@media (pointer: coarse)": {
+            ".caps-keycap[data-touch=\"hide\"]": { "display": "none" }
           },
           ".caps-keycap": {
             "display": "inline-grid",
@@ -4947,6 +5187,20 @@
             "minWidth": "var(--caps-keycap-label-min-width, auto)",
             "lineHeight": "var(--caps-keycap-label-line-height, inherit)"
           },
+          ".caps-keycap[data-size=\"hint\"]": {
+            "display": "inline-block",
+            "minWidth": "0",
+            "minHeight": "0",
+            "marginInline": "var(--spacing-2xs)",
+            "padding": "0 var(--spacing-2xs)",
+            "borderRadius": "var(--radius-selector)",
+            "borderColor": "var(--stipe-hairline-quiet)",
+            "background": "transparent",
+            "boxShadow": "none",
+            "color": "color-mix(in oklab, var(--color-base-content) 65%, transparent)",
+            "fontSize": "var(--text-xs)",
+            "lineHeight": 1.25
+          },
           ".caps-keycap-button .caps-keycap": {
             "flex": "var(--caps-keycap-shortcut-flex, 0 1 auto)",
             "minWidth": "var(\n      --caps-keycap-shortcut-size,\n      var(--caps-keycap-legend-min-size, 2rem)\n    )",
@@ -5906,6 +6160,12 @@
             "lineHeight": 1.5
           }
         },
+        "@layer caps-app-bar": {
+          ".caps-card .empty-state-panel": {
+            "border": "0",
+            "background": "transparent"
+          }
+        },
         "@property --caps-game-host-ink": {
           "syntax": "\"<color>\"",
           "inherits": "true",
@@ -6547,6 +6807,19 @@
           ".caps-loader:not([data-variant=\"line\"], .caps-loader-fill)": {
             "height": "auto",
             "aspectRatio": "1"
+          },
+          ".caps-loading-state > .caps-loader": { "width": "4rem" },
+          ".caps-loading-state[data-size=\"sm\"] > .caps-loader": {
+            "width": "2rem"
+          },
+          ".caps-loading-state[data-size=\"lg\"] > .caps-loader": {
+            "width": "7rem"
+          },
+          ".caps-loading-state[data-icon] > .caps-loader": { "width": "auto" },
+          ".caps-button > .caps-loader": {
+            "width": "1.25rem",
+            "height": "1.25rem",
+            "marginInlineEnd": "calc(var(--spacing-xs) * -0.5)"
           }
         },
         "@layer components": {

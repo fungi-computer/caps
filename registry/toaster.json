@@ -18,7 +18,7 @@
       "path": "../src/components/toaster.tsx",
       "type": "registry:ui",
       "target": "@ui/toaster.tsx",
-      "content": "import { Toaster as Sonner, type ToasterProps } from \"sonner\";\nimport { cn } from \"@/lib/cn\";\nimport { createPortal } from \"react-dom\";\nimport { useOverlayRoot } from \"@/components/ui/overlay-root\";\n\nexport { toast } from \"sonner\";\n\n/** Sonner owns gestures, stacking, focus and lifetime; Caps owns the surface. */\nexport function Toaster({ className, ...props }: ToasterProps) {\n  const root = useOverlayRoot(\"toast\");\n  if (!root) return null;\n  return createPortal(\n    <Sonner\n      position=\"top-right\"\n      swipeDirections={[\"right\", \"top\"]}\n      offset={16}\n      gap={8}\n      className={cn(\"caps-toaster\", className)}\n      {...props}\n    />,\n    root,\n  );\n}\n"
+      "content": "import { Toaster as Sonner, type ToasterProps } from \"sonner\";\nimport { X } from \"lucide-react\";\nimport { cn } from \"@/lib/cn\";\nimport { Loader } from \"./loader.js\";\nimport { Status } from \"./status.js\";\nimport { createPortal } from \"react-dom\";\nimport { useOverlayRoot } from \"@/components/ui/overlay-root\";\n\nimport { toast } from \"sonner\";\n\nexport { toast };\n\n/**\n * Show a notice a hosted App asked for, on one named Toaster, with the\n * notice's tone choosing the Caps status dot.\n */\nexport function showNotice(\n  notice: Readonly<{\n    message: string;\n    tone?: \"error\" | \"info\" | \"success\" | \"warning\";\n  }>,\n  toasterId: string,\n): void {\n  const options = { toasterId, closeButton: true };\n  if (notice.tone === undefined) toast(notice.message, options);\n  else toast[notice.tone](notice.message, options);\n}\n\n/**\n * Sonner owns gestures, stacking, focus and lifetime; Caps owns the surface.\n * Colors come from the Stipe tokens in the cascade, so a `data-theme` switch\n * restyles open toasts; Sonner's own light and dark palettes are overridden.\n */\nexport function Toaster({ className, ...props }: ToasterProps) {\n  const root = useOverlayRoot(\"toast\");\n  if (!root) return null;\n  return createPortal(\n    <Sonner\n      position=\"top-right\"\n      swipeDirections={[\"right\", \"top\"]}\n      offset={16}\n      gap={8}\n      icons={{\n        close: <X aria-hidden=\"true\" size={12} />,\n        success: <Status glyph=\"dot\" tone=\"success\" />,\n        error: <Status glyph=\"dot\" tone=\"error\" />,\n        warning: <Status glyph=\"dot\" tone=\"warning\" />,\n        info: <Status glyph=\"dot\" tone=\"info\" />,\n        loading: (\n          <Loader decorative size=\"sm\" tone=\"current\" variant=\"wander\" />\n        ),\n      }}\n      className={cn(\"caps-toaster\", className)}\n      {...props}\n    />,\n    root,\n  );\n}\n"
     },
     {
       "path": "../src/lib/cn.ts",
@@ -38,6 +38,80 @@
     "@plugin \"@tailwindcss/typography\"": {},
     ".caps-toaster[data-sonner-toaster]": {
       "zIndex": "var(--stipe-layer-toast)"
+    },
+    ".caps-toaster[data-sonner-toaster][data-sonner-theme]": {
+      "fontFamily": "inherit",
+      "--border-radius": "var(--radius-box)",
+      "--normal-bg": "var(--stipe-surface-raised)",
+      "--normal-bg-hover": "var(--color-base-200)",
+      "--normal-border": "var(--stipe-hairline-quiet)",
+      "--normal-border-hover": "var(--stipe-hairline)",
+      "--normal-text": "var(--color-base-content)",
+      "--success-bg": "color-mix(\n    in oklab,\n    var(--color-success) 10%,\n    var(--stipe-surface-raised)\n  )",
+      "--success-border": "color-mix(in oklab, var(--color-success) 35%, transparent)",
+      "--success-text": "var(--color-base-content)",
+      "--info-bg": "color-mix(\n    in oklab,\n    var(--color-info) 10%,\n    var(--stipe-surface-raised)\n  )",
+      "--info-border": "color-mix(in oklab, var(--color-info) 35%, transparent)",
+      "--info-text": "var(--color-base-content)",
+      "--warning-bg": "color-mix(\n    in oklab,\n    var(--color-warning) 12%,\n    var(--stipe-surface-raised)\n  )",
+      "--warning-border": "color-mix(in oklab, var(--color-warning) 40%, transparent)",
+      "--warning-text": "var(--color-base-content)",
+      "--error-bg": "color-mix(\n    in oklab,\n    var(--color-error) 10%,\n    var(--stipe-surface-raised)\n  )",
+      "--error-border": "color-mix(in oklab, var(--color-error) 40%, transparent)",
+      "--error-text": "var(--color-base-content)"
+    },
+    ".caps-toaster[data-sonner-toaster] [data-sonner-toast][data-styled=\"true\"]": {
+      "fontSize": "var(--text-sm)",
+      "lineHeight": 1.35,
+      "boxShadow": "0 0.25rem 0.75rem\n    color-mix(\n      in oklab,\n      var(--color-base-content) calc(var(--depth) * 14%),\n      transparent\n    )"
+    },
+    ".caps-toaster[data-sonner-toaster] [data-sonner-toast][data-styled]": {
+      "alignItems": "flex-start",
+      "fontFamily": "inherit"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-icon]": {
+      "alignItems": "center",
+      "height": "calc(var(--text-sm) * 1.35)",
+      "margin": "0",
+      "color": "var(--color-base-content)"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-description]": {
+      "color": "color-mix(in oklab, var(--color-base-content) 78%, transparent)"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-close-button]": {
+      "position": "static",
+      "order": 99,
+      "alignSelf": "flex-start",
+      "marginInlineStart": "auto",
+      "transform": "none",
+      "flex": "none",
+      "width": "1.25rem",
+      "height": "1.25rem",
+      "color": "var(--color-base-content)",
+      "background": "var(--stipe-surface-raised)",
+      "border": "var(--border) solid var(--stipe-hairline)",
+      "transitionDuration": "var(--stipe-motion-fast)"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled][data-type=\"success\"]\n  [data-icon]": {
+      "color": "var(--color-success)"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled][data-type=\"error\"]\n  [data-icon]": {
+      "color": "var(--color-error)"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled][data-type=\"warning\"]\n  [data-icon]": {
+      "color": "var(--color-warning)"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled][data-type=\"info\"]\n  [data-icon]": {
+      "color": "var(--color-info)"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-close-button]:hover": {
+      "background": "var(--color-base-200)",
+      "borderColor": "var(--stipe-hairline)"
+    },
+    ".caps-toaster[data-sonner-toaster]\n  [data-sonner-toast][data-styled]\n  [data-close-button]:focus-visible": {
+      "outline": "2px solid var(--caps-focus-ring)",
+      "outlineOffset": "1px",
+      "boxShadow": "none"
     },
     "@layer utilities": {
       ".caps-toaster": { "maxWidth": "calc(100% - var(--spacing-xl))" },

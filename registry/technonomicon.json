@@ -178,6 +178,9 @@
         "color": "var(--marginalia-ink)",
         "fontSize": "0.875em"
       },
+      "@media (pointer: coarse)": {
+        ".caps-keycap[data-touch=\"hide\"]": { "display": "none" }
+      },
       ".caps-keycap": {
         "display": "inline-grid",
         "minWidth": "var(--caps-keycap-legend-min-size, 2rem)",
@@ -1408,6 +1411,20 @@
       ".caps-keycap-button-label": {
         "minWidth": "var(--caps-keycap-label-min-width, auto)",
         "lineHeight": "var(--caps-keycap-label-line-height, inherit)"
+      },
+      ".caps-keycap[data-size=\"hint\"]": {
+        "display": "inline-block",
+        "minWidth": "0",
+        "minHeight": "0",
+        "marginInline": "var(--spacing-2xs)",
+        "padding": "0 var(--spacing-2xs)",
+        "borderRadius": "var(--radius-selector)",
+        "borderColor": "var(--stipe-hairline-quiet)",
+        "background": "transparent",
+        "boxShadow": "none",
+        "color": "color-mix(in oklab, var(--color-base-content) 65%, transparent)",
+        "fontSize": "var(--text-xs)",
+        "lineHeight": 1.25
       },
       ".caps-keycap-button .caps-keycap": {
         "flex": "var(--caps-keycap-shortcut-flex, 0 1 auto)",

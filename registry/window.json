@@ -94,7 +94,7 @@
         "minHeight": "32px",
         "textAlign": "left",
         "padding": "var(--spacing-xs) var(--spacing-md)",
-        "fontSize": "11px",
+        "fontSize": "var(--caps-window-path-size, 11px)",
         "fontWeight": 600,
         "color": "inherit",
         "background": "transparent",
@@ -189,7 +189,7 @@
         "minWidth": "0",
         "flexShrink": 1,
         "fontFamily": "var(--caps-label-font, inherit)",
-        "fontSize": "11px",
+        "fontSize": "var(--caps-window-path-size, 11px)",
         "fontWeight": 500
       },
       ".caps-window-crumb-item[data-caps-crumb-position=\"current\"]": {
@@ -236,6 +236,17 @@
       },
       "@media (max-width: 640px)": {
         ".caps-window-header:has(.caps-window-crumbs)": { "flexWrap": "wrap" },
+        ".caps-window-header:has(\n        .caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      ):has(.caps-window-commands)::after": {
+          "content": "\"\"",
+          "flexBasis": "100%",
+          "order": 1
+        },
+        ".caps-window-header:has(\n        .caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      )\n      > :is(.caps-window-commands, .caps-window-actions)": {
+          "order": 2
+        },
+        ".caps-window-header:has(\n        .caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      )\n      > .caps-window-commands": {
+          "marginInlineEnd": "auto"
+        },
         ".caps-window-crumbs": { "minWidth": "min-content", "flexShrink": 0 },
         ".caps-window-crumb-item": { "flexShrink": 0 },
         ".caps-window-statuses": {
@@ -255,6 +266,41 @@
         },
         ".caps-window-crumb-item[data-caps-crumb-position=\"parent\"]\n      .caps-window-crumb-separator": {
           "display": "none"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"]": {
+          "--caps-window-path-size": "0.75rem",
+          "flexWrap": "nowrap"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"]::after": {
+          "display": "none"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"] > .caps-window-icon": {
+          "display": "none"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"] > .caps-window-crumbs": {
+          "flex": 1,
+          "minWidth": "0",
+          "maxWidth": "none"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"] .caps-window-crumb-item": {
+          "flexShrink": 1,
+          "overflow": "hidden"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"]\n      .caps-window-crumb-item[data-caps-crumb-position=\"current\"]": {
+          "flexShrink": 0,
+          "maxWidth": "50%"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"] .caps-window-crumb": {
+          "flexShrink": 1,
+          "overflow": "hidden"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"]\n      > .caps-window-crumbs\n      + .caps-window-title": {
+          "flex": 0,
+          "paddingInline": "0"
+        },
+        ".caps-window-header[data-phone-compact=\"true\"] > .caps-window-commands": {
+          "order": 0,
+          "marginInlineEnd": "0"
         }
       },
       ".caps-window-body": {

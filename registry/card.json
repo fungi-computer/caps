@@ -175,6 +175,12 @@
         "lineHeight": 1.5
       }
     },
+    "@layer caps-app-bar": {
+      ".caps-card .empty-state-panel": {
+        "border": "0",
+        "background": "transparent"
+      }
+    },
     "@property --caps-game-host-ink": {
       "syntax": "\"<color>\"",
       "inherits": "true",

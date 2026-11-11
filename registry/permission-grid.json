@@ -11,7 +11,7 @@
       "path": "../src/blocks/permission-grid.tsx",
       "type": "registry:block",
       "target": "@components/blocks/permission-grid.tsx",
-      "content": "import type { JSX, ReactNode } from \"react\";\n\n/**\n * LAW — a permission grid is a spec sheet, not a form: one row per\n * capability, read left to right as index, mark, name, state and scope. The\n * mark is decorative; the row's name is its accessible fact. State is always\n * spelled out in words, never carried by color alone. Any control a row\n * carries is caller-owned and names itself.\n */\n\n/** Whether the capability is available in this scope. */\nexport type PermissionState = \"allowed\" | \"denied\";\n\n/** One capability row. */\nexport type PermissionGridRow = Readonly<{\n  id: string;\n  /** Decorative mark, for example a sigil; hidden from assistive technology. */\n  mark: ReactNode;\n  /** The capability's name; the row's accessible fact. */\n  label: string;\n  /** Short family label shown beside the index, for example `COMPUTERS`. */\n  group?: string;\n  state: PermissionState;\n  /** Visible state word, for example `On` or `Off`. */\n  stateLabel: string;\n  /** Where the state comes from, for example `Owner grant` or `Default`. */\n  scope: string;\n  /** Optional caller-owned control, for example a switch naming this row. */\n  control?: ReactNode;\n}>;\n\n/** Props accepted by PermissionGrid. */\nexport type PermissionGridProps = Readonly<{\n  /** Visible caption naming whose permissions these are. */\n  caption: ReactNode;\n  /** Optional plain-language note under the caption. */\n  summary?: ReactNode;\n  rows: readonly PermissionGridRow[];\n  /** Column headings; product copy stays with the caller. */\n  headings?: Readonly<{\n    capability: string;\n    state: string;\n    scope: string;\n    control?: string;\n  }>;\n  className?: string;\n}>;\n\nconst DEFAULT_HEADINGS = {\n  capability: \"Capability\",\n  state: \"State\",\n  scope: \"Scope\",\n} as const;\n\nfunction index(position: number): string {\n  return String(position + 1).padStart(2, \"0\");\n}\n\n/** Product-neutral, dense capability sheet: one row per capability. */\nexport function PermissionGrid({\n  caption,\n  summary,\n  rows,\n  headings = DEFAULT_HEADINGS,\n  className,\n}: PermissionGridProps): JSX.Element {\n  const hasControls = rows.some((row) => row.control !== undefined);\n  return (\n    <figure className={`caps-permission-grid ${className ?? \"\"}`}>\n      <figcaption className=\"caps-permission-grid-caption\">\n        <span className=\"caps-permission-grid-title\">{caption}</span>\n        {summary === undefined ? null : (\n          <span className=\"caps-permission-grid-summary\">{summary}</span>\n        )}\n      </figcaption>\n      <table>\n        <thead>\n          <tr>\n            <th scope=\"col\" className=\"caps-permission-grid-index\">\n              #\n            </th>\n            <th scope=\"col\">{headings.capability}</th>\n            <th scope=\"col\">{headings.state}</th>\n            <th scope=\"col\">{headings.scope}</th>\n            {hasControls ? (\n              <th scope=\"col\">\n                {headings.control ?? <span className=\"sr-only\">Change</span>}\n              </th>\n            ) : null}\n          </tr>\n        </thead>\n        <tbody>\n          {rows.map((row, position) => (\n            <tr key={row.id} data-state={row.state}>\n              <td className=\"caps-permission-grid-index\">\n                <span>{index(position)}</span>\n                {row.group === undefined ? null : (\n                  <span className=\"caps-permission-grid-group\">\n                    {row.group}\n                  </span>\n                )}\n              </td>\n              <th scope=\"row\">\n                <span className=\"caps-permission-grid-capability\">\n                  <span\n                    className=\"caps-permission-grid-mark\"\n                    aria-hidden=\"true\"\n                  >\n                    {row.mark}\n                  </span>\n                  <span>{row.label}</span>\n                </span>\n              </th>\n              <td>\n                <span\n                  className=\"caps-permission-grid-state\"\n                  data-state={row.state}\n                >\n                  {row.stateLabel}\n                </span>\n              </td>\n              <td className=\"caps-permission-grid-scope\">{row.scope}</td>\n              {hasControls ? <td>{row.control ?? null}</td> : null}\n            </tr>\n          ))}\n        </tbody>\n      </table>\n    </figure>\n  );\n}\n"
+      "content": "import type { JSX, ReactNode } from \"react\";\n\n/**\n * LAW — a permission grid is a spec sheet, not a form: one row per\n * capability, read left to right as index, mark, name, state and scope. The\n * mark is decorative; the row's name is its accessible fact. State is always\n * spelled out in words, never carried by color alone. Any control a row\n * carries is caller-owned and names itself.\n */\n\n/** Whether the capability is available in this scope. */\nexport type PermissionState = \"allowed\" | \"denied\";\n\n/** One capability row. */\nexport type PermissionGridRow = Readonly<{\n  id: string;\n  /** Decorative mark, for example a sigil; hidden from assistive technology. */\n  mark: ReactNode;\n  /** The capability's name; the row's accessible fact. */\n  label: string;\n  /** Short family label shown beside the index, for example `COMPUTERS`. */\n  group?: string;\n  state: PermissionState;\n  /** Visible state word, for example `On` or `Off`. */\n  stateLabel: string;\n  /** Where the state comes from, for example `Owner grant` or `Default`. */\n  scope: string;\n  /** Optional caller-owned control, for example a switch naming this row. */\n  control?: ReactNode;\n}>;\n\n/** Props accepted by PermissionGrid. */\nexport type PermissionGridProps = Readonly<{\n  /** Visible caption naming whose permissions these are. */\n  caption: ReactNode;\n  /** Optional plain-language note under the caption. */\n  summary?: ReactNode;\n  rows: readonly PermissionGridRow[];\n  /** Column headings; product copy stays with the caller. */\n  headings?: Readonly<{\n    capability: string;\n    state: string;\n    scope: string;\n    control?: string;\n  }>;\n  className?: string;\n}>;\n\nconst DEFAULT_HEADINGS = {\n  capability: \"Capability\",\n  state: \"State\",\n  scope: \"Scope\",\n} as const;\n\nfunction index(position: number): string {\n  return String(position + 1).padStart(2, \"0\");\n}\n\n/** Product-neutral, dense capability sheet: one row per capability. */\nexport function PermissionGrid({\n  caption,\n  summary,\n  rows,\n  headings = DEFAULT_HEADINGS,\n  className,\n}: PermissionGridProps): JSX.Element {\n  const hasControls = rows.some((row) => row.control !== undefined);\n  return (\n    <figure className={`caps-permission-grid ${className ?? \"\"}`}>\n      <figcaption className=\"caps-permission-grid-caption\">\n        <span className=\"caps-permission-grid-title\">{caption}</span>\n        {summary === undefined ? null : (\n          <span className=\"caps-permission-grid-summary\">{summary}</span>\n        )}\n      </figcaption>\n      <table>\n        <thead>\n          <tr>\n            <th scope=\"col\" className=\"caps-permission-grid-index\">\n              #\n            </th>\n            <th scope=\"col\">{headings.capability}</th>\n            <th scope=\"col\" className=\"caps-permission-grid-col-state\">\n              {headings.state}\n            </th>\n            <th scope=\"col\" className=\"caps-permission-grid-col-scope\">\n              {headings.scope}\n            </th>\n            {hasControls ? (\n              <th scope=\"col\" className=\"caps-permission-grid-col-control\">\n                {headings.control ?? <span className=\"sr-only\">Change</span>}\n              </th>\n            ) : null}\n          </tr>\n        </thead>\n        <tbody>\n          {rows.map((row, position) => (\n            <tr key={row.id} data-state={row.state}>\n              <td className=\"caps-permission-grid-index\">\n                <span>{index(position)}</span>\n                {row.group === undefined ? null : (\n                  <span\n                    className=\"caps-permission-grid-group\"\n                    title={row.group}\n                  >\n                    {row.group}\n                  </span>\n                )}\n              </td>\n              <th scope=\"row\">\n                <span className=\"caps-permission-grid-capability\">\n                  <span\n                    className=\"caps-permission-grid-mark\"\n                    aria-hidden=\"true\"\n                  >\n                    {row.mark}\n                  </span>\n                  <span>{row.label}</span>\n                </span>\n              </th>\n              <td className=\"caps-permission-grid-state-cell\">\n                <span\n                  className=\"caps-permission-grid-state\"\n                  data-state={row.state}\n                >\n                  {row.stateLabel}\n                </span>\n              </td>\n              <td className=\"caps-permission-grid-scope\">{row.scope}</td>\n              {hasControls ? (\n                <td className=\"caps-permission-grid-control-cell\">\n                  <span className=\"caps-permission-grid-control\">\n                    {row.control ?? null}\n                  </span>\n                </td>\n              ) : null}\n            </tr>\n          ))}\n        </tbody>\n      </table>\n    </figure>\n  );\n}\n"
     }
   ],
   "css": {
@@ -25,19 +25,20 @@
         "minWidth": "0",
         "width": "100%",
         "maxWidth": "100%",
-        "overflowX": ["auto", "auto"],
+        "overflowX": "auto",
         "margin": "0",
         "color": "var(--color-base-content)",
         "border": "var(--border) solid\n      color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))",
         "borderRadius": "var(--radius-box)",
-        "background": "var(--color-base-100)"
+        "background": "var(--color-base-100)",
+        "containerType": "inline-size"
       },
       ".caps-permission-grid-caption": {
         "display": "flex",
         "flexDirection": "column",
         "gap": "var(--spacing-2xs)",
         "padding": "var(--spacing-sm) var(--spacing-md)",
-        "borderBottom": "var(--border) solid\n      color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))"
+        "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
       },
       ".caps-permission-grid-title": {
         "fontFamily": "var(--font-mono)",
@@ -53,8 +54,12 @@
       ".caps-permission-grid table": {
         "width": "100%",
         "borderCollapse": "collapse",
+        "tableLayout": "fixed",
         "fontSize": "0.875rem"
       },
+      ".caps-permission-grid-col-state": { "width": "5rem" },
+      ".caps-permission-grid-col-scope": { "width": "28%" },
+      ".caps-permission-grid-col-control": { "width": "5.5rem" },
       ".caps-permission-grid thead th": {
         "padding": "var(--spacing-xs) var(--spacing-md)",
         "fontFamily": "var(--font-mono)",
@@ -64,25 +69,28 @@
         "textAlign": "start",
         "textTransform": "uppercase",
         "opacity": 0.7,
-        "borderBottom": "var(--border) solid\n      color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))"
+        "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
       },
       ".caps-permission-grid tbody td,.caps-permission-grid tbody th": {
         "padding": "var(--spacing-xs) var(--spacing-md)",
         "textAlign": "start",
         "verticalAlign": "middle",
         "fontWeight": 400,
-        "borderBottom": "var(--border) dashed\n      color-mix(in oklch, var(--color-base-content) 14%, var(--color-base-100))"
+        "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
       },
       ".caps-permission-grid tbody tr:last-child > *": { "borderBottom": "0" },
       ".caps-permission-grid-index": {
-        "width": "1%",
+        "width": "5.5rem",
         "whiteSpace": "nowrap",
         "fontFamily": "var(--font-mono)",
         "fontSize": "0.75rem",
-        "fontVariantNumeric": "tabular-nums"
+        "fontVariantNumeric": "tabular-nums",
+        "overflow": "hidden"
       },
       ".caps-permission-grid-index > span": { "display": "block" },
       ".caps-permission-grid-group": {
+        "overflow": "hidden",
+        "textOverflow": "ellipsis",
         "fontSize": "0.625rem",
         "letterSpacing": "0.08em",
         "textTransform": "uppercase",
@@ -124,6 +132,65 @@
         "fontFamily": "var(--font-mono)",
         "fontSize": "0.75rem",
         "opacity": 0.8
+      },
+      "@container (width <= 30rem)": {
+        ".caps-permission-grid thead": {
+          "position": "absolute",
+          "width": "1px",
+          "height": "1px",
+          "overflow": "hidden",
+          "clipPath": "inset(50%)"
+        },
+        ".caps-permission-grid table,.caps-permission-grid tbody": {
+          "display": "block"
+        },
+        ".caps-permission-grid tbody tr": {
+          "display": "grid",
+          "gridTemplateColumns": "minmax(0, 1fr) auto auto",
+          "columnGap": "var(--spacing-sm)",
+          "alignItems": "center",
+          "padding": "var(--spacing-sm) var(--spacing-md)",
+          "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
+        },
+        ".caps-permission-grid tbody tr:last-child": { "borderBottom": "0" },
+        ".caps-permission-grid tbody tr > :is(th, td)": {
+          "minWidth": "0",
+          "padding": "0",
+          "border": "0"
+        },
+        ".caps-permission-grid-index": { "display": "none" },
+        ".caps-permission-grid tbody th": { "gridColumn": "1", "gridRow": "1" },
+        ".caps-permission-grid tbody .caps-permission-grid-scope": {
+          "gridColumn": "1",
+          "gridRow": "2",
+          "paddingTop": "var(--spacing-2xs)",
+          "paddingInlineStart": "var(--spacing-2xl)",
+          "overflowWrap": "anywhere"
+        },
+        ".caps-permission-grid-state-cell": {
+          "gridColumn": "2",
+          "gridRow": "1 / span 2"
+        },
+        ".caps-permission-grid-control-cell": {
+          "gridColumn": "3",
+          "gridRow": "1 / span 2"
+        },
+        ".caps-permission-grid-mark": { "width": "1.5rem", "height": "1.5rem" },
+        ".caps-permission-grid-title,.caps-permission-grid-state,.caps-permission-grid-scope": {
+          "fontFamily": "inherit",
+          "fontSize": "0.75rem",
+          "letterSpacing": "normal",
+          "textTransform": "none"
+        },
+        ".caps-permission-grid-title": {
+          "fontSize": "0.875rem",
+          "fontWeight": 600
+        },
+        ".caps-permission-grid-control": {
+          "display": "inline-flex",
+          "alignItems": "center",
+          "minHeight": "var(--caps-touch-target, 2.75rem)"
+        }
       }
     },
     "@property --caps-game-host-ink": {

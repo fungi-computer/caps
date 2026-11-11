@@ -165,7 +165,7 @@
         "borderTop": "calc(var(--border) * 2) solid var(--color-base-content)"
       },
       ".caps-spec-faq-item": {
-        "borderBottom": "var(--border) solid var(--stipe-hairline)"
+        "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)"
       },
       ".caps-spec-faq-question": {
         "display": "grid",

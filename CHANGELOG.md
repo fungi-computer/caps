@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.10.7
+
+### Patch Changes
+
+- Changes since 0.10.6:
+
+  - fix(caps): tighten copy field, list heading, speech empty state, field help
+    and dark inputs
+
 ## 0.10.6
 
 ### Patch Changes

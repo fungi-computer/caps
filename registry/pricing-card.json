@@ -93,7 +93,7 @@
       },
       ".caps-pricing-card-banded .caps-pricing-card-description": {
         "paddingBottom": "var(--spacing-md)",
-        "borderBottom": "var(--border) solid var(--stipe-hairline)",
+        "borderBottom": "var(--border) solid var(--stipe-hairline-quiet)",
         "color": "var(--color-base-content)",
         "fontSize": "var(--text-base)"
       },

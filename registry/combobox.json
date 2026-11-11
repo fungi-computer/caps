@@ -95,7 +95,7 @@
         "--caps-input-edge-width": "0px",
         "background": "var(--caps-input-floor)",
         "color": "var(--color-base-content)",
-        "border": "var(--border) solid\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      )",
+        "border": "var(--border) solid\n      light-dark(\n        color-mix(\n          in oklab,\n          var(--stipe-linework),\n          transparent calc(var(--depth) * 100%)\n        ),\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          var(--stipe-linework)\n        )\n      )",
         "paddingInline": "var(--spacing-lg)",
         "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n      inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
         "transition": "border-color var(--stipe-motion-fast) ease,\n      box-shadow var(--stipe-motion-fast) ease"

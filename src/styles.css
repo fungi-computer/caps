@@ -4701,6 +4701,8 @@
     line-height: 1.5;
   }
   .caps-field-description {
+    min-width: 0;
+    max-width: var(--caps-field-control-width, 100%);
     color: var(--stipe-fg-muted);
   }
   .caps-field-error {
@@ -5087,6 +5089,7 @@
     > .caps-field-description {
     grid-column: 2;
     grid-row: 2;
+    max-width: 30rem;
   }
   :is(.caps-form, .caps-form-section)[data-layout="columns"]
     :is(
@@ -5268,6 +5271,7 @@
     > .caps-field-description {
     grid-column: 2;
     grid-row: 2;
+    max-width: 30rem;
   }
   :is(.caps-form, .caps-form-section)[data-layout="columns"] .caps-field,
   .caps-fieldset[data-layout="columns"] {
@@ -5599,10 +5603,17 @@
     background: var(--caps-input-floor);
     color: var(--color-base-content);
     border: var(--border) solid
-      color-mix(
-        in oklab,
-        var(--stipe-linework),
-        transparent calc(var(--depth) * 100%)
+      light-dark(
+        color-mix(
+          in oklab,
+          var(--stipe-linework),
+          transparent calc(var(--depth) * 100%)
+        ),
+        color-mix(
+          in oklab,
+          var(--color-base-content) calc(var(--depth) * 12%),
+          var(--stipe-linework)
+        )
       );
     padding-inline: var(--spacing-lg);
     box-shadow:
@@ -8487,13 +8498,17 @@
     justify-content: space-between;
     gap: var(--spacing-sm);
     margin: 0;
-    padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-2xs);
+    padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-2xs);
     color: var(--stipe-fg-muted);
     font-size: var(--text-xs);
     font-variant: small-caps;
     font-weight: 750;
     letter-spacing: 0.06em;
     text-transform: lowercase;
+  }
+  /* A compact list sets its rows flush, so its heading does too. */
+  .list.list-sm > .caps-data-list-heading {
+    padding-inline: 0;
   }
   .caps-data-list-heading-aside {
     font-variant: normal;
@@ -8680,6 +8695,12 @@
     }
     .empty-state-bubble .empty-state-actions {
       justify-content: center;
+    }
+    .empty-state-bubble .empty-state-suggestions {
+      justify-content: center;
+    }
+    .empty-state-bubble .empty-state-primary {
+      justify-items: center;
     }
   }
   @media (prefers-reduced-motion: reduce) {

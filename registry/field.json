@@ -62,7 +62,11 @@
         "fontSize": "var(--text-xs)",
         "lineHeight": 1.5
       },
-      ".caps-field-description": { "color": "var(--stipe-fg-muted)" },
+      ".caps-field-description": {
+        "minWidth": "0",
+        "maxWidth": "var(--caps-field-control-width, 100%)",
+        "color": "var(--stipe-fg-muted)"
+      },
       ".caps-field-error": {
         "color": "var(--color-error)",
         "minWidth": "0",
@@ -236,7 +240,8 @@
       },
       ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > .caps-field-description": {
         "gridColumn": "2",
-        "gridRow": "2"
+        "gridRow": "2",
+        "maxWidth": "30rem"
       },
       ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal)": {
         "gridColumn": "2",
@@ -326,7 +331,8 @@
       },
       ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > .caps-field-description": {
         "gridColumn": "2",
-        "gridRow": "2"
+        "gridRow": "2",
+        "maxWidth": "30rem"
       },
       ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"] .caps-field,.caps-fieldset[data-layout=\"columns\"]": {
         "--caps-field-icon-size": "1rem"

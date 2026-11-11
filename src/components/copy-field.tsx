@@ -112,7 +112,7 @@ export function CopyField({
             readOnly
             value={displayValue ?? copied}
           />
-          <Button onClick={() => void copy()} size="sm" variant="outline">
+          <Button onClick={() => void copy()} variant="outline">
             {state.kind === "copied" ? "Copied" : (label ?? "Copy")}
           </Button>
         </InputGroup>
