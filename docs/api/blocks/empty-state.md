@@ -17,7 +17,7 @@ type EmptyStateVariant = "plain" | "panel" | "speech" | "hint" | "quiet";
 ```
 
 How an absence presents itself. `plain` leaves layout to the host; `panel` is a
-recessed, centered invitation; `speech` lets the visual (a mascot) say the copy
+solid, centered surface card; `speech` lets the visual (a mascot) say the copy
 from a molded speech bubble; `hint` is a quiet centered footnote under content,
 such as the next thing to try; `quiet` is a left-aligned absence nested under a
 card or section heading, titled below that heading.

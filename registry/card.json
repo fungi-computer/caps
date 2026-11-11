@@ -84,7 +84,6 @@
       ".caps-card[data-state=\"empty\"]": {
         "--caps-card-edge": "var(--caps-card-empty-edge, var(--color-base-300))",
         "borderWidth": "var(--caps-card-empty-width, var(--border))",
-        "borderStyle": "dashed",
         "background": "var(--caps-card-empty-face, var(--caps-card-resting-face))",
         "boxShadow": "var(--caps-card-empty-shadow, var(--caps-card-resting-shadow))"
       },

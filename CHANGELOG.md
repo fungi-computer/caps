@@ -1,5 +1,17 @@
 # @fungi.computer/caps
 
+## 0.10.6
+
+### Patch Changes
+
+- Changes since 0.10.5:
+
+  - fix(caps): share the card edge and face tokens with the panel
+  - fix(caps): put the panel on the card face and cap Bonsai Changes width
+  - fix(caps): make the empty Card solid, not dashed like a drop zone
+  - fix(caps): align the panel story copy and registry with the solid card
+  - fix(caps): make the empty-state panel a solid card, not a dashed drop zone
+
 ## 0.10.5
 
 ### Patch Changes

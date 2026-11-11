@@ -113,7 +113,7 @@ try {
       );
       assert.match(
         result.empty.border,
-        /^3px dashed /u,
+        /^3px solid /u,
         `${theme}: empty state`,
       );
       assert.match(

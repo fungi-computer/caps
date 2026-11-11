@@ -3310,7 +3310,9 @@
   }
   /* Hierarchy: molded shell, strong heading, compact labels, quiet help.
      Controls own state and motion; the containing card stays still. */
-  .caps-card {
+  /* The shared edge and face: Card and the EmptyState panel read one formula. */
+  .caps-card,
+  .empty-state-panel {
     --caps-card-edge: color-mix(
       in oklab,
       var(--color-base-content) calc(13% + (1 - var(--depth)) * 87%),
@@ -3321,6 +3323,8 @@
       var(--color-base-100) calc(100% - var(--depth) * 3%),
       var(--color-base-content) calc(var(--depth) * 3%)
     );
+  }
+  .caps-card {
     background: var(--caps-card-resting-face);
     background-image: var(--caps-card-image, none);
     background-size: var(--caps-print-texture-size, auto);
@@ -3871,7 +3875,6 @@
   .caps-card[data-state="empty"] {
     --caps-card-edge: var(--caps-card-empty-edge, var(--color-base-300));
     border-width: var(--caps-card-empty-width, var(--border));
-    border-style: dashed;
     background: var(--caps-card-empty-face, var(--caps-card-resting-face));
     box-shadow: var(--caps-card-empty-shadow, var(--caps-card-resting-shadow));
   }
@@ -8224,25 +8227,22 @@
     grid-column: 1 / -1;
   }
 
-  /* EmptyState variant="panel": a recessed, centered invitation. */
+  /* EmptyState variant="panel": a solid card on the Caps card face, never
+     dashed or sunken: that reads as a place to drop files. Inside a Card it
+     gives up its own frame so there is one box, not two. */
   .empty-state-panel {
     display: grid;
     justify-items: center;
     gap: var(--spacing-xs);
     padding: var(--spacing-xl) var(--spacing-lg);
-    border: var(--border) dashed
-      color-mix(in oklab, var(--color-base-content) 16%, transparent);
+    border: var(--border) solid var(--caps-card-edge);
     border-radius: var(--radius-box);
-    background: color-mix(
-      in oklab,
-      var(--color-base-content) calc(2% + var(--depth) * 2%),
-      transparent
-    );
-    box-shadow: var(
-      --stipe-shadow-inset,
-      inset 0 1px 2px rgb(0 0 0 / calc(var(--depth) * 0.06))
-    );
+    background: var(--caps-card-resting-face);
     text-align: center;
+  }
+  .caps-card .empty-state-panel {
+    border: 0;
+    background: transparent;
   }
   .empty-state-panel > .empty-state-visual {
     display: grid;

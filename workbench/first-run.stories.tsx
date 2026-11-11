@@ -27,7 +27,7 @@ import { Status } from "../src/components/status.js";
 
 /*
  * A fresh Team's first screen, composed only from Caps variants: the mascot
- * greets from a speech bubble, Recent invites from a recessed panel, and the
+ * greets from a speech bubble, Recent invites from a solid panel, and the
  * Apps are big molded toy keys.
  */
 
@@ -97,7 +97,7 @@ export const EmptyStateVariants = () => (
       variant="panel"
       visual={<MessagesSquare />}
       title="Panel"
-      description="A recessed, centered invitation with an optional action."
+      description="A solid, centered card with an optional action."
       actions={<Button size="sm">Start</Button>}
     />
     <EmptyState
