@@ -6,7 +6,9 @@ import { Popover as BasePopover } from "@base-ui/react/popover";
 import { animate, stagger, type JSAnimation } from "animejs";
 import { motionDefaults, readMotion, useReducedMotion } from "../lib/motion.js";
 import { themedEase, themedSpring } from "../lib/motion-spring.js";
-import { PanelsTopLeft, X } from "lucide-react";
+import { PanelsTopLeft, Search, X } from "lucide-react";
+import { SearchInput } from "../components/input.js";
+import { isImeComposing } from "../lib/ime.js";
 import {
   useEffect,
   useId,
@@ -176,6 +178,8 @@ export function AppBar({
   const portalContainer = container ?? popoverRoot;
   const [internalOpen, setInternalOpen] = useState(false);
   const [notchLeft, setNotchLeft] = useState(0);
+  const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
   const open = isOpen ?? internalOpen;
   useOverlayDismiss(() => {
     setOpen(false);
@@ -185,6 +189,26 @@ export function AppBar({
     onOpenChange?.(next);
   };
   const expanded = alwaysExpanded || open;
+  const searchable = !alwaysExpanded;
+  const needle = query.trim().toLowerCase();
+  const matches = (item: AppBarItem) =>
+    needle === "" || item.label.toLowerCase().includes(needle);
+  const shownLaunchers = launchers.filter(matches);
+  const shownSessions = sessions.filter(matches);
+  useEffect(() => {
+    if (!searchable) return;
+    if (!open) {
+      setQuery("");
+      return;
+    }
+    // The closed panel is not displayed until this frame, so it cannot focus yet.
+    const frame = requestAnimationFrame(() => {
+      searchRef.current?.focus({ preventScroll: true });
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+    };
+  }, [open, searchable]);
   const root = useRef<HTMLElement>(null);
   const runningRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
@@ -269,7 +293,9 @@ export function AppBar({
         opacity: expanded ? 1 : 0,
         x: reduced || expanded ? 0 : -feel.distance * 3,
         scale: reduced || expanded ? 1 : 0.88,
-        duration,
+        // The panel appears fully opaque so content behind never reads through
+        // it; only closing fades.
+        duration: expanded ? 0 : duration,
         ease,
       }),
     );
@@ -461,7 +487,27 @@ export function AppBar({
                 aria-label="Speed dial"
                 aria-hidden={!expanded}
               >
-                {launchers.length > 0 ? (
+                {searchable && launchers.length + sessions.length > 0 ? (
+                  <SearchInput
+                    ref={searchRef}
+                    leading={<Search className="size-4" />}
+                    aria-label={`Search ${appsLabel}`}
+                    placeholder={`Search ${appsLabel}`}
+                    value={query}
+                    autoComplete="off"
+                    onChange={(event) => {
+                      setQuery(event.currentTarget.value);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key !== "Enter" || isImeComposing(event))
+                        return;
+                      event.preventDefault();
+                      const first = shownLaunchers[0] ?? shownSessions[0];
+                      if (first) select(first.onSelect);
+                    }}
+                  />
+                ) : null}
+                {shownLaunchers.length > 0 ? (
                   <div
                     className="caps-app-bar-section"
                     role="group"
@@ -471,11 +517,11 @@ export function AppBar({
                       {appsLabel}
                     </span>
                     <div className="caps-app-bar-app-list">
-                      {launchers.map((item) => renderItem(item, true))}
+                      {shownLaunchers.map((item) => renderItem(item, true))}
                     </div>
                   </div>
                 ) : null}
-                {sessions.length > 0 ? (
+                {shownSessions.length > 0 ? (
                   <div
                     className="caps-app-bar-section caps-app-bar-sessions"
                     role="group"
@@ -485,9 +531,18 @@ export function AppBar({
                       Recent Sessions
                     </span>
                     <div className="caps-app-bar-session-list">
-                      {sessions.map((item) => renderItem(item, true, true))}
+                      {shownSessions.map((item) =>
+                        renderItem(item, true, true),
+                      )}
                     </div>
                   </div>
+                ) : null}
+                {needle !== "" &&
+                shownLaunchers.length === 0 &&
+                shownSessions.length === 0 ? (
+                  <span className="caps-app-bar-empty" role="status">
+                    No matches
+                  </span>
                 ) : null}
                 {launchers.length === 0 &&
                 sessions.length === 0 &&

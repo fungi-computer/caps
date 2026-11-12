@@ -1,5 +1,16 @@
 # @fungi.computer/caps
 
+## 0.11.2
+
+### Patch Changes
+
+- Changes since 0.11.1:
+
+  - fix(oyster): keep the app picker solid and open, and update stale tourtois
+    proofs
+  - fix(oyster): filter the open app picker by typing and restore open windows
+    on reload
+
 ## 0.11.1
 
 ### Patch Changes

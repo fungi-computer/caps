@@ -421,4 +421,51 @@ describe("AppBar", () => {
       document.getElementById(firstId ?? "")?.getAttribute("aria-label"),
     ).toBe("Speed dial");
   });
+  it("filters the App list by typing, opens the top match on Enter, and clears on close", async () => {
+    const grove = vi.fn();
+    const hello = vi.fn();
+    const { container } = render(
+      <AppBar
+        windows={[]}
+        launchers={[
+          { id: "hello", label: "Hello", onSelect: hello },
+          { id: "grove", label: "Grove", onSelect: grove },
+        ]}
+        launcher={{ label: "Apps" }}
+      />,
+    );
+    act(() => {
+      button(container, "Apps").click();
+    });
+    const search = requireValue(
+      document.querySelector<HTMLInputElement>(
+        'input[aria-label="Search Apps"]',
+      ),
+      "search",
+    );
+    await act(async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+    });
+    expect(document.activeElement).toBe(search);
+    const labels = () =>
+      [
+        ...document.querySelectorAll(
+          ".caps-app-bar-launchers .caps-app-bar-item",
+        ),
+      ].map((node) => node.textContent);
+    expect(labels()).toEqual(["Hello", "Grove"]);
+    act(() => {
+      Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        "value",
+      )?.set?.call(search, "gro");
+      search.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    expect(labels()).toEqual(["Grove"]);
+    act(() => {
+      fireKey(search, { key: "Enter" });
+    });
+    expect(grove).toHaveBeenCalledOnce();
+    expect(hello).not.toHaveBeenCalled();
+  });
 });
