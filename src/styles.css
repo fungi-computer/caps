@@ -11347,12 +11347,23 @@
       inset: min(0px, calc((100% - var(--caps-touch-target)) / 2));
     }
     /* Back and Forward sit tight together as on desktop; each reaches the
-       touch target outward, so the two hit areas never overlap. */
+       whole touch target outward from the seam between them, so both hit
+       areas are full size and never overlap. */
+    .caps-window-back {
+      /* Room at the window edge for Back's outward half of the target. */
+      margin-left: calc(var(--caps-touch-target) - var(--spacing-xl));
+    }
     .caps-window-back::after {
+      inset-inline-start: min(0px, calc(100% - var(--caps-touch-target)));
       inset-inline-end: 0;
+    }
+    .caps-window-forward {
+      /* Above the title handle that follows, so its outward half is live. */
+      z-index: 1;
     }
     .caps-window-forward::after {
       inset-inline-start: 0;
+      inset-inline-end: min(0px, calc(100% - var(--caps-touch-target)));
     }
   }
 }

@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.11.1
+
+### Patch Changes
+
+- Changes since 0.11.0:
+
+  - fix(window): keep a stable Back and Forward slot and pair their chords
+
 ## 0.11.0
 
 ### Minor Changes
