@@ -201,10 +201,18 @@ export function AppBar({
       setQuery("");
       return;
     }
-    // The closed panel is not displayed until this frame, so it cannot focus yet.
-    const frame = requestAnimationFrame(() => {
-      searchRef.current?.focus({ preventScroll: true });
-    });
+    // The panel is not displayed on the first frame, and a dialog that was
+    // open a moment ago (Ctrl K then O) keeps everything else inert while it
+    // closes, so keep trying until the search takes focus.
+    let frame = 0;
+    let attempts = 0;
+    const focusSearch = () => {
+      const input = searchRef.current;
+      input?.focus({ preventScroll: true });
+      if (document.activeElement !== input && attempts++ < 30)
+        frame = requestAnimationFrame(focusSearch);
+    };
+    frame = requestAnimationFrame(focusSearch);
     return () => {
       cancelAnimationFrame(frame);
     };

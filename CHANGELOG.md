@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.11.3
+
+### Patch Changes
+
+- Changes since 0.11.2:
+
+  - fix(oyster): focus the picker search from the keyboard, list open apps,
+    restore minimized windows
+
 ## 0.11.2
 
 ### Patch Changes
