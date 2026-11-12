@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.11.0
+
+### Minor Changes
+
+- Changes since 0.10.8:
+
+  - fix(caps): keep Back and Forward adjacent on phone-width window headers
+  - feat(window): add in-App Forward to the window contract and title bar
+
 ## 0.10.8
 
 ### Patch Changes

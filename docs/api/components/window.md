@@ -66,6 +66,62 @@ optional hint?: string;
 
 Tooltip text, e.g. the keyboard route to the same action.
 
+##### disabled?
+
+```ts
+optional disabled?: boolean;
+```
+
+Shown but inert while there is nothing to go back to.
+
+---
+
+### WindowForwardAction
+
+```ts
+type WindowForwardAction = object;
+```
+
+A host-owned request to go forward inside the window's content.
+
+#### Properties
+
+##### label
+
+```ts
+label: string;
+```
+
+Accessible name, e.g. "Forward in Games".
+
+##### onForward
+
+```ts
+onForward: () => void;
+```
+
+Request going forward; the host owns the history and the outcome.
+
+###### Returns
+
+`void`
+
+##### hint?
+
+```ts
+optional hint?: string;
+```
+
+Tooltip text, e.g. the keyboard route to the same action.
+
+##### disabled?
+
+```ts
+optional disabled?: boolean;
+```
+
+Shown but inert while there is nothing to go forward to.
+
 ---
 
 ### WindowHeaderProps
@@ -88,7 +144,8 @@ Supply handleProps only when the title is an interactive layout handle.
 | `subtitle?`    | `string`                                                                          | Where the content is now, shown after the title and truncated first.                                                                                                |
 | `icon?`        | `ReactNode`                                                                       | -                                                                                                                                                                   |
 | `actions?`     | `ReactNode`                                                                       | -                                                                                                                                                                   |
-| `back?`        | [`WindowBackAction`](#windowbackaction)                                           | Present only while there is somewhere to go back to.                                                                                                                |
+| `back?`        | [`WindowBackAction`](#windowbackaction)                                           | Present only for content that keeps a history; disabled at its start.                                                                                               |
+| `forward?`     | [`WindowForwardAction`](#windowforwardaction)                                     | Present with `back`; disabled while there is nothing to go forward to.                                                                                              |
 | `crumbs?`      | readonly [`WindowCrumb`](window-crumbs.md#windowcrumb)[]                          | The content's path, shown in place of the title and subtitle. The last crumb is the current place; earlier ones are links, and a crumb with siblings is a switcher. |
 | `onCrumb()?`   | (`crumbId`, `siblingId?`) => `void`                                               | Selected crumb, or the sibling chosen from a switcher crumb.                                                                                                        |
 | `status?`      | readonly [`WindowStatus`](window-crumbs.md#windowstatus)[]                        | Quiet facts about the view, such as "Valid" or "Saved", with beads.                                                                                                 |
@@ -265,7 +322,8 @@ Decorative snap destination. Geometry and visibility belong to the layout owner.
 function WindowHeader(__namedParameters): Element;
 ```
 
-The handle, Back and actions are siblings, so presses never start a drag.
+The handle, Back, Forward and actions are siblings, so presses never start a
+drag.
 
 #### Parameters
 

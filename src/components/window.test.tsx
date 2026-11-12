@@ -177,6 +177,29 @@ describe("Window", () => {
     expect(select).toHaveBeenCalledOnce();
   });
 
+  it("offers Forward beside Back, disabled until there is somewhere to go", () => {
+    const back = vi.fn();
+    const forward = vi.fn();
+    const view = render(
+      <WindowHeader
+        title="Games"
+        back={{ label: "Back in Games", onBack: back, disabled: true }}
+        forward={{ label: "Forward in Games", onForward: forward }}
+      />,
+    );
+    const buttons = [...view.container.querySelectorAll("button")];
+    expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual([
+      "Back in Games",
+      "Forward in Games",
+    ]);
+    expect(buttons[0]?.disabled).toBe(true);
+    expect(buttons[1]?.disabled).toBe(false);
+    act(() => buttons[0]?.click());
+    act(() => buttons[1]?.click());
+    expect(back).not.toHaveBeenCalled();
+    expect(forward).toHaveBeenCalledOnce();
+  });
+
   it("offers Back before the title only when the host supplies it, outside the drag handle", () => {
     const back = vi.fn();
     const drag = vi.fn();

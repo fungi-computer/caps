@@ -6582,12 +6582,19 @@
     font-weight: 500;
     color: color-mix(in srgb, currentColor 65%, transparent);
   }
-  /* Back sits flush at the leading edge, before the title handle. */
+  /* Back and Forward sit flush at the leading edge, before the title handle. */
   .caps-window-back {
     flex-shrink: 0;
     margin-left: var(--spacing-2xs);
   }
-  .caps-window-back + .caps-window-title {
+  .caps-window-back + .caps-window-forward {
+    margin-left: 0;
+  }
+  .caps-window-forward {
+    flex-shrink: 0;
+  }
+  .caps-window-back + .caps-window-title,
+  .caps-window-forward + .caps-window-title {
     padding-left: var(--spacing-2xs);
   }
   /* The slim tiled bar: same parts, tighter rhythm. */
@@ -6623,8 +6630,9 @@
   }
   /* Window chrome keeps small glyphs, with room for fingers on touch screens. */
   @media (max-width: 640px), (any-pointer: coarse) {
-    .caps-window-header .caps-button,
-    .caps-icon-button-responsive {
+    .caps-window-header
+      .caps-button:not(.caps-window-back, .caps-window-forward),
+    .caps-icon-button-responsive:not(.caps-window-back, .caps-window-forward) {
       min-width: 44px;
       min-height: 44px;
       flex-shrink: 0;
@@ -11337,6 +11345,14 @@
       content: "";
       position: absolute;
       inset: min(0px, calc((100% - var(--caps-touch-target)) / 2));
+    }
+    /* Back and Forward sit tight together as on desktop; each reaches the
+       touch target outward, so the two hit areas never overlap. */
+    .caps-window-back::after {
+      inset-inline-end: 0;
+    }
+    .caps-window-forward::after {
+      inset-inline-start: 0;
     }
   }
 }

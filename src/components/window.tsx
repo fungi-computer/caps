@@ -1,5 +1,6 @@
 import {
   ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   Columns2,
   Maximize2,
@@ -86,6 +87,20 @@ export type WindowBackAction = {
   onBack: () => void;
   /** Tooltip text, e.g. the keyboard route to the same action. */
   hint?: string;
+  /** Shown but inert while there is nothing to go back to. */
+  disabled?: boolean;
+};
+
+/** A host-owned request to go forward inside the window's content. */
+export type WindowForwardAction = {
+  /** Accessible name, e.g. "Forward in Games". */
+  label: string;
+  /** Request going forward; the host owns the history and the outcome. */
+  onForward: () => void;
+  /** Tooltip text, e.g. the keyboard route to the same action. */
+  hint?: string;
+  /** Shown but inert while there is nothing to go forward to. */
+  disabled?: boolean;
 };
 
 /** Supply handleProps only when the title is an interactive layout handle. */
@@ -98,8 +113,10 @@ export type WindowHeaderProps = Omit<
   subtitle?: string;
   icon?: ReactNode;
   actions?: ReactNode;
-  /** Present only while there is somewhere to go back to. */
+  /** Present only for content that keeps a history; disabled at its start. */
   back?: WindowBackAction;
+  /** Present with `back`; disabled while there is nothing to go forward to. */
+  forward?: WindowForwardAction;
   /**
    * The content's path, shown in place of the title and subtitle. The last
    * crumb is the current place; earlier ones are links, and a crumb with
@@ -126,13 +143,14 @@ export type WindowHeaderProps = Omit<
   >;
 };
 
-/** The handle, Back and actions are siblings, so presses never start a drag. */
+/** The handle, Back, Forward and actions are siblings, so presses never start a drag. */
 export function WindowHeader({
   title,
   subtitle,
   icon,
   actions,
   back,
+  forward,
   crumbs,
   onCrumb,
   primary,
@@ -175,6 +193,17 @@ export function WindowHeader({
           title={back.hint ?? back.label}
           icon={<ArrowLeft />}
           onClick={back.onBack}
+          disabled={back.disabled === true}
+        />
+      )}
+      {forward && (
+        <IconButton
+          className="caps-window-forward"
+          aria-label={forward.label}
+          title={forward.hint ?? forward.label}
+          icon={<ArrowRight />}
+          onClick={forward.onForward}
+          disabled={forward.disabled === true}
         />
       )}
       {trail ? (
