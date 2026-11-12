@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.10.8
+
+### Patch Changes
+
+- Changes since 0.10.7:
+
+  - fix(caps,prints): keep a failed generation's Retry above the dimmed
+    placeholder
+
 ## 0.10.7
 
 ### Patch Changes

@@ -4591,7 +4591,11 @@
   .caps-generation-frame[data-status="failed"] > .caps-generation-placeholder {
     opacity: 0.4;
   }
+  /* The dimmed placeholder is a stacking context (opacity), which paints above
+     in-flow siblings; position the failure layer so its message and Retry
+     stay on top and clickable. */
   .caps-generation-failure {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
