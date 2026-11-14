@@ -5687,12 +5687,20 @@
     color: var(--color-base-content);
     font-weight: 650;
   }
+  /* The choice not taken is quieter, so the selected one reads in both themes. */
+  .caps-tabs-segmented > .tab:not(.tab-active):not([aria-selected="true"]) {
+    color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
+  }
   .caps-tabs-segmented > .tab:hover {
     color: var(--color-base-content);
   }
   .caps-tabs-segmented > .tab-active,
   .caps-tabs-segmented > .tab[aria-selected="true"] {
-    background-color: var(--color-base-100);
+    background-color: color-mix(
+      in oklab,
+      var(--color-base-content) 12%,
+      var(--color-base-100)
+    );
     color: var(--color-base-content);
     box-shadow: var(
       --stipe-shadow-raised,

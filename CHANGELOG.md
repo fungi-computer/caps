@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.11.5
+
+### Patch Changes
+
+- Changes since 0.11.4:
+
+  - fix(prints,caps): audio polish from the wired re-review
+
 ## 0.11.4
 
 ### Patch Changes
