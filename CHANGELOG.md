@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.11.4
+
+### Patch Changes
+
+- Changes since 0.11.3:
+
+  - fix(caps): let a nested Dialog dim the page it opens over
+  - fix(grove): polish the Agent instructions dialog
+
 ## 0.11.3
 
 ### Patch Changes

@@ -146,7 +146,14 @@ export const DialogPopup = forwardRef<HTMLDivElement, DialogPopupProps>(
 
 /** Props accepted by DialogContent. */
 export type DialogContentProps = DialogPopupProps &
-  Pick<BaseDialog.Portal.Props, "container" | "keepMounted">;
+  Pick<BaseDialog.Portal.Props, "container" | "keepMounted"> & {
+    /**
+     * Base UI omits the backdrop of a Dialog that sits inside another Dialog's
+     * tree, as a Dialog rendered inside an always-open navigation rail does.
+     * Keep it, so the page behind still dims.
+     */
+    forceBackdrop?: boolean;
+  };
 
 /**
  * The default portal, backdrop and popup composition for a Dialog.
@@ -154,13 +161,20 @@ export type DialogContentProps = DialogPopupProps &
  */
 export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
   function DialogContent(
-    { container, keepMounted = true, className, size = "default", ...props },
+    {
+      container,
+      keepMounted = true,
+      forceBackdrop = false,
+      className,
+      size = "default",
+      ...props
+    },
     ref,
   ) {
     const { modal } = useDialogContext();
     return (
       <DialogPortal container={container} keepMounted={keepMounted}>
-        {modal === true ? <DialogBackdrop /> : null}
+        {modal === true ? <DialogBackdrop forceRender={forceBackdrop} /> : null}
         <DialogPopup
           {...props}
           size={size}

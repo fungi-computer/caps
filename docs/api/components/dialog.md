@@ -82,10 +82,17 @@ Props accepted by DialogPopup.
 
 ```ts
 type DialogContentProps = DialogPopupProps &
-  Pick<BaseDialog.Portal.Props, "container" | "keepMounted">;
+  Pick<BaseDialog.Portal.Props, "container" | "keepMounted"> &
+  object;
 ```
 
 Props accepted by DialogContent.
+
+#### Type Declaration
+
+| Name             | Type      | Description                                                                                                                                                                             |
+| ---------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `forceBackdrop?` | `boolean` | Base UI omits the backdrop of a Dialog that sits inside another Dialog's tree, as a Dialog rendered inside an always-open navigation rail does. Keep it, so the page behind still dims. |
 
 ## Variables
 

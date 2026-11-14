@@ -91,6 +91,33 @@ it("leaves body dialogs ranked by portal recency", () => {
   }
 });
 
+it.each([
+  [false, 0],
+  [true, 1],
+])(
+  "keeps a nested dialog's backdrop only when asked (forceBackdrop=%s)",
+  (forceBackdrop, backdrops) => {
+    render(
+      // An always-open, non-modal Dialog is how Grove holds its navigation rail.
+      <Dialog open modal={false}>
+        <DialogPortal keepMounted>
+          <DialogPopup>
+            <Dialog open>
+              <DialogContent forceBackdrop={forceBackdrop}>
+                <DialogTitle>Inside</DialogTitle>
+                <DialogDescription>A dialog in the rail</DialogDescription>
+              </DialogContent>
+            </Dialog>
+          </DialogPopup>
+        </DialogPortal>
+      </Dialog>,
+    );
+    expect(document.querySelectorAll(".caps-dialog-backdrop")).toHaveLength(
+      backdrops,
+    );
+  },
+);
+
 it("appends a nested menu after its open dialog", async () => {
   render(
     <Dialog open>
