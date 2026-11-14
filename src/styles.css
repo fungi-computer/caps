@@ -6183,7 +6183,7 @@
     --btn-border: var(--stipe-linework);
     --caps-key-face: var(--caps-button-outline-face, var(--color-base-200));
 
-    font-weight: var(--caps-button-weight, 500);
+    font-weight: var(--caps-button-weight, 600);
     box-shadow: var(
       --caps-button-outline-drop,
       var(--caps-button-drop, var(--caps-key-rest-shadow))
@@ -6205,7 +6205,10 @@
     font-weight: 500;
   }
 
-  .caps-button-filled:not(.btn-circle) {
+  /* Filled and outline keys of one size share a corner radius and a weight,
+     so a Cancel beside a Stop, or a Stop beside a Delete, read as equals. */
+  .caps-button-filled:not(.btn-circle),
+  .caps-button.btn-outline:not(.btn-circle) {
     --radius-field: var(--radius-button);
   }
 

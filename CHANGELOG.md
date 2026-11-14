@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.11.6
+
+### Patch Changes
+
+- Changes since 0.11.5:
+
+  - fix(caps): match outline and filled button weight and radius; toasts sit at
+    the bottom on phones
+
 ## 0.11.5
 
 ### Patch Changes
