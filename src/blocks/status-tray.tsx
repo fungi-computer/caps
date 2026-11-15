@@ -132,14 +132,27 @@ export function StatusTray({
       onOpenChange(null);
     };
     const onPointer = (event: PointerEvent) => {
-      if (event.target instanceof Node && !root.current?.contains(event.target))
-        onOpenChange(null);
+      if (
+        !(event.target instanceof Node) ||
+        root.current?.contains(event.target)
+      )
+        return;
+      // A menu opened from inside the tray owns the pointer outside: its modal
+      // backdrop (portaled out of the tray) dismisses the menu, not the tray.
+      // Read in the capture phase, before the menu closes on this same press.
+      if (
+        root.current?.querySelector(
+          '[aria-haspopup="menu"][aria-expanded="true"]',
+        )
+      )
+        return;
+      onOpenChange(null);
     };
     document.addEventListener("keydown", onKey);
-    document.addEventListener("pointerdown", onPointer);
+    document.addEventListener("pointerdown", onPointer, true);
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.removeEventListener("pointerdown", onPointer);
+      document.removeEventListener("pointerdown", onPointer, true);
     };
   }, [activeId, onOpenChange]);
   return (

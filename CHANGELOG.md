@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.11.7
+
+### Patch Changes
+
+- Changes since 0.11.6:
+
+  - fix(prints,caps): repair the four broken Prints workbench proofs
+
 ## 0.11.6
 
 ### Patch Changes

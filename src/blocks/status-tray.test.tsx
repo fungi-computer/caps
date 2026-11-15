@@ -217,6 +217,30 @@ describe("StatusTray", () => {
     expect(document.activeElement).toBe(outside);
   });
 
+  it("leaves the tray open while a menu opened from inside it owns the outside pointer", () => {
+    const { container } = render(<Harness />);
+    const ports = button(container, "Ports3");
+    act(() => {
+      ports.click();
+    });
+    const menuKey = button(container, "Open preview");
+    menuKey.setAttribute("aria-haspopup", "menu");
+    menuKey.setAttribute("aria-expanded", "true");
+    act(() => {
+      button(container, "Outside").dispatchEvent(
+        new Event("pointerdown", { bubbles: true }),
+      );
+    });
+    expect(ports.getAttribute("aria-expanded")).toBe("true");
+    menuKey.setAttribute("aria-expanded", "false");
+    act(() => {
+      button(container, "Outside").dispatchEvent(
+        new Event("pointerdown", { bubbles: true }),
+      );
+    });
+    expect(container.querySelector('[role="dialog"]')).toBeNull();
+  });
+
   it("never opens disabled items, including externally selected ones", () => {
     const { container } = render(<Harness disabled />);
     const processes = button(container, "Processes");
