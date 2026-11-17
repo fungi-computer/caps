@@ -1,0 +1,154 @@
+/* An outline button is the neutral key: a base-200 face on linework. */
+.caps-button.btn-outline {
+  --btn-border: var(--stipe-linework);
+  --caps-key-face: var(--caps-button-outline-face, var(--color-base-200));
+
+  font-weight: var(--caps-button-weight, 600);
+  box-shadow: var(
+    --caps-button-outline-drop,
+    var(--caps-button-drop, var(--caps-key-rest-shadow))
+  );
+  transition-property: background-color, border-color, box-shadow, translate;
+  transition-duration: var(--stipe-motion-fast);
+  transition-timing-function: ease-out;
+}
+
+.caps-button.btn-outline:not(:disabled):not([aria-disabled="true"]):active {
+  translate: 0 var(--caps-button-press, var(--caps-key-lip));
+  box-shadow: var(
+    --caps-button-outline-drop,
+    var(--caps-button-drop-active, var(--caps-key-pressed-shadow))
+  );
+}
+
+.caps-button.btn-ghost {
+  font-weight: 500;
+}
+
+/* Filled and outline keys of one size share a corner radius and a weight,
+     so a Cancel beside a Stop, or a Stop beside a Delete, read as equals. */
+.caps-button-filled:not(.btn-circle),
+.caps-button.btn-outline:not(.btn-circle) {
+  --radius-field: var(--radius-button);
+}
+
+/* A filled button is the same key in its role colour: one solid fill with
+     no lighter ring, an edge a hair darker than the fill, a quiet lip shaded
+     darker still, and only a very faint top edge. Flat themes edge it in
+     linework instead; a theme sets --caps-button-linework: 0% to edge it in
+     its own fill. */
+.caps-button-filled {
+  --btn-bg: var(--btn-color);
+  --caps-key-face: var(--btn-color);
+  --caps-key-lip-ink: black;
+  --caps-key-top-edge: 0.06;
+  /* prettier-ignore */
+  --caps-button-filled-edge: var(
+      --caps-button-border-color,
+      color-mix(
+        in oklab,
+        color-mix(in oklab, var(--btn-bg), black calc(var(--depth) * 6%)),
+        var(--stipe-linework)
+          calc((1 - var(--depth)) * var(--caps-button-linework, 100%))
+      )
+    );
+  /* prettier-ignore */
+  --caps-button-filled-drop: var(
+      --caps-button-drop,
+      var(--caps-key-rest-shadow)
+    );
+
+  background-color: var(--btn-bg);
+  color: var(--btn-fg);
+  background-image: none;
+  border-color: var(--caps-button-filled-edge);
+  text-shadow: none;
+  box-shadow: var(--caps-button-filled-drop);
+  translate: 0 0;
+  scale: 1;
+  transition-property:
+    background-color, border-color, box-shadow, translate, scale;
+  transition-duration: var(--stipe-motion-fast);
+  transition-timing-function: var(--stipe-motion-ease);
+}
+
+/* Disabled means the same filled key, dimmed; validation does not change its role.
+     A theme whose keys sit on a hard drop may instead set a disabled plate:
+     its own face, ink, edge and drop at full opacity. */
+.caps-button-filled:is(:disabled, [aria-disabled="true"]),
+.caps-keycap-button:is(:disabled, [aria-disabled="true"]) {
+  opacity: var(--caps-button-disabled-opacity, 0.45);
+}
+.caps-button-filled:is(:disabled, [aria-disabled="true"]) {
+  background-color: var(--caps-button-disabled-face, var(--btn-bg));
+  color: var(--caps-button-disabled-ink, var(--btn-fg));
+  border-color: var(
+    --caps-button-disabled-edge,
+    var(--caps-button-filled-edge)
+  );
+  /* prettier-ignore */
+  box-shadow: var(
+      --caps-button-disabled-drop,
+      var(--caps-button-filled-drop)
+    );
+}
+
+/* A joined filled key keeps its edge and overlap in every native state. */
+.caps-button-filled.join-item {
+  border-width: var(--caps-button-border-width, var(--border));
+}
+.caps-button-filled.join-item:not(:first-child) {
+  margin-inline-start: calc(var(--border) * -1 * var(--join-h));
+  margin-block-start: calc(var(--border) * -1 * var(--join-v));
+}
+
+@media (hover: hover) {
+  .caps-button-filled:not(:disabled):not([aria-disabled="true"]):hover {
+    --btn-bg: color-mix(in oklab, var(--btn-color) 92%, white);
+  }
+}
+
+.caps-button-filled:not(:disabled):not([aria-disabled="true"]):is(
+    :active,
+    .btn-active
+  ) {
+  --btn-bg: color-mix(in oklab, var(--btn-color) 92%, black);
+
+  translate: 0 var(--caps-button-press, var(--caps-key-lip));
+  scale: var(--stipe-press-scale);
+  box-shadow: var(--caps-button-drop-active, var(--caps-key-pressed-shadow));
+  transition-duration: var(--stipe-motion-squish);
+}
+
+.caps-button.caps-button-menubar {
+  height: var(--spacing-2xl);
+  padding: 0 var(--spacing-sm);
+  font-size: 12px;
+  font-weight: 500;
+  border: 0;
+  border-radius: var(--radius-field);
+  background: transparent;
+  box-shadow: none;
+}
+.caps-button.caps-button-menubar:hover,
+.caps-button.caps-button-menubar[data-popup-open] {
+  background: var(--color-base-300);
+}
+.caps-button.caps-button-menubar:focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: -2px;
+}
+
+/* A joined action fits inside the assembly, rather than standing above it:
+     the same faint top highlight, never moving or scaling the shared seam. */
+.caps-button-filled.caps-input-group-control {
+  translate: none;
+  scale: none;
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18));
+}
+
+.caps-button-filled.caps-input-group-control:not(:disabled):not(
+    [aria-disabled="true"]
+  ):is(:active, .btn-active) {
+  box-shadow: inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08));
+}

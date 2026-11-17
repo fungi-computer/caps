@@ -1,0 +1,22 @@
+.caps-game-meter {
+  display: grid;
+  min-width: 0;
+  gap: var(--spacing-2xs);
+}
+.caps-game-meter-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 var(--spacing-sm);
+  font-size: 0.8125rem;
+  line-height: 1.25;
+}
+.caps-game-meter-value {
+  flex: none;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.caps-game-meter .progress {
+  height: 0.625rem;
+}

@@ -1,0 +1,150 @@
+.caps-callout {
+  border-inline-start: var(--card-rule-width) solid var(--card-rule);
+  padding: var(--spacing-md);
+  background: var(--card-paper);
+  color: var(--card-ink);
+}
+.caps-callout[data-kind="warning"] {
+  border-color: var(--growth-fruiting);
+}
+.caps-callout[data-kind="lesson"] {
+  border-color: var(--growth-mycelium);
+}
+/* Daisy's outline badge carries the stage tone; Caps sets the type. */
+.caps-growth-badge {
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+}
+.caps-issue-masthead {
+  border-block: var(--card-rule-width) double var(--card-rule);
+  padding-block: var(--spacing-lg);
+  color: var(--card-ink);
+  text-align: center;
+}
+.caps-issue-masthead h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 40;
+  font-weight: var(--caps-heading-weight, 600);
+  letter-spacing: var(--caps-heading-tracking, -0.015em);
+  font-size: clamp(2rem, 7vw, 5rem);
+  line-height: var(--caps-heading-line-height, 1);
+}
+.caps-issue-masthead > p:last-child {
+  max-width: 44rem;
+  margin: var(--spacing-sm) auto 0;
+}
+.caps-issue-kicker {
+  margin: 0 0 var(--spacing-sm);
+  color: var(--marginalia-ink);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+/* Editorial regions: an Issue is a stack of ruled spreads. */
+.caps-spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--spacing-xl);
+  padding-block: var(--spacing-2xl);
+  color: var(--card-ink);
+}
+.caps-spread + .caps-spread {
+  border-top: var(--card-rule-width) solid var(--newsprint-column-rule);
+}
+.caps-spread[data-layout="grid"] {
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+}
+@media (min-width: 48rem) {
+  .caps-spread[data-layout="columns"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 0;
+  }
+  .caps-spread[data-layout="columns"] > :nth-child(odd) {
+    border-inline-end: var(--card-rule-width) solid var(--newsprint-column-rule);
+    padding-inline-end: var(--spacing-2xl);
+  }
+  .caps-spread[data-layout="columns"] > :nth-child(even) {
+    padding-inline-start: var(--spacing-2xl);
+  }
+}
+
+/* A note shown as a teaser: meta line, linked title, dek, lede, onward link. */
+.caps-note-teaser {
+  display: grid;
+  align-content: start;
+  gap: var(--spacing-md);
+  color: var(--card-ink);
+}
+.caps-note-teaser-head {
+  display: grid;
+  gap: var(--spacing-sm);
+}
+.caps-note-teaser-head h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.caps-note-teaser-head h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+.caps-note-teaser-head h2 a:hover,
+.caps-note-teaser-head h2 a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: var(--card-rule-width);
+  text-underline-offset: 0.15em;
+}
+.caps-note-teaser-dek {
+  margin: 0;
+  color: var(--marginalia-ink);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+.caps-note-teaser-body {
+  display: flow-root;
+  line-height: 1.7;
+}
+.caps-note-teaser-body > p {
+  margin: 0 0 var(--spacing-md);
+}
+.caps-note-teaser-body a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--card-rule-width);
+  text-underline-offset: 0.15em;
+}
+.caps-note-teaser-body > .caps-compact-plate {
+  margin: 0 0 var(--spacing-lg);
+}
+.caps-note-teaser-more {
+  justify-self: start;
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-decoration-thickness: var(--card-rule-width);
+  text-underline-offset: 0.3em;
+}
+@media (min-width: 40rem) {
+  .caps-note-teaser-body > .caps-compact-plate {
+    float: inline-end;
+    width: 40%;
+    margin: var(--spacing-xs) 0 var(--spacing-md) var(--spacing-xl);
+  }
+  .caps-spread[data-layout="lead"] .caps-note-teaser-head h2 {
+    font-size: clamp(1.875rem, 3.4vw, 2.625rem);
+  }
+  .caps-spread[data-layout="lead"] .caps-note-teaser-body {
+    font-size: 1.125rem;
+  }
+  .caps-spread[data-layout="lead"]
+    .caps-note-teaser-body
+    > .caps-compact-plate {
+    width: 34%;
+  }
+}

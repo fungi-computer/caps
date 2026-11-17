@@ -1,0 +1,40 @@
+.caps-input::placeholder {
+  color: color-mix(
+    in oklab,
+    var(--color-base-content) 85%,
+    var(--color-base-100)
+  );
+  opacity: 1;
+}
+
+.caps-input:focus {
+  --caps-input-edge: var(--color-info);
+  --caps-input-edge-width: 2px;
+  outline: none;
+}
+
+.caps-input[aria-invalid]:not([aria-invalid="false"]) {
+  --caps-input-edge: var(--color-error);
+  --caps-input-edge-width: 1px;
+}
+
+.caps-input[aria-invalid]:not([aria-invalid="false"]):focus {
+  --caps-input-edge-width: 2px;
+}
+
+.caps-input:read-only {
+  cursor: default;
+}
+
+.caps-input:disabled {
+  color: var(--color-base-content);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (forced-colors: active) {
+  .caps-input:focus {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}

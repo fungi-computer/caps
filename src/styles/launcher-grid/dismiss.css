@@ -1,0 +1,5 @@
+@media (prefers-reduced-motion: reduce) {
+  .caps-app-grid[data-size="lg"] .caps-app-grid-icon {
+    transition: none;
+  }
+}

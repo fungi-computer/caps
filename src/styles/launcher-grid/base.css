@@ -1,0 +1,67 @@
+.caps-section-grid {
+  display: grid;
+  width: min(100%, var(--container-6xl, 72rem));
+  grid-template-columns: minmax(0, 1.35fr) minmax(22rem, 0.85fr);
+  align-items: start;
+  gap: var(--spacing-lg);
+  margin-inline: auto;
+  padding: var(--spacing-lg);
+}
+.caps-app-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--spacing-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.caps-app-grid-item {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 6.5rem;
+  align-content: center;
+  justify-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  border: var(--border) solid transparent;
+  border-radius: var(--radius-box);
+  background: transparent;
+  color: var(--color-base-content);
+  cursor: pointer;
+  text-align: center;
+}
+.caps-app-grid-item:is(:hover, :focus-visible) {
+  /* prettier-ignore */
+  border-color: color-mix(
+      in oklab,
+      var(--color-base-content) 18%,
+      transparent
+    );
+  background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
+}
+.caps-app-grid-item:focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+.caps-app-grid-item:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.caps-app-grid-icon {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+}
+.caps-app-grid-icon > :is(svg, .caps-monogram) {
+  width: 100%;
+  height: 100%;
+}
+.caps-app-grid-label {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

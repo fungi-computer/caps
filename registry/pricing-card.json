@@ -36,10 +36,10 @@
         "flexDirection": "column",
         "border": "calc(var(--border) * 2) solid var(--color-base-content)",
         "background": "var(--color-base-100)",
-        "boxShadow": "var(\n      --caps-pricing-shadow,\n      calc(var(--caps-pricing-card-offset) * 1.5)\n        calc(var(--caps-pricing-card-offset) * 1.5) 0\n        color-mix(in oklab, var(--color-base-content) 30%, transparent)\n    )"
+        "boxShadow": "var(\n    --caps-pricing-shadow,\n    calc(var(--caps-pricing-card-offset) * 1.5)\n      calc(var(--caps-pricing-card-offset) * 1.5) 0\n      color-mix(in oklab, var(--color-base-content) 30%, transparent)\n  )"
       },
       ".caps-pricing-card-banded[data-featured=\"true\"]": {
-        "boxShadow": "var(\n      --caps-pricing-shadow-featured,\n      calc(var(--caps-pricing-card-offset) * 2)\n        calc(var(--caps-pricing-card-offset) * 2) 0 var(--color-base-content)\n    )"
+        "boxShadow": "var(\n    --caps-pricing-shadow-featured,\n    calc(var(--caps-pricing-card-offset) * 2)\n      calc(var(--caps-pricing-card-offset) * 2) 0 var(--color-base-content)\n  )"
       },
       ".caps-pricing-card-band": {
         "display": "flex",

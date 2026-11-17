@@ -1,0 +1,225 @@
+/* Hierarchy: molded shell, strong heading, compact labels, quiet help.
+     Controls own state and motion; the containing card stays still. */
+/* The shared edge and face: Card and the EmptyState panel read one formula. */
+.caps-card,
+.empty-state-panel {
+  /* prettier-ignore */
+  --caps-card-edge: color-mix(
+      in oklab,
+      var(--color-base-content) calc(13% + (1 - var(--depth)) * 87%),
+      transparent
+    );
+  /* prettier-ignore */
+  --caps-card-resting-face: color-mix(
+      in oklab,
+      var(--color-base-100) calc(100% - var(--depth) * 3%),
+      var(--color-base-content) calc(var(--depth) * 3%)
+    );
+}
+.caps-card {
+  background: var(--caps-card-resting-face);
+  background-image: var(--caps-card-image, none);
+  background-size: var(--caps-print-texture-size, auto);
+  color: var(--color-base-content);
+  border: var(--border) solid var(--caps-card-edge);
+  border-radius: var(--radius-box);
+  /* prettier-ignore */
+  --caps-card-resting-shadow: var(
+      --stipe-shadow-raised,
+      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.14)),
+      inset 0 -1px 0 rgb(0 0 0 / calc(var(--depth) * 0.06)),
+      0 2px 3px rgb(0 0 0 / calc(var(--depth) * 0.06)),
+      0 14px 28px -18px rgb(0 0 0 / calc(var(--depth) * 0.28))
+    );
+  box-shadow: var(--caps-card-resting-shadow);
+}
+.caps-card-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--caps-card-grid-min-column, 20rem)), 1fr)
+  );
+  align-items: stretch;
+  gap: var(--spacing-md);
+}
+.caps-card-grid > .caps-pricing-card {
+  height: 100%;
+}
+.result-state {
+  display: grid;
+  gap: var(--spacing-sm);
+  justify-items: start;
+  padding: var(--spacing-xl);
+  border: var(--border) solid var(--color-base-300);
+  border-radius: var(--radius-box);
+  background: var(--color-base-200);
+}
+.caps-loading-state {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-height: 4rem;
+  padding: var(--spacing-md);
+  border: var(--border) solid var(--color-base-300);
+  border-radius: var(--radius-box);
+  background: var(--color-base-200);
+  color: var(--color-base-content);
+}
+.result-state > * {
+  margin: 0;
+}
+.result-state :is(h2, h3, h4) {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--text-xl);
+  font-weight: 600;
+}
+.result-state[data-tone="failed"] .result-state-visual {
+  color: var(--color-error);
+}
+.result-state[data-tone="done"] .result-state-visual {
+  color: var(--color-success);
+}
+.result-state[data-tone="failed"] {
+  border-color: color-mix(
+    in oklab,
+    var(--color-error) 45%,
+    var(--color-base-300)
+  );
+}
+.result-state[data-tone="done"] {
+  border-color: color-mix(
+    in oklab,
+    var(--color-success) 45%,
+    var(--color-base-300)
+  );
+}
+.result-state-visual {
+  display: grid;
+  place-items: center;
+  max-width: 100%;
+  color: var(--color-primary);
+}
+.result-state-steps {
+  display: grid;
+  gap: var(--spacing-xs);
+  margin: 0;
+  padding-inline-start: var(--spacing-lg);
+  font-size: var(--text-sm);
+  list-style: decimal;
+}
+.result-state-visual > svg {
+  width: 3rem;
+  height: 3rem;
+}
+.caps-loading-state[data-framed="false"] {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.caps-loading-state-copy {
+  display: grid;
+  flex: 0 1 auto;
+  min-width: 0;
+  gap: var(--spacing-2xs);
+}
+/* One fixed slot per size, so copy aligns down a column of states. */
+.caps-loading-state > .caps-loader {
+  width: 4rem;
+}
+.caps-loading-state[data-size="sm"] > .caps-loader {
+  width: 2rem;
+}
+.caps-loading-state[data-size="lg"] > .caps-loader {
+  width: 7rem;
+}
+/* With an App icon the state stacks: icon, then loader, then copy. */
+.caps-loading-state[data-icon] {
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  text-align: center;
+}
+.caps-loading-state[data-icon] > .caps-loader {
+  width: auto;
+}
+.caps-loading-state-icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+}
+.caps-loading-state-icon > svg {
+  width: 100%;
+  height: 100%;
+}
+.caps-loading-state-retry {
+  flex: none;
+}
+.caps-loading-state-detail {
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-sm);
+}
+.caps-loading-state[data-size="lg"] {
+  min-height: 6rem;
+}
+.result-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+.caps-centered-card-stage {
+  display: grid;
+  width: 100%;
+  min-height: max(24rem, calc(100svh - 9rem));
+  place-items: center;
+  padding-block: var(--spacing-lg);
+}
+.caps-centered-card {
+  width: min(100%, var(--container-lg));
+  margin-inline: auto;
+}
+.caps-card-outline {
+  /* prettier-ignore */
+  --caps-card-edge: var(
+      --caps-card-outline-edge,
+      color-mix(in oklab, var(--color-base-content) 22%, transparent)
+    );
+  border-width: var(--caps-card-outline-width, var(--border));
+  background-color: var(
+    --caps-card-outline-face,
+    var(--caps-card-resting-face)
+  );
+  background-image: var(
+    --caps-card-outline-image,
+    var(--caps-card-image, none)
+  );
+  /* prettier-ignore */
+  box-shadow: var(
+      --caps-card-outline-shadow,
+      var(--caps-card-resting-shadow)
+    );
+}
+.caps-card-fit {
+  align-self: start;
+}
+.caps-card-interactive {
+  transition:
+    border-color var(--stipe-motion-fast) ease,
+    transform var(--stipe-motion-normal) var(--stipe-motion-ease),
+    box-shadow var(--stipe-motion-normal) ease;
+}
+.caps-card-interactive:is(:hover, :has(:focus-visible)) {
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+  box-shadow:
+    var(--stipe-shadow-raised),
+    0 8px 20px -12px var(--color-primary);
+}
+.caps-card-interactive:active {
+  transform: scale(var(--stipe-press-scale));
+  transition-duration: var(--stipe-motion-squish);
+}

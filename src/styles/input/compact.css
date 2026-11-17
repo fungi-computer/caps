@@ -1,0 +1,17 @@
+.caps-search-input {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.caps-search-leading {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1;
+}
+.caps-search-input[data-leading="true"] .caps-input {
+  padding-inline-start: var(--spacing-3xl);
+}

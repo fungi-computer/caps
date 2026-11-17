@@ -1,0 +1,36 @@
+/* ActionRow appearance="card": each row is its own raised plastic card.
+     Rows separate by gap and shadow, never by a ruled line. */
+.caps-action-row.caps-action-row-card {
+  border-color: transparent;
+  border-radius: var(--radius-box);
+  background: var(--color-base-100);
+  box-shadow: var(
+    --stipe-shadow-raised,
+    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.45)),
+    0 1px 2px rgb(0 0 0 / calc(var(--depth) * 0.07)),
+    0 8px 16px -14px rgb(0 0 0 / calc(var(--depth) * 0.4))
+  );
+  transition:
+    box-shadow var(--stipe-motion-fast) ease,
+    translate var(--stipe-motion-fast) ease;
+}
+.caps-action-row.caps-action-row-card + .caps-action-row-card {
+  margin-block-start: var(--spacing-xs);
+}
+@media (hover: hover) {
+  .caps-action-row.caps-action-row-card:not(:disabled):hover {
+    background: var(--color-base-100);
+    translate: 0 calc(var(--depth) * -1px);
+  }
+}
+.caps-action-row.caps-action-row-card[aria-current="page"] {
+  box-shadow:
+    inset 0 0 0 2px color-mix(in oklab, var(--color-primary) 55%, transparent),
+    0 1px 2px rgb(0 0 0 / calc(var(--depth) * 0.07));
+}
+.caps-action-row-card .caps-action-row-trailing {
+  width: auto;
+  min-width: 6rem;
+  flex: 0 0 auto;
+  gap: var(--spacing-xs);
+}

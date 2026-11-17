@@ -1,0 +1,77 @@
+@layer components {
+  .caps-rough {
+    position: relative;
+    color: inherit;
+  }
+  /* Inline marks hug their words: one box, the height of the line. */
+  span.caps-rough {
+    display: inline-block;
+  }
+  .caps-rough-svg {
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    overflow: visible;
+    color: var(--color-base-content);
+    pointer-events: none;
+  }
+  .caps-rough-primary > .caps-rough-svg {
+    color: var(--color-primary);
+  }
+  .caps-rough-highlight > .caps-rough-svg {
+    z-index: -1;
+    opacity: 0.35;
+  }
+  .caps-rough-highlight {
+    isolation: isolate;
+  }
+  .caps-rough-box:not([data-rough-drawn]),
+  .caps-rough-bubble:not([data-rough-drawn]) {
+    outline: calc(var(--border) * 2) solid var(--color-base-content);
+    outline-offset: 2px;
+  }
+  .caps-rough-bubble:not([data-rough-drawn]) {
+    border-radius: var(--radius-full);
+  }
+  .caps-rough-circle:not([data-rough-drawn]) {
+    border-radius: var(--radius-full);
+    box-shadow: 0 0 0 calc(var(--border) * 2) var(--color-base-content);
+  }
+  .caps-rough-underline:not([data-rough-drawn]) {
+    text-decoration: underline;
+    text-decoration-thickness: calc(var(--border) * 2);
+    text-underline-offset: 0.2em;
+  }
+  .caps-rough-highlight:not([data-rough-drawn]) {
+    background: linear-gradient(
+      transparent 55%,
+      color-mix(in oklab, var(--color-base-content) 30%, transparent) 55%
+    );
+  }
+  .caps-rough-primary:not([data-rough-drawn]) {
+    outline-color: var(--color-primary);
+    text-decoration-color: var(--color-primary);
+  }
+  .caps-rough-primary.caps-rough-circle:not([data-rough-drawn]) {
+    box-shadow: 0 0 0 calc(var(--border) * 2) var(--color-primary);
+  }
+  /* Draw in once, stroke by stroke (paths use pathLength="1"). */
+  [data-rough-animate][data-rough-drawn] > .caps-rough-svg path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: caps-rough-draw calc(var(--stipe-motion-slow) * 3)
+      cubic-bezier(0.6, 0, 0.3, 1)
+      var(--caps-rough-delay, var(--stipe-motion-normal)) forwards;
+  }
+  @keyframes caps-rough-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-rough-animate][data-rough-drawn] > .caps-rough-svg path {
+      stroke-dashoffset: 0;
+      animation: none;
+    }
+  }
+}

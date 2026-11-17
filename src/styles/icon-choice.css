@@ -1,0 +1,278 @@
+.caps-icon-choice {
+  display: inline-grid;
+  min-width: 3.5rem;
+  min-height: 3.25rem;
+  cursor: pointer;
+}
+.caps-icon-choice-mark {
+  grid-area: control;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--spacing-2xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: var(--border) solid var(--caps-control-line, var(--color-base-300));
+  border-radius: var(--radius-field);
+  background: var(--caps-control-face, var(--color-base-100));
+  color: var(--caps-control-dim, var(--stipe-fg-muted));
+  pointer-events: none;
+}
+.caps-icon-choice-art {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  filter: var(--caps-control-icon-off, grayscale(1) contrast(0));
+  opacity: 0.55;
+  transition:
+    filter var(--stipe-motion-fast) var(--stipe-motion-ease),
+    opacity var(--stipe-motion-fast) var(--stipe-motion-ease);
+}
+.caps-icon-choice-art > svg {
+  width: 100%;
+  height: 100%;
+}
+.caps-icon-choice-caption {
+  font-family: var(--caps-control-label-font, inherit);
+  font-size: var(--caps-control-label-size, var(--text-xs));
+  letter-spacing: var(--caps-control-label-tracking, inherit);
+  text-transform: var(--caps-control-label-case, inherit);
+  line-height: 1;
+}
+.caps-icon-choice-lamp {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: currentcolor;
+  opacity: 0;
+}
+.caps-icon-choice-input:checked + .caps-icon-choice-mark,
+.caps-icon-choice-input:indeterminate + .caps-icon-choice-mark,
+.caps-icon-lamp[data-on="true"] > .caps-icon-choice-mark {
+  border-color: var(--caps-control-selected-line, var(--color-base-content));
+  background: var(--caps-control-selected-face, var(--color-base-200));
+  color: var(--caps-control-ink, var(--color-base-content));
+}
+.caps-icon-lamp[data-on="true"] > .caps-icon-choice-mark .caps-icon-choice-art,
+.caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-art,
+.caps-icon-choice-input:indeterminate
+  + .caps-icon-choice-mark
+  .caps-icon-choice-art {
+  filter: none;
+  opacity: 1;
+}
+.caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-lamp,
+.caps-icon-lamp[data-on="true"]
+  > .caps-icon-choice-mark
+  .caps-icon-choice-lamp {
+  opacity: 1;
+}
+/* A read-only icon state, such as a right an App holds: the icon key's
+     face with no input. A row of lamps wraps like a row of keys. */
+.caps-icon-lamp {
+  display: inline-grid;
+  min-width: 3.5rem;
+  min-height: 3.25rem;
+}
+.caps-icon-lamps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.caps-icon-choice-input:indeterminate
+  + .caps-icon-choice-mark
+  .caps-icon-choice-lamp {
+  width: 7px;
+  height: 2px;
+  border-radius: 0;
+  opacity: 1;
+}
+.caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)
+  + .caps-icon-choice-mark
+  .caps-icon-choice-art {
+  opacity: 0.8;
+}
+.caps-icon-choice[data-appearance="compact"] {
+  --caps-control-selected-face: transparent;
+  display: grid;
+  place-items: center;
+  position: relative;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+}
+.caps-icon-choice[data-appearance="compact"] .caps-icon-choice-input {
+  grid-area: auto;
+  position: absolute;
+  inset: 0;
+  cursor: inherit;
+}
+.caps-icon-choice[data-appearance="compact"] .caps-icon-choice-mark {
+  grid-area: auto;
+  position: static;
+  gap: var(--spacing-2xs);
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--color-base-content);
+  font-size: 0.5rem;
+}
+.caps-icon-choice[data-appearance="compact"] .caps-icon-choice-art {
+  display: contents;
+  filter: none;
+  opacity: 1;
+}
+.caps-icon-choice[data-appearance="compact"] .caps-icon-choice-art > svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.caps-icon-choice[data-appearance="compact"]
+  .caps-icon-choice-input:not(:checked, :indeterminate)
+  + .caps-icon-choice-mark
+  svg {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+.caps-icon-choice[data-appearance="compact"] .caps-icon-choice-caption {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+.caps-icon-choice[data-appearance="compact"] .caps-icon-choice-lamp {
+  display: none;
+}
+/* SwatchRadio: a 2.25rem icon key whose colour dot stays lit, so each
+     colour reads before it is chosen; the lamp marks the choice. */
+.caps-icon-choice[data-swatch] {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+}
+.caps-icon-choice[data-swatch] .caps-icon-choice-mark {
+  padding: var(--spacing-xs);
+}
+.caps-icon-choice[data-art="color"] .caps-icon-choice-art {
+  filter: none;
+  opacity: 1;
+}
+.caps-icon-choice[data-swatch] .caps-icon-choice-art {
+  width: 1rem;
+  height: 1rem;
+}
+.caps-swatch-dot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  outline: var(--border) solid
+    color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  outline-offset: -1px;
+}
+/* CheckKey: a short multi-select as wide icon keys. The same face, line,
+     selected face and lamp as an icon key; Sigil, label and hint read like
+     a details-panel row. The checkbox's own focus ring and disabled ink
+     apply to the whole key. */
+.caps-check-keys {
+  flex: 1 1 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr));
+  gap: var(--spacing-xs);
+  min-width: 0;
+}
+/* A long list reads two to a row, so longer names keep whole words. */
+.caps-check-keys:has(> :nth-child(7)) {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+}
+.caps-check-key {
+  display: grid;
+  min-width: 0;
+  cursor: pointer;
+}
+.caps-check-key > .caps-checkbox {
+  min-height: 2.25rem;
+}
+.caps-check-key-face {
+  grid-area: control;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+  min-width: 0;
+  padding: var(--spacing-xs) var(--spacing-md) var(--spacing-xs)
+    var(--spacing-sm);
+  border: var(--border) solid var(--caps-control-line, var(--color-base-300));
+  border-radius: var(--radius-field);
+  background: var(--caps-control-face, var(--color-base-100));
+  color: var(--caps-control-dim, var(--stipe-fg-muted));
+  pointer-events: none;
+  transition:
+    border-color var(--stipe-motion-fast) var(--stipe-motion-ease),
+    background-color var(--stipe-motion-fast) var(--stipe-motion-ease);
+}
+.caps-check-key-icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  width: 1rem;
+  height: calc(var(--text-sm) * 1.5);
+  filter: var(--caps-control-icon-off, grayscale(1) contrast(0));
+  opacity: 0.55;
+}
+.caps-check-key-icon > :is(svg, img) {
+  width: 1rem;
+  height: 1rem;
+}
+.caps-check-key-copy {
+  display: grid;
+  min-width: 0;
+}
+.caps-check-key-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+.caps-check-key-hint {
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--stipe-fg-muted);
+}
+.caps-check-key-lamp {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: currentcolor;
+  opacity: 0;
+}
+.caps-check-key-input:checked + .caps-check-key-face {
+  border-color: var(--caps-control-selected-line, var(--color-base-content));
+  background: var(--caps-control-selected-face, var(--color-base-200));
+  color: var(--caps-control-ink, var(--color-base-content));
+}
+.caps-check-key-input:checked + .caps-check-key-face .caps-check-key-icon {
+  filter: none;
+  opacity: 1;
+}
+.caps-check-key-input:checked + .caps-check-key-face .caps-check-key-lamp {
+  opacity: 1;
+}
+.caps-check-key-input:hover:not(:checked, :disabled)
+  + .caps-check-key-face
+  .caps-check-key-icon {
+  opacity: 0.8;
+}
+.caps-check-key:has(.caps-check-key-input:disabled) {
+  cursor: not-allowed;
+}
+.caps-icon-choice:has(.caps-icon-choice-input:disabled) {
+  cursor: not-allowed;
+}

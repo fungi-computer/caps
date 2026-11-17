@@ -1,0 +1,72 @@
+@layer caps-touch-targets {
+  @media (max-width: 640px), (any-pointer: coarse) {
+    .caps-button:not(.caps-icon-button),
+    .caps-dropdown-trigger,
+    .caps-dropdown-item,
+    .caps-input,
+    .caps-select,
+    .caps-navigation-rail-content > a,
+    .caps-app-bar-button,
+    .caps-app-bar-primary,
+    .caps-app-bar-close {
+      min-width: var(--caps-touch-target);
+      min-height: var(--caps-touch-target);
+    }
+    .caps-navigation-rail-content > a {
+      align-content: center;
+    }
+    /* Text fields and selects share one touch height. Checkboxes, radios
+       and switches keep their 24px layout; their invisible native input
+       reaches the touch height instead, centred on the visual, so rows don't
+       spread apart. Their labels stay the horizontal target. */
+    .caps-checkbox-input,
+    .caps-radio-input,
+    .caps-switch-input {
+      place-self: center stretch;
+      height: max(100%, var(--caps-touch-target));
+    }
+    /* A switch or a colour key is its own target, not beside a label, so its
+       hit area reaches the touch width too; the visual keeps its size and
+       the extra reach spills evenly into the gap around it. */
+    .caps-switch-input,
+    .caps-icon-choice[data-swatch] .caps-icon-choice-input {
+      place-self: center;
+      width: max(100%, var(--caps-touch-target));
+    }
+    .caps-check-key > .caps-checkbox {
+      min-height: var(--caps-touch-target);
+    }
+    .caps-check-key .caps-check-key-face {
+      align-items: center;
+    }
+    .caps-icon-choice[data-swatch] .caps-icon-choice-input {
+      height: max(100%, var(--caps-touch-target));
+    }
+    /* An icon button keeps its grid size and face; an invisible hit area
+       centred on it reaches the touch target instead. */
+    .caps-icon-button::after {
+      content: "";
+      position: absolute;
+      inset: min(0px, calc((100% - var(--caps-touch-target)) / 2));
+    }
+    /* Back and Forward sit tight together as on desktop; each reaches the
+       whole touch target outward from the seam between them, so both hit
+       areas are full size and never overlap. */
+    .caps-window-back {
+      /* Room at the window edge for Back's outward half of the target. */
+      margin-left: calc(var(--caps-touch-target) - var(--spacing-xl));
+    }
+    .caps-window-back::after {
+      inset-inline-start: min(0px, calc(100% - var(--caps-touch-target)));
+      inset-inline-end: 0;
+    }
+    .caps-window-forward {
+      /* Above the title handle that follows, so its outward half is live. */
+      z-index: 1;
+    }
+    .caps-window-forward::after {
+      inset-inline-start: 0;
+      inset-inline-end: min(0px, calc(100% - var(--caps-touch-target)));
+    }
+  }
+}

@@ -1,0 +1,140 @@
+/* Cards: goals, letters, dialogue, pause and end screens. */
+.caps-hud-card {
+  font-family: var(--caps-hud-card-font, inherit);
+  background-image: var(--caps-hud-card-image, var(--card-texture, none));
+  border-top: var(
+    --caps-hud-card-top-border,
+    var(--caps-hud-border-width, 2px) solid var(--card-ink)
+  );
+  display: grid;
+  width: min(20rem, 100%);
+  min-width: 0;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.caps-hud-card-header {
+  display: grid;
+  gap: var(--spacing-2xs);
+}
+.caps-hud-card-kicker {
+  color: var(--caps-primary-text);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.caps-hud-card-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.caps-hud-card-body {
+  display: grid;
+  min-width: 0;
+  gap: var(--spacing-sm);
+}
+.caps-hud-card-title-text {
+  font-family: var(--caps-hud-title-font, inherit);
+}
+.caps-hud-card-body > p,
+.caps-hud-card-body > h3 {
+  margin: 0;
+}
+.caps-hud-card-body > h3 {
+  margin-top: var(--spacing-xs);
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+}
+.caps-hud-card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px dashed color-mix(in oklab, var(--card-ink) 45%, transparent);
+}
+.caps-hud-card[data-kind="goal"] {
+  width: min(17rem, 100%);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+.caps-hud-card[data-kind="goal"] .caps-hud-card-title {
+  font-size: 1rem;
+}
+.caps-hud-card[data-kind="letter"],
+.caps-hud-card[data-kind="screen"],
+.caps-hud-card[data-kind="end"] {
+  box-shadow: var(--caps-hud-lift-large, 6px) var(--caps-hud-lift-large, 6px) 0
+    color-mix(in oklab, var(--card-ink) 88%, transparent);
+
+  width: min(34rem, 100%);
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+.caps-hud-card[data-kind="letter"] .caps-hud-card-body {
+  padding-left: var(--spacing-md);
+  border-left: 3px double
+    color-mix(in oklab, var(--color-accent) 60%, transparent);
+}
+.caps-hud-card[data-kind="letter"] .caps-hud-card-title,
+.caps-hud-card[data-kind="screen"] .caps-hud-card-title,
+.caps-hud-card[data-kind="end"] .caps-hud-card-title {
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.caps-hud-card[data-kind="end"] {
+  text-align: center;
+}
+.caps-hud-card[data-kind="end"] .caps-hud-card-footer {
+  flex-direction: column;
+  align-items: stretch;
+}
+.caps-hud-card[data-kind="dialogue"] {
+  width: min(26rem, 100%);
+}
+
+.caps-goal-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--spacing-sm);
+  margin: 0;
+  font-weight: 600;
+}
+.caps-goal-box {
+  position: relative;
+  width: 1rem;
+  height: 1rem;
+  margin-top: var(--spacing-2xs);
+  background: var(--card-paper);
+  border: 2px solid var(--card-ink);
+  border-radius: var(--radius-selector);
+}
+.caps-goal-line[data-done="true"] .caps-goal-box {
+  background: var(--color-primary);
+}
+.caps-goal-line[data-done="true"] .caps-goal-box::after {
+  position: absolute;
+  top: 0;
+  left: 3px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--color-primary-content);
+  border-width: 0 2px 2px 0;
+  rotate: 45deg;
+  content: "";
+}
+.caps-goal-line[data-done="true"] .caps-goal-text {
+  color: color-mix(in oklab, var(--color-base-content) 60%, transparent);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}

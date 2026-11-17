@@ -1,0 +1,19 @@
+/* Fuse: a burning hairline for an undo window. Its thickness is the
+     theme's fuse token; the bright end is the ember. */
+.caps-fuse {
+  color: var(--caps-fuse-color, inherit);
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--stipe-motion-fuse, 1px);
+  background: linear-gradient(
+    to right,
+    color-mix(in oklab, currentColor 55%, transparent),
+    currentColor
+  );
+  transform-origin: left center;
+  pointer-events: none;
+}
+.caps-undo-action {
+  position: relative;
+}

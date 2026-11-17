@@ -1,0 +1,8 @@
+.caps-inline-code {
+  color: var(--stipe-fg-muted, var(--color-base-content));
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}

@@ -10,13 +10,14 @@
       "description": "Swipeable Sonner notifications styled for Caps.",
       "dependencies": [
         "sonner",
+        "lucide-react",
         "@fungi.computer/stipe",
         "cn",
         "class-variance-authority",
         "react",
         "react-dom"
       ],
-      "registryDependencies": [],
+      "registryDependencies": ["@shiit/loader", "@shiit/status"],
       "files": [
         {
           "path": "../src/components/toaster.tsx",
@@ -195,9 +196,9 @@
             "isolation": "isolate",
             "minWidth": "0",
             "minHeight": "0",
-            "border": "var(--caps-surface-rim) solid\n      color-mix(\n        in oklab,\n        transparent,\n        var(--stipe-linework) calc((1 - var(--depth)) * 100%)\n      )",
+            "border": "var(--caps-surface-rim) solid\n    color-mix(\n      in oklab,\n      transparent,\n      var(--stipe-linework) calc((1 - var(--depth)) * 100%)\n    )",
             "borderRadius": "calc(var(--radius-field) + var(--caps-surface-rim))",
-            "background": "linear-gradient(\n          var(--caps-surface-face, var(--color-base-100)),\n          var(--caps-surface-face, var(--color-base-100))\n        )\n        padding-box,\n      var(--stipe-surface-frame-image, var(--caps-surface-molding)) border-box",
+            "background": "linear-gradient(\n        var(--caps-surface-face, var(--color-base-100)),\n        var(--caps-surface-face, var(--color-base-100))\n      )\n      padding-box,\n    var(--stipe-surface-frame-image, var(--caps-surface-molding)) border-box",
             "boxShadow": "var(\n      --stipe-shadow-raised,\n      0 0 0 calc(var(--depth) * 1px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) 12%,\n          var(--color-base-200)\n        ),\n      0 0 0 calc(var(--depth) * 3px) var(--color-base-200),\n      0 calc(var(--depth) * 1px) 0 calc(var(--depth) * 4px)\n        oklch(100% 0 0 / calc(var(--depth) * 0.3))\n    )"
           },
           ".caps-surface[data-surface-size=\"sm\"]": {
@@ -225,24 +226,24 @@
           ".caps-surface::before": {
             "inset": "calc(-1 * var(--caps-surface-rim))",
             "borderRadius": "inherit",
-            "boxShadow": "var(\n      --stipe-shadow-edge,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.48)),\n      inset 1px 0 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),\n      inset 0 -1px 0\n        color-mix(in oklab, var(--color-base-content) 10%, transparent)\n    )"
+            "boxShadow": "var(\n    --stipe-shadow-edge,\n    inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.48)),\n    inset 1px 0 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),\n    inset 0 -1px 0\n      color-mix(in oklab, var(--color-base-content) 10%, transparent)\n  )"
           },
           ".caps-surface::after": {
             "inset": "0",
             "borderRadius": "var(--radius-field)",
-            "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 1px 0\n        color-mix(in oklab, var(--color-base-content) 18%, transparent),\n      inset 0 var(--caps-surface-inset) var(--caps-surface-inset)\n        oklch(0% 0 0 / calc(var(--depth) * 0.16)),\n      inset 0 0 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n      inset -1px -1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.16))\n    )"
+            "boxShadow": "var(\n    --stipe-shadow-inset,\n    inset 0 1px 0\n      color-mix(in oklab, var(--color-base-content) 18%, transparent),\n    inset 0 var(--caps-surface-inset) var(--caps-surface-inset)\n      oklch(0% 0 0 / calc(var(--depth) * 0.16)),\n    inset 0 0 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n    inset -1px -1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.16))\n  )"
           },
           ".caps-display-gasket": {
             "--caps-display-gasket-padding": "calc(var(--spacing-sm) * var(--depth))",
             "padding": "var(--caps-display-gasket-padding)",
             "borderRadius": "var(--radius-field)",
             "background": "var(--stipe-display-gasket-face, var(--color-base-300))",
-            "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 20%),\n          transparent\n        )\n    )"
+            "boxShadow": "var(\n    --stipe-shadow-inset,\n    inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 20%),\n        transparent\n      )\n  )"
           },
           ".caps-display-gasket[data-display-density=\"compact\"]": {
             "--caps-display-gasket-padding": "var(--spacing-2xs)"
           },
-          ".caps-surface[data-surface-size=\"sm\"][data-surface-placement=\"embedded\"]\n    > .caps-display-gasket[data-display-density=\"compact\"]": {
+          ".caps-surface[data-surface-size=\"sm\"][data-surface-placement=\"embedded\"]\n  > .caps-display-gasket[data-display-density=\"compact\"]": {
             "--caps-display-gasket-padding": "1px"
           },
           ".caps-display-gasket > .caps-screen": {
@@ -287,7 +288,7 @@
             "backgroundImage": "var(--stipe-display-texture-image)",
             "backgroundSize": "var(--caps-print-texture-size, auto)",
             "textShadow": "var(--stipe-display-text-shadow)",
-            "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        )\n    )"
+            "boxShadow": "var(\n    --stipe-shadow-inset,\n    inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        transparent\n      )\n  )"
           },
           ".caps-screen-header": {
             "display": "flex",
@@ -295,7 +296,7 @@
             "gap": "var(--spacing-sm)",
             "minWidth": "0",
             "padding": "var(--spacing-sm) var(--spacing-md)",
-            "borderBottom": "var(--border) solid\n      var(--caps-control-line, var(--color-base-300))",
+            "borderBottom": "var(--border) solid\n    var(--caps-control-line, var(--color-base-300))",
             "fontFamily": "var(--caps-control-label-font, inherit)",
             "fontSize": "var(--text-sm)"
           },
@@ -322,7 +323,7 @@
           },
           ".caps-screen-cells": {
             "display": "grid",
-            "gridTemplateColumns": "repeat(\n      auto-fit,\n      minmax(min(100%, var(--caps-screen-cell-min, 12rem)), 1fr)\n    )",
+            "gridTemplateColumns": "repeat(\n    auto-fit,\n    minmax(min(100%, var(--caps-screen-cell-min, 12rem)), 1fr)\n  )",
             "overflow": "hidden"
           },
           ".caps-screen-cell": {
@@ -332,7 +333,7 @@
             "gap": "var(--spacing-xs)",
             "minWidth": "0",
             "padding": "var(--spacing-sm) var(--spacing-md) var(--spacing-md)",
-            "boxShadow": "calc(var(--border) * -1) calc(var(--border) * -1) 0 0\n      var(--caps-control-line, var(--color-base-300))"
+            "boxShadow": "calc(var(--border) * -1) calc(var(--border) * -1) 0 0\n    var(--caps-control-line, var(--color-base-300))"
           },
           ".caps-screen-cell[data-wide]": { "gridColumn": "1 / -1" },
           ".caps-screen-cell-legend,.caps-screen-cell-readout": {
@@ -365,7 +366,7 @@
             "boxShadow": "none",
             "fontSize": "0.875rem"
           },
-          ".caps-screen-cell[data-appearance=\"compact\"]\n    + .caps-screen-cell[data-appearance=\"compact\"]": {
+          ".caps-screen-cell[data-appearance=\"compact\"]\n  + .caps-screen-cell[data-appearance=\"compact\"]": {
             "borderTop": "1px solid color-mix(in oklab, currentcolor 12%, transparent)"
           },
           ".caps-screen-cell[data-appearance=\"compact\"] > .caps-screen-cell-icon": {
@@ -433,7 +434,7 @@
           },
           ".caps-scroll-area.caps-surface": {
             "--caps-scroll-frame-inset": "var(--caps-surface-rim)",
-            "background": "var(--stipe-surface-frame-image, var(--caps-surface-molding))\n      border-box"
+            "background": "var(--stipe-surface-frame-image, var(--caps-surface-molding))\n    border-box"
           },
           ".caps-scroll-area.caps-surface::after": {
             "insetInlineEnd": "var(--caps-scroll-gutter-width)"
@@ -469,11 +470,11 @@
             "inset": "0",
             "pointerEvents": "none",
             "borderRadius": "var(--radius-selector)",
-            "backgroundColor": "var(\n      --caps-scrollbar-thumb,\n      color-mix(in oklab, var(--color-base-content) 22%, transparent)\n    )",
+            "backgroundColor": "var(\n    --caps-scrollbar-thumb,\n    color-mix(in oklab, var(--color-base-content) 22%, transparent)\n  )",
             "transition": "background-color var(--stipe-motion-fast) ease-out"
           },
           ".caps-scroll-area:hover .caps-scroll-thumb-surface,.caps-scroll-thumb:active .caps-scroll-thumb-surface": {
-            "backgroundColor": "var(\n      --caps-scrollbar-thumb-active,\n      color-mix(in oklab, var(--color-base-content) 40%, transparent)\n    )"
+            "backgroundColor": "var(\n    --caps-scrollbar-thumb-active,\n    color-mix(in oklab, var(--color-base-content) 40%, transparent)\n  )"
           },
           "@media (prefers-reduced-motion: reduce)": {
             ".caps-scroll-thumb-surface": { "transform": "none !important" }
@@ -638,7 +639,9 @@
             "flexShrink": 0,
             "marginLeft": "var(--spacing-2xs)"
           },
-          ".caps-window-back + .caps-window-title": {
+          ".caps-window-back + .caps-window-forward": { "marginLeft": "0" },
+          ".caps-window-forward": { "flexShrink": 0 },
+          ".caps-window-back + .caps-window-title,.caps-window-forward + .caps-window-title": {
             "paddingLeft": "var(--spacing-2xs)"
           },
           ".caps-window-header[data-density=\"compact\"]": {
@@ -671,7 +674,7 @@
             "outlineOffset": "-2px"
           },
           "@media (max-width: 640px), (any-pointer: coarse)": {
-            ".caps-window-header .caps-button": {
+            ".caps-window-header\n      .caps-button:not(.caps-window-back, .caps-window-forward),.caps-icon-button-responsive:not(.caps-window-back, .caps-window-forward)": {
               "minWidth": "44px",
               "minHeight": "44px",
               "flexShrink": 0
@@ -836,6 +839,22 @@
             "--caps-keycap-shortcut-font-size": "0.75rem",
             "--caps-keycap-shortcut-weight": "700"
           }
+        },
+        "@layer caps-touch-targets": {
+          "@media (max-width: 640px), (any-pointer: coarse)": {
+            ".caps-window-back": {
+              "marginLeft": "calc(var(--caps-touch-target) - var(--spacing-xl))"
+            },
+            ".caps-window-back::after": {
+              "insetInlineStart": "min(0px, calc(100% - var(--caps-touch-target)))",
+              "insetInlineEnd": "0"
+            },
+            ".caps-window-forward": { "zIndex": 1 },
+            ".caps-window-forward::after": {
+              "insetInlineStart": "0",
+              "insetInlineEnd": "min(0px, calc(100% - var(--caps-touch-target)))"
+            }
+          }
         }
       }
     },
@@ -942,7 +961,7 @@
             "borderColor": "var(--caps-button-filled-edge)",
             "boxShadow": "var(--caps-button-filled-drop)"
           },
-          ".caps-button.btn-outline[aria-busy=\"true\"]:is(\n      :disabled,\n      [aria-disabled=\"true\"]\n    )": {
+          ".caps-button.btn-outline[aria-busy=\"true\"]:is(\n    :disabled,\n    [aria-disabled=\"true\"]\n  )": {
             "backgroundColor": "var(--caps-key-face)",
             "color": "var(--caps-button-outline-ink, var(--color-base-content))",
             "outline": "none"
@@ -958,15 +977,16 @@
           },
           ".caps-button-filled:not(.btn-circle),.caps-button.btn-outline:not(.btn-circle)": {
             "paddingInline": "var(--caps-button-padding, var(--btn-p))",
-            "borderStartStartRadius": "var(\n      --join-ss,\n      var(--caps-button-radius, var(--radius-field))\n    )",
-            "borderStartEndRadius": "var(\n      --join-se,\n      var(--caps-button-radius, var(--radius-field))\n    )",
-            "borderEndStartRadius": "var(\n      --join-es,\n      var(--caps-button-radius, var(--radius-field))\n    )",
-            "borderEndEndRadius": "var(\n      --join-ee,\n      var(--caps-button-radius, var(--radius-field))\n    )"
+            "borderStartStartRadius": "var(\n    --join-ss,\n    var(--caps-button-radius, var(--radius-field))\n  )",
+            "borderStartEndRadius": "var(\n    --join-se,\n    var(--caps-button-radius, var(--radius-field))\n  )",
+            "borderEndStartRadius": "var(\n    --join-es,\n    var(--caps-button-radius, var(--radius-field))\n  )",
+            "borderEndEndRadius": "var(\n    --join-ee,\n    var(--caps-button-radius, var(--radius-field))\n  )",
+            "--radius-field": "var(--radius-button)"
           },
           ".caps-button-filled.btn-square,.caps-button.btn-outline.btn-square": {
             "paddingInline": "var(--caps-button-padding, 0)"
           },
-          ".caps-button:not(.btn-ghost):not(.caps-button-filled):is(\n      :disabled,\n      [aria-disabled=\"true\"]\n    )": {
+          ".caps-button:not(.btn-ghost):not(.caps-button-filled):is(\n    :disabled,\n    [aria-disabled=\"true\"]\n  )": {
             "borderColor": "var(--caps-button-border-color, var(--color-base-300))",
             "boxShadow": "var(--caps-button-drop, none)"
           },
@@ -975,8 +995,8 @@
             "isolation": "var(--caps-button-outline-isolation, auto)",
             "--btn-border": "var(--stipe-linework)",
             "--caps-key-face": "var(--caps-button-outline-face, var(--color-base-200))",
-            "fontWeight": "var(--caps-button-weight, 500)",
-            "boxShadow": "var(\n      --caps-button-outline-drop,\n      var(--caps-button-drop, var(--caps-key-rest-shadow))\n    )",
+            "fontWeight": "var(--caps-button-weight, 600)",
+            "boxShadow": "var(\n    --caps-button-outline-drop,\n    var(--caps-button-drop, var(--caps-key-rest-shadow))\n  )",
             "transitionProperty": "background-color, border-color, box-shadow, translate",
             "transitionDuration": "var(--stipe-motion-fast)",
             "transitionTimingFunction": "ease-out"
@@ -986,11 +1006,11 @@
             "color": "var(--caps-button-outline-ink, var(--color-base-content))"
           },
           ".caps-button.btn-outline:is(:disabled, [aria-disabled=\"true\"])": {
-            "backgroundColor": "var(\n      --caps-button-outline-disabled-face,\n      var(--color-base-200)\n    )"
+            "backgroundColor": "var(\n    --caps-button-outline-disabled-face,\n    var(--color-base-200)\n  )"
           },
           ".caps-button.btn-outline:not(:disabled):not([aria-disabled=\"true\"]):hover": {
-            "backgroundColor": "var(\n      --caps-button-outline-hover-face,\n      var(--caps-keycap-hover-face, var(--caps-key-face))\n    )",
-            "color": "var(\n      --caps-button-outline-hover-ink,\n      var(--caps-button-outline-ink, var(--color-base-content))\n    )"
+            "backgroundColor": "var(\n    --caps-button-outline-hover-face,\n    var(--caps-keycap-hover-face, var(--caps-key-face))\n  )",
+            "color": "var(\n    --caps-button-outline-hover-ink,\n    var(--caps-button-outline-ink, var(--color-base-content))\n  )"
           },
           ".caps-button.btn-outline::before": {
             "content": "var(--caps-button-outline-inset-content, none)",
@@ -1005,12 +1025,9 @@
           },
           ".caps-button.btn-outline:not(:disabled):not([aria-disabled=\"true\"]):active": {
             "translate": "0 var(--caps-button-press, var(--caps-key-lip))",
-            "boxShadow": "var(\n      --caps-button-outline-drop,\n      var(--caps-button-drop-active, var(--caps-key-pressed-shadow))\n    )"
+            "boxShadow": "var(\n    --caps-button-outline-drop,\n    var(--caps-button-drop-active, var(--caps-key-pressed-shadow))\n  )"
           },
           ".caps-button.btn-ghost": { "fontWeight": 500 },
-          ".caps-button-filled:not(.btn-circle)": {
-            "--radius-field": "var(--radius-button)"
-          },
           ".caps-button-filled": {
             "--btn-bg": "var(--btn-color)",
             "--caps-key-face": "var(--btn-color)",
@@ -1034,7 +1051,7 @@
             "opacity": "var(--caps-button-disabled-opacity, 0.45)",
             "backgroundColor": "var(--caps-button-disabled-face, var(--btn-bg))",
             "color": "var(--caps-button-disabled-ink, var(--btn-fg))",
-            "borderColor": "var(\n      --caps-button-disabled-edge,\n      var(--caps-button-filled-edge)\n    )",
+            "borderColor": "var(\n    --caps-button-disabled-edge,\n    var(--caps-button-filled-edge)\n  )",
             "boxShadow": "var(\n      --caps-button-disabled-drop,\n      var(--caps-button-filled-drop)\n    )"
           },
           ".caps-button-filled.join-item": {
@@ -1049,7 +1066,7 @@
               "--btn-bg": "color-mix(in oklab, var(--btn-color) 92%, white)"
             }
           },
-          ".caps-button-filled:not(:disabled):not([aria-disabled=\"true\"]):is(\n      :active,\n      .btn-active\n    )": {
+          ".caps-button-filled:not(:disabled):not([aria-disabled=\"true\"]):is(\n    :active,\n    .btn-active\n  )": {
             "--btn-bg": "color-mix(in oklab, var(--btn-color) 92%, black)",
             "translate": "0 var(--caps-button-press, var(--caps-key-lip))",
             "scale": "var(--stipe-press-scale)",
@@ -1078,7 +1095,7 @@
             "scale": "none",
             "boxShadow": "inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))"
           },
-          ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n      [aria-disabled=\"true\"]\n    ):is(:active, .btn-active)": {
+          ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n    [aria-disabled=\"true\"]\n  ):is(:active, .btn-active)": {
             "boxShadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))"
           }
         },
@@ -1098,7 +1115,7 @@
             "outlineOffset": "-2px"
           },
           "@media (max-width: 640px), (any-pointer: coarse)": {
-            ".caps-window-header .caps-button": {
+            ".caps-window-header\n      .caps-button:not(.caps-window-back, .caps-window-forward)": {
               "minWidth": "44px",
               "minHeight": "44px",
               "flexShrink": 0
@@ -1122,7 +1139,7 @@
             "height": "2rem",
             "fontSize": "var(--text-xs)"
           },
-          ".empty-state-suggestions\n    .caps-button:is(:disabled, [aria-disabled=\"true\"]):not([aria-busy=\"true\"])": {
+          ".empty-state-suggestions\n  .caps-button:is(:disabled, [aria-disabled=\"true\"]):not([aria-busy=\"true\"])": {
             "opacity": 0.5,
             "outline": "none",
             "boxShadow": "none"
@@ -1230,7 +1247,7 @@
             "fontSize": "var(--text-xs)"
           },
           "@media (max-width: 480px)": {
-            ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+            ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row:has(\n      > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n    )": {
               "flexDirection": "column",
               "alignItems": "stretch",
               "gap": "var(--spacing-xs)",
@@ -1239,7 +1256,7 @@
           },
           ".caps-number-field-input.caps-input": {
             "--caps-input-floor": "var(\n      --caps-control-number-face,\n      color-mix(\n        in oklab,\n        var(--color-base-200) calc(100% - var(--depth) * 4%),\n        var(--color-base-content) calc(var(--depth) * 4%)\n      )\n    )",
-            "borderColor": "var(\n      --caps-control-number-line,\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      )\n    )"
+            "borderColor": "var(\n    --caps-control-number-line,\n    color-mix(\n      in oklab,\n      var(--stipe-linework),\n      transparent calc(var(--depth) * 100%)\n    )\n  )"
           },
           ".caps-input,.caps-input:disabled": {
             "--caps-input-floor": "color-mix(\n      in oklab,\n      var(--color-base-200) calc(100% - var(--depth) * 4%),\n      var(--color-base-content) calc(var(--depth) * 4%)\n    )",
@@ -1247,16 +1264,16 @@
             "--caps-input-edge-width": "0px",
             "background": "var(--caps-input-floor)",
             "color": "var(--color-base-content)",
-            "border": "var(--border) solid\n      light-dark(\n        color-mix(\n          in oklab,\n          var(--stipe-linework),\n          transparent calc(var(--depth) * 100%)\n        ),\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          var(--stipe-linework)\n        )\n      )",
+            "border": "var(--border) solid\n    light-dark(\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      ),\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        var(--stipe-linework)\n      )\n    )",
             "paddingInline": "var(--spacing-lg)",
-            "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n      inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
-            "transition": "border-color var(--stipe-motion-fast) ease,\n      box-shadow var(--stipe-motion-fast) ease"
+            "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n    inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n    inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
+            "transition": "border-color var(--stipe-motion-fast) ease,\n    box-shadow var(--stipe-motion-fast) ease"
           },
           ".caps-input.caps-input-group-control": {
             "borderColor": "color-mix(\n      in oklab,\n      var(--color-base-content) 22%,\n      transparent\n    )"
           },
           ".caps-input::placeholder": {
-            "color": "color-mix(\n      in oklab,\n      var(--color-base-content) 85%,\n      var(--color-base-100)\n    )",
+            "color": "color-mix(\n    in oklab,\n    var(--color-base-content) 85%,\n    var(--color-base-100)\n  )",
             "opacity": 1
           },
           ".caps-input:focus": {
@@ -1288,7 +1305,7 @@
             "scale": "none",
             "boxShadow": "inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))"
           },
-          ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n      [aria-disabled=\"true\"]\n    ):is(:active, .btn-active)": {
+          ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n    [aria-disabled=\"true\"]\n  ):is(:active, .btn-active)": {
             "boxShadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))"
           }
         },
@@ -1403,7 +1420,7 @@
             "display": "grid",
             "gridTemplateRows": "0fr",
             "opacity": 0,
-            "transition": "grid-template-rows var(--stipe-motion-normal) ease-out,\n      opacity var(--stipe-motion-normal) ease-out"
+            "transition": "grid-template-rows var(--stipe-motion-normal) ease-out,\n    opacity var(--stipe-motion-normal) ease-out"
           },
           ".caps-collapse[data-open=\"true\"]": {
             "gridTemplateRows": "1fr",
@@ -1420,7 +1437,7 @@
               "transitionDuration": "0s !important",
               "transitionDelay": "var(--stipe-motion-fast) !important"
             },
-            ".caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n      > .caps-collapse-clip": {
+            ".caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n    > .caps-collapse-clip": {
               "transition": "none !important"
             }
           },
@@ -1622,7 +1639,7 @@
             "position": "absolute",
             "inset": "0",
             "zIndex": -1,
-            "backgroundColor": "color-mix(\n      in oklab,\n      var(--caps-tool-call-tone) 12%,\n      transparent\n    )",
+            "backgroundColor": "color-mix(\n    in oklab,\n    var(--caps-tool-call-tone) 12%,\n    transparent\n  )",
             "transform": "scaleX(0)",
             "transformOrigin": "left center",
             "transition": "background-color var(--stipe-motion-normal) ease"
@@ -1754,14 +1771,14 @@
           ".caps-field[data-orientation=\"horizontal\"] > .caps-field-row": {
             "--caps-field-control-width": "16rem"
           },
-          ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-copy": {
+          ".caps-field[data-orientation=\"horizontal\"]\n  > .caps-field-row\n  > .caps-field-copy": {
             "minWidth": "6rem"
           },
-          ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-lead": {
+          ".caps-field[data-orientation=\"horizontal\"]\n  > .caps-field-row\n  > .caps-field-lead": {
             "minWidth": "calc(6rem + var(--caps-field-icon-size) + var(--spacing-sm))"
           },
           "@media (max-width: 480px)": {
-            ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+            ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row:has(\n      > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n    )": {
               "flexDirection": "column",
               "alignItems": "stretch",
               "gap": "var(--spacing-xs)",
@@ -1779,10 +1796,10 @@
           ".list.list-sm > .list-row > .caps-field .caps-field-icon": {
             "height": "calc(var(--caps-control-label-size, var(--text-sm)) * 1.5)"
           },
-          ".list.list-sm\n    > .list-row\n    > .caps-field:has(> .caps-field-row > .caps-field-lead)\n    > .caps-field-error-reveal": {
+          ".list.list-sm\n  > .list-row\n  > .caps-field:has(> .caps-field-row > .caps-field-lead)\n  > .caps-field-error-reveal": {
             "paddingInlineStart": "calc(var(--caps-field-icon-size) + var(--spacing-xs))"
           },
-          ".caps-field:has(> .caps-field-row > .caps-field-lead)\n    > .caps-field-error-reveal": {
+          ".caps-field:has(> .caps-field-row > .caps-field-lead)\n  > .caps-field-error-reveal": {
             "paddingInlineStart": "calc(var(--caps-field-icon-size) + var(--spacing-sm))"
           },
           ".caps-field > .caps-field-error-reveal .caps-field-error": {
@@ -1847,7 +1864,7 @@
           ":is(.caps-form, .caps-form-section, .caps-fieldset)[data-layout=\"columns\"]": {
             "--caps-form-label-col": "7rem"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )": {
             "display": "grid",
             "gridTemplateColumns": "var(--caps-form-label-col) minmax(0, 1fr)",
             "columnGap": "var(--spacing-md)",
@@ -1856,10 +1873,10 @@
             "justifyContent": "stretch",
             "--caps-field-control-width": "100%"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-copy": {
             "display": "contents"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > label": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-copy\n  > label": {
             "gridColumn": "1",
             "gridRow": "1",
             "minWidth": "0",
@@ -1880,42 +1897,42 @@
             "minHeight": "var(--caps-fieldset-legend-line, 2.25rem)",
             "alignContent": "center"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > .caps-field-description": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-copy\n  > .caps-field-description": {
             "gridColumn": "2",
             "gridRow": "2",
             "maxWidth": "30rem"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal)": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal)": {
             "gridColumn": "2",
             "gridRow": "1",
             "width": "100%",
             "maxWidth": "30rem"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-switch": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-switch": {
             "width": "40px",
             "justifySelf": "start"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-checkbox": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-checkbox": {
             "width": "24px",
             "justifySelf": "start"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"vertical\"]\n    > .caps-field-lead": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field[data-orientation=\"vertical\"]\n  > .caps-field-lead": {
             "gridColumn": "1",
             "gridRow": "1",
             "margin": "0"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"vertical\"]\n    > .caps-field-error-reveal": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field[data-orientation=\"vertical\"]\n  > .caps-field-error-reveal": {
             "gridColumn": "2",
             "gridRow": "2"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-lead": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field[data-orientation=\"horizontal\"]\n  > .caps-field-row\n  > .caps-field-lead": {
             "gridColumn": "1",
             "gridRow": "1"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-error-reveal": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field[data-orientation=\"horizontal\"]\n  > .caps-field-error-reveal": {
             "paddingInlineStart": "calc(var(--caps-form-label-col) + var(--spacing-md))"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field:has(> .caps-field-error-reveal[data-open=\"true\"])\n    .caps-field-description,.caps-fieldset[data-layout=\"columns\"]:has(\n      > .caps-field-error-reveal[data-open=\"true\"]\n    )\n    > .caps-fieldset-description": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field:has(> .caps-field-error-reveal[data-open=\"true\"])\n  .caps-field-description,.caps-fieldset[data-layout=\"columns\"]:has(\n    > .caps-field-error-reveal[data-open=\"true\"]\n  )\n  > .caps-fieldset-description": {
             "display": "none"
           },
           ".caps-fieldset[data-layout=\"columns\"]": {
@@ -1925,7 +1942,7 @@
             "rowGap": "var(--spacing-2xs)",
             "alignItems": "start"
           },
-          ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+          ".caps-fieldset[data-layout=\"columns\"]:has(\n    .caps-icon-choice:not([data-swatch])\n  )": {
             "--caps-fieldset-legend-line": "3.25rem"
           },
           ".caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-fields": {
@@ -1936,33 +1953,33 @@
             "margin": "0",
             "maxWidth": "30rem"
           },
-          ".caps-fieldset[data-layout=\"columns\"]\n    > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
+          ".caps-fieldset[data-layout=\"columns\"]\n  > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
             "gridColumn": "2",
             "gridRow": "2"
           },
           "@container (min-width: 36rem)": {
-            ".caps-form[data-layout=\"columns\"]\n      .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))": {
+            ".caps-form[data-layout=\"columns\"]\n    .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))": {
               "display": "grid",
               "gridTemplateColumns": "minmax(0, 1fr) auto",
               "alignItems": "start"
             },
-            ".caps-form[data-layout=\"columns\"]\n      .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))\n      > .caps-form-footer": {
+            ".caps-form[data-layout=\"columns\"]\n    .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))\n    > .caps-form-footer": {
               "paddingInlineStart": "0",
               "maxWidth": "none"
             }
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead": {
             "display": "contents"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead\n  > .caps-field-copy": {
             "display": "contents"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-icon": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead\n  > .caps-field-icon": {
             "gridColumn": "1",
             "gridRow": "1",
             "justifySelf": "start"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > label": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead\n  > .caps-field-copy\n  > label": {
             "gridColumn": "1",
             "gridRow": "1",
             "minWidth": "0",
@@ -1971,7 +1988,7 @@
             "textOverflow": "ellipsis",
             "whiteSpace": "nowrap"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > .caps-field-description": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead\n  > .caps-field-copy\n  > .caps-field-description": {
             "gridColumn": "2",
             "gridRow": "2",
             "maxWidth": "30rem"
@@ -1979,40 +1996,40 @@
           ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"] .caps-field,.caps-fieldset[data-layout=\"columns\"]": {
             "--caps-field-icon-size": "1rem"
           },
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field\n    :is(.caps-field-copy > label, .caps-field-icon),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field\n  :is(.caps-field-copy > label, .caps-field-icon),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
             "color": "var(--stipe-fg-muted)",
             "fontWeight": 400
           },
           "@container (max-width: 24rem)": {
-            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      ),.caps-fieldset[data-layout=\"columns\"]": {
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    ),.caps-fieldset[data-layout=\"columns\"]": {
               "gridTemplateColumns": "minmax(0, 1fr)"
             },
-            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-fields": {
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-fields": {
               "gridColumn": "1",
               "gridRow": "2",
               "maxWidth": "none"
             },
-            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-copy\n      > .caps-field-description,:is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      .caps-field[data-orientation=\"vertical\"]\n      > .caps-field-error-reveal,.caps-fieldset[data-layout=\"columns\"]\n      > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > .caps-field-description,:is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"vertical\"]\n    > .caps-field-error-reveal,.caps-fieldset[data-layout=\"columns\"]\n    > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
               "gridColumn": "1",
               "gridRow": "3"
             },
-            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-copy\n      > label,.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > label,.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
               "overflow": "visible",
               "textOverflow": "clip",
               "whiteSpace": "normal",
               "minHeight": "0"
             },
-            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      .caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-error-reveal": {
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-error-reveal": {
               "paddingInlineStart": "0",
               "maxWidth": "none"
             },
-            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-lead\n      > .caps-field-copy\n      > .caps-field-description": {
+            ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > .caps-field-description": {
               "gridColumn": "1",
               "gridRow": "3"
             }
           },
           "@media (prefers-reduced-motion: reduce)": {
-            ".caps-field-error-reveal,.caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n      > .caps-collapse-clip": {
+            ".caps-field-error-reveal,.caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n    > .caps-collapse-clip": {
               "transition": "none !important"
             }
           },
@@ -2083,9 +2100,10 @@
         "@fungi.computer/stipe",
         "animejs",
         "lucide-react",
-        "react"
+        "react",
+        "zod"
       ],
-      "registryDependencies": [],
+      "registryDependencies": ["@shiit/input"],
       "files": [
         {
           "path": "../src/blocks/app-bar.tsx",
@@ -2111,6 +2129,11 @@
           "path": "../src/components/overlay-root.tsx",
           "type": "registry:ui",
           "target": "@ui/overlay-root.tsx"
+        },
+        {
+          "path": "../src/lib/ime.ts",
+          "type": "registry:lib",
+          "target": "@lib/ime.ts"
         }
       ],
       "css": {
@@ -2158,14 +2181,14 @@
             "flexDirection": "column",
             "alignItems": "stretch",
             "width": "min(24rem, calc(100vw - 2 * var(--spacing-xl)))",
-            "maxWidth": "min(\n      24rem,\n      calc(100vw - 2 * var(--spacing-xl)),\n      var(--available-width)\n    )",
+            "maxWidth": "min(\n    24rem,\n    calc(100vw - 2 * var(--spacing-xl)),\n    var(--available-width)\n  )",
             "maxHeight": "min(60vh, 28rem, var(--available-height))",
             "overflow": "auto",
             "padding": "var(--spacing-sm)",
-            "border": "var(--border) solid\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(14% + (1 - var(--depth)) * 86%),\n        transparent\n      )",
+            "border": "var(--border) solid\n    color-mix(\n      in oklab,\n      var(--color-base-content) calc(14% + (1 - var(--depth)) * 86%),\n      transparent\n    )",
             "borderRadius": "var(--radius-box)",
             "background": "var(--color-base-100)",
-            "boxShadow": "0 calc(var(--depth) * 8px) calc(var(--depth) * 24px)\n      color-mix(\n        in srgb,\n        var(--color-base-content) calc(var(--depth) * 14%),\n        transparent\n      )",
+            "boxShadow": "0 calc(var(--depth) * 8px) calc(var(--depth) * 24px)\n    color-mix(\n      in srgb,\n      var(--color-base-content) calc(var(--depth) * 14%),\n      transparent\n    )",
             "transformOrigin": "top left",
             "opacity": 1,
             "pointerEvents": "auto"
@@ -2177,7 +2200,7 @@
           },
           ".caps-app-bar-section + .caps-app-bar-section": {
             "paddingTop": "var(--spacing-sm)",
-            "borderTop": "var(--border) solid\n      color-mix(in oklab, var(--color-base-content) 14%, transparent)"
+            "borderTop": "var(--border) solid\n    color-mix(in oklab, var(--color-base-content) 14%, transparent)"
           },
           ".caps-app-bar-section-label": {
             "paddingInline": "var(--spacing-xs)",
@@ -2203,7 +2226,7 @@
           },
           ".caps-app-bar-launchers[aria-hidden=\"true\"]": {
             "display": "none",
-            "transition": "visibility 0s var(--stipe-motion-fast),\n      display 0s var(--stipe-motion-fast) allow-discrete"
+            "transition": "visibility 0s var(--stipe-motion-fast),\n    display 0s var(--stipe-motion-fast) allow-discrete"
           },
           ".caps-app-bar-launcher": {
             "position": "relative",
@@ -2311,7 +2334,7 @@
             "padding": "var(--spacing-2xs)",
             "borderColor": "color-mix(\n      in oklab,\n      var(--color-base-content) 20%,\n      transparent\n    )",
             "background": "var(--color-base-100)",
-            "boxShadow": "inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.1)),\n      inset 0 -2px 0 rgb(0 0 0 / calc(var(--depth) * 0.16)),\n      0 3px 7px -4px rgb(0 0 0 / calc(var(--depth) * 0.35))",
+            "boxShadow": "inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.1)),\n    inset 0 -2px 0 rgb(0 0 0 / calc(var(--depth) * 0.16)),\n    0 3px 7px -4px rgb(0 0 0 / calc(var(--depth) * 0.35))",
             "transformOrigin": "center bottom"
           },
           ".caps-app-bar-mascot,.caps-app-bar-mascot canvas": {
@@ -2339,8 +2362,8 @@
             "left": "var(--caps-app-bar-notch-left, 24px)",
             "width": "9px",
             "height": "9px",
-            "borderTop": "var(--border) solid\n      color-mix(in oklab, var(--color-base-content) 14%, transparent)",
-            "borderLeft": "var(--border) solid\n      color-mix(in oklab, var(--color-base-content) 14%, transparent)",
+            "borderTop": "var(--border) solid\n    color-mix(in oklab, var(--color-base-content) 14%, transparent)",
+            "borderLeft": "var(--border) solid\n    color-mix(in oklab, var(--color-base-content) 14%, transparent)",
             "background": "var(--color-base-100)",
             "transform": "rotate(45deg)"
           },
@@ -2570,7 +2593,7 @@
           }
         },
         "@layer utilities": {
-          ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+          ".caps-composer-toolbar\n  > .caps-status-tray\n  .caps-status-tray-row\n  :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
             "height": "var(--caps-status-tray-key-height)",
             "minHeight": "var(--caps-status-tray-key-height)"
           },
@@ -2582,7 +2605,7 @@
             "fontSize": "var(--text-xs)"
           },
           "@media (max-width: 480px)": {
-            ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+            ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row:has(\n      > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n    )": {
               "flexDirection": "column",
               "alignItems": "stretch",
               "gap": "var(--spacing-xs)",
@@ -2591,7 +2614,7 @@
           },
           ".caps-number-field-input.caps-input": {
             "--caps-input-floor": "var(\n      --caps-control-number-face,\n      color-mix(\n        in oklab,\n        var(--color-base-200) calc(100% - var(--depth) * 4%),\n        var(--color-base-content) calc(var(--depth) * 4%)\n      )\n    )",
-            "borderColor": "var(\n      --caps-control-number-line,\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      )\n    )"
+            "borderColor": "var(\n    --caps-control-number-line,\n    color-mix(\n      in oklab,\n      var(--stipe-linework),\n      transparent calc(var(--depth) * 100%)\n    )\n  )"
           },
           ".caps-input,.caps-input:disabled": {
             "--caps-input-floor": "color-mix(\n      in oklab,\n      var(--color-base-200) calc(100% - var(--depth) * 4%),\n      var(--color-base-content) calc(var(--depth) * 4%)\n    )",
@@ -2599,10 +2622,10 @@
             "--caps-input-edge-width": "0px",
             "background": "var(--caps-input-floor)",
             "color": "var(--color-base-content)",
-            "border": "var(--border) solid\n      light-dark(\n        color-mix(\n          in oklab,\n          var(--stipe-linework),\n          transparent calc(var(--depth) * 100%)\n        ),\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          var(--stipe-linework)\n        )\n      )",
+            "border": "var(--border) solid\n    light-dark(\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      ),\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        var(--stipe-linework)\n      )\n    )",
             "paddingInline": "var(--spacing-lg)",
-            "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n      inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
-            "transition": "border-color var(--stipe-motion-fast) ease,\n      box-shadow var(--stipe-motion-fast) ease"
+            "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n    inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n    inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
+            "transition": "border-color var(--stipe-motion-fast) ease,\n    box-shadow var(--stipe-motion-fast) ease"
           },
           ".caps-input.caps-input-group-control": {
             "borderColor": "color-mix(\n      in oklab,\n      var(--color-base-content) 22%,\n      transparent\n    )"
@@ -2613,7 +2636,7 @@
             "backgroundColor": "var(--color-base-100)",
             "color": "var(--color-base-content)",
             "fontWeight": 650,
-            "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.22)),\n      0 calc(var(--depth) * 1px) 0\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        )\n    )"
+            "boxShadow": "var(\n    --stipe-shadow-raised,\n    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.22)),\n    0 calc(var(--depth) * 1px) 0\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 16%),\n        transparent\n      )\n  )"
           },
           ".caps-select-shell": {
             "display": "inline-grid",
@@ -2672,10 +2695,10 @@
             "display": "flex",
             "flexDirection": "column",
             "padding": "var(--spacing-xs)",
-            "border": "var(--border) solid\n      color-mix(in oklab, var(--color-base-content) 16%, transparent)",
+            "border": "var(--border) solid\n    color-mix(in oklab, var(--color-base-content) 16%, transparent)",
             "borderRadius": "var(--radius-box)",
             "background": "var(--color-base-200)",
-            "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.45)),\n      inset 0 -1px 0\n        color-mix(in oklab, var(--color-base-content) 12%, transparent),\n      0 calc(var(--depth) * 2px) 0\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        ),\n      0 calc(var(--depth) * 8px) calc(var(--depth) * 20px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        )\n    )"
+            "boxShadow": "var(\n    --stipe-shadow-raised,\n    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.45)),\n    inset 0 -1px 0\n      color-mix(in oklab, var(--color-base-content) 12%, transparent),\n    0 calc(var(--depth) * 2px) 0\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 16%),\n        transparent\n      ),\n    0 calc(var(--depth) * 8px) calc(var(--depth) * 20px)\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        transparent\n      )\n  )"
           },
           ".caps-combobox-popup": {
             "width": "max(14rem, var(--anchor-width))",
@@ -2717,7 +2740,7 @@
             "fontSize": "var(--text-sm)",
             "cursor": "pointer"
           },
-          ".caps-combobox-option[data-active=\"true\"]:not(:disabled),.caps-combobox-list[data-navigation=\"pointer\"]\n    .caps-combobox-option:hover:not(:disabled)": {
+          ".caps-combobox-option[data-active=\"true\"]:not(:disabled),.caps-combobox-list[data-navigation=\"pointer\"]\n  .caps-combobox-option:hover:not(:disabled)": {
             "--caps-shortcut-face": "var(\n      --caps-combobox-active-key-face,\n      var(--color-base-200)\n    )",
             "--caps-shortcut-ink": "var(\n      --caps-combobox-active-key-ink,\n      var(--color-base-content)\n    )",
             "background": "var(--caps-combobox-active-face, var(--color-base-300))",
@@ -2745,7 +2768,7 @@
             }
           },
           ".caps-input::placeholder": {
-            "color": "color-mix(\n      in oklab,\n      var(--color-base-content) 85%,\n      var(--color-base-100)\n    )",
+            "color": "color-mix(\n    in oklab,\n    var(--color-base-content) 85%,\n    var(--color-base-100)\n  )",
             "opacity": 1
           },
           ".caps-input:focus": {
@@ -2771,7 +2794,7 @@
             "scale": "none",
             "boxShadow": "inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))"
           },
-          ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n      [aria-disabled=\"true\"]\n    ):is(:active, .btn-active)": {
+          ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n    [aria-disabled=\"true\"]\n  ):is(:active, .btn-active)": {
             "boxShadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))"
           }
         },
@@ -2928,7 +2951,7 @@
         "cn",
         "react"
       ],
-      "registryDependencies": [],
+      "registryDependencies": ["@shiit/status"],
       "files": [
         {
           "path": "../src/blocks/result-state.tsx",
@@ -3117,7 +3140,7 @@
             "justifyContent": "center",
             "minHeight": "calc(var(--spacing-xl) + var(--spacing-xs))",
             "borderBlock": "var(--border) solid var(--color-base-content)",
-            "background": "repeating-linear-gradient(\n          to right,\n          var(--caps-spec-tick) 0 1px,\n          transparent 1px 64px\n        )\n        0 0 / 100% 100% no-repeat,\n      repeating-linear-gradient(\n          to right,\n          var(--caps-spec-tick) 0 1px,\n          transparent 1px 8px\n        )\n        0 100% / 100% 7px no-repeat,\n      var(--color-base-100)"
+            "background": "repeating-linear-gradient(\n        to right,\n        var(--caps-spec-tick) 0 1px,\n        transparent 1px 64px\n      )\n      0 0 / 100% 100% no-repeat,\n    repeating-linear-gradient(\n        to right,\n        var(--caps-spec-tick) 0 1px,\n        transparent 1px 8px\n      )\n      0 100% / 100% 7px no-repeat,\n    var(--color-base-100)"
           },
           ".caps-spec-ruler-label": {
             "paddingInline": "var(--spacing-md)",
@@ -3149,7 +3172,7 @@
           ".caps-spec-frame-window": {
             "padding": "var(--spacing-sm)",
             "border": "var(--border) solid var(--color-base-content)",
-            "background": "repeating-linear-gradient(\n        45deg,\n        var(--color-base-content) 0 1px,\n        transparent 1px 5px\n      ),\n      var(--color-base-100)"
+            "background": "repeating-linear-gradient(\n      45deg,\n      var(--color-base-content) 0 1px,\n      transparent 1px 5px\n    ),\n    var(--color-base-100)"
           },
           ".caps-spec-frame-window > *": {
             "display": "block",
@@ -3218,7 +3241,7 @@
             "alignContent": "start",
             "gap": "var(--spacing-sm)",
             "padding": "var(--spacing-xl)",
-            "boxShadow": "inset calc(var(--border) * -1) 0 0 var(--stipe-hairline),\n      inset 0 calc(var(--border) * -1) 0 var(--stipe-hairline)"
+            "boxShadow": "inset calc(var(--border) * -1) 0 0 var(--stipe-hairline),\n    inset 0 calc(var(--border) * -1) 0 var(--stipe-hairline)"
           },
           ".caps-spec-step-number": {
             "justifySelf": "start",
@@ -3403,10 +3426,10 @@
             "flexDirection": "column",
             "border": "calc(var(--border) * 2) solid var(--color-base-content)",
             "background": "var(--color-base-100)",
-            "boxShadow": "var(\n      --caps-pricing-shadow,\n      calc(var(--caps-pricing-card-offset) * 1.5)\n        calc(var(--caps-pricing-card-offset) * 1.5) 0\n        color-mix(in oklab, var(--color-base-content) 30%, transparent)\n    )"
+            "boxShadow": "var(\n    --caps-pricing-shadow,\n    calc(var(--caps-pricing-card-offset) * 1.5)\n      calc(var(--caps-pricing-card-offset) * 1.5) 0\n      color-mix(in oklab, var(--color-base-content) 30%, transparent)\n  )"
           },
           ".caps-pricing-card-banded[data-featured=\"true\"]": {
-            "boxShadow": "var(\n      --caps-pricing-shadow-featured,\n      calc(var(--caps-pricing-card-offset) * 2)\n        calc(var(--caps-pricing-card-offset) * 2) 0 var(--color-base-content)\n    )"
+            "boxShadow": "var(\n    --caps-pricing-shadow-featured,\n    calc(var(--caps-pricing-card-offset) * 2)\n      calc(var(--caps-pricing-card-offset) * 2) 0 var(--color-base-content)\n  )"
           },
           ".caps-pricing-card-band": {
             "display": "flex",
@@ -3529,7 +3552,7 @@
             "overflowX": "auto",
             "margin": "0",
             "color": "var(--color-base-content)",
-            "border": "var(--border) solid\n      color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))",
+            "border": "var(--border) solid\n    color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))",
             "borderRadius": "var(--radius-box)",
             "background": "var(--color-base-100)",
             "containerType": "inline-size"
@@ -3737,8 +3760,8 @@
           ".caps-upload-row": {
             "borderRadius": "var(--radius-field)",
             "background": "var(--color-base-200)",
-            "border": "var(--border) solid\n      color-mix(\n        in oklch,\n        var(--color-base-content) calc(18% + (1 - var(--depth)) * 82%),\n        var(--color-base-200)\n      )",
-            "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 calc(var(--depth) * 1px) 0\n        color-mix(in oklch, white calc(var(--depth) * 45%), transparent),\n      inset 0 calc(var(--depth) * -2px) 0\n        color-mix(\n          in oklch,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        ),\n      0 calc(var(--depth) * 2px) 0\n        color-mix(\n          in oklch,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        )\n    )"
+            "border": "var(--border) solid\n    color-mix(\n      in oklch,\n      var(--color-base-content) calc(18% + (1 - var(--depth)) * 82%),\n      var(--color-base-200)\n    )",
+            "boxShadow": "var(\n    --stipe-shadow-raised,\n    inset 0 calc(var(--depth) * 1px) 0\n      color-mix(in oklch, white calc(var(--depth) * 45%), transparent),\n    inset 0 calc(var(--depth) * -2px) 0\n      color-mix(\n        in oklch,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        transparent\n      ),\n    0 calc(var(--depth) * 2px) 0\n      color-mix(\n        in oklch,\n        var(--color-base-content) calc(var(--depth) * 16%),\n        transparent\n      )\n  )"
           },
           ".caps-upload-details": {
             "display": "flex",
@@ -3747,7 +3770,7 @@
             "paddingTop": "var(--spacing-xs)"
           },
           ".caps-upload-status": {
-            "color": "color-mix(\n      in oklch,\n      var(--color-base-content) 75%,\n      var(--color-base-200)\n    )",
+            "color": "color-mix(\n    in oklch,\n    var(--color-base-content) 75%,\n    var(--color-base-200)\n  )",
             "fontSize": "0.75rem",
             "lineHeight": 1.25
           },
@@ -3919,7 +3942,7 @@
             "display": "inline-flex",
             "gap": "var(--spacing-2xs)",
             "borderBottom": "var(--card-rule-width) solid transparent",
-            "transition": "color var(--stipe-motion-slow) var(--stipe-motion-ease),\n      border-color var(--stipe-motion-slow) var(--stipe-motion-ease)"
+            "transition": "color var(--stipe-motion-slow) var(--stipe-motion-ease),\n    border-color var(--stipe-motion-slow) var(--stipe-motion-ease)"
           },
           ".caps-stage-plate-key > li[data-pending]": {
             "fontStyle": "italic",
@@ -3950,7 +3973,7 @@
             "marginInline": "var(--caps-keycap-legend-margin, 0)",
             "fontSize": "var(--caps-keycap-legend-font-size, inherit)",
             "placeItems": "center",
-            "border": "var(--card-rule-width) solid\n      var(\n        --caps-keycap-legend-edge,\n        color-mix(in oklab, var(--card-rule) 22%, transparent)\n      )",
+            "border": "var(--card-rule-width) solid\n    var(\n      --caps-keycap-legend-edge,\n      color-mix(in oklab, var(--card-rule) 22%, transparent)\n    )",
             "borderRadius": "var(--radius-selector)",
             "paddingInline": "var(--spacing-sm)",
             "background": "color-mix(in oklab, var(--card-ink) 5%, var(--card-paper))",
@@ -4095,7 +4118,7 @@
               "columnGap": "0"
             },
             ".caps-spread[data-layout=\"columns\"] > :nth-child(odd)": {
-              "borderInlineEnd": "var(--card-rule-width) solid\n        var(--newsprint-column-rule)",
+              "borderInlineEnd": "var(--card-rule-width) solid var(--newsprint-column-rule)",
               "paddingInlineEnd": "var(--spacing-2xl)"
             },
             ".caps-spread[data-layout=\"columns\"] > :nth-child(even)": {
@@ -4175,7 +4198,7 @@
             ".caps-spread[data-layout=\"lead\"] .caps-note-teaser-body": {
               "fontSize": "1.125rem"
             },
-            ".caps-spread[data-layout=\"lead\"]\n      .caps-note-teaser-body\n      > .caps-compact-plate": {
+            ".caps-spread[data-layout=\"lead\"]\n    .caps-note-teaser-body\n    > .caps-compact-plate": {
               "width": "34%"
             }
           },
@@ -4210,7 +4233,7 @@
             "width": "100%",
             "height": "100%",
             "transformStyle": "preserve-3d",
-            "transition": "transform calc(var(--stipe-motion-slow) * 2)\n      cubic-bezier(0.3, 0.7, 0.2, 1)"
+            "transition": "transform calc(var(--stipe-motion-slow) * 2)\n    cubic-bezier(0.3, 0.7, 0.2, 1)"
           },
           ".caps-cigarette-card[data-flipped=\"true\"] .caps-cigarette-card-inner": {
             "transform": "rotateY(180deg)"
@@ -4221,11 +4244,11 @@
             "display": "flex",
             "flexDirection": "column",
             "padding": "4.5cqi",
-            "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-accent) 55%, var(--card-frame))",
+            "border": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-accent) 55%, var(--card-frame))",
             "borderRadius": "2.2cqi",
             "background": "var(--card-texture), var(--card-frame)",
             "backfaceVisibility": "hidden",
-            "boxShadow": "0 0.4cqi 0.8cqi var(--card-shadow),\n      0 3cqi 6cqi -2.5cqi var(--card-shadow)"
+            "boxShadow": "0 0.4cqi 0.8cqi var(--card-shadow),\n    0 3cqi 6cqi -2.5cqi var(--card-shadow)"
           },
           ".caps-cigarette-card-head": {
             "display": "flex",
@@ -4239,7 +4262,7 @@
           ".caps-cigarette-card-title": {
             "fontFamily": "var(--font-display)",
             "fontSize": "9cqi",
-            "fontVariationSettings": "\"SOFT\" 60,\n      \"WONK\" 1",
+            "fontVariationSettings": "\"SOFT\" 60,\n    \"WONK\" 1",
             "fontWeight": "var(--caps-heading-weight, 640)",
             "lineHeight": "var(--caps-heading-line-height, 1.05)",
             "letterSpacing": "var(--caps-heading-tracking, -0.01em)"
@@ -4284,10 +4307,10 @@
             "marginTop": "1.5cqi",
             "overflow": "hidden",
             "padding": "4cqi 4cqi 11cqi",
-            "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
+            "border": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
             "borderRadius": "0.8cqi",
             "background": "var(--card-texture), var(--card-window)",
-            "boxShadow": "inset 0 0.6cqi 1.8cqi -0.4cqi var(--card-shadow),\n      inset 0 0 0 0.6cqi color-mix(in srgb, var(--card-window) 70%, transparent)"
+            "boxShadow": "inset 0 0.6cqi 1.8cqi -0.4cqi var(--card-shadow),\n    inset 0 0 0 0.6cqi color-mix(in srgb, var(--card-window) 70%, transparent)"
           },
           ".caps-cigarette-card-window img,.caps-cigarette-card-window svg": {
             "width": "100%",
@@ -4387,7 +4410,7 @@
             "gap": "2cqi",
             "marginTop": "auto",
             "paddingTop": "2cqi",
-            "borderTop": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-accent) 45%, transparent)",
+            "borderTop": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-accent) 45%, transparent)",
             "color": "color-mix(in srgb, var(--card-frame-ink) 70%, transparent)",
             "fontSize": "max(0.5rem, 3.2cqi)",
             "fontVariant": "small-caps",
@@ -4415,7 +4438,7 @@
             "marginBlock": "1.5cqi 2.4cqi",
             "overflow": "hidden",
             "padding": "3.2cqi 3.6cqi",
-            "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
+            "border": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
             "borderRadius": "0.8cqi",
             "background": "var(--card-texture), var(--card-window)",
             "color": "var(--card-window-ink)",
@@ -4442,7 +4465,7 @@
             "display": "flex",
             "alignItems": "baseline",
             "paddingBlock": "1.1cqi",
-            "borderBottom": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 35%, transparent)"
+            "borderBottom": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-rule) 35%, transparent)"
           },
           ".caps-cigarette-card-stat-label": {
             "fontVariant": "small-caps",
@@ -4452,7 +4475,7 @@
             "flex": 1,
             "minWidth": "1.5em",
             "marginInline": "var(--spacing-xs)",
-            "borderBottom": "var(--card-rule-width) dotted\n      color-mix(in srgb, var(--card-rule) 60%, transparent)"
+            "borderBottom": "var(--card-rule-width) dotted\n    color-mix(in srgb, var(--card-rule) 60%, transparent)"
           },
           ".caps-cigarette-card-stat-value": {
             "display": "flex",
@@ -4505,7 +4528,7 @@
             "gap": "0.8cqi",
             "maxHeight": "15cqi",
             "overflow": "hidden",
-            "borderTop": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 35%, transparent)",
+            "borderTop": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-rule) 35%, transparent)",
             "paddingTop": "1.8cqi",
             "color": "var(--marginalia-ink, var(--card-ink))",
             "fontSize": "max(0.5rem, 3.3cqi)",
@@ -4517,7 +4540,7 @@
             "background": "var(--card-texture), var(--card-window)",
             "color": "var(--card-window-ink)"
           },
-          ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-window": {
+          ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-window": {
             "position": "absolute",
             "inset": "0",
             "margin": "0",
@@ -4527,38 +4550,38 @@
             "background": "none",
             "boxShadow": "none"
           },
-          ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-window\n    img": {
+          ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-window\n  img": {
             "width": "125%",
             "maxWidth": "none",
             "height": "100%",
             "maxHeight": "none",
             "objectFit": "cover"
           },
-          ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-head,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-plate,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-flavor,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+          ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-head,.caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-plate,.caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-flavor,.caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-collector": {
             "position": "relative",
             "zIndex": 1
           },
-          ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-head": {
+          ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-head": {
             "margin": "-3cqi -3cqi 0",
             "padding": "3cqi 16cqi 3cqi 4cqi",
-            "background": "linear-gradient(\n      var(--card-window) 55%,\n      color-mix(in srgb, var(--card-window) 0%, transparent)\n    )"
+            "background": "linear-gradient(\n    var(--card-window) 55%,\n    color-mix(in srgb, var(--card-window) 0%, transparent)\n  )"
           },
-          ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-type,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+          ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-type,.caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-collector": {
             "color": "color-mix(in srgb, var(--card-window-ink) 72%, transparent)"
           },
-          ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-plate": {
+          ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-plate": {
             "margin": "auto 0 0",
             "color": "var(--card-frame-ink)"
           },
-          ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-flavor": {
+          ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-flavor": {
             "margin": "2cqi 0 0",
             "padding": "2.4cqi 3cqi",
-            "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 40%, transparent)",
+            "border": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-rule) 40%, transparent)",
             "borderRadius": "0.8cqi",
             "background": "color-mix(in srgb, var(--card-window) 88%, transparent)",
             "color": "var(--card-window-ink)"
           },
-          ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+          ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-collector": {
             "marginTop": "2.4cqi"
           },
           "@media (prefers-reduced-motion: reduce)": {
@@ -4631,7 +4654,7 @@
             "fontFamily": "var(--font-mono)",
             "fontSize": "0.75rem"
           },
-          ".caps-prose-dropcap > p:first-of-type::first-letter,.caps-spread[data-layout=\"lead\"]\n    .caps-note-teaser-body\n    > p:first-of-type::first-letter": {
+          ".caps-prose-dropcap > p:first-of-type::first-letter,.caps-spread[data-layout=\"lead\"]\n  .caps-note-teaser-body\n  > p:first-of-type::first-letter": {
             "cssFloat": "left",
             "margin": "var(--spacing-2xs) var(--spacing-xs) 0 0",
             "color": "var(--card-ink)",
@@ -4653,7 +4676,7 @@
             "borderColor": "transparent"
           },
           ".caps-pencil-reveal": {
-            "animation": "caps-pencil-reveal calc(var(--stipe-motion-slow) * 2) ease-out\n      both"
+            "animation": "caps-pencil-reveal calc(var(--stipe-motion-slow) * 2) ease-out both"
           },
           ".caps-meta": {
             "display": "flex",
@@ -4733,7 +4756,7 @@
             }
           },
           ".caps-toc": {
-            "borderBlock": "var(--border, 1px) solid\n      var(--newsprint-column-rule, var(--stipe-linework))",
+            "borderBlock": "var(--border, 1px) solid\n    var(--newsprint-column-rule, var(--stipe-linework))",
             "paddingBlock": "var(--spacing-md)"
           },
           ".caps-toc > .caps-meta": { "marginBottom": "var(--spacing-sm)" },
@@ -4757,7 +4780,7 @@
             "paddingInlineStart": "var(--spacing-2xl)"
           },
           ".caps-backlinks": {
-            "borderTop": "var(--border, 1px) solid\n      var(--newsprint-column-rule, var(--stipe-linework))",
+            "borderTop": "var(--border, 1px) solid\n    var(--newsprint-column-rule, var(--stipe-linework))",
             "paddingTop": "var(--spacing-lg)"
           },
           ".caps-backlinks > h2": { "margin": "0 0 var(--spacing-sm)" },
@@ -4963,7 +4986,7 @@
           },
           ".caps-print-prose h2:not(.caps-meta),.caps-print-prose h3:not(.caps-meta)": {
             "fontFamily": "var(--font-display)",
-            "fontVariationSettings": "\"SOFT\" 50,\n      \"WONK\" 1",
+            "fontVariationSettings": "\"SOFT\" 50,\n    \"WONK\" 1",
             "fontWeight": 750,
             "letterSpacing": "-0.015em"
           },
@@ -4984,7 +5007,7 @@
             "position": "absolute",
             "inset": "0",
             "zIndex": -1,
-            "backgroundColor": "color-mix(\n      in oklab,\n      var(--caps-tool-call-tone) 12%,\n      transparent\n    )",
+            "backgroundColor": "color-mix(\n    in oklab,\n    var(--caps-tool-call-tone) 12%,\n    transparent\n  )",
             "transform": "scaleX(0)",
             "transformOrigin": "left center",
             "transition": "background-color var(--stipe-motion-normal) ease"
@@ -5000,7 +5023,7 @@
           ".caps-tool-call .caps-presence": { "display": "inline-flex" }
         },
         "@layer utilities": {
-          ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+          ".caps-composer-toolbar\n  > .caps-status-tray\n  .caps-status-tray-row\n  :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
             "height": "var(--caps-status-tray-key-height)",
             "minHeight": "var(--caps-status-tray-key-height)"
           },
@@ -5125,14 +5148,14 @@
             "justifyContent": "var(--caps-keycap-justify, space-between)",
             "gap": "var(--spacing-sm)",
             "padding": "var(--caps-keycap-padding, var(--spacing-xs) var(--spacing-sm))",
-            "border": "var(\n      --caps-keycap-context-border,\n      var(--border) solid\n        var(\n          --caps-keycap-edge,\n          color-mix(in oklab, var(--stipe-linework) 80%, var(--caps-key-face))\n        )\n    )",
+            "border": "var(\n    --caps-keycap-context-border,\n    var(--border) solid\n      var(\n        --caps-keycap-edge,\n        color-mix(in oklab, var(--stipe-linework) 80%, var(--caps-key-face))\n      )\n  )",
             "fontSize": "var(--caps-keycap-font-size, inherit)",
-            "fontWeight": "var(\n      --caps-keycap-context-weight,\n      var(--caps-keycap-font-weight, inherit)\n    )",
+            "fontWeight": "var(\n    --caps-keycap-context-weight,\n    var(--caps-keycap-font-weight, inherit)\n  )",
             "borderRadius": "var(--radius-field)",
             "--caps-keycap-painted-face": "var(\n      --caps-keycap-context-face,\n      var(--caps-keycap-face, var(--color-base-200))\n    )",
             "backgroundColor": "var(--caps-keycap-painted-face)",
             "--caps-keycap-default-image": "linear-gradient(\n      to bottom,\n      color-mix(\n        in oklab,\n        var(--caps-keycap-painted-face),\n        white calc(var(--depth) * 3%)\n      ),\n      color-mix(\n        in oklab,\n        var(--caps-keycap-painted-face),\n        black calc(var(--depth) * 3%)\n      )\n    )",
-            "backgroundImage": "var(\n      --caps-keycap-context-image,\n      var(--caps-keycap-default-image)\n    )",
+            "backgroundImage": "var(\n    --caps-keycap-context-image,\n    var(--caps-keycap-default-image)\n  )",
             "boxShadow": "var(\n      --caps-keycap-context-shadow,\n      var(--caps-keycap-rest-shadow)\n    )",
             "color": "var(--caps-keycap-ink, var(--color-base-content))",
             "textAlign": "left",
@@ -5143,7 +5166,7 @@
           },
           ".caps-keycap-button:active": {
             "translate": "0 var(--caps-keycap-context-travel, var(--caps-key-lip))",
-            "boxShadow": "var(\n      --caps-keycap-active-shadow,\n      var(--caps-keycap-pressed-shadow)\n    )"
+            "boxShadow": "var(\n    --caps-keycap-active-shadow,\n    var(--caps-keycap-pressed-shadow)\n  )"
           },
           ".caps-keycap-button:focus-visible": {
             "outline": "2px solid var(--caps-keycap-focus-ink, var(--color-base-content))",
@@ -5181,7 +5204,7 @@
           ".caps-keycap-button:hover": {
             "--caps-keycap-painted-face": "var(\n      --caps-keycap-hover-face,\n      var(\n        --caps-keycap-context-face,\n        var(--caps-keycap-face, var(--color-base-200))\n      )\n    )",
             "backgroundColor": "var(--caps-keycap-painted-face)",
-            "backgroundImage": "var(\n      --caps-keycap-hover-image,\n      var(--caps-keycap-context-image, var(--caps-keycap-default-image))\n    )"
+            "backgroundImage": "var(\n    --caps-keycap-hover-image,\n    var(--caps-keycap-context-image, var(--caps-keycap-default-image))\n  )"
           },
           ".caps-keycap-button-label": {
             "minWidth": "var(--caps-keycap-label-min-width, auto)",
@@ -5203,18 +5226,18 @@
           },
           ".caps-keycap-button .caps-keycap": {
             "flex": "var(--caps-keycap-shortcut-flex, 0 1 auto)",
-            "minWidth": "var(\n      --caps-keycap-shortcut-size,\n      var(--caps-keycap-legend-min-size, 2rem)\n    )",
-            "minHeight": "var(\n      --caps-keycap-shortcut-size,\n      var(--caps-keycap-legend-min-size, 2rem)\n    )",
-            "border": "var(\n      --caps-keycap-shortcut-border,\n      var(--card-rule-width) solid\n        var(\n          --caps-keycap-legend-edge,\n          color-mix(in oklab, var(--card-rule) 22%, transparent)\n        )\n    )",
-            "background": "var(\n      --caps-keycap-shortcut-face,\n      color-mix(in oklab, var(--card-ink) 5%, var(--card-paper))\n    )",
+            "minWidth": "var(\n    --caps-keycap-shortcut-size,\n    var(--caps-keycap-legend-min-size, 2rem)\n  )",
+            "minHeight": "var(\n    --caps-keycap-shortcut-size,\n    var(--caps-keycap-legend-min-size, 2rem)\n  )",
+            "border": "var(\n    --caps-keycap-shortcut-border,\n    var(--card-rule-width) solid\n      var(\n        --caps-keycap-legend-edge,\n        color-mix(in oklab, var(--card-rule) 22%, transparent)\n      )\n  )",
+            "background": "var(\n    --caps-keycap-shortcut-face,\n    color-mix(in oklab, var(--card-ink) 5%, var(--card-paper))\n  )",
             "color": "var(--caps-keycap-shortcut-ink, var(--card-ink))",
             "boxShadow": "var(--caps-keycap-shortcut-shadow, none)",
-            "fontSize": "var(\n      --caps-keycap-shortcut-font-size,\n      var(--caps-keycap-legend-font-size, inherit)\n    )",
+            "fontSize": "var(\n    --caps-keycap-shortcut-font-size,\n    var(--caps-keycap-legend-font-size, inherit)\n  )",
             "fontWeight": "var(--caps-keycap-shortcut-weight, inherit)"
           },
           ".caps-keycap-button:is([aria-expanded=\"true\"], [aria-pressed=\"true\"])": {
-            "color": "var(\n      --caps-keycap-selected-ink,\n      var(--caps-keycap-ink, var(--color-base-content))\n    )",
-            "backgroundColor": "var(\n      --caps-keycap-selected-face,\n      var(--caps-keycap-painted-face)\n    )"
+            "color": "var(\n    --caps-keycap-selected-ink,\n    var(--caps-keycap-ink, var(--color-base-content))\n  )",
+            "backgroundColor": "var(\n    --caps-keycap-selected-face,\n    var(--caps-keycap-painted-face)\n  )"
           },
           ".caps-keycap-button:has(> .caps-keycap-led)": {
             "position": "relative"
@@ -5295,10 +5318,10 @@
         "@layer utilities": {
           ".caps-game-share": {
             "--caps-card-edge": "var(\n      --caps-card-interactive-edge,\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(13% + (1 - var(--depth)) * 87%),\n        transparent\n      )\n    )",
-            "backgroundColor": "var(\n      --caps-card-interactive-face,\n      var(--caps-card-resting-face)\n    )",
-            "backgroundImage": "var(\n      --caps-card-interactive-image,\n      var(--caps-card-image, none)\n    )",
-            "backgroundSize": "var(\n      --caps-card-interactive-image-size,\n      var(--caps-print-texture-size, auto)\n    )",
-            "boxShadow": "var(\n      --caps-card-interactive-shadow,\n      var(--caps-card-resting-shadow)\n    )",
+            "backgroundColor": "var(\n    --caps-card-interactive-face,\n    var(--caps-card-resting-face)\n  )",
+            "backgroundImage": "var(\n    --caps-card-interactive-image,\n    var(--caps-card-image, none)\n  )",
+            "backgroundSize": "var(\n    --caps-card-interactive-image-size,\n    var(--caps-print-texture-size, auto)\n  )",
+            "boxShadow": "var(\n    --caps-card-interactive-shadow,\n    var(--caps-card-resting-shadow)\n  )",
             "width": "min(32rem, calc(100% - var(--spacing-md) - var(--spacing-md)))",
             "minWidth": "0",
             "margin": "0 var(--spacing-md) var(--spacing-md)",
@@ -5401,7 +5424,7 @@
             "insetInline": "0",
             "bottom": "0",
             "height": "var(--stipe-motion-fuse, 1px)",
-            "background": "linear-gradient(\n      to right,\n      color-mix(in oklab, currentColor 55%, transparent),\n      currentColor\n    )",
+            "background": "linear-gradient(\n    to right,\n    color-mix(in oklab, currentColor 55%, transparent),\n    currentColor\n  )",
             "transformOrigin": "left center",
             "pointerEvents": "none"
           },
@@ -5491,12 +5514,12 @@
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
         "@layer utilities": {
-          ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+          ".caps-composer-toolbar\n  > .caps-status-tray\n  .caps-status-tray-row\n  :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
             "height": "var(--caps-status-tray-key-height)",
             "minHeight": "var(--caps-status-tray-key-height)"
           },
           "@media (max-width: 480px)": {
-            ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+            ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row:has(\n      > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n    )": {
               "flexDirection": "column",
               "alignItems": "stretch",
               "gap": "var(--spacing-xs)",
@@ -5509,7 +5532,7 @@
             "backgroundColor": "var(--color-base-100)",
             "color": "var(--color-base-content)",
             "fontWeight": 650,
-            "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.22)),\n      0 calc(var(--depth) * 1px) 0\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        )\n    )"
+            "boxShadow": "var(\n    --stipe-shadow-raised,\n    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.22)),\n    0 calc(var(--depth) * 1px) 0\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 16%),\n        transparent\n      )\n  )"
           },
           ".caps-select-shell": {
             "display": "inline-grid",
@@ -5613,7 +5636,7 @@
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
         "@layer utilities": {
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-checkbox": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-checkbox": {
             "width": "24px",
             "justifySelf": "start"
           }
@@ -5626,7 +5649,7 @@
             "height": "24px",
             "flex": "none",
             "verticalAlign": "middle",
-            "color": "var(\n      --caps-control-dim,\n      color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n    )",
+            "color": "var(\n    --caps-control-dim,\n    color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n  )",
             "borderRadius": "var(--radius-selector)",
             "transition": "color var(--stipe-motion-normal) ease",
             "--caps-checkbox-depth": "var(--depth)"
@@ -5670,12 +5693,12 @@
           ".caps-checkbox:has(input:disabled)": { "opacity": 0.4 },
           ".caps-checkbox-input:disabled": { "cursor": "not-allowed" },
           ".caps-checkbox[data-state=\"unchecked\"] .caps-checkbox-track": {
-            "stroke": "var(\n      --caps-control-dim,\n      color-mix(in oklab, var(--color-base-content) 70%, var(--color-base-200))\n    )"
+            "stroke": "var(\n    --caps-control-dim,\n    color-mix(in oklab, var(--color-base-content) 70%, var(--color-base-200))\n  )"
           },
           ".caps-checkbox:has(input[aria-invalid]:not([aria-invalid=\"false\"]))": {
             "color": "var(--color-error)"
           },
-          ".caps-checkbox:has(input[aria-invalid]:not([aria-invalid=\"false\"]))\n    .caps-checkbox-track": {
+          ".caps-checkbox:has(input[aria-invalid]:not([aria-invalid=\"false\"]))\n  .caps-checkbox-track": {
             "stroke": "var(--color-error)"
           },
           ".caps-checkbox[data-appearance=\"compact\"],.caps-checkbox[data-appearance=\"compact\"]:has(input:disabled)": {
@@ -5771,7 +5794,7 @@
             "height": "24px",
             "flex": "none",
             "verticalAlign": "middle",
-            "color": "color-mix(\n      in oklab,\n      var(--color-base-content) 35%,\n      var(--color-base-100)\n    )",
+            "color": "color-mix(\n    in oklab,\n    var(--color-base-content) 35%,\n    var(--color-base-100)\n  )",
             "borderRadius": "var(--radius-full)",
             "transition": "color var(--stipe-motion-normal) ease"
           },
@@ -5882,7 +5905,7 @@
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
         "@layer utilities": {
-          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-switch": {
+          ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-switch": {
             "width": "40px",
             "justifySelf": "start"
           }
@@ -5900,7 +5923,7 @@
             "height": "24px",
             "flex": "none",
             "verticalAlign": "middle",
-            "color": "var(\n      --caps-control-dim,\n      color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n    )",
+            "color": "var(\n    --caps-control-dim,\n    color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n  )",
             "borderRadius": "var(--radius-full)",
             "transition": "color var(--stipe-motion-normal) ease",
             "--caps-switch-depth": "var(--depth)"
@@ -6028,7 +6051,7 @@
           },
           ".caps-card-grid": {
             "display": "grid",
-            "gridTemplateColumns": "repeat(\n      auto-fit,\n      minmax(min(100%, var(--caps-card-grid-min-column, 20rem)), 1fr)\n    )",
+            "gridTemplateColumns": "repeat(\n    auto-fit,\n    minmax(min(100%, var(--caps-card-grid-min-column, 20rem)), 1fr)\n  )",
             "alignItems": "stretch",
             "gap": "var(--spacing-md)"
           },
@@ -6036,23 +6059,23 @@
           ".caps-card-outline": {
             "--caps-card-edge": "var(\n      --caps-card-outline-edge,\n      color-mix(in oklab, var(--color-base-content) 22%, transparent)\n    )",
             "borderWidth": "var(--caps-card-outline-width, var(--border))",
-            "backgroundColor": "var(\n      --caps-card-outline-face,\n      var(--caps-card-resting-face)\n    )",
-            "backgroundImage": "var(\n      --caps-card-outline-image,\n      var(--caps-card-image, none)\n    )",
+            "backgroundColor": "var(\n    --caps-card-outline-face,\n    var(--caps-card-resting-face)\n  )",
+            "backgroundImage": "var(\n    --caps-card-outline-image,\n    var(--caps-card-image, none)\n  )",
             "boxShadow": "var(\n      --caps-card-outline-shadow,\n      var(--caps-card-resting-shadow)\n    )"
           },
           ".caps-card-fit": { "alignSelf": "start" },
           ".caps-card-interactive": {
-            "transition": "border-color var(--stipe-motion-fast) ease,\n      transform var(--stipe-motion-normal) var(--stipe-motion-ease),\n      box-shadow var(--stipe-motion-normal) ease",
+            "transition": "border-color var(--stipe-motion-fast) ease,\n    transform var(--stipe-motion-normal) var(--stipe-motion-ease),\n    box-shadow var(--stipe-motion-normal) ease",
             "--caps-card-edge": "var(\n      --caps-card-interactive-edge,\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(13% + (1 - var(--depth)) * 87%),\n        transparent\n      )\n    )",
-            "backgroundColor": "var(\n      --caps-card-interactive-face,\n      var(--caps-card-resting-face)\n    )",
-            "backgroundImage": "var(\n      --caps-card-interactive-image,\n      var(--caps-card-image, none)\n    )",
-            "backgroundSize": "var(\n      --caps-card-interactive-image-size,\n      var(--caps-print-texture-size, auto)\n    )",
-            "boxShadow": "var(\n      --caps-card-interactive-shadow,\n      var(--caps-card-resting-shadow)\n    )"
+            "backgroundColor": "var(\n    --caps-card-interactive-face,\n    var(--caps-card-resting-face)\n  )",
+            "backgroundImage": "var(\n    --caps-card-interactive-image,\n    var(--caps-card-image, none)\n  )",
+            "backgroundSize": "var(\n    --caps-card-interactive-image-size,\n    var(--caps-print-texture-size, auto)\n  )",
+            "boxShadow": "var(\n    --caps-card-interactive-shadow,\n    var(--caps-card-resting-shadow)\n  )"
           },
           ".caps-card-interactive:is(:hover, :has(:focus-visible))": {
             "borderColor": "var(--color-primary)",
             "transform": "translateY(-1px)",
-            "boxShadow": "var(--stipe-shadow-raised),\n      0 8px 20px -12px var(--color-primary)"
+            "boxShadow": "var(--stipe-shadow-raised),\n    0 8px 20px -12px var(--color-primary)"
           },
           ".caps-card-interactive:active": {
             "transform": "scale(var(--stipe-press-scale))",
@@ -6078,7 +6101,7 @@
             }
           },
           "@keyframes caps-card-wiggle": {
-            "0%,\n    100%": { "rotate": "0deg" },
+            "0%,\n  100%": { "rotate": "0deg" },
             "30%": { "rotate": "-0.7deg" },
             "70%": { "rotate": "0.7deg" }
           },
@@ -6343,7 +6366,7 @@
             "height": "auto",
             "minHeight": "1.5rem",
             "color": "var(--color-base-content)",
-            "backgroundColor": "color-mix(\n      in oklab,\n      var(--badge-color, var(--color-base-content)) 12%,\n      var(--color-base-100)\n    )",
+            "backgroundColor": "color-mix(\n    in oklab,\n    var(--badge-color, var(--color-base-content)) 12%,\n    var(--color-base-100)\n  )",
             "backgroundImage": "none",
             "borderColor": "transparent",
             "boxShadow": "none",
@@ -6355,9 +6378,9 @@
             "lineHeight": 1.4,
             "paddingBlock": "var(--spacing-xs)",
             "flexShrink": 0,
-            "backgroundImage": "linear-gradient(\n      to bottom,\n      rgb(255 255 255 / calc(var(--depth) * 0.14)),\n      transparent 65%\n    )",
+            "backgroundImage": "linear-gradient(\n    to bottom,\n    rgb(255 255 255 / calc(var(--depth) * 0.14)),\n    transparent 65%\n  )",
             "borderColor": "color-mix(in oklab, var(--badge-color) 82%, black)",
-            "boxShadow": "var(\n      --stipe-shadow-edge,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.35)),\n      inset 0 -1px 0 rgb(0 0 0 / calc(var(--depth) * 0.1))\n    )"
+            "boxShadow": "var(\n    --stipe-shadow-edge,\n    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.35)),\n    inset 0 -1px 0 rgb(0 0 0 / calc(var(--depth) * 0.1))\n  )"
           }
         },
         "@property --caps-game-host-ink": {
@@ -6398,8 +6421,8 @@
           ".caps-alert": {
             "borderRadius": "var(--radius-field)",
             "background": "var(--color-base-200)",
-            "border": "var(--border) solid\n      color-mix(\n        in oklch,\n        var(--color-base-content) calc(18% + (1 - var(--depth)) * 82%),\n        var(--color-base-200)\n      )",
-            "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 calc(var(--depth) * 1px) 0\n        color-mix(in oklch, white calc(var(--depth) * 45%), transparent),\n      inset 0 calc(var(--depth) * -2px) 0\n        color-mix(\n          in oklch,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        ),\n      0 calc(var(--depth) * 2px) 0\n        color-mix(\n          in oklch,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        )\n    )",
+            "border": "var(--border) solid\n    color-mix(\n      in oklch,\n      var(--color-base-content) calc(18% + (1 - var(--depth)) * 82%),\n      var(--color-base-200)\n    )",
+            "boxShadow": "var(\n    --stipe-shadow-raised,\n    inset 0 calc(var(--depth) * 1px) 0\n      color-mix(in oklch, white calc(var(--depth) * 45%), transparent),\n    inset 0 calc(var(--depth) * -2px) 0\n      color-mix(\n        in oklch,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        transparent\n      ),\n    0 calc(var(--depth) * 2px) 0\n      color-mix(\n        in oklch,\n        var(--color-base-content) calc(var(--depth) * 16%),\n        transparent\n      )\n  )",
             "display": "flex",
             "alignItems": "flex-start",
             "gap": "var(--spacing-sm)",
@@ -6491,7 +6514,7 @@
             "--caps-keycap-width": "auto",
             "--caps-keycap-height": "var(--caps-status-tray-key-height)"
           },
-          ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+          ".caps-composer-toolbar\n  > .caps-status-tray\n  .caps-status-tray-row\n  :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
             "height": "var(--caps-status-tray-key-height)",
             "minHeight": "var(--caps-status-tray-key-height)"
           },
@@ -6552,10 +6575,10 @@
             "width": "fit-content",
             "alignItems": "center",
             "gap": "var(--spacing-2xs)",
-            "padding": "var(--spacing-2xs) var(--spacing-sm) var(--spacing-2xs)\n      var(--spacing-xs)",
+            "padding": "var(--spacing-2xs) var(--spacing-sm) var(--spacing-2xs)\n    var(--spacing-xs)",
             "borderRadius": "var(--radius-full)",
-            "background": "color-mix(\n      in oklab,\n      var(--caps-status-chip-tone) 14%,\n      transparent\n    )",
-            "color": "color-mix(\n      in oklab,\n      var(--caps-status-chip-tone) 70%,\n      var(--color-base-content)\n    )",
+            "background": "color-mix(\n    in oklab,\n    var(--caps-status-chip-tone) 14%,\n    transparent\n  )",
+            "color": "color-mix(\n    in oklab,\n    var(--caps-status-chip-tone) 70%,\n    var(--color-base-content)\n  )",
             "fontWeight": 650
           },
           ".caps-status-chip[data-tone=\"primary\"]": {
@@ -6979,7 +7002,7 @@
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
         "@layer utilities": {
-          ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+          ".caps-fieldset[data-layout=\"columns\"]:has(\n    .caps-icon-choice:not([data-swatch])\n  )": {
             "--caps-fieldset-legend-line": "3.25rem"
           }
         },
@@ -7011,7 +7034,7 @@
             "height": "2rem",
             "filter": "var(--caps-control-icon-off, grayscale(1) contrast(0))",
             "opacity": 0.55,
-            "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n      opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
+            "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n    opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
           },
           ".caps-icon-choice-art > svg": { "width": "100%", "height": "100%" },
           ".caps-icon-choice-caption": {
@@ -7036,20 +7059,20 @@
             "background": "var(--caps-control-selected-face, var(--color-base-200))",
             "color": "var(--caps-control-ink, var(--color-base-content))"
           },
-          ".caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+          ".caps-icon-lamp[data-on=\"true\"] > .caps-icon-choice-mark .caps-icon-choice-art,.caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n  + .caps-icon-choice-mark\n  .caps-icon-choice-art": {
             "filter": "none",
             "opacity": 1
           },
-          ".caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+          ".caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n  > .caps-icon-choice-mark\n  .caps-icon-choice-lamp": {
             "opacity": 1
           },
-          ".caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+          ".caps-icon-choice-input:indeterminate\n  + .caps-icon-choice-mark\n  .caps-icon-choice-lamp": {
             "width": "7px",
             "height": "2px",
             "borderRadius": "0",
             "opacity": 1
           },
-          ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+          ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n  + .caps-icon-choice-mark\n  .caps-icon-choice-art": {
             "opacity": 0.8
           },
           ".caps-icon-choice[data-appearance=\"compact\"]": {
@@ -7086,7 +7109,7 @@
             "width": "1.5rem",
             "height": "1.5rem"
           },
-          ".caps-icon-choice[data-appearance=\"compact\"]\n    .caps-icon-choice-input:not(:checked, :indeterminate)\n    + .caps-icon-choice-mark\n    svg": {
+          ".caps-icon-choice[data-appearance=\"compact\"]\n  .caps-icon-choice-input:not(:checked, :indeterminate)\n  + .caps-icon-choice-mark\n  svg": {
             "filter": "grayscale(1)",
             "opacity": 0.55
           },
@@ -7166,7 +7189,7 @@
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
         "@layer utilities": {
-          ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+          ".caps-fieldset[data-layout=\"columns\"]:has(\n    .caps-icon-choice:not([data-swatch])\n  )": {
             "--caps-fieldset-legend-line": "3.25rem"
           }
         },
@@ -7198,7 +7221,7 @@
             "height": "2rem",
             "filter": "var(--caps-control-icon-off, grayscale(1) contrast(0))",
             "opacity": 0.55,
-            "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n      opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
+            "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n    opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
           },
           ".caps-icon-choice-art > svg": { "width": "100%", "height": "100%" },
           ".caps-icon-choice-caption": {
@@ -7223,11 +7246,11 @@
             "background": "var(--caps-control-selected-face, var(--color-base-200))",
             "color": "var(--caps-control-ink, var(--color-base-content))"
           },
-          ".caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+          ".caps-icon-lamp[data-on=\"true\"] > .caps-icon-choice-mark .caps-icon-choice-art,.caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n  + .caps-icon-choice-mark\n  .caps-icon-choice-art": {
             "filter": "none",
             "opacity": 1
           },
-          ".caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+          ".caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n  > .caps-icon-choice-mark\n  .caps-icon-choice-lamp": {
             "opacity": 1
           },
           ".caps-icon-lamp": {
@@ -7243,13 +7266,13 @@
             "padding": "0",
             "listStyle": "none"
           },
-          ".caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+          ".caps-icon-choice-input:indeterminate\n  + .caps-icon-choice-mark\n  .caps-icon-choice-lamp": {
             "width": "7px",
             "height": "2px",
             "borderRadius": "0",
             "opacity": 1
           },
-          ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+          ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n  + .caps-icon-choice-mark\n  .caps-icon-choice-art": {
             "opacity": 0.8
           },
           ".caps-icon-choice[data-appearance=\"compact\"]": {
@@ -7286,7 +7309,7 @@
             "width": "1.5rem",
             "height": "1.5rem"
           },
-          ".caps-icon-choice[data-appearance=\"compact\"]\n    .caps-icon-choice-input:not(:checked, :indeterminate)\n    + .caps-icon-choice-mark\n    svg": {
+          ".caps-icon-choice[data-appearance=\"compact\"]\n  .caps-icon-choice-input:not(:checked, :indeterminate)\n  + .caps-icon-choice-mark\n  svg": {
             "filter": "grayscale(1)",
             "opacity": 0.55
           },
@@ -7366,7 +7389,7 @@
         "@import \"@fungi.computer/stipe/styles.css\"": {},
         "@plugin \"@tailwindcss/typography\"": {},
         "@layer utilities": {
-          ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+          ".caps-fieldset[data-layout=\"columns\"]:has(\n    .caps-icon-choice:not([data-swatch])\n  )": {
             "--caps-fieldset-legend-line": "3.25rem"
           }
         },
@@ -7398,7 +7421,7 @@
             "height": "2rem",
             "filter": "var(--caps-control-icon-off, grayscale(1) contrast(0))",
             "opacity": 0.55,
-            "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n      opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
+            "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n    opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
           },
           ".caps-icon-choice-art > svg": { "width": "100%", "height": "100%" },
           ".caps-icon-choice-caption": {
@@ -7423,20 +7446,20 @@
             "background": "var(--caps-control-selected-face, var(--color-base-200))",
             "color": "var(--caps-control-ink, var(--color-base-content))"
           },
-          ".caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+          ".caps-icon-lamp[data-on=\"true\"] > .caps-icon-choice-mark .caps-icon-choice-art,.caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n  + .caps-icon-choice-mark\n  .caps-icon-choice-art": {
             "filter": "none",
             "opacity": 1
           },
-          ".caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+          ".caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n  > .caps-icon-choice-mark\n  .caps-icon-choice-lamp": {
             "opacity": 1
           },
-          ".caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+          ".caps-icon-choice-input:indeterminate\n  + .caps-icon-choice-mark\n  .caps-icon-choice-lamp": {
             "width": "7px",
             "height": "2px",
             "borderRadius": "0",
             "opacity": 1
           },
-          ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+          ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n  + .caps-icon-choice-mark\n  .caps-icon-choice-art": {
             "opacity": 0.8
           },
           ".caps-icon-choice[data-appearance=\"compact\"]": {
@@ -7473,7 +7496,7 @@
             "width": "1.5rem",
             "height": "1.5rem"
           },
-          ".caps-icon-choice[data-appearance=\"compact\"]\n    .caps-icon-choice-input:not(:checked, :indeterminate)\n    + .caps-icon-choice-mark\n    svg": {
+          ".caps-icon-choice[data-appearance=\"compact\"]\n  .caps-icon-choice-input:not(:checked, :indeterminate)\n  + .caps-icon-choice-mark\n  svg": {
             "filter": "grayscale(1)",
             "opacity": 0.55
           },
@@ -7590,6 +7613,7 @@
             "opacity": 0.4
           },
           ".caps-generation-failure": {
+            "position": "relative",
             "display": "flex",
             "flexDirection": "column",
             "alignItems": "center",
@@ -7768,7 +7792,7 @@
             "height": "1.1em",
             "borderRadius": "var(--radius-selector)",
             "background": "currentColor",
-            "animation": "caps-code-caret calc(var(--stipe-motion-slow) * 4)\n      steps(2, jump-none) infinite"
+            "animation": "caps-code-caret calc(var(--stipe-motion-slow) * 4)\n    steps(2, jump-none) infinite"
           },
           "@media (forced-colors: active)": {
             ".caps-code-slot[data-active=\"true\"]": {

@@ -1,0 +1,24 @@
+@layer caps-glide {
+  .caps-glide-host {
+    isolation: isolate;
+  }
+  .caps-glide-host.caps-glide-anchor {
+    position: relative;
+  }
+  .caps-glide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .caps-glide[hidden] {
+    display: none;
+  }
+  .caps-glide-host [data-glide-stand-in] {
+    transition: none !important;
+  }
+  .caps-glide-host [data-glide-stand-in=""] {
+    background-color: transparent !important;
+  }
+}

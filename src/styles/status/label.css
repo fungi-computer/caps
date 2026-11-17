@@ -1,0 +1,6 @@
+.caps-status-compact {
+  flex: 0 0 auto;
+  gap: var(--spacing-xs);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}

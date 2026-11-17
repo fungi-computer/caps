@@ -1,0 +1,9 @@
+@layer base {
+  html {
+    background-color: var(--color-base-100);
+    scrollbar-color: var(--stipe-linework) var(--color-base-100);
+  }
+  html::-webkit-scrollbar-track {
+    background-color: var(--color-base-100);
+  }
+}

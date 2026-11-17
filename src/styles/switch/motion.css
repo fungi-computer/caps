@@ -1,0 +1,78 @@
+.caps-switch[data-checked="true"],
+.caps-radio[data-checked="true"],
+.caps-checkbox:not([data-state="unchecked"]) {
+  color: var(--color-success);
+}
+
+.caps-switch-input,
+.caps-switch-visual,
+.caps-radio-input,
+.caps-radio-visual,
+.caps-checkbox-input,
+.caps-checkbox-visual {
+  grid-area: control;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.caps-switch-input,
+.caps-radio-input,
+.caps-checkbox-input {
+  opacity: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.caps-switch-visual,
+.caps-radio-visual,
+.caps-checkbox-visual {
+  overflow: visible;
+  pointer-events: none;
+}
+
+.caps-switch-track,
+.caps-radio-track,
+.caps-checkbox-track {
+  fill: var(--color-base-200);
+  stroke: var(--color-base-300);
+  stroke-width: 1;
+}
+
+.caps-switch:has(input:focus-visible),
+.caps-radio:has(input:focus-visible),
+.caps-checkbox:has(input:focus-visible) {
+  outline: 2px solid var(--caps-focus-ring);
+  outline-offset: 3px;
+}
+
+.caps-switch:has(input:disabled),
+.caps-radio:has(input:disabled),
+.caps-checkbox:has(input:disabled) {
+  opacity: 0.4;
+}
+.caps-switch-input:disabled,
+.caps-radio-input:disabled,
+.caps-checkbox-input:disabled {
+  cursor: not-allowed;
+}
+
+/* On a screen the switch is printed on the glass: flat bead, calm ink. */
+.caps-switch {
+  --caps-switch-depth: var(--depth);
+  color: var(
+    --caps-control-dim,
+    color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))
+  );
+}
+.caps-switch[data-checked="true"] {
+  color: var(--caps-control-ink, var(--color-success));
+}
+.caps-switch-visual {
+  --depth: var(--caps-control-depth, var(--caps-switch-depth));
+}
+.caps-switch-track {
+  fill: var(--caps-control-face, var(--color-base-200));
+  stroke: var(--caps-control-dim, var(--color-base-300));
+}

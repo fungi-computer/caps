@@ -1,0 +1,54 @@
+.caps-diff {
+  margin: 0;
+  overflow-x: auto;
+  border: 1px solid var(--color-base-300);
+  border-radius: var(--radius-field);
+  background: var(--stipe-surface, var(--color-base-100));
+  padding-block: var(--spacing-xs);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  line-height: 1.5;
+}
+
+.caps-diff-line {
+  display: block;
+  padding-inline: var(--spacing-sm);
+  white-space: pre;
+  color: var(--color-base-content);
+}
+
+.caps-diff-marker {
+  display: inline-block;
+  width: 1.5em;
+  user-select: none;
+  color: var(--stipe-fg-muted);
+}
+
+.caps-diff-line[data-kind="add"] {
+  background: color-mix(in oklab, var(--color-success) 16%, transparent);
+}
+
+.caps-diff-line[data-kind="add"] .caps-diff-marker {
+  color: var(--color-success);
+}
+
+.caps-diff-line[data-kind="remove"] {
+  background: color-mix(in oklab, var(--color-error) 14%, transparent);
+}
+
+.caps-diff-line[data-kind="remove"] .caps-diff-marker {
+  color: var(--color-error);
+}
+
+.caps-diff-line[data-kind="hunk"],
+.caps-diff-line[data-kind="more"] {
+  color: var(--stipe-fg-muted);
+}
+
+.caps-diff-line[data-kind="file"] {
+  font-weight: 600;
+}
+
+.caps-diff-line[data-kind="file"] .caps-diff-marker {
+  display: none;
+}

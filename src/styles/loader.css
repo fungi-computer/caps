@@ -1,0 +1,33 @@
+.caps-loader {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+.caps-loader > svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.caps-loader-sm {
+  width: 2rem;
+  height: 1rem;
+}
+.caps-loader-md {
+  width: 4rem;
+  height: 2rem;
+}
+.caps-loader-lg {
+  width: 7rem;
+  height: 3.5rem;
+}
+/* The formation keeps its proportions, centred in whatever box it fills. */
+.caps-loader-fill {
+  width: 100%;
+  height: 100%;
+}
+.caps-loader:not([data-variant="line"], .caps-loader-fill) {
+  height: auto;
+  aspect-ratio: 1;
+}

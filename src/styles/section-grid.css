@@ -1,0 +1,19 @@
+/* SectionGrid layout="desktop": a composed home screen. It fills and
+     scrolls its region, centers a bounded two-column measure, and lets
+     span="full" sections run across both columns. */
+.caps-section-grid[data-layout="desktop"] {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: minmax(0, 40rem) minmax(0, 30rem);
+  align-content: safe center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-inline: 0;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.caps-section-grid > [data-span="full"] {
+  grid-column: 1 / -1;
+}

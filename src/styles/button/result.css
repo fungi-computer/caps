@@ -1,0 +1,28 @@
+/* A result beat: label and result faces share one cell, so the button
+     keeps the wider of the two and never shifts. */
+.caps-button-faces {
+  display: inline-grid;
+  place-items: center;
+  gap: inherit;
+}
+.caps-button-face {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  gap: inherit;
+  white-space: nowrap;
+}
+.caps-button-faces[data-showing="result"] > [data-face="label"],
+.caps-button-faces[data-showing="label"] > [data-face="result"] {
+  opacity: 0;
+}
+.caps-button-check {
+  width: 1.1em;
+  height: 1.1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+}

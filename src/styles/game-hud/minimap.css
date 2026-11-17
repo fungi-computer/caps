@@ -1,0 +1,136 @@
+/* The minimap: a squared chart with inked marks. */
+.caps-minimap {
+  display: grid;
+  width: min(15rem, 42vw);
+  margin: 0;
+  gap: var(--spacing-2xs);
+  padding: var(--spacing-xs);
+}
+.caps-minimap-field {
+  position: relative;
+  aspect-ratio: var(--caps-minimap-columns) / var(--caps-minimap-rows);
+  background:
+    linear-gradient(
+        to right,
+        color-mix(in oklab, var(--color-primary) 18%, transparent) 1px,
+        transparent 1px
+      )
+      0 0 / calc(100% / var(--caps-minimap-columns)) 100%,
+    linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-primary) 18%, transparent) 1px,
+        transparent 1px
+      )
+      0 0 / 100% calc(100% / var(--caps-minimap-rows)),
+    color-mix(in oklab, var(--color-primary) 12%, var(--card-paper));
+  border: 1px solid color-mix(in oklab, var(--card-ink) 60%, transparent);
+  border-radius: var(--radius-selector);
+}
+.caps-minimap-mark {
+  --caps-minimap-tone: var(--card-ink);
+
+  position: absolute;
+  top: calc(var(--caps-minimap-y) * 100%);
+  left: calc(var(--caps-minimap-x) * 100%);
+  width: 0.625rem;
+  height: 0.625rem;
+  background: var(--caps-minimap-tone);
+  border: 2px solid var(--card-ink);
+  translate: -50% -50%;
+}
+.caps-minimap-mark[data-kind="self"] {
+  --caps-minimap-tone: var(--color-primary);
+
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 2px var(--card-paper);
+}
+.caps-minimap-mark[data-kind="ally"] {
+  --caps-minimap-tone: var(--color-success);
+
+  border-radius: var(--radius-full);
+}
+.caps-minimap-mark[data-kind="foe"] {
+  --caps-minimap-tone: var(--color-error);
+
+  rotate: 45deg;
+}
+.caps-minimap-mark[data-kind="place"] {
+  --caps-minimap-tone: var(--card-paper);
+}
+.caps-minimap-mark[data-kind="goal"] {
+  --caps-minimap-tone: var(--color-accent);
+}
+.caps-minimap-name {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  padding: 0 var(--spacing-2xs);
+  color: var(--color-base-content);
+  background: color-mix(in oklab, var(--card-paper) 85%, transparent);
+  font-size: 0.625rem;
+  font-weight: 800;
+  line-height: 1.3;
+  white-space: nowrap;
+  translate: -50% 2px;
+}
+/* Names are laid out clear of each other (layoutMinimapLabels): below,
+     above, right or left of the dot. One with no room hides until the mark
+     is hovered or focused. */
+.caps-minimap-mark[data-label="above"] .caps-minimap-name {
+  top: auto;
+  bottom: 100%;
+  translate: -50% -2px;
+}
+.caps-minimap-mark[data-label="right"] .caps-minimap-name {
+  top: 50%;
+  left: 100%;
+  translate: 2px -50%;
+}
+.caps-minimap-mark[data-label="left"] .caps-minimap-name {
+  top: 50%;
+  right: 100%;
+  left: auto;
+  translate: -2px -50%;
+}
+.caps-minimap-mark[data-label="below-right"] .caps-minimap-name {
+  left: 50%;
+  translate: 0 2px;
+}
+.caps-minimap-mark[data-label="below-left"] .caps-minimap-name {
+  right: 50%;
+  left: auto;
+  translate: 0 2px;
+}
+.caps-minimap-mark[data-label="above-right"] .caps-minimap-name {
+  top: auto;
+  bottom: 100%;
+  left: 50%;
+  translate: 0 -2px;
+}
+.caps-minimap-mark[data-label="above-left"] .caps-minimap-name {
+  top: auto;
+  right: 50%;
+  bottom: 100%;
+  left: auto;
+  translate: 0 -2px;
+}
+.caps-minimap-mark[data-label="hidden"] .caps-minimap-name {
+  display: none;
+}
+.caps-minimap-mark[data-label="hidden"]:is(:hover, :focus-visible) {
+  z-index: 1;
+}
+.caps-minimap-mark[data-label="hidden"]:is(:hover, :focus-visible)
+  .caps-minimap-name {
+  display: block;
+}
+.caps-minimap-caption {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+}

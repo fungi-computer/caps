@@ -1,0 +1,12 @@
+.caps-toaster {
+  max-width: calc(100% - var(--spacing-xl));
+}
+/* Sonner's own sheet sets a system font stack; toasts speak in the theme's. */
+.caps-toaster[data-sonner-toaster] {
+  font-family: inherit;
+}
+.caps-toaster [data-sonner-toast][data-styled="false"] {
+  width: 100%;
+  user-select: none;
+  touch-action: none;
+}

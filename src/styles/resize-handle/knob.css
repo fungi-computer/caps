@@ -1,0 +1,69 @@
+.caps-resize-handle {
+  display: grid;
+  width: 44px;
+  height: 24px;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-field);
+  background: transparent;
+  cursor: row-resize;
+  touch-action: none;
+  user-select: none;
+}
+.caps-resize-handle[aria-orientation="vertical"] {
+  width: 24px;
+  height: 44px;
+  cursor: col-resize;
+}
+.caps-resize-handle:focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+.caps-resize-handle:active {
+  cursor: grabbing;
+}
+.caps-resize-grip {
+  position: relative;
+  width: 28px;
+  height: 6px;
+  border-radius: var(--radius-button);
+  background-color: var(--color-base-200);
+  /* prettier-ignore */
+  box-shadow:
+    0 0 0 1px
+        color-mix(in oklab, var(--stipe-linework) 80%, var(--color-base-200)),
+      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),
+      0 1px 0
+        color-mix(
+          in oklab,
+          var(--color-base-200),
+          var(--color-base-content) 14%
+        );
+}
+.caps-resize-handle:hover .caps-resize-grip {
+  background-color: var(--color-base-300);
+}
+.caps-resize-grip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2px;
+  height: 2px;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-selector);
+  background: color-mix(in oklab, var(--color-base-content) 45%, transparent);
+  box-shadow:
+    -5px 0 0 color-mix(in oklab, var(--color-base-content) 45%, transparent),
+    5px 0 0 color-mix(in oklab, var(--color-base-content) 45%, transparent);
+}
+.caps-resize-handle[aria-orientation="vertical"] .caps-resize-grip {
+  width: 6px;
+  height: 28px;
+}
+.caps-resize-handle[aria-orientation="vertical"] .caps-resize-grip::after {
+  box-shadow:
+    0 -5px 0 color-mix(in oklab, var(--color-base-content) 45%, transparent),
+    0 5px 0 color-mix(in oklab, var(--color-base-content) 45%, transparent);
+}

@@ -1,0 +1,256 @@
+/* The Vishnu game shell's own arrangement of the pieces above:
+     organisms (@fungi.computer/vishnu-ui) compose them; this is their
+     layout, so the shell ships no stylesheet of its own. */
+.caps-game-shell {
+  --caps-game-host-ink: var(--card-ink, black);
+  --caps-game-scrim-ink: var(--caps-game-host-ink);
+}
+.caps-game-shell,
+.caps-game-windows {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.caps-game-shell .caps-game-scrim {
+  z-index: 2;
+}
+.caps-game-region[data-region="top-left"] > .caps-hud-plate {
+  width: min(19rem, 100%);
+}
+.caps-hud-plate-group {
+  display: grid;
+  gap: var(--spacing-sm);
+  padding-top: var(--spacing-xs);
+}
+.caps-hud-plate {
+  --caps-disclosure-font-size: 0.75rem;
+}
+.caps-hud-card-kicker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+.caps-hud-card-kicker-row .caps-icon-button {
+  margin: calc(var(--spacing-xs) * -1) calc(var(--spacing-xs) * -1) 0 0;
+}
+.caps-minimap-seat {
+  width: 16rem;
+  max-width: 100%;
+  padding: var(--spacing-xs);
+}
+.caps-hud-card .caps-game-window-content,
+.caps-minimap-seat .caps-game-window-content {
+  padding: 0;
+}
+.caps-minimap-seat > .caps-minimap {
+  width: 100%;
+  box-shadow: none;
+  border-width: 1px;
+}
+.caps-minimap-seat {
+  --caps-game-window-content-font-size: 0.75rem;
+}
+.caps-minimap-seat .caps-game-window-content {
+  padding: var(--spacing-xs);
+}
+.caps-game-screen-stack {
+  display: grid;
+  justify-items: center;
+  gap: var(--spacing-lg);
+  width: 100%;
+}
+.caps-game-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs) var(--spacing-md);
+  margin: 0;
+  padding: var(--spacing-sm) 0 0;
+  list-style: none;
+  font-size: 0.8125rem;
+}
+.caps-game-keys > li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* Keycap action bar: a rail of keys, and a group's menu beside it. */
+.caps-action-bar {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+.caps-action-bar > .caps-hud-plate {
+  width: 13.5rem;
+}
+.caps-action-menu {
+  width: 13rem;
+  animation: caps-game-scrim-in var(--stipe-motion-fast) steps(2, end);
+}
+.caps-action-hint {
+  margin: 0;
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  font-size: 0.75rem;
+}
+.caps-action-dock {
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+.caps-action-dock .caps-hud-keys {
+  flex-wrap: nowrap;
+}
+
+/* Inventory grid with its item line. */
+.caps-inventory {
+  display: grid;
+  gap: var(--spacing-xs);
+}
+.caps-item-glyph {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+/* A game's own item icon: pixel art, fitted whole inside its cell. */
+.caps-item-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.caps-item-detail {
+  min-height: 1.3em;
+  margin: 0;
+  color: color-mix(in oklab, var(--color-base-content) 78%, transparent);
+  font-size: 0.75rem;
+}
+.caps-offer-list {
+  display: grid;
+}
+
+.caps-game-toast {
+  --caps-toast-tone: var(--color-info);
+
+  width: min(24rem, calc(100vw - var(--spacing-2xl)));
+  border-left-width: 6px;
+  border-left-color: var(--caps-toast-tone);
+  font-weight: 700;
+}
+.caps-game-toast[data-tone="success"] {
+  --caps-toast-tone: var(--color-success);
+}
+.caps-game-toast[data-tone="warning"] {
+  --caps-toast-tone: var(--color-warning);
+}
+.caps-game-toast[data-tone="error"] {
+  --caps-toast-tone: var(--color-error);
+}
+
+.caps-game-compact-disclosure > .caps-disclosure-trigger {
+  min-height: 44px;
+}
+
+.caps-game-compact-details {
+  max-height: 40dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* The shell chooses compact from its game container, including narrow
+     windows on a wide display. Status, action keys and panels share that choice. */
+.caps-game-layer[data-compact] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto auto;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  padding-bottom: calc(var(--spacing-4xl) + var(--spacing-lg));
+}
+.caps-game-layer[data-compact] .caps-game-region[data-region="top-left"] {
+  grid-row: 1;
+  grid-column: 1;
+  align-items: stretch;
+}
+.caps-game-layer[data-compact] .caps-game-region[data-region="right"] {
+  grid-row: 2;
+  grid-column: 1;
+  align-items: stretch;
+}
+.caps-game-layer[data-compact] .caps-game-region[data-region="top-right"] {
+  grid-row: 3;
+  grid-column: 1;
+  align-items: stretch;
+}
+.caps-game-layer[data-compact] .caps-game-region[data-region="bottom-left"] {
+  grid-row: 5;
+  grid-column: 1;
+}
+.caps-game-layer[data-compact] .caps-game-region[data-region="bottom"] {
+  grid-row: 6;
+  grid-column: 1;
+}
+.caps-game-layer[data-compact]
+  .caps-game-region[data-region="top-left"]
+  > .caps-hud-plate,
+.caps-game-layer[data-compact] .caps-game-region[data-region="top-right"] > * {
+  width: 100%;
+}
+.caps-game-layer[data-compact]
+  .caps-game-region[data-region="top-left"]
+  .caps-hud-plate {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+.caps-game-layer[data-compact] .caps-hud-bar {
+  min-width: 0;
+}
+.caps-game-layer[data-compact] .caps-hud-clock-mark {
+  width: 1.625rem;
+  height: 1.625rem;
+}
+.caps-game-layer[data-compact] .caps-action-bar {
+  flex-direction: column-reverse;
+  align-items: stretch;
+}
+.caps-game-layer[data-compact] .caps-action-bar > .caps-hud-plate {
+  width: 100%;
+}
+.caps-game-layer[data-compact] .caps-action-bar .caps-hud-keys {
+  justify-content: flex-start;
+  max-height: 16rem;
+  overflow-y: auto;
+}
+.caps-game-layer[data-compact]
+  .caps-game-region[data-region="top-right"]
+  > .caps-minimap-seat {
+  width: min(15rem, 64%);
+  align-self: flex-end;
+}
+.caps-game-layer[data-compact] .caps-hud-card[data-kind="goal"] {
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+@media (max-width: 560px) {
+  .caps-hud-card[data-kind="goal"] {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  .caps-hud-card[data-kind="letter"],
+  .caps-hud-card[data-kind="screen"],
+  .caps-hud-card[data-kind="end"] {
+    padding: var(--spacing-lg);
+    font-size: 0.875rem;
+  }
+}
+
+@keyframes caps-game-scrim-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes caps-hud-low {
+  50% {
+    opacity: 0.55;
+  }
+}

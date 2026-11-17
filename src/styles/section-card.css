@@ -1,0 +1,11 @@
+.caps-section-card-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+.caps-section-card-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}

@@ -1,0 +1,46 @@
+.caps-popover-anchor {
+  position: relative;
+}
+.caps-popover {
+  position: absolute;
+  inset-inline: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: min(18rem, 50vh);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--spacing-xs);
+  border: var(--border) solid
+    color-mix(in oklab, var(--color-base-content) 16%, transparent);
+  border-radius: var(--radius-box);
+  background: var(--color-base-200);
+  box-shadow: var(
+    --stipe-shadow-raised,
+    0 calc(var(--depth) * 8px) calc(var(--depth) * 20px)
+      color-mix(
+        in oklab,
+        var(--color-base-content) calc(var(--depth) * 12%),
+        transparent
+      )
+  );
+}
+.caps-popover[data-side="top"] {
+  bottom: calc(100% + var(--spacing-xs));
+}
+.caps-popover[data-side="bottom"] {
+  top: calc(100% + var(--spacing-xs));
+}
+.caps-popover-option {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  min-height: 2rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-field);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.caps-popover-option[data-active="true"],
+.caps-popover-option:hover {
+  background: var(--color-base-300);
+}

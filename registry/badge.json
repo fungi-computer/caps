@@ -33,7 +33,7 @@
         "height": "auto",
         "minHeight": "1.5rem",
         "color": "var(--color-base-content)",
-        "backgroundColor": "color-mix(\n      in oklab,\n      var(--badge-color, var(--color-base-content)) 12%,\n      var(--color-base-100)\n    )",
+        "backgroundColor": "color-mix(\n    in oklab,\n    var(--badge-color, var(--color-base-content)) 12%,\n    var(--color-base-100)\n  )",
         "backgroundImage": "none",
         "borderColor": "transparent",
         "boxShadow": "none",
@@ -45,9 +45,9 @@
         "lineHeight": 1.4,
         "paddingBlock": "var(--spacing-xs)",
         "flexShrink": 0,
-        "backgroundImage": "linear-gradient(\n      to bottom,\n      rgb(255 255 255 / calc(var(--depth) * 0.14)),\n      transparent 65%\n    )",
+        "backgroundImage": "linear-gradient(\n    to bottom,\n    rgb(255 255 255 / calc(var(--depth) * 0.14)),\n    transparent 65%\n  )",
         "borderColor": "color-mix(in oklab, var(--badge-color) 82%, black)",
-        "boxShadow": "var(\n      --stipe-shadow-edge,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.35)),\n      inset 0 -1px 0 rgb(0 0 0 / calc(var(--depth) * 0.1))\n    )"
+        "boxShadow": "var(\n    --stipe-shadow-edge,\n    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.35)),\n    inset 0 -1px 0 rgb(0 0 0 / calc(var(--depth) * 0.1))\n  )"
       }
     },
     "@property --caps-game-host-ink": {

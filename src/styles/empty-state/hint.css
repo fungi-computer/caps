@@ -1,0 +1,51 @@
+/* EmptyState variant="hint": a quiet centered footnote under content. */
+.empty-state-hint {
+  display: grid;
+  justify-items: center;
+  gap: var(--spacing-2xs);
+  padding: var(--spacing-lg) var(--spacing-md);
+  color: var(--stipe-fg-muted);
+  text-align: center;
+}
+.empty-state-hint .empty-state-title {
+  margin: 0;
+  color: var(--color-base-content);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.empty-state-hint p {
+  max-width: 30rem;
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+.empty-state-hint .empty-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin-block-start: var(--spacing-xs);
+}
+
+/* EmptyState quiet: a nested absence inside a card or section, so its
+     title never outranks the heading it sits under. */
+.empty-state-quiet {
+  display: grid;
+  gap: var(--spacing-2xs);
+}
+.empty-state-quiet .empty-state-title {
+  margin: 0;
+  color: var(--color-base-content);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.empty-state-quiet > p {
+  margin: 0;
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+.empty-state-quiet .empty-state-actions {
+  margin-block-start: var(--spacing-sm);
+}

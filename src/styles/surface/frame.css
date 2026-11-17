@@ -1,0 +1,148 @@
+/* Shared frame; the theme supplies material, Caps owns geometry. */
+.caps-surface {
+  /* prettier-ignore */
+  --caps-surface-rim: max(
+      var(--border),
+      calc(var(--stipe-surface-frame-width, 6px) * var(--depth))
+    );
+  --caps-surface-inset: 2px;
+  /* prettier-ignore */
+  --caps-surface-molding-base: color-mix(
+      in oklab,
+      var(--color-base-100),
+      var(--color-base-200) calc(var(--depth) * 100%)
+    );
+  /* prettier-ignore */
+  --caps-surface-molding: linear-gradient(
+      155deg,
+      color-mix(
+        in oklab,
+        var(--caps-surface-molding-base),
+        var(--color-base-content)
+          calc(var(--depth) * var(--stipe-surface-molding-contrast))
+      ),
+      var(--caps-surface-molding-base) 50%,
+      color-mix(
+        in oklab,
+        var(--caps-surface-molding-base),
+        white calc(var(--depth) * var(--stipe-surface-molding-contrast))
+      )
+    );
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  min-height: 0;
+  border: var(--caps-surface-rim) solid
+    color-mix(
+      in oklab,
+      transparent,
+      var(--stipe-linework) calc((1 - var(--depth)) * 100%)
+    );
+  border-radius: calc(var(--radius-field) + var(--caps-surface-rim));
+  background:
+    linear-gradient(
+        var(--caps-surface-face, var(--color-base-100)),
+        var(--caps-surface-face, var(--color-base-100))
+      )
+      padding-box,
+    var(--stipe-surface-frame-image, var(--caps-surface-molding)) border-box;
+  /* prettier-ignore */
+  box-shadow: var(
+      --stipe-shadow-raised,
+      0 0 0 calc(var(--depth) * 1px)
+        color-mix(
+          in oklab,
+          var(--color-base-content) 12%,
+          var(--color-base-200)
+        ),
+      0 0 0 calc(var(--depth) * 3px) var(--color-base-200),
+      0 calc(var(--depth) * 1px) 0 calc(var(--depth) * 4px)
+        oklch(100% 0 0 / calc(var(--depth) * 0.3))
+    );
+}
+.caps-surface[data-surface-size="sm"] {
+  /* prettier-ignore */
+  --caps-surface-rim: max(
+      var(--border),
+      calc(var(--stipe-surface-frame-width, 2px) * var(--depth))
+    );
+}
+.caps-surface[data-surface-size="lg"] {
+  /* prettier-ignore */
+  --caps-surface-rim: max(
+      var(--border),
+      calc(var(--stipe-surface-frame-width, 10px) * var(--depth))
+    );
+}
+.caps-surface[data-surface-depth="deep"] {
+  --caps-surface-inset: 5px;
+}
+.caps-surface[data-surface-placement="embedded"],
+.caps-surface .caps-surface {
+  --caps-surface-rim: var(--border);
+  box-shadow: none;
+}
+.caps-surface[data-surface-placement="embedded"]::before,
+.caps-surface[data-surface-placement="embedded"]::after,
+.caps-surface .caps-surface::before,
+.caps-surface .caps-surface::after {
+  box-shadow: none;
+}
+.caps-surface::before,
+.caps-surface::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+}
+.caps-surface::before {
+  inset: calc(-1 * var(--caps-surface-rim));
+  border-radius: inherit;
+  box-shadow: var(
+    --stipe-shadow-edge,
+    inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.48)),
+    inset 1px 0 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),
+    inset 0 -1px 0
+      color-mix(in oklab, var(--color-base-content) 10%, transparent)
+  );
+}
+.caps-surface::after {
+  inset: 0;
+  border-radius: var(--radius-field);
+  box-shadow: var(
+    --stipe-shadow-inset,
+    inset 0 1px 0
+      color-mix(in oklab, var(--color-base-content) 18%, transparent),
+    inset 0 var(--caps-surface-inset) var(--caps-surface-inset)
+      oklch(0% 0 0 / calc(var(--depth) * 0.16)),
+    inset 0 0 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.08)),
+    inset -1px -1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.16))
+  );
+}
+/* Display construction uses the ordinary theme surfaces, never a second palette. */
+.caps-display-gasket {
+  --caps-display-gasket-padding: calc(var(--spacing-sm) * var(--depth));
+  padding: var(--caps-display-gasket-padding);
+  border-radius: var(--radius-field);
+  background: var(--stipe-display-gasket-face, var(--color-base-300));
+  box-shadow: var(
+    --stipe-shadow-inset,
+    inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)
+      color-mix(
+        in oklab,
+        var(--color-base-content) calc(var(--depth) * 20%),
+        transparent
+      )
+  );
+}
+.caps-display-gasket[data-display-density="compact"] {
+  --caps-display-gasket-padding: var(--spacing-2xs);
+}
+.caps-surface[data-surface-size="sm"][data-surface-placement="embedded"]
+  > .caps-display-gasket[data-display-density="compact"] {
+  --caps-display-gasket-padding: 1px;
+}
+.caps-display-gasket > .caps-screen {
+  border-radius: var(--radius-field);
+  border: var(--border) solid var(--stipe-linework);
+}

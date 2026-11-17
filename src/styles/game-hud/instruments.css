@@ -1,0 +1,209 @@
+/* A segmented bar: ten notches, a hard ink edge, the tone as the fill. */
+.caps-hud-bar {
+  --caps-hud-tone: var(--color-info);
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--spacing-2xs) var(--spacing-xs);
+  min-width: 11rem;
+}
+.caps-hud-bar:not(:has(.caps-hud-glyph)) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.caps-hud-bar[data-tone="success"] {
+  --caps-hud-tone: var(--color-success);
+}
+.caps-hud-bar[data-tone="warning"] {
+  --caps-hud-tone: var(--color-warning);
+}
+.caps-hud-bar[data-tone="error"] {
+  --caps-hud-tone: var(--color-error);
+}
+.caps-hud-bar-label {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.caps-hud-bar-value {
+  display: inline-flex;
+  justify-self: end;
+  color: color-mix(in oklab, var(--color-base-content) 78%, transparent);
+}
+.caps-hud-bar-track {
+  position: relative;
+  grid-column: 1 / -1;
+  height: 0.75rem;
+  overflow: hidden;
+  background: color-mix(
+    in oklab,
+    var(--color-base-content) 12%,
+    var(--card-paper)
+  );
+  border: 2px solid var(--card-ink);
+  border-radius: var(--radius-selector);
+}
+.caps-hud-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--caps-hud-share) * 100%);
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, white 28%, transparent) 0 2px,
+      transparent 2px
+    ),
+    var(--caps-hud-tone);
+  transition: width var(--stipe-motion-normal) steps(4, end);
+}
+.caps-hud-bar-track::after {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to right,
+    transparent 0 calc(10% - 1px),
+    color-mix(in oklab, var(--card-ink) 45%, transparent) calc(10% - 1px) 10%
+  );
+  content: "";
+}
+.caps-hud-bar[data-low] .caps-hud-bar-fill {
+  animation: caps-hud-low calc(var(--stipe-motion-slow) * 4) steps(2, jump-none)
+    infinite;
+}
+
+.caps-hud-chip {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  background: color-mix(
+    in oklab,
+    var(--color-base-content) 7%,
+    var(--card-paper)
+  );
+  border: 1px solid color-mix(in oklab, var(--card-ink) 55%, transparent);
+  border-radius: var(--radius-selector);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.caps-hud-chip-label {
+  color: color-mix(in oklab, var(--color-base-content) 78%, transparent);
+  font-weight: 700;
+}
+.caps-hud-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.caps-hud-clock {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.caps-hud-clock-mark {
+  display: grid;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  color: var(--color-primary-content);
+  background: var(--color-primary);
+  border: 2px solid var(--card-ink);
+  border-radius: var(--radius-full);
+}
+.caps-hud-clock-mark > svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  stroke-width: 2.25;
+}
+.caps-hud-clock[data-phase="dusk"] .caps-hud-clock-mark {
+  color: var(--color-warning-content);
+  background: var(--color-warning);
+}
+.caps-hud-clock[data-phase="night"] .caps-hud-clock-mark {
+  color: var(--color-neutral-content);
+  background: var(--color-neutral);
+}
+.caps-hud-clock-text {
+  display: grid;
+  min-width: 0;
+  line-height: 1.2;
+}
+.caps-hud-clock-label {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.caps-hud-clock-detail {
+  color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.caps-hud-clock-time {
+  margin-left: auto;
+  padding-left: var(--spacing-sm);
+}
+
+.caps-portraits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs) var(--spacing-md);
+}
+.caps-portrait {
+  --caps-portrait-mood: var(--color-success);
+
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.caps-portrait[data-mood="warn"] {
+  --caps-portrait-mood: var(--color-warning);
+}
+.caps-portrait[data-mood="bad"] {
+  --caps-portrait-mood: var(--color-error);
+}
+.caps-monogram.caps-portrait-avatar {
+  position: relative;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 2px solid var(--card-ink);
+  border-radius: var(--radius-selector);
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 800;
+}
+.caps-monogram.caps-portrait-avatar::after {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  width: 0.625rem;
+  height: 0.625rem;
+  background: var(--caps-portrait-mood);
+  border: 2px solid var(--card-ink);
+  border-radius: var(--radius-full);
+  content: "";
+}
+.caps-portrait-text {
+  display: grid;
+  min-width: 0;
+  line-height: 1.2;
+}
+.caps-portrait-name {
+  font-weight: 800;
+}
+.caps-portrait-status {
+  max-width: 9rem;
+  overflow: hidden;
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

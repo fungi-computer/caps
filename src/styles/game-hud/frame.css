@@ -1,0 +1,137 @@
+/* Game HUD (components/game-hud.tsx): paper plates in the sprites' ink line,
+     laid over a full-bleed world. Colour comes from the enclosing game theme
+     (a palette, paper material and optional tint); nothing here is
+     per game. */
+
+.caps-game-layer,
+.caps-hud-plate,
+.caps-hud-card,
+.caps-minimap,
+.caps-item-grid,
+.caps-item-slot {
+  --caps-pixel-outline-ink: var(--card-ink);
+}
+
+/* Desktop: status down the left, goals and map at top right with the
+     action rail under them, a bottom row for docks. The world shows
+     through every gap and takes every pointer outside the pieces. */
+.caps-game-layer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+  color: var(--color-base-content);
+  font-family: var(--font-sans);
+  pointer-events: none;
+}
+.caps-game-region {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+.caps-game-region > * {
+  pointer-events: auto;
+}
+.caps-game-region[data-region="top-left"] {
+  grid-row: 1 / 3;
+  grid-column: 1;
+  align-self: start;
+  align-items: flex-start;
+}
+.caps-game-region[data-region="top-right"] {
+  grid-row: 1;
+  grid-column: 3;
+  align-items: flex-end;
+}
+.caps-game-region[data-region="right"] {
+  grid-row: 2;
+  grid-column: 3;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+.caps-game-region[data-region="bottom"] {
+  grid-row: 3;
+  grid-column: 2;
+  align-items: center;
+  justify-content: flex-end;
+}
+.caps-game-region[data-region="bottom-left"] {
+  grid-row: 3;
+  grid-column: 1;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+.caps-game-region[data-region="center"] {
+  grid-area: 1 / 1 / -1 / -1;
+  place-self: center;
+}
+
+.caps-game-scrim {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--spacing-lg);
+  overflow: auto;
+  background: color-mix(
+    in oklab,
+    var(--caps-game-scrim-ink, var(--card-ink, black)) 46%,
+    transparent
+  );
+  pointer-events: auto;
+  animation: caps-game-scrim-in var(--stipe-motion-normal) steps(3, end);
+}
+
+/* Paper and ink: the shared material of every plate and card. */
+.caps-hud-plate,
+.caps-hud-card,
+.caps-minimap {
+  color: var(--color-base-content);
+  background-color: var(--card-paper);
+  background-image: var(--card-texture, none);
+  border: var(--caps-hud-border-width, 2px) solid var(--card-ink);
+  border-radius: var(--radius-box);
+  box-shadow: var(--caps-hud-lift, 3px) var(--caps-hud-lift, 3px) 0
+    color-mix(in oklab, var(--card-ink) 88%, transparent);
+}
+.caps-hud-plate {
+  display: grid;
+  min-width: 0;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+.caps-hud-plate[data-density="roomy"] {
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+.caps-hud-plate > h3,
+.caps-hud-plate > p {
+  margin: 0;
+}
+.caps-hud-plate > h3 {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.caps-hud-glyph {
+  display: inline-grid;
+  flex: none;
+  width: 1.25rem;
+  place-items: center;
+  font-size: 0.875rem;
+  line-height: 1;
+}
+.caps-hud-text-value {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,6 @@
+@utility caps-stat-compact {
+  & > .stat {
+    padding-block: var(--spacing-xs);
+    padding-inline: var(--spacing-sm);
+  }
+}

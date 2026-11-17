@@ -1,0 +1,6 @@
+.caps-alert[data-tone="error"] h3 {
+  color: var(--color-error);
+}
+.caps-alert[data-tone="success"] h3 {
+  color: var(--color-success);
+}

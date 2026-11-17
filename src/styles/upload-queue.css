@@ -1,0 +1,28 @@
+.caps-upload-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding-top: var(--spacing-xs);
+}
+.caps-upload-status {
+  color: color-mix(
+    in oklch,
+    var(--color-base-content) 75%,
+    var(--color-base-200)
+  );
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+.caps-upload-status[role="alert"] {
+  color: var(--color-error);
+}
+.caps-upload-progress {
+  grid-column: 1 / -1;
+  height: var(--spacing-sm);
+}
+.caps-upload-actions {
+  min-width: 3.25rem;
+}
+.caps-upload-preview {
+  align-self: center;
+}

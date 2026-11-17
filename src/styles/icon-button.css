@@ -1,0 +1,5 @@
+@layer components {
+  .caps-icon-button {
+    position: relative;
+  }
+}

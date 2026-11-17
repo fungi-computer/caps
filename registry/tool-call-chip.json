@@ -101,7 +101,7 @@
         "position": "absolute",
         "inset": "0",
         "zIndex": -1,
-        "backgroundColor": "color-mix(\n      in oklab,\n      var(--caps-tool-call-tone) 12%,\n      transparent\n    )",
+        "backgroundColor": "color-mix(\n    in oklab,\n    var(--caps-tool-call-tone) 12%,\n    transparent\n  )",
         "transform": "scaleX(0)",
         "transformOrigin": "left center",
         "transition": "background-color var(--stipe-motion-normal) ease"

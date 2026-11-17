@@ -1,0 +1,170 @@
+/* EmptyState variant="panel": a solid card on the Caps card face, never
+     dashed or sunken: that reads as a place to drop files. Inside a Card it
+     gives up its own frame so there is one box, not two. */
+.empty-state-panel {
+  display: grid;
+  justify-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  border: var(--border) solid var(--caps-card-edge);
+  border-radius: var(--radius-box);
+  background: var(--caps-card-resting-face);
+  text-align: center;
+}
+.caps-card .empty-state-panel {
+  border: 0;
+  background: transparent;
+}
+.empty-state-panel > .empty-state-visual {
+  display: grid;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+  place-items: center;
+  margin-block-end: var(--spacing-xs);
+  color: var(--color-primary);
+}
+.empty-state-panel > .empty-state-visual > svg {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+.empty-state-panel .empty-state-title,
+.empty-state-bubble .empty-state-title {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.empty-state-panel p,
+.empty-state-bubble p {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.empty-state-panel .empty-state-actions,
+.empty-state-bubble .empty-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-block-start: var(--spacing-sm);
+}
+.empty-state-panel .empty-state-actions {
+  justify-content: center;
+}
+.empty-state-panel > .empty-state-visual {
+  min-height: 0;
+  margin-block-end: 0;
+}
+.empty-state-suggestions .caps-button {
+  min-height: 2rem;
+  height: 2rem;
+  font-size: var(--text-xs);
+}
+/* A chip that cannot be chosen is muted and flat: no plate, no rim. */
+.empty-state-suggestions
+  .caps-button:is(:disabled, [aria-disabled="true"]):not([aria-busy="true"]) {
+  opacity: 0.5;
+  outline: none;
+  box-shadow: none;
+}
+.empty-state-primary {
+  display: grid;
+  justify-items: start;
+  gap: var(--spacing-2xs);
+  margin-block-start: var(--spacing-sm);
+}
+.empty-state-panel .empty-state-primary {
+  justify-items: center;
+}
+.empty-state-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+.empty-state-reason {
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-sm);
+}
+.empty-state-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin: var(--spacing-sm) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.empty-state-panel .empty-state-suggestions {
+  justify-content: center;
+}
+
+/* EmptyState variant="speech": the visual (a mascot) says the copy from a
+     molded speech bubble whose tail points back at it. */
+.empty-state-speech {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--spacing-xl);
+}
+.empty-state-speech > .empty-state-visual {
+  display: grid;
+  width: 8.5rem;
+  height: 8.5rem;
+  place-items: center;
+}
+.empty-state-speech > .empty-state-visual > * {
+  width: 100%;
+  height: 100%;
+}
+.empty-state-bubble {
+  position: relative;
+  display: grid;
+  max-width: 42rem;
+  justify-self: start;
+  justify-items: start;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border: var(--border) solid
+    color-mix(
+      in oklab,
+      var(--color-base-content) calc(12% + (1 - var(--depth)) * 88%),
+      transparent
+    );
+  border-radius: calc(var(--radius-box) * 2);
+  background: var(--color-base-100);
+  box-shadow: var(
+    --stipe-shadow-raised,
+    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.5)),
+    0 calc(var(--depth) * 3px) 0
+      color-mix(
+        in oklab,
+        var(--color-base-content) calc(var(--depth) * 8%),
+        transparent
+      ),
+    0 18px 30px -20px rgb(0 0 0 / calc(var(--depth) * 0.35))
+  );
+}
+.empty-state-bubble::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: inherit;
+  border-block-start-color: transparent;
+  border-inline-end-color: transparent;
+  background: inherit;
+  content: "";
+  rotate: 45deg;
+  translate: -50% -50%;
+}
+.empty-state-bubble .empty-state-title {
+  font-size: var(--text-2xl);
+}
+.empty-state-bubble p {
+  font-size: var(--text-base);
+}

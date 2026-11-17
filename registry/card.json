@@ -43,7 +43,7 @@
       },
       ".caps-card-grid": {
         "display": "grid",
-        "gridTemplateColumns": "repeat(\n      auto-fit,\n      minmax(min(100%, var(--caps-card-grid-min-column, 20rem)), 1fr)\n    )",
+        "gridTemplateColumns": "repeat(\n    auto-fit,\n    minmax(min(100%, var(--caps-card-grid-min-column, 20rem)), 1fr)\n  )",
         "alignItems": "stretch",
         "gap": "var(--spacing-md)"
       },
@@ -51,23 +51,23 @@
       ".caps-card-outline": {
         "--caps-card-edge": "var(\n      --caps-card-outline-edge,\n      color-mix(in oklab, var(--color-base-content) 22%, transparent)\n    )",
         "borderWidth": "var(--caps-card-outline-width, var(--border))",
-        "backgroundColor": "var(\n      --caps-card-outline-face,\n      var(--caps-card-resting-face)\n    )",
-        "backgroundImage": "var(\n      --caps-card-outline-image,\n      var(--caps-card-image, none)\n    )",
+        "backgroundColor": "var(\n    --caps-card-outline-face,\n    var(--caps-card-resting-face)\n  )",
+        "backgroundImage": "var(\n    --caps-card-outline-image,\n    var(--caps-card-image, none)\n  )",
         "boxShadow": "var(\n      --caps-card-outline-shadow,\n      var(--caps-card-resting-shadow)\n    )"
       },
       ".caps-card-fit": { "alignSelf": "start" },
       ".caps-card-interactive": {
-        "transition": "border-color var(--stipe-motion-fast) ease,\n      transform var(--stipe-motion-normal) var(--stipe-motion-ease),\n      box-shadow var(--stipe-motion-normal) ease",
+        "transition": "border-color var(--stipe-motion-fast) ease,\n    transform var(--stipe-motion-normal) var(--stipe-motion-ease),\n    box-shadow var(--stipe-motion-normal) ease",
         "--caps-card-edge": "var(\n      --caps-card-interactive-edge,\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(13% + (1 - var(--depth)) * 87%),\n        transparent\n      )\n    )",
-        "backgroundColor": "var(\n      --caps-card-interactive-face,\n      var(--caps-card-resting-face)\n    )",
-        "backgroundImage": "var(\n      --caps-card-interactive-image,\n      var(--caps-card-image, none)\n    )",
-        "backgroundSize": "var(\n      --caps-card-interactive-image-size,\n      var(--caps-print-texture-size, auto)\n    )",
-        "boxShadow": "var(\n      --caps-card-interactive-shadow,\n      var(--caps-card-resting-shadow)\n    )"
+        "backgroundColor": "var(\n    --caps-card-interactive-face,\n    var(--caps-card-resting-face)\n  )",
+        "backgroundImage": "var(\n    --caps-card-interactive-image,\n    var(--caps-card-image, none)\n  )",
+        "backgroundSize": "var(\n    --caps-card-interactive-image-size,\n    var(--caps-print-texture-size, auto)\n  )",
+        "boxShadow": "var(\n    --caps-card-interactive-shadow,\n    var(--caps-card-resting-shadow)\n  )"
       },
       ".caps-card-interactive:is(:hover, :has(:focus-visible))": {
         "borderColor": "var(--color-primary)",
         "transform": "translateY(-1px)",
-        "boxShadow": "var(--stipe-shadow-raised),\n      0 8px 20px -12px var(--color-primary)"
+        "boxShadow": "var(--stipe-shadow-raised),\n    0 8px 20px -12px var(--color-primary)"
       },
       ".caps-card-interactive:active": {
         "transform": "scale(var(--stipe-press-scale))",
@@ -93,7 +93,7 @@
         }
       },
       "@keyframes caps-card-wiggle": {
-        "0%,\n    100%": { "rotate": "0deg" },
+        "0%,\n  100%": { "rotate": "0deg" },
         "30%": { "rotate": "-0.7deg" },
         "70%": { "rotate": "0.7deg" }
       },

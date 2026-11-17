@@ -1,0 +1,68 @@
+/* The composer is a surface, not a box inside a panel: the host region is
+     the field, and the text sits directly on the host's face. A slim row along
+     the bottom edge carries the toolbar and, at its end, the action key. */
+.caps-composer {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+.caps-composer-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+.caps-composer-input {
+  position: relative;
+  min-width: 0;
+}
+.caps-composer-input :is(textarea, input),
+.caps-composer-input :is(textarea, input):focus,
+.caps-composer-input :is(textarea, input):focus-visible {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  outline: none;
+  padding-inline: 0;
+}
+.caps-composer-bar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+.caps-composer-toolbar {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+/* A StatusTray seated as the composer's toolbar: one wrapping row of keys,
+     selects and chips on the theme's field-size grid, the same in every App. */
+.caps-composer-toolbar > .caps-status-tray {
+  flex: 1;
+  min-width: 0;
+  --caps-status-tray-row-wrap: wrap;
+  --caps-status-tray-chips-display: contents;
+  --caps-status-tray-key-height: calc(var(--size-field) * 8);
+  --caps-status-tray-chip-height: var(--caps-status-tray-key-height);
+  --caps-status-tray-width: 28rem;
+  --caps-keycap-width: auto;
+  --caps-keycap-height: var(--caps-status-tray-key-height);
+}
+.caps-composer-toolbar
+  > .caps-status-tray
+  .caps-status-tray-row
+  :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select) {
+  height: var(--caps-status-tray-key-height);
+  min-height: var(--caps-status-tray-key-height);
+}
+/* A chip label is a flex row, so an inline label box adds no text strut
+     and chip text shares the keys' baseline. */
+.caps-composer-toolbar > .caps-status-tray .caps-status-tray-label {
+  display: flex;
+  align-items: center;
+}

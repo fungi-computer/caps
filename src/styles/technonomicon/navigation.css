@@ -1,0 +1,36 @@
+/* Site navigation: a catalogue number beside each section name. */
+.caps-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+.caps-nav-link:hover > :last-child,
+.caps-nav-link[aria-current="page"] > :last-child {
+  text-decoration: underline;
+  text-decoration-thickness: var(--border, 1px);
+  text-underline-offset: 0.35em;
+}
+/* Keyboard shortcut sheet: one keycap and its action per row. */
+.caps-shortcuts {
+  display: grid;
+  gap: var(--spacing-sm);
+  margin: 0;
+}
+.caps-shortcuts > div {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+.caps-shortcuts dt,
+.caps-shortcuts dd {
+  margin: 0;
+}

@@ -1,0 +1,31 @@
+@media (prefers-reduced-motion: reduce) {
+  .caps-feedback-ring {
+    opacity: 1;
+    scale: 1;
+    animation: none;
+  }
+  .caps-feedback-amount,
+  .caps-feedback-note,
+  .caps-feedback-mark[data-kind="deny"] .caps-feedback-note {
+    animation: none;
+  }
+  .caps-feedback-word-text {
+    scale: 1;
+    rotate: 0deg;
+    opacity: 1;
+    translate: -50% 0;
+    animation: none;
+  }
+  .caps-feedback-word-jaw-top,
+  .caps-feedback-word-jaw-bottom {
+    animation: none;
+  }
+
+  .caps-game-scrim,
+  .caps-hud-bar[data-low] .caps-hud-bar-fill {
+    animation: none;
+  }
+  .caps-hud-bar-fill {
+    transition: none;
+  }
+}

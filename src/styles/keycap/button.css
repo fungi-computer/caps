@@ -1,0 +1,22 @@
+/* The Caps key material: a flat face on a 1px lip shaded toward the ink,
+     a faint top edge, and a press that settles the face onto its lip. Every
+     Button reads it; KeycapButton reads its face and lip and raises its own
+     finish on them. Everything scales with --depth, so flat themes keep a
+     flat linework key, and a theme's --caps-button-drop/-press still win. */
+.caps-keycap-button,
+.caps-button-filled,
+.caps-button.btn-outline {
+  --caps-key-lip: calc(var(--depth) * 1px);
+  /* prettier-ignore */
+  --caps-key-rest-shadow:
+    inset 0 1px 0
+        oklch(100% 0 0 / calc(var(--depth) * var(--caps-key-top-edge, 0.14))),
+      0 var(--caps-key-lip) 0
+        color-mix(
+          in oklab,
+          var(--caps-key-face),
+          var(--caps-key-lip-ink, var(--color-base-content)) 14%
+        );
+  --caps-key-pressed-shadow:
+    inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08)), 0 0 0 transparent;
+}

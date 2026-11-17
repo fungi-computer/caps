@@ -1,0 +1,34 @@
+.caps-field,
+.caps-field-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 0;
+}
+.caps-field-compact {
+  flex: 1 1 var(--container-xs);
+  min-width: min(100%, var(--container-xs));
+  max-width: var(--container-md);
+}
+.caps-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+}
+.caps-field-description,
+.caps-field-error {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+.caps-field-description {
+  min-width: 0;
+  max-width: var(--caps-field-control-width, 100%);
+  color: var(--stipe-fg-muted);
+}
+.caps-field-error {
+  color: var(--color-error);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

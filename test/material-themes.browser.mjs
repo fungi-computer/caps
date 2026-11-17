@@ -54,7 +54,7 @@ for (const name of [
           "var(\n      --caps-button-drop,\n      var(--caps-key-rest-shadow)\n    )",
         filledShadow: "var(--caps-button-filled-drop)",
         outlineShadow:
-          "var(\n      --caps-button-outline-drop,\n      var(--caps-button-drop, var(--caps-key-rest-shadow))\n    )",
+          "var(\n    --caps-button-outline-drop,\n    var(--caps-button-drop, var(--caps-key-rest-shadow))\n  )",
       },
       "button: registry preserves the exact independent key material",
     );

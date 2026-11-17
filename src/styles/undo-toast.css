@@ -1,0 +1,8 @@
+.caps-undo-toast {
+  --caps-fuse-color: var(--color-base-content);
+  position: relative;
+}
+.caps-undo-toast > .caps-fuse {
+  inset-inline: var(--spacing-md);
+  bottom: var(--spacing-xs);
+}

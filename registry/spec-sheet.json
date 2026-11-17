@@ -37,7 +37,7 @@
         "justifyContent": "center",
         "minHeight": "calc(var(--spacing-xl) + var(--spacing-xs))",
         "borderBlock": "var(--border) solid var(--color-base-content)",
-        "background": "repeating-linear-gradient(\n          to right,\n          var(--caps-spec-tick) 0 1px,\n          transparent 1px 64px\n        )\n        0 0 / 100% 100% no-repeat,\n      repeating-linear-gradient(\n          to right,\n          var(--caps-spec-tick) 0 1px,\n          transparent 1px 8px\n        )\n        0 100% / 100% 7px no-repeat,\n      var(--color-base-100)"
+        "background": "repeating-linear-gradient(\n        to right,\n        var(--caps-spec-tick) 0 1px,\n        transparent 1px 64px\n      )\n      0 0 / 100% 100% no-repeat,\n    repeating-linear-gradient(\n        to right,\n        var(--caps-spec-tick) 0 1px,\n        transparent 1px 8px\n      )\n      0 100% / 100% 7px no-repeat,\n    var(--color-base-100)"
       },
       ".caps-spec-ruler-label": {
         "paddingInline": "var(--spacing-md)",
@@ -69,7 +69,7 @@
       ".caps-spec-frame-window": {
         "padding": "var(--spacing-sm)",
         "border": "var(--border) solid var(--color-base-content)",
-        "background": "repeating-linear-gradient(\n        45deg,\n        var(--color-base-content) 0 1px,\n        transparent 1px 5px\n      ),\n      var(--color-base-100)"
+        "background": "repeating-linear-gradient(\n      45deg,\n      var(--color-base-content) 0 1px,\n      transparent 1px 5px\n    ),\n    var(--color-base-100)"
       },
       ".caps-spec-frame-window > *": {
         "display": "block",
@@ -138,7 +138,7 @@
         "alignContent": "start",
         "gap": "var(--spacing-sm)",
         "padding": "var(--spacing-xl)",
-        "boxShadow": "inset calc(var(--border) * -1) 0 0 var(--stipe-hairline),\n      inset 0 calc(var(--border) * -1) 0 var(--stipe-hairline)"
+        "boxShadow": "inset calc(var(--border) * -1) 0 0 var(--stipe-hairline),\n    inset 0 calc(var(--border) * -1) 0 var(--stipe-hairline)"
       },
       ".caps-spec-step-number": {
         "justifySelf": "start",

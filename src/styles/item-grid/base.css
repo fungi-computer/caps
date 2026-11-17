@@ -1,0 +1,206 @@
+/* Item grid: recessed pockets in an ink-lined tray; items sit on top. */
+.caps-item-grid,
+.caps-item-slot {
+  /* prettier-ignore */
+  --caps-pocket: light-dark(
+      color-mix(in oklab, var(--color-base-200), var(--color-base-content) 6%),
+      var(--color-base-300)
+    );
+  /* prettier-ignore */
+  --caps-item-face: light-dark(
+      color-mix(in oklab, var(--color-base-100), white 40%),
+      color-mix(in oklab, var(--color-base-100), var(--color-base-content) 16%)
+    );
+}
+.caps-item-grid {
+  --caps-cell: 2.75rem;
+  --caps-cell-gap: 2px;
+
+  display: grid;
+  box-sizing: border-box;
+  gap: var(--spacing-sm);
+  justify-items: start;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.caps-item-grid[data-cell-size="sm"] {
+  --caps-cell: 2rem;
+}
+.caps-item-grid[data-cell-size="lg"] {
+  --caps-cell: 3.5rem;
+}
+.caps-item-grid-board {
+  display: grid;
+  padding: var(--spacing-xs);
+  background: color-mix(
+    in oklab,
+    var(--color-base-300),
+    var(--color-base-content) 10%
+  );
+  border: 2px solid var(--card-ink);
+  border-radius: var(--radius-field);
+  box-shadow:
+    3px 3px 0 var(--card-ink),
+    inset 0 2px 0 oklch(0% 0 0 / calc(var(--depth) * 0.12));
+}
+.caps-item-grid-cells,
+.caps-item-grid-items {
+  grid-area: 1 / 1;
+  display: grid;
+  grid-template-columns: repeat(
+    var(--caps-item-grid-columns),
+    var(--caps-cell)
+  );
+  grid-template-rows: repeat(var(--caps-item-grid-rows), var(--caps-cell));
+  gap: var(--caps-cell-gap);
+}
+.caps-item-grid-row {
+  display: contents;
+}
+.caps-item-grid-cell {
+  background: var(--caps-pocket);
+  border-radius: var(--radius-selector);
+  box-shadow:
+    inset 0 2px 0 oklch(0% 0 0 / calc(0.04 + var(--depth) * 0.1)),
+    inset 0 -1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.35));
+  cursor: pointer;
+}
+.caps-item-grid-cell:focus-visible {
+  position: relative;
+  z-index: 2;
+  outline: 2px solid var(--color-info);
+  outline-offset: 1px;
+}
+.caps-item-grid-items {
+  pointer-events: none;
+}
+.caps-item {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  background: var(--caps-item-face);
+  border: 2px solid var(--card-ink);
+  border-radius: var(--radius-selector);
+  box-shadow:
+    inset 0 -2px 0
+      color-mix(in oklab, var(--color-base-300), var(--card-ink) 15%),
+    0 2px 0 color-mix(in oklab, var(--card-ink) 40%, transparent);
+}
+.caps-item[data-selected="true"] {
+  outline: 2px solid var(--caps-focus-ring);
+  outline-offset: 1px;
+}
+/* Icons fit their footprint whatever their own size. */
+.caps-item-icon {
+  position: absolute;
+  inset: 12%;
+  display: grid;
+  place-items: center;
+  image-rendering: pixelated;
+}
+.caps-item-icon > :is(img, svg) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.caps-item-count {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  z-index: 1;
+  padding: var(--spacing-2xs);
+  color: light-dark(var(--color-base-100), var(--color-base-content));
+  background: var(--card-ink);
+  border-radius: var(--radius-selector);
+}
+.caps-item-ghost {
+  z-index: 2;
+  border: 2px solid var(--color-success);
+  border-radius: var(--radius-selector);
+  background: color-mix(in oklab, var(--color-success) 28%, transparent);
+}
+.caps-item-ghost[data-legal="false"] {
+  border-color: var(--color-error);
+  background: color-mix(in oklab, var(--color-error) 28%, transparent);
+}
+/* A refusal is written as a small ink note under the tray. */
+.caps-item-grid-reason {
+  max-width: 100%;
+  margin: 0;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  color: var(--color-base-content);
+  background: var(--color-base-100);
+  border: 2px solid var(--card-ink);
+  border-left: 6px solid var(--color-error);
+  border-radius: var(--radius-selector);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.caps-item-slot {
+  display: inline-grid;
+  justify-items: center;
+  gap: var(--spacing-2xs);
+  padding: 0;
+  color: var(--color-base-content);
+  background: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+.caps-item-slot-pocket {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--caps-pocket);
+  border: 2px solid var(--card-ink);
+  border-radius: var(--radius-field);
+  box-shadow:
+    inset 0 3px 0 oklch(0% 0 0 / calc(0.04 + var(--depth) * 0.1)),
+    2px 2px 0 var(--card-ink);
+}
+.caps-item-slot[data-filled="true"] .caps-item-slot-pocket {
+  background: var(--caps-item-face);
+}
+.caps-item-slot:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.caps-item-slot[data-state="legal"] .caps-item-slot-pocket {
+  border-color: var(--color-success);
+  background: color-mix(in oklab, var(--color-success) 22%, transparent);
+}
+.caps-item-slot[data-state="illegal"] .caps-item-slot-pocket {
+  border-color: var(--color-error);
+  background: color-mix(in oklab, var(--color-error) 22%, transparent);
+}
+.caps-item-slot:focus-visible {
+  outline: none;
+}
+.caps-item-slot:focus-visible .caps-item-slot-pocket {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+}
+.caps-item-slot-placeholder {
+  position: absolute;
+  inset: 18%;
+  display: grid;
+  place-items: center;
+  color: color-mix(in oklab, var(--color-base-content) 35%, transparent);
+}
+.caps-item-slot-placeholder > svg {
+  width: 100%;
+  height: 100%;
+}
+.caps-item-slot-label {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}

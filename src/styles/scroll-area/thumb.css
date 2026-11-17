@@ -1,0 +1,5 @@
+@media (prefers-reduced-motion: reduce) {
+  .caps-scroll-thumb-surface {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,64 @@
+/* Choice cards: a RadioGroup option with room for a description and a
+     trailing readout. Selection is ink, not accent. */
+.caps-choice-card {
+  display: flex;
+  flex: 1 1 var(--caps-choice-card-basis, 14rem);
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  min-width: 0;
+  padding: var(--spacing-md);
+  border: var(--border) solid var(--stipe-linework);
+  border-radius: var(--radius-box);
+  background: var(--color-base-100);
+  cursor: pointer;
+  transition:
+    border-color var(--stipe-motion-fast) ease,
+    box-shadow var(--stipe-motion-fast) ease;
+}
+.caps-choice-card:hover {
+  /* prettier-ignore */
+  border-color: color-mix(
+      in oklab,
+      var(--color-base-content) 40%,
+      transparent
+    );
+}
+.caps-choice-card[data-checked="true"] {
+  border-color: var(--color-base-content);
+  box-shadow: inset 0 0 0 1px var(--color-base-content);
+}
+.caps-choice-card:has(input:focus-visible) {
+  outline: 2px solid var(--caps-focus-ring);
+  outline-offset: 2px;
+}
+.caps-choice-card[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.caps-choice-card-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+  min-width: 0;
+}
+.caps-choice-card-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.caps-choice-card-description {
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--stipe-fg-muted);
+}
+.caps-choice-card-meta {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--stipe-fg-muted);
+}
+.caps-choice-card[data-checked="true"] .caps-choice-card-meta {
+  color: var(--color-base-content);
+}

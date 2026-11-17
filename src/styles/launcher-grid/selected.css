@@ -1,0 +1,19 @@
+@media (min-width: 70rem) {
+  .caps-app-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+@media (max-width: 48rem) {
+  .caps-section-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+  }
+}
+@media (max-width: 48rem) {
+  .caps-section-grid[data-layout="desktop"] {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+}

@@ -1,0 +1,37 @@
+/* FactRow: a details-panel fact. A fixed label column (16px Sigil and a
+     quiet name) beside a wrapping value; the row rule spans both. */
+.list-row.caps-fact {
+  --list-grid-cols: 6.5rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--spacing-sm);
+}
+.list-row.caps-fact::after {
+  inset-inline: 0;
+}
+.caps-fact-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  min-height: 1lh;
+  color: var(--stipe-fg-muted);
+}
+.caps-fact-icon {
+  display: inline-flex;
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+}
+.caps-fact-icon > :is(svg, img) {
+  width: 100%;
+  height: 100%;
+}
+.caps-fact-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* DataList density="compact": rows whose content brings its own inset
+     (an ActionRow) sit flush with the list's edge, one control high. */
+.list.list-sm > .list-row {
+  gap: var(--spacing-sm);
+  padding: var(--spacing-2xs) 0;
+}

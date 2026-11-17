@@ -1,0 +1,7 @@
+@layer caps-button-group {
+  .caps-button-group {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--caps-button-group-gap, var(--spacing-md));
+  }
+}

@@ -146,7 +146,7 @@ test("CSS cannot bypass theme spacing and radii", async () => {
 test("a screen restyles its controls through tokens, never by ancestry", async () => {
   const { readFile } = await import("node:fs/promises");
   const css = await readFile(
-    fileURLToPath(new URL("../src/styles.css", import.meta.url)),
+    fileURLToPath(new URL("../src/styles/surface/screen.css", import.meta.url)),
     "utf8",
   );
   // Match Screen itself, not ScreenCell styling its own parts.
@@ -158,7 +158,7 @@ test("a screen restyles its controls through tokens, never by ancestry", async (
     .filter((selector) => !selector.startsWith(".caps-screen {"));
   assert.deepEqual(reach, []);
   // The context itself is the token set that controls read.
-  const context = /\n {2}\.caps-screen \{([^}]*)\}/u.exec(css)?.[1] ?? "";
+  const context = /\.caps-screen \{([^}]*)\}/u.exec(css)?.[1] ?? "";
   for (const token of [
     "--caps-control-depth",
     "--caps-control-ink",

@@ -1,0 +1,37 @@
+@media (prefers-reduced-motion: reduce) {
+  .caps-button-filled:not(:disabled):not([aria-disabled="true"]) {
+    transition: none;
+    translate: none;
+    scale: none;
+  }
+
+  /* The press is a state, not motion: a key still settles onto its lip. */
+  .caps-button-filled:not(:disabled):not([aria-disabled="true"]):active {
+    translate: var(--caps-button-press-reduced, 0 var(--caps-key-lip));
+  }
+
+  .caps-gooey-motion,
+  .caps-gooey-motion::before,
+  .caps-switch,
+  .caps-radio,
+  .caps-checkbox,
+  .caps-checkbox-track,
+  .caps-input,
+  .caps-status-bead {
+    animation: none !important;
+    transition-property: opacity !important;
+    transition-duration: var(--stipe-motion-fast) !important;
+  }
+
+  .caps-gooey-progress::-webkit-progress-value {
+    animation: none !important;
+    transition-property: opacity !important;
+    transition-duration: var(--stipe-motion-fast) !important;
+  }
+
+  .caps-gooey-progress::-moz-progress-bar {
+    animation: none !important;
+    transition-property: opacity !important;
+    transition-duration: var(--stipe-motion-fast) !important;
+  }
+}

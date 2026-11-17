@@ -69,24 +69,25 @@ Props shared by every Combobox mode: item shape, rendering, and field wiring.
 
 #### Type Declaration
 
-| Name                | Type                                                                                       | Description                                                                     |
-| ------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| `activeTone?`       | `"neutral"` \| `"primary"`                                                                 | Color intent for the locally active option.                                     |
-| `container?`        | `BasePopover.Portal.Props`\[`"container"`\]                                                | Native portal destination. Use an unclipped themed container for nested themes. |
-| `contentClassName?` | `string`                                                                                   | -                                                                               |
-| `emptyMessage?`     | `ReactNode`                                                                                | -                                                                               |
-| `getKey()`          | (`item`) => `string`                                                                       | Returns the stable identity used to track and compare items.                    |
-| `getLabel()`        | (`item`) => `string`                                                                       | Returns the text shown for an item in the trigger and the list.                 |
-| `getSearchText()?`  | (`item`) => `string`                                                                       | Returns the text matched against caller input; defaults to the item's label.    |
-| `groupBy()?`        | (`item`) => `string`                                                                       | Returns the heading an item is grouped under in the list.                       |
-| `id?`               | `string`                                                                                   | Identifies the popup trigger or inline input for native label association.      |
-| `inputProps?`       | `Omit`\<`React.InputHTMLAttributes`\<`HTMLInputElement`\>, `"defaultValue"` \| `"value"`\> | -                                                                               |
-| `inputRef?`         | `React.Ref`\<`HTMLInputElement`\>                                                          | -                                                                               |
-| `rootRef?`          | `React.Ref`\<`HTMLDivElement`\>                                                            | Receives the selection control's root div.                                      |
-| `isDisabled()?`     | (`item`) => `boolean`                                                                      | Returns whether an item is unselectable.                                        |
-| `items`             | readonly `T`[]                                                                             | -                                                                               |
-| `placeholder?`      | `string`                                                                                   | -                                                                               |
-| `renderItem()?`     | (`item`, `active`, `state`) => `ReactNode`                                                 | Renders one item's content; defaults to its label.                              |
+| Name                 | Type                                                                                       | Description                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `activeTone?`        | `"neutral"` \| `"primary"`                                                                 | Color intent for the locally active option.                                               |
+| `container?`         | `BasePopover.Portal.Props`\[`"container"`\]                                                | Native portal destination. Use an unclipped themed container for nested themes.           |
+| `contentClassName?`  | `string`                                                                                   | -                                                                                         |
+| `defaultInputValue?` | `string`                                                                                   | Text the search input starts with; it already filters `items` and the person can edit it. |
+| `emptyMessage?`      | `ReactNode`                                                                                | -                                                                                         |
+| `getKey()`           | (`item`) => `string`                                                                       | Returns the stable identity used to track and compare items.                              |
+| `getLabel()`         | (`item`) => `string`                                                                       | Returns the text shown for an item in the trigger and the list.                           |
+| `getSearchText()?`   | (`item`) => `string`                                                                       | Returns the text matched against caller input; defaults to the item's label.              |
+| `groupBy()?`         | (`item`) => `string`                                                                       | Returns the heading an item is grouped under in the list.                                 |
+| `id?`                | `string`                                                                                   | Identifies the popup trigger or inline input for native label association.                |
+| `inputProps?`        | `Omit`\<`React.InputHTMLAttributes`\<`HTMLInputElement`\>, `"defaultValue"` \| `"value"`\> | -                                                                                         |
+| `inputRef?`          | `React.Ref`\<`HTMLInputElement`\>                                                          | -                                                                                         |
+| `rootRef?`           | `React.Ref`\<`HTMLDivElement`\>                                                            | Receives the selection control's root div.                                                |
+| `isDisabled()?`      | (`item`) => `boolean`                                                                      | Returns whether an item is unselectable.                                                  |
+| `items`              | readonly `T`[]                                                                             | -                                                                                         |
+| `placeholder?`       | `string`                                                                                   | -                                                                                         |
+| `renderItem()?`      | (`item`, `active`, `state`) => `ReactNode`                                                 | Renders one item's content; defaults to its label.                                        |
 
 #### Type Parameters
 

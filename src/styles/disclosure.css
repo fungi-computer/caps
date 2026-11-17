@@ -1,0 +1,101 @@
+.caps-disclosure {
+  --caps-disclosure-rail: var(--color-base-300);
+
+  min-width: 0;
+  font-family: var(--font-sans);
+}
+
+.caps-disclosure-error {
+  --caps-disclosure-rail: var(--color-error);
+}
+
+.caps-disclosure-trigger {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding-inline: var(--spacing-md);
+  border-radius: var(--radius-field);
+  color: var(--stipe-fg-muted);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color var(--stipe-motion-fast) ease,
+    color var(--stipe-motion-fast) ease;
+}
+
+.caps-disclosure-group > .caps-disclosure-trigger {
+  min-height: 2rem;
+  font-size: var(--caps-disclosure-font-size, 0.75rem);
+}
+
+.caps-disclosure-row > .caps-disclosure-trigger {
+  min-height: 1.75rem;
+  font-size: var(--caps-disclosure-font-size, 0.6875rem);
+}
+
+.caps-disclosure-trigger:hover {
+  background-color: color-mix(
+    in oklab,
+    var(--color-base-content) 5%,
+    transparent
+  );
+  color: var(--color-base-content);
+}
+
+.caps-disclosure-trigger:focus-visible {
+  outline: 2px solid var(--caps-focus-ring);
+  outline-offset: -2px;
+}
+
+.caps-disclosure-error > .caps-disclosure-trigger {
+  color: var(--color-error);
+}
+
+.caps-disclosure-leading {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.caps-disclosure-summary {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.caps-disclosure-trailing {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--stipe-fg-muted);
+}
+
+.caps-disclosure-chevron {
+  flex: none;
+  color: var(--stipe-fg-muted);
+  transition: transform var(--stipe-motion-fast) ease;
+}
+
+.caps-disclosure[data-open]
+  > .caps-disclosure-trigger
+  .caps-disclosure-chevron {
+  transform: rotate(90deg);
+}
+
+.caps-disclosure-panel {
+  margin-inline-start: var(--spacing-lg);
+  padding-inline-start: var(--spacing-sm);
+  border-inline-start: 1px solid var(--caps-disclosure-rail);
+}
+
+.caps-disclosure-row > .caps-disclosure-panel {
+  padding-block: var(--spacing-xs) var(--spacing-sm);
+}

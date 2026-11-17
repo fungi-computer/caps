@@ -157,7 +157,7 @@
         "display": "inline-flex",
         "gap": "var(--spacing-2xs)",
         "borderBottom": "var(--card-rule-width) solid transparent",
-        "transition": "color var(--stipe-motion-slow) var(--stipe-motion-ease),\n      border-color var(--stipe-motion-slow) var(--stipe-motion-ease)"
+        "transition": "color var(--stipe-motion-slow) var(--stipe-motion-ease),\n    border-color var(--stipe-motion-slow) var(--stipe-motion-ease)"
       },
       ".caps-stage-plate-key > li[data-pending]": {
         "fontStyle": "italic",
@@ -188,7 +188,7 @@
         "marginInline": "var(--caps-keycap-legend-margin, 0)",
         "fontSize": "var(--caps-keycap-legend-font-size, inherit)",
         "placeItems": "center",
-        "border": "var(--card-rule-width) solid\n      var(\n        --caps-keycap-legend-edge,\n        color-mix(in oklab, var(--card-rule) 22%, transparent)\n      )",
+        "border": "var(--card-rule-width) solid\n    var(\n      --caps-keycap-legend-edge,\n      color-mix(in oklab, var(--card-rule) 22%, transparent)\n    )",
         "borderRadius": "var(--radius-selector)",
         "paddingInline": "var(--spacing-sm)",
         "background": "color-mix(in oklab, var(--card-ink) 5%, var(--card-paper))",
@@ -333,7 +333,7 @@
           "columnGap": "0"
         },
         ".caps-spread[data-layout=\"columns\"] > :nth-child(odd)": {
-          "borderInlineEnd": "var(--card-rule-width) solid\n        var(--newsprint-column-rule)",
+          "borderInlineEnd": "var(--card-rule-width) solid var(--newsprint-column-rule)",
           "paddingInlineEnd": "var(--spacing-2xl)"
         },
         ".caps-spread[data-layout=\"columns\"] > :nth-child(even)": {
@@ -410,7 +410,7 @@
         ".caps-spread[data-layout=\"lead\"] .caps-note-teaser-body": {
           "fontSize": "1.125rem"
         },
-        ".caps-spread[data-layout=\"lead\"]\n      .caps-note-teaser-body\n      > .caps-compact-plate": {
+        ".caps-spread[data-layout=\"lead\"]\n    .caps-note-teaser-body\n    > .caps-compact-plate": {
           "width": "34%"
         }
       },
@@ -445,7 +445,7 @@
         "width": "100%",
         "height": "100%",
         "transformStyle": "preserve-3d",
-        "transition": "transform calc(var(--stipe-motion-slow) * 2)\n      cubic-bezier(0.3, 0.7, 0.2, 1)"
+        "transition": "transform calc(var(--stipe-motion-slow) * 2)\n    cubic-bezier(0.3, 0.7, 0.2, 1)"
       },
       ".caps-cigarette-card[data-flipped=\"true\"] .caps-cigarette-card-inner": {
         "transform": "rotateY(180deg)"
@@ -456,11 +456,11 @@
         "display": "flex",
         "flexDirection": "column",
         "padding": "4.5cqi",
-        "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-accent) 55%, var(--card-frame))",
+        "border": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-accent) 55%, var(--card-frame))",
         "borderRadius": "2.2cqi",
         "background": "var(--card-texture), var(--card-frame)",
         "backfaceVisibility": "hidden",
-        "boxShadow": "0 0.4cqi 0.8cqi var(--card-shadow),\n      0 3cqi 6cqi -2.5cqi var(--card-shadow)"
+        "boxShadow": "0 0.4cqi 0.8cqi var(--card-shadow),\n    0 3cqi 6cqi -2.5cqi var(--card-shadow)"
       },
       ".caps-cigarette-card-head": {
         "display": "flex",
@@ -474,7 +474,7 @@
       ".caps-cigarette-card-title": {
         "fontFamily": "var(--font-display)",
         "fontSize": "9cqi",
-        "fontVariationSettings": "\"SOFT\" 60,\n      \"WONK\" 1",
+        "fontVariationSettings": "\"SOFT\" 60,\n    \"WONK\" 1",
         "fontWeight": "var(--caps-heading-weight, 640)",
         "lineHeight": "var(--caps-heading-line-height, 1.05)",
         "letterSpacing": "var(--caps-heading-tracking, -0.01em)"
@@ -519,10 +519,10 @@
         "marginTop": "1.5cqi",
         "overflow": "hidden",
         "padding": "4cqi 4cqi 11cqi",
-        "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
+        "border": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
         "borderRadius": "0.8cqi",
         "background": "var(--card-texture), var(--card-window)",
-        "boxShadow": "inset 0 0.6cqi 1.8cqi -0.4cqi var(--card-shadow),\n      inset 0 0 0 0.6cqi color-mix(in srgb, var(--card-window) 70%, transparent)"
+        "boxShadow": "inset 0 0.6cqi 1.8cqi -0.4cqi var(--card-shadow),\n    inset 0 0 0 0.6cqi color-mix(in srgb, var(--card-window) 70%, transparent)"
       },
       ".caps-cigarette-card-window img,.caps-cigarette-card-window svg": {
         "width": "100%",
@@ -619,7 +619,7 @@
         "gap": "2cqi",
         "marginTop": "auto",
         "paddingTop": "2cqi",
-        "borderTop": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-accent) 45%, transparent)",
+        "borderTop": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-accent) 45%, transparent)",
         "color": "color-mix(in srgb, var(--card-frame-ink) 70%, transparent)",
         "fontSize": "max(0.5rem, 3.2cqi)",
         "fontVariant": "small-caps",
@@ -647,7 +647,7 @@
         "marginBlock": "1.5cqi 2.4cqi",
         "overflow": "hidden",
         "padding": "3.2cqi 3.6cqi",
-        "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
+        "border": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame))",
         "borderRadius": "0.8cqi",
         "background": "var(--card-texture), var(--card-window)",
         "color": "var(--card-window-ink)",
@@ -674,7 +674,7 @@
         "display": "flex",
         "alignItems": "baseline",
         "paddingBlock": "1.1cqi",
-        "borderBottom": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 35%, transparent)"
+        "borderBottom": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-rule) 35%, transparent)"
       },
       ".caps-cigarette-card-stat-label": {
         "fontVariant": "small-caps",
@@ -684,7 +684,7 @@
         "flex": 1,
         "minWidth": "1.5em",
         "marginInline": "var(--spacing-xs)",
-        "borderBottom": "var(--card-rule-width) dotted\n      color-mix(in srgb, var(--card-rule) 60%, transparent)"
+        "borderBottom": "var(--card-rule-width) dotted\n    color-mix(in srgb, var(--card-rule) 60%, transparent)"
       },
       ".caps-cigarette-card-stat-value": {
         "display": "flex",
@@ -737,7 +737,7 @@
         "gap": "0.8cqi",
         "maxHeight": "15cqi",
         "overflow": "hidden",
-        "borderTop": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 35%, transparent)",
+        "borderTop": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-rule) 35%, transparent)",
         "paddingTop": "1.8cqi",
         "color": "var(--marginalia-ink, var(--card-ink))",
         "fontSize": "max(0.5rem, 3.3cqi)",
@@ -749,7 +749,7 @@
         "background": "var(--card-texture), var(--card-window)",
         "color": "var(--card-window-ink)"
       },
-      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-window": {
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-window": {
         "position": "absolute",
         "inset": "0",
         "margin": "0",
@@ -759,38 +759,38 @@
         "background": "none",
         "boxShadow": "none"
       },
-      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-window\n    img": {
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-window\n  img": {
         "width": "125%",
         "maxWidth": "none",
         "height": "100%",
         "maxHeight": "none",
         "objectFit": "cover"
       },
-      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-head,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-plate,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-flavor,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-head,.caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-plate,.caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-flavor,.caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-collector": {
         "position": "relative",
         "zIndex": 1
       },
-      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-head": {
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-head": {
         "margin": "-3cqi -3cqi 0",
         "padding": "3cqi 16cqi 3cqi 4cqi",
-        "background": "linear-gradient(\n      var(--card-window) 55%,\n      color-mix(in srgb, var(--card-window) 0%, transparent)\n    )"
+        "background": "linear-gradient(\n    var(--card-window) 55%,\n    color-mix(in srgb, var(--card-window) 0%, transparent)\n  )"
       },
-      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-type,.caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-type,.caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-collector": {
         "color": "color-mix(in srgb, var(--card-window-ink) 72%, transparent)"
       },
-      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-plate": {
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-plate": {
         "margin": "auto 0 0",
         "color": "var(--card-frame-ink)"
       },
-      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-flavor": {
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-flavor": {
         "margin": "2cqi 0 0",
         "padding": "2.4cqi 3cqi",
-        "border": "var(--card-rule-width) solid\n      color-mix(in srgb, var(--card-rule) 40%, transparent)",
+        "border": "var(--card-rule-width) solid\n    color-mix(in srgb, var(--card-rule) 40%, transparent)",
         "borderRadius": "0.8cqi",
         "background": "color-mix(in srgb, var(--card-window) 88%, transparent)",
         "color": "var(--card-window-ink)"
       },
-      ".caps-cigarette-card[data-finish=\"full-art\"]\n    .caps-cigarette-card-front\n    .caps-cigarette-card-collector": {
+      ".caps-cigarette-card[data-finish=\"full-art\"]\n  .caps-cigarette-card-front\n  .caps-cigarette-card-collector": {
         "marginTop": "2.4cqi"
       },
       "@media (prefers-reduced-motion: reduce)": {
@@ -863,7 +863,7 @@
         "fontFamily": "var(--font-mono)",
         "fontSize": "0.75rem"
       },
-      ".caps-prose-dropcap > p:first-of-type::first-letter,.caps-spread[data-layout=\"lead\"]\n    .caps-note-teaser-body\n    > p:first-of-type::first-letter": {
+      ".caps-prose-dropcap > p:first-of-type::first-letter,.caps-spread[data-layout=\"lead\"]\n  .caps-note-teaser-body\n  > p:first-of-type::first-letter": {
         "cssFloat": "left",
         "margin": "var(--spacing-2xs) var(--spacing-xs) 0 0",
         "color": "var(--card-ink)",
@@ -885,7 +885,7 @@
         "borderColor": "transparent"
       },
       ".caps-pencil-reveal": {
-        "animation": "caps-pencil-reveal calc(var(--stipe-motion-slow) * 2) ease-out\n      both"
+        "animation": "caps-pencil-reveal calc(var(--stipe-motion-slow) * 2) ease-out both"
       },
       ".caps-meta": {
         "display": "flex",
@@ -965,7 +965,7 @@
         }
       },
       ".caps-toc": {
-        "borderBlock": "var(--border, 1px) solid\n      var(--newsprint-column-rule, var(--stipe-linework))",
+        "borderBlock": "var(--border, 1px) solid\n    var(--newsprint-column-rule, var(--stipe-linework))",
         "paddingBlock": "var(--spacing-md)"
       },
       ".caps-toc > .caps-meta": { "marginBottom": "var(--spacing-sm)" },
@@ -989,7 +989,7 @@
         "paddingInlineStart": "var(--spacing-2xl)"
       },
       ".caps-backlinks": {
-        "borderTop": "var(--border, 1px) solid\n      var(--newsprint-column-rule, var(--stipe-linework))",
+        "borderTop": "var(--border, 1px) solid\n    var(--newsprint-column-rule, var(--stipe-linework))",
         "paddingTop": "var(--spacing-lg)"
       },
       ".caps-backlinks > h2": { "margin": "0 0 var(--spacing-sm)" },
@@ -1190,7 +1190,7 @@
       },
       ".caps-print-prose h2:not(.caps-meta),.caps-print-prose h3:not(.caps-meta)": {
         "fontFamily": "var(--font-display)",
-        "fontVariationSettings": "\"SOFT\" 50,\n      \"WONK\" 1",
+        "fontVariationSettings": "\"SOFT\" 50,\n    \"WONK\" 1",
         "fontWeight": 750,
         "letterSpacing": "-0.015em"
       },
@@ -1211,7 +1211,7 @@
         "position": "absolute",
         "inset": "0",
         "zIndex": -1,
-        "backgroundColor": "color-mix(\n      in oklab,\n      var(--caps-tool-call-tone) 12%,\n      transparent\n    )",
+        "backgroundColor": "color-mix(\n    in oklab,\n    var(--caps-tool-call-tone) 12%,\n    transparent\n  )",
         "transform": "scaleX(0)",
         "transformOrigin": "left center",
         "transition": "background-color var(--stipe-motion-normal) ease"
@@ -1225,7 +1225,7 @@
       ".caps-tool-call .caps-presence": { "display": "inline-flex" }
     },
     "@layer utilities": {
-      ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+      ".caps-composer-toolbar\n  > .caps-status-tray\n  .caps-status-tray-row\n  :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
         "height": "var(--caps-status-tray-key-height)",
         "minHeight": "var(--caps-status-tray-key-height)"
       },
@@ -1350,14 +1350,14 @@
         "justifyContent": "var(--caps-keycap-justify, space-between)",
         "gap": "var(--spacing-sm)",
         "padding": "var(--caps-keycap-padding, var(--spacing-xs) var(--spacing-sm))",
-        "border": "var(\n      --caps-keycap-context-border,\n      var(--border) solid\n        var(\n          --caps-keycap-edge,\n          color-mix(in oklab, var(--stipe-linework) 80%, var(--caps-key-face))\n        )\n    )",
+        "border": "var(\n    --caps-keycap-context-border,\n    var(--border) solid\n      var(\n        --caps-keycap-edge,\n        color-mix(in oklab, var(--stipe-linework) 80%, var(--caps-key-face))\n      )\n  )",
         "fontSize": "var(--caps-keycap-font-size, inherit)",
-        "fontWeight": "var(\n      --caps-keycap-context-weight,\n      var(--caps-keycap-font-weight, inherit)\n    )",
+        "fontWeight": "var(\n    --caps-keycap-context-weight,\n    var(--caps-keycap-font-weight, inherit)\n  )",
         "borderRadius": "var(--radius-field)",
         "--caps-keycap-painted-face": "var(\n      --caps-keycap-context-face,\n      var(--caps-keycap-face, var(--color-base-200))\n    )",
         "backgroundColor": "var(--caps-keycap-painted-face)",
         "--caps-keycap-default-image": "linear-gradient(\n      to bottom,\n      color-mix(\n        in oklab,\n        var(--caps-keycap-painted-face),\n        white calc(var(--depth) * 3%)\n      ),\n      color-mix(\n        in oklab,\n        var(--caps-keycap-painted-face),\n        black calc(var(--depth) * 3%)\n      )\n    )",
-        "backgroundImage": "var(\n      --caps-keycap-context-image,\n      var(--caps-keycap-default-image)\n    )",
+        "backgroundImage": "var(\n    --caps-keycap-context-image,\n    var(--caps-keycap-default-image)\n  )",
         "boxShadow": "var(\n      --caps-keycap-context-shadow,\n      var(--caps-keycap-rest-shadow)\n    )",
         "color": "var(--caps-keycap-ink, var(--color-base-content))",
         "textAlign": "left",
@@ -1368,7 +1368,7 @@
       },
       ".caps-keycap-button:active": {
         "translate": "0 var(--caps-keycap-context-travel, var(--caps-key-lip))",
-        "boxShadow": "var(\n      --caps-keycap-active-shadow,\n      var(--caps-keycap-pressed-shadow)\n    )"
+        "boxShadow": "var(\n    --caps-keycap-active-shadow,\n    var(--caps-keycap-pressed-shadow)\n  )"
       },
       ".caps-keycap-button:focus-visible": {
         "outline": "2px solid var(--caps-keycap-focus-ink, var(--color-base-content))",
@@ -1406,7 +1406,7 @@
       ".caps-keycap-button:hover": {
         "--caps-keycap-painted-face": "var(\n      --caps-keycap-hover-face,\n      var(\n        --caps-keycap-context-face,\n        var(--caps-keycap-face, var(--color-base-200))\n      )\n    )",
         "backgroundColor": "var(--caps-keycap-painted-face)",
-        "backgroundImage": "var(\n      --caps-keycap-hover-image,\n      var(--caps-keycap-context-image, var(--caps-keycap-default-image))\n    )"
+        "backgroundImage": "var(\n    --caps-keycap-hover-image,\n    var(--caps-keycap-context-image, var(--caps-keycap-default-image))\n  )"
       },
       ".caps-keycap-button-label": {
         "minWidth": "var(--caps-keycap-label-min-width, auto)",
@@ -1428,18 +1428,18 @@
       },
       ".caps-keycap-button .caps-keycap": {
         "flex": "var(--caps-keycap-shortcut-flex, 0 1 auto)",
-        "minWidth": "var(\n      --caps-keycap-shortcut-size,\n      var(--caps-keycap-legend-min-size, 2rem)\n    )",
-        "minHeight": "var(\n      --caps-keycap-shortcut-size,\n      var(--caps-keycap-legend-min-size, 2rem)\n    )",
-        "border": "var(\n      --caps-keycap-shortcut-border,\n      var(--card-rule-width) solid\n        var(\n          --caps-keycap-legend-edge,\n          color-mix(in oklab, var(--card-rule) 22%, transparent)\n        )\n    )",
-        "background": "var(\n      --caps-keycap-shortcut-face,\n      color-mix(in oklab, var(--card-ink) 5%, var(--card-paper))\n    )",
+        "minWidth": "var(\n    --caps-keycap-shortcut-size,\n    var(--caps-keycap-legend-min-size, 2rem)\n  )",
+        "minHeight": "var(\n    --caps-keycap-shortcut-size,\n    var(--caps-keycap-legend-min-size, 2rem)\n  )",
+        "border": "var(\n    --caps-keycap-shortcut-border,\n    var(--card-rule-width) solid\n      var(\n        --caps-keycap-legend-edge,\n        color-mix(in oklab, var(--card-rule) 22%, transparent)\n      )\n  )",
+        "background": "var(\n    --caps-keycap-shortcut-face,\n    color-mix(in oklab, var(--card-ink) 5%, var(--card-paper))\n  )",
         "color": "var(--caps-keycap-shortcut-ink, var(--card-ink))",
         "boxShadow": "var(--caps-keycap-shortcut-shadow, none)",
-        "fontSize": "var(\n      --caps-keycap-shortcut-font-size,\n      var(--caps-keycap-legend-font-size, inherit)\n    )",
+        "fontSize": "var(\n    --caps-keycap-shortcut-font-size,\n    var(--caps-keycap-legend-font-size, inherit)\n  )",
         "fontWeight": "var(--caps-keycap-shortcut-weight, inherit)"
       },
       ".caps-keycap-button:is([aria-expanded=\"true\"], [aria-pressed=\"true\"])": {
-        "color": "var(\n      --caps-keycap-selected-ink,\n      var(--caps-keycap-ink, var(--color-base-content))\n    )",
-        "backgroundColor": "var(\n      --caps-keycap-selected-face,\n      var(--caps-keycap-painted-face)\n    )"
+        "color": "var(\n    --caps-keycap-selected-ink,\n    var(--caps-keycap-ink, var(--color-base-content))\n  )",
+        "backgroundColor": "var(\n    --caps-keycap-selected-face,\n    var(--caps-keycap-painted-face)\n  )"
       },
       ".caps-keycap-button:has(> .caps-keycap-led)": { "position": "relative" },
       ".caps-keycap-led": {

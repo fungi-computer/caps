@@ -1,0 +1,410 @@
+@layer caps-window {
+  .caps-window {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    isolation: isolate;
+    color: var(--color-base-content);
+    background: var(--caps-window-face, var(--color-base-100));
+    background-image: var(--caps-window-image, none);
+    background-size: var(--caps-print-texture-size, auto);
+    border: var(
+      --caps-window-border,
+      var(--border) solid var(--stipe-linework)
+    );
+    border-radius: var(--radius-box);
+    box-shadow: var(
+      --caps-window-shadow,
+      var(
+        --stipe-shadow-raised,
+        0 calc(var(--depth) * 2px) calc(var(--depth) * 6px)
+          color-mix(
+            in srgb,
+            var(--color-base-content) calc(var(--depth) * 4%),
+            transparent
+          )
+      )
+    );
+  }
+  .caps-window[hidden] {
+    display: none;
+  }
+  .caps-window[data-fit-content="true"] .caps-window-body {
+    flex: 0 1 auto;
+    scrollbar-width: thin;
+  }
+  .caps-window[data-active="true"] {
+    border-color: var(
+      --caps-window-border-active,
+      color-mix(in srgb, var(--color-primary) 50%, var(--color-base-300))
+    );
+    box-shadow: var(
+      --caps-window-shadow,
+      var(
+        --stipe-shadow-raised,
+        0 0 0 calc(var(--depth) * 1px)
+          color-mix(
+            in srgb,
+            var(--color-primary) calc(var(--depth) * 10%),
+            transparent
+          ),
+        0 calc(var(--depth) * 4px) calc(var(--depth) * 12px)
+          color-mix(
+            in srgb,
+            var(--color-base-content) calc(var(--depth) * 6%),
+            transparent
+          )
+      )
+    );
+  }
+  .caps-window[data-active="true"] .caps-window-header {
+    background: color-mix(
+      in oklab,
+      var(--color-primary)
+        var(
+          --caps-window-header-active-tint,
+          var(--caps-window-header-tint, 0%)
+        ),
+      var(--caps-window-header-face, var(--color-base-200))
+    );
+  }
+  .caps-window[data-floating="true"] {
+    box-shadow: var(
+      --caps-window-shadow,
+      var(
+        --stipe-shadow-raised,
+        0 calc(var(--depth) * 2px) calc(var(--depth) * 4px)
+          color-mix(
+            in srgb,
+            var(--color-base-300) calc(var(--depth) * 30%),
+            transparent
+          ),
+        0 calc(var(--depth) * 12px) calc(var(--depth) * 28px)
+          calc(var(--depth) * -8px)
+          color-mix(
+            in srgb,
+            var(--color-base-300) calc(var(--depth) * 55%),
+            transparent
+          )
+      )
+    );
+  }
+  .caps-window-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+    min-height: 32px;
+    flex-shrink: 0;
+    padding-right: var(--spacing-xs);
+    background: color-mix(
+      in oklab,
+      var(--color-primary) var(--caps-window-header-tint, 0%),
+      var(--caps-window-header-face, var(--color-base-200))
+    );
+    border-bottom: var(
+      --caps-window-header-border,
+      var(--border) solid var(--stipe-linework)
+    );
+    box-shadow: var(
+      --stipe-shadow-raised,
+      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.045))
+    );
+  }
+  .caps-window-title {
+    font-family: var(--caps-label-font, inherit);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    min-width: 0;
+    flex: 1;
+    align-self: stretch;
+    min-height: 32px;
+    text-align: left;
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--caps-window-path-size, 11px);
+    font-weight: 600;
+    color: inherit;
+    background: transparent;
+    border: 0;
+  }
+  .caps-window-snap-preview {
+    position: absolute;
+    pointer-events: none;
+    border-radius: var(--radius-box);
+    border: var(--border) solid var(--color-info);
+    background: color-mix(in oklab, var(--color-info) 14%, transparent);
+    box-shadow: var(
+      --stipe-shadow-raised,
+      inset 0 calc(var(--depth) * 1px) 0
+        color-mix(in oklab, white calc(var(--depth) * 40%), transparent),
+      inset 0 calc(var(--depth) * -2px) 0
+        color-mix(
+          in oklab,
+          var(--color-info) calc(var(--depth) * 25%),
+          transparent
+        )
+    );
+  }
+  .caps-window-title[data-caps-window-handle] {
+    touch-action: none;
+  }
+  .caps-window[data-floating="true"] [data-caps-window-handle] {
+    cursor: grab;
+  }
+  .caps-window[data-floating="true"] [data-caps-window-handle]:active {
+    cursor: grabbing;
+  }
+  .caps-window-title:focus-visible {
+    outline: 2px solid var(--color-info);
+    outline-offset: -3px;
+    border-radius: var(--radius-selector);
+  }
+  .caps-window-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 0;
+    max-width: 100%;
+    font-family: var(--caps-window-title-font, inherit);
+    font-size: var(--caps-window-title-size, inherit);
+    font-weight: var(--caps-window-title-weight, inherit);
+  }
+  .caps-window-subtitle {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+    color: color-mix(in srgb, currentColor 65%, transparent);
+  }
+  /* Back and Forward sit flush at the leading edge, before the title handle. */
+  .caps-window-back {
+    flex-shrink: 0;
+    margin-left: var(--spacing-2xs);
+  }
+  .caps-window-back + .caps-window-forward {
+    margin-left: 0;
+  }
+  .caps-window-forward {
+    flex-shrink: 0;
+  }
+  .caps-window-back + .caps-window-title,
+  .caps-window-forward + .caps-window-title {
+    padding-left: var(--spacing-2xs);
+  }
+  /* The slim tiled bar: same parts, tighter rhythm. */
+  .caps-window-header[data-density="compact"] {
+    min-height: 28px;
+  }
+  .caps-window-header[data-density="compact"] .caps-window-title {
+    min-height: 28px;
+    padding-block: var(--spacing-2xs);
+  }
+  .caps-window-icon {
+    display: flex;
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+  .caps-window-icon > :is(svg, .caps-monogram) {
+    width: 14px;
+    height: 14px;
+  }
+  .caps-window-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+    flex-shrink: 0;
+  }
+  /* Fixed window controls keep their square target during label motion. */
+  .caps-window-actions .caps-button {
+    min-width: var(--size);
+    flex-shrink: 0;
+  }
+  .caps-window-actions .caps-button:focus-visible {
+    outline-offset: -2px;
+  }
+  /* Window chrome keeps small glyphs, with room for fingers on touch screens. */
+  @media (max-width: 640px), (any-pointer: coarse) {
+    .caps-window-header
+      .caps-button:not(.caps-window-back, .caps-window-forward),
+    .caps-icon-button-responsive:not(.caps-window-back, .caps-window-forward) {
+      min-width: 44px;
+      min-height: 44px;
+      flex-shrink: 0;
+    }
+    .caps-window-title[data-caps-window-handle] {
+      min-height: 44px;
+    }
+  }
+  /* The path trail: flat text crumbs on the header face, no new colours.
+     It keeps the title's size and the header's 32px height, and its icon
+     sits where a plain title's icon sits, so switching views never shifts it. */
+  .caps-window-header > .caps-window-icon {
+    margin-inline: var(--spacing-md)
+      calc(var(--spacing-sm) - var(--spacing-2xs));
+  }
+  .caps-window-crumbs {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex-shrink: 1;
+    font-family: var(--caps-label-font, inherit);
+    font-size: var(--caps-window-path-size, 11px);
+    font-weight: 500;
+  }
+  .caps-window-crumb-item[data-caps-crumb-position="current"] {
+    font-weight: 600;
+  }
+  .caps-window-crumb-item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+  .caps-window-crumb-separator {
+    padding-inline: var(--spacing-2xs);
+    color: color-mix(in srgb, currentColor 50%, transparent);
+  }
+  .caps-window-crumb {
+    min-width: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    gap: var(--spacing-2xs);
+  }
+  .caps-window-crumb-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .caps-window-crumb-item[data-caps-crumb-position="current"]
+    .caps-window-crumb {
+    padding-inline: var(--spacing-xs);
+  }
+  /* The trail keeps its width beside the empty title handle (a zero basis),
+     and gives way, crumb labels first, only when the row runs out of room. */
+  .caps-window-crumbs:has(+ .caps-window-title) {
+    max-width: 70%;
+  }
+  .caps-window-statuses {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+    padding-inline-end: var(--spacing-sm);
+    font-size: 11px;
+    color: color-mix(in srgb, currentColor 65%, transparent);
+  }
+  .caps-window-commands {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2xs);
+    flex-shrink: 0;
+  }
+  /* A phone keeps `‹ parent › current`; the rest of the trail is a tap away on Back. */
+  @media (max-width: 640px) {
+    /* Touch buttons cannot shrink below 44px. Reserve their path's width
+       instead of shrinking its containers underneath neighbouring targets. */
+    .caps-window-header:has(.caps-window-crumbs) {
+      flex-wrap: wrap;
+    }
+    /* Keep commands and window controls together below a phone's path.
+       Otherwise one short command fits beside the path and strands the
+       close/minimize controls on their own line. */
+    .caps-window-header:has(
+        .caps-window-crumb-item[data-caps-crumb-position="parent"]
+      ):has(.caps-window-commands)::after {
+      content: "";
+      flex-basis: 100%;
+      order: 1;
+    }
+    .caps-window-header:has(
+        .caps-window-crumb-item[data-caps-crumb-position="parent"]
+      )
+      > :is(.caps-window-commands, .caps-window-actions) {
+      order: 2;
+    }
+    .caps-window-header:has(
+        .caps-window-crumb-item[data-caps-crumb-position="parent"]
+      )
+      > .caps-window-commands {
+      margin-inline-end: auto;
+    }
+    .caps-window-crumbs {
+      min-width: min-content;
+      flex-shrink: 0;
+    }
+    .caps-window-crumb-item {
+      flex-shrink: 0;
+    }
+    /* State shrinks to its beads; the words stay for screen readers and a long press. */
+    .caps-window-statuses {
+      gap: var(--spacing-2xs);
+      padding-inline-end: var(--spacing-2xs);
+    }
+    .caps-window-status > span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .caps-window-crumb-item[data-caps-crumb-position="ancestor"] {
+      display: none;
+    }
+    .caps-window-crumb-item[data-caps-crumb-position="parent"]
+      .caps-window-crumb-separator {
+      display: none;
+    }
+  }
+  /* The host folds secondary and window commands into its maintained menu.
+     This opt-in keeps one row while allowing long path labels to truncate. */
+  @media (max-width: 640px) {
+    .caps-window-header[data-phone-compact="true"] {
+      --caps-window-path-size: 0.75rem;
+
+      flex-wrap: nowrap;
+    }
+    .caps-window-header[data-phone-compact="true"]::after {
+      display: none;
+    }
+    .caps-window-header[data-phone-compact="true"] > .caps-window-icon {
+      display: none;
+    }
+    .caps-window-header[data-phone-compact="true"] > .caps-window-crumbs {
+      flex: 1;
+      min-width: 0;
+      max-width: none;
+    }
+    .caps-window-header[data-phone-compact="true"] .caps-window-crumb-item {
+      flex-shrink: 1;
+      overflow: hidden;
+    }
+    .caps-window-header[data-phone-compact="true"]
+      .caps-window-crumb-item[data-caps-crumb-position="current"] {
+      flex-shrink: 0;
+      max-width: 50%;
+    }
+    .caps-window-header[data-phone-compact="true"] .caps-window-crumb {
+      flex-shrink: 1;
+      overflow: hidden;
+    }
+    .caps-window-header[data-phone-compact="true"]
+      > .caps-window-crumbs
+      + .caps-window-title {
+      flex: 0;
+      padding-inline: 0;
+    }
+    .caps-window-header[data-phone-compact="true"] > .caps-window-commands {
+      order: 0;
+      margin-inline-end: 0;
+    }
+  }
+  .caps-window-body {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+  }
+}

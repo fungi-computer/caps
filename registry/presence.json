@@ -39,7 +39,7 @@
         "display": "grid",
         "gridTemplateRows": "0fr",
         "opacity": 0,
-        "transition": "grid-template-rows var(--stipe-motion-normal) ease-out,\n      opacity var(--stipe-motion-normal) ease-out"
+        "transition": "grid-template-rows var(--stipe-motion-normal) ease-out,\n    opacity var(--stipe-motion-normal) ease-out"
       },
       ".caps-collapse[data-open=\"true\"]": {
         "gridTemplateRows": "1fr",
@@ -56,7 +56,7 @@
           "transitionDuration": "0s !important",
           "transitionDelay": "var(--stipe-motion-fast) !important"
         },
-        ".caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n      > .caps-collapse-clip": {
+        ".caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n    > .caps-collapse-clip": {
           "transition": "none !important"
         }
       },

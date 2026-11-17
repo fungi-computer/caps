@@ -1,6 +1,6 @@
 {
   "name": "@fungi.computer/caps",
-  "version": "0.11.7",
+  "version": "0.12.0",
   "author": "Levi <levi@technomancy.dev>",
   "description": "Product-neutral React primitives and blocks for Fungi interfaces",
   "type": "module",
@@ -466,6 +466,7 @@
   "files": [
     "dist",
     "src/styles.css",
+    "src/styles",
     "docs/api",
     "README.md",
     "src/fonts.css",
@@ -479,9 +480,11 @@
   "scripts": {
     "clean": "node --input-type=module --eval \"import { rm } from 'node:fs/promises'; await rm('dist', { recursive: true, force: true });\"",
     "build:css": "tailwindcss -i src/styles.css -o dist/styles.css",
-    "lint:css": "stylelint 'src/**/*.css' '.ladle/**/*.css' 'workbench/**/*.css' --config stylelint.config.mjs",
+    "check:style-size": "node scripts/style-size.mjs",
+    "lint:css": "stylelint 'src/**/*.css' '.ladle/**/*.css' 'workbench/**/*.css' --config stylelint.config.mjs && node scripts/style-size.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "build": "pnpm run clean && tsc -p tsconfig.build.json && pnpm run build:css",
+    "proof:visual": "node --import tsx scripts/proof-visual.mjs",
     "registry:generate": "node scripts/registry.mjs",
     "registry:check": "node scripts/registry.mjs check",
     "registry:stranger": "node scripts/registry-stranger.mjs",

@@ -1,0 +1,424 @@
+/* Form rhythm: fields 16px apart, sections 32px apart with one quiet rule. */
+.caps-form {
+  min-width: 0;
+  container-type: inline-size;
+}
+/* Keep footer queries outside the busy fieldset. Chromium can lose the
+     nested container's layout when a submission inserts more form fields. */
+.caps-form .caps-form-footer {
+  container-type: normal;
+}
+.caps-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.caps-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  min-width: 0;
+}
+.caps-form-section + .caps-form-section {
+  border-top: var(--border) solid var(--stipe-linework);
+  padding-top: var(--spacing-xl);
+  margin-top: var(--spacing-sm);
+}
+.caps-form-section-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+.caps-form-section-title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--color-base-content);
+}
+.caps-form-section-description {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--stipe-fg-muted);
+}
+.caps-form-section-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  min-width: 0;
+}
+
+.caps-form-footer {
+  flex-shrink: 0;
+  container-type: inline-size;
+}
+.caps-form-footer[data-divider="true"] {
+  border-top: var(--border) solid var(--stipe-linework);
+  padding-top: var(--spacing-md);
+}
+.caps-form-footer-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+.caps-form-footer-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--stipe-fg-muted);
+}
+.caps-form-footer-actions {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+}
+/* Stretch stacks full-width actions, primary (last in source) on top. */
+.caps-form-footer[data-layout="stretch"] .caps-form-footer-row,
+.caps-form-footer[data-layout="stretch"] .caps-form-footer-actions {
+  flex-direction: column-reverse;
+  align-items: stretch;
+}
+/* Phone-width footers give every action an equal share of the row. */
+@container (max-width: 24rem) {
+  .caps-form-footer-actions > * {
+    flex: 1 1 0;
+  }
+}
+.caps-form-footer .caps-field-error {
+  padding-bottom: var(--spacing-sm);
+}
+
+/* The label gutter belongs to an opted-in form. No default Field or Form
+     changes geometry, including the signed-off permissions panel. */
+:is(.caps-form, .caps-form-section, .caps-fieldset)[data-layout="columns"] {
+  --caps-form-label-col: 7rem;
+}
+.caps-form[data-layout="columns"]
+  :is(.caps-form-body, .caps-form-section-fields) {
+  gap: var(--spacing-sm);
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  ) {
+  display: grid;
+  grid-template-columns: var(--caps-form-label-col) minmax(0, 1fr);
+  column-gap: var(--spacing-md);
+  row-gap: var(--spacing-2xs);
+  align-items: center;
+  justify-content: stretch;
+  --caps-field-control-width: 100%;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-field-copy {
+  display: contents;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-field-copy
+  > label {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.caps-fieldset[data-layout="columns"] > .caps-fieldset-legend {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-field-copy
+  > .caps-field-description {
+  grid-column: 2;
+  grid-row: 2;
+  max-width: 30rem;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal) {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+  max-width: 30rem;
+}
+/* Grid controls fill the value column; a switch or checkbox is a fixed-size
+     key, never a stretched track spanning the next settings row. */
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-switch {
+  width: 40px;
+  justify-self: start;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-checkbox {
+  width: 24px;
+  justify-self: start;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  .caps-field[data-orientation="vertical"]
+  > .caps-field-lead {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  .caps-field[data-orientation="vertical"]
+  > .caps-field-error-reveal {
+  grid-column: 2;
+  grid-row: 2;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  .caps-field[data-orientation="horizontal"]
+  > .caps-field-row
+  > .caps-field-lead {
+  grid-column: 1;
+  grid-row: 1;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  .caps-field[data-orientation="horizontal"]
+  > .caps-field-error-reveal {
+  padding-inline-start: calc(var(--caps-form-label-col) + var(--spacing-md));
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  .caps-field:has(> .caps-field-error-reveal[data-open="true"])
+  .caps-field-description,
+.caps-fieldset[data-layout="columns"]:has(
+    > .caps-field-error-reveal[data-open="true"]
+  )
+  > .caps-fieldset-description {
+  display: none;
+}
+.caps-fieldset[data-layout="columns"] {
+  display: grid;
+  grid-template-columns: var(--caps-form-label-col) minmax(0, 1fr);
+  column-gap: var(--spacing-md);
+  row-gap: var(--spacing-2xs);
+  align-items: start;
+}
+.caps-fieldset[data-layout="columns"] > .caps-fieldset-legend {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  /* A floated legend is an ordinary grid item rather than the fieldset's
+       rendered legend, so it shares a row with its keys. It centres on the
+       first line of keys, as a field's label centres on its control, and
+       stays on that line when the keys wrap. */
+  float: left;
+  align-self: start;
+  min-height: var(--caps-fieldset-legend-line, 2.25rem);
+  align-content: center;
+}
+.caps-fieldset[data-layout="columns"]:has(
+    .caps-icon-choice:not([data-swatch])
+  ) {
+  --caps-fieldset-legend-line: 3.25rem;
+}
+.caps-fieldset[data-layout="columns"] > .caps-fieldset-fields {
+  grid-column: 2;
+  grid-row: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0;
+  /* Choices share the value column's measure with the form's controls. */
+  max-width: 30rem;
+}
+.caps-fieldset[data-layout="columns"]
+  > :is(.caps-fieldset-description, .caps-field-error-reveal) {
+  grid-column: 2;
+  grid-row: 2;
+}
+.caps-form[data-layout="columns"] .caps-form-footer {
+  padding-inline-start: calc(var(--caps-form-label-col) + var(--spacing-md));
+  max-width: calc(var(--caps-form-label-col) + var(--spacing-md) + 30rem);
+}
+/* A short add form can share its one field row with the actions. */
+@container (min-width: 36rem) {
+  .caps-form[data-layout="columns"]
+    .caps-form-body:has(> .caps-field:first-child:nth-last-child(2)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+  .caps-form[data-layout="columns"]
+    .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))
+    > .caps-form-footer {
+    padding-inline-start: 0;
+    max-width: none;
+  }
+}
+/* The label column reads like a details panel's fact column: a 16px Sigil
+     before a quiet label, the value beside it. The icon shares the label's
+     cell; the description and error stay under the control. */
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-field-lead {
+  display: contents;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-field-lead
+  > .caps-field-copy {
+  display: contents;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-field-lead
+  > .caps-field-icon {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-field-lead
+  > .caps-field-copy
+  > label {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  padding-inline-start: calc(var(--caps-field-icon-size) + var(--spacing-xs));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  :is(
+    .caps-field[data-orientation="vertical"],
+    .caps-field[data-orientation="horizontal"] > .caps-field-row
+  )
+  > .caps-field-lead
+  > .caps-field-copy
+  > .caps-field-description {
+  grid-column: 2;
+  grid-row: 2;
+  max-width: 30rem;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"] .caps-field,
+.caps-fieldset[data-layout="columns"] {
+  --caps-field-icon-size: 1rem;
+}
+:is(.caps-form, .caps-form-section)[data-layout="columns"]
+  .caps-field
+  :is(.caps-field-copy > label, .caps-field-icon),
+.caps-fieldset[data-layout="columns"] > .caps-fieldset-legend {
+  color: var(--stipe-fg-muted);
+  font-weight: 400;
+}
+/* Phone-width containers stack every field: label (with its Sigil) above
+     the control, description and error under it. */
+@container (max-width: 24rem) {
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    ),
+  .caps-fieldset[data-layout="columns"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal),
+  .caps-fieldset[data-layout="columns"] > .caps-fieldset-fields {
+    grid-column: 1;
+    grid-row: 2;
+    max-width: none;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > .caps-field-copy
+    > .caps-field-description,
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    .caps-field[data-orientation="vertical"]
+    > .caps-field-error-reveal,
+  .caps-fieldset[data-layout="columns"]
+    > :is(.caps-fieldset-description, .caps-field-error-reveal) {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > .caps-field-copy
+    > label,
+  .caps-fieldset[data-layout="columns"] > .caps-fieldset-legend {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    /* Stacked, the legend sits on its own line above the keys. */
+    min-height: 0;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    .caps-field[data-orientation="horizontal"]
+    > .caps-field-error-reveal,
+  .caps-form[data-layout="columns"] .caps-form-footer {
+    padding-inline-start: 0;
+    max-width: none;
+  }
+  :is(.caps-form, .caps-form-section)[data-layout="columns"]
+    :is(
+      .caps-field[data-orientation="vertical"],
+      .caps-field[data-orientation="horizontal"] > .caps-field-row
+    )
+    > .caps-field-lead
+    > .caps-field-copy
+    > .caps-field-description {
+    grid-column: 1;
+    grid-row: 3;
+  }
+}

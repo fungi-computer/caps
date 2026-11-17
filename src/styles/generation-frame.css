@@ -1,0 +1,55 @@
+/* GenerationFrame: every layer shares one cell of a fixed frame, so a
+     generation never changes the frame's size. */
+.caps-generation-frame {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-base-200);
+}
+.caps-generation-frame[data-aspect] {
+  height: auto;
+}
+.caps-generation-frame > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+  min-height: 0;
+}
+.caps-generation-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+}
+.caps-generation-placeholder.skeleton {
+  background-color: var(--color-base-200);
+}
+.caps-generation-media > :where(img, video, canvas) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Refining shows the rough preview softly; done sharpens it. */
+.caps-generation-frame[data-status="refining"] > .caps-generation-media {
+  filter: blur(var(--caps-generation-refine-blur, 6px));
+  opacity: 0.85;
+}
+/* A failure dims the frame behind its message. */
+.caps-generation-frame[data-status="failed"] > .caps-generation-placeholder {
+  opacity: 0.4;
+}
+/* The dimmed placeholder is a stacking context (opacity), which paints above
+     in-flow siblings; position the failure layer so its message and Retry
+     stay on top and clickable. */
+.caps-generation-failure {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  text-align: center;
+}

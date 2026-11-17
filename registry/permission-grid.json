@@ -28,7 +28,7 @@
         "overflowX": "auto",
         "margin": "0",
         "color": "var(--color-base-content)",
-        "border": "var(--border) solid\n      color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))",
+        "border": "var(--border) solid\n    color-mix(in oklch, var(--color-base-content) 22%, var(--color-base-100))",
         "borderRadius": "var(--radius-box)",
         "background": "var(--color-base-100)",
         "containerType": "inline-size"

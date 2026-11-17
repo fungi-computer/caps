@@ -1,0 +1,17 @@
+.caps-switch,
+.caps-radio,
+.caps-checkbox {
+  display: inline-grid;
+  grid-template-areas: "control";
+  width: 40px;
+  height: 24px;
+  flex: none;
+  vertical-align: middle;
+  color: color-mix(
+    in oklab,
+    var(--color-base-content) 35%,
+    var(--color-base-100)
+  );
+  border-radius: var(--radius-full);
+  transition: color var(--stipe-motion-normal) ease;
+}

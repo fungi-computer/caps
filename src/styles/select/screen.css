@@ -1,0 +1,5 @@
+@layer utilities {
+  .leading-heading {
+    line-height: var(--caps-heading-line-height, 1.25);
+  }
+}

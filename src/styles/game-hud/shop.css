@@ -1,0 +1,93 @@
+/* Shop and workbench rows. */
+.caps-offer-row,
+.caps-recipe-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--spacing-xs) var(--spacing-sm);
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px dashed
+    color-mix(in oklab, var(--card-ink, currentcolor) 35%, transparent);
+}
+.caps-offer-text {
+  display: grid;
+  min-width: 0;
+  line-height: 1.25;
+}
+.caps-offer-label,
+.caps-recipe-label {
+  font-weight: 700;
+}
+.caps-offer-detail {
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  font-size: 0.75rem;
+}
+.caps-offer-price {
+  padding: var(--spacing-2xs) var(--spacing-xs);
+  color: var(--color-secondary-content);
+  background: var(--color-secondary);
+  border-radius: var(--radius-selector);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.caps-recipe-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.caps-recipe-parts {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+.caps-recipe-action {
+  grid-row: 1;
+  grid-column: 2;
+}
+.caps-recipe-slot {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  align-content: center;
+  background: color-mix(
+    in oklab,
+    var(--color-base-content) 7%,
+    var(--card-paper, var(--color-base-100))
+  );
+  border: 2px solid var(--card-ink, currentcolor);
+  border-radius: var(--radius-selector);
+  line-height: 1;
+}
+.caps-recipe-slot[data-short] {
+  border-color: var(--color-error);
+  border-style: dashed;
+}
+.caps-recipe-glyph {
+  font-size: 1rem;
+}
+.caps-recipe-count {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+.caps-recipe-slot[data-short] .caps-recipe-count {
+  color: var(--color-error);
+}
+.caps-recipe-arrow {
+  font-weight: 800;
+}
+
+.caps-made-with {
+  color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
+  font-size: 0.75rem;
+  text-align: center;
+  text-decoration: none;
+}
+.caps-made-with:hover,
+.caps-made-with:focus-visible {
+  color: var(--caps-primary-text);
+  text-decoration: underline;
+}

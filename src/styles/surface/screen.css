@@ -1,0 +1,207 @@
+/* The screen context. A screen is glass, so the form controls on it read
+     these values: flat, calm ink, tiny mono legends, segmented ranges. It
+     only defines custom properties; each control's own rules read them, with
+     its ordinary look as the fallback. Themes tune them with --stipe-screen-*. */
+.caps-screen {
+  --caps-control-depth: var(--stipe-screen-depth, 0);
+  --caps-control-ink: var(--stipe-screen-ink, var(--color-base-content));
+  /* prettier-ignore */
+  --caps-control-dim: var(
+      --stipe-screen-dim,
+      color-mix(in oklab, var(--color-base-content) 68%, var(--color-base-100))
+    );
+  /* prettier-ignore */
+  --caps-control-line: var(
+      --stipe-screen-line,
+      color-mix(in oklab, var(--color-base-content) 22%, transparent)
+    );
+  --caps-control-face: var(--stipe-screen-face, transparent);
+  --caps-control-label-font: var(--stipe-screen-label-font, var(--font-mono));
+  --caps-control-label-size: var(--stipe-screen-label-size, 0.625rem);
+  --caps-control-label-case: var(--stipe-screen-label-case, uppercase);
+  --caps-control-label-tracking: var(--stipe-screen-label-tracking, 0.08em);
+  --caps-control-segment: var(--stipe-screen-segment, 0.5rem);
+  --caps-control-segment-gap: var(--stipe-screen-segment-gap, 2px);
+  /* prettier-ignore */
+  --caps-control-range-mask: repeating-linear-gradient(
+      to right,
+      black 0 var(--caps-control-segment),
+      transparent var(--caps-control-segment)
+        calc(var(--caps-control-segment) + var(--caps-control-segment-gap))
+    );
+  --caps-control-range-track: 100%;
+  --caps-control-range-thumb: var(--caps-control-ink);
+  --caps-control-range-focus: var(--caps-focus-ring);
+  /* A selected icon key is calm: a hairline and a faint ink tint, so its
+       colour Sigil is the one bright thing on the glass. */
+  /* prettier-ignore */
+  --caps-control-selected-face: var(
+      --stipe-screen-selected-face,
+      color-mix(in oklab, var(--caps-control-ink) 6%, transparent)
+    );
+  /* prettier-ignore */
+  --caps-control-selected-line: var(
+      --stipe-screen-selected-line,
+      var(--caps-control-ink)
+    );
+  /* NumberField becomes an encoder: the value sits in a dial between
+       hairline − / + keys. */
+  --caps-control-dial: block;
+  --caps-control-number-areas: "down dial up";
+  --caps-control-number-value: dial;
+  --caps-control-number-face: transparent;
+  --caps-control-number-line: transparent;
+  --caps-control-number-size: var(--text-xl);
+  --caps-control-number-key-align: center;
+  --caps-control-number-width: 4ch;
+  --caps-control-number-padding: 0;
+  --caps-control-number-unit-room: 0;
+  --caps-control-number-stack: column;
+  --caps-control-number-unit-position: static;
+  min-width: 0;
+  border-radius: var(--radius-field);
+  font-family: var(--font-sans);
+  color: var(--color-base-content);
+  background-color: var(--color-base-100);
+  background-image: var(--stipe-display-texture-image);
+  background-size: var(--caps-print-texture-size, auto);
+  text-shadow: var(--stipe-display-text-shadow);
+  box-shadow: var(
+    --stipe-shadow-inset,
+    inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)
+      color-mix(
+        in oklab,
+        var(--color-base-content) calc(var(--depth) * 12%),
+        transparent
+      )
+  );
+}
+/* Instrument parts printed on the glass: a title bar, then hairline-ruled
+     cells. Lines read the screen's control line; each cell's offset shadow
+     draws the rule above and before it, clipped at the screen's edge. */
+.caps-screen-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: var(--border) solid
+    var(--caps-control-line, var(--color-base-300));
+  font-family: var(--caps-control-label-font, inherit);
+  font-size: var(--text-sm);
+}
+.caps-screen-header-icon {
+  display: inline-flex;
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.caps-screen-header-icon > :is(svg, img) {
+  width: 100%;
+  height: 100%;
+}
+.caps-screen-header-title {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.caps-screen-header-status {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+.caps-screen-cells {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--caps-screen-cell-min, 12rem)), 1fr)
+  );
+  overflow: hidden;
+}
+.caps-screen-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 0;
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
+  box-shadow: calc(var(--border) * -1) calc(var(--border) * -1) 0 0
+    var(--caps-control-line, var(--color-base-300));
+}
+.caps-screen-cell[data-wide] {
+  grid-column: 1 / -1;
+}
+.caps-screen-cell-legend,
+.caps-screen-cell-readout {
+  font-family: var(--caps-control-label-font, inherit);
+  font-size: var(--caps-control-label-size, var(--text-xs));
+  letter-spacing: var(--caps-control-label-tracking, inherit);
+  text-transform: var(--caps-control-label-case, inherit);
+  line-height: 1.5;
+}
+.caps-screen-cell-legend {
+  font-weight: 600;
+  color: var(--stipe-fg-muted);
+}
+.caps-screen-cell-readout {
+  position: absolute;
+  top: var(--spacing-sm);
+  inset-inline-end: var(--spacing-md);
+  color: var(--caps-control-ink, var(--color-base-content));
+}
+.caps-screen-cells[data-appearance="compact"] {
+  display: block;
+  overflow: visible;
+}
+.caps-screen-cell[data-appearance="compact"] {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-height: 2.5rem;
+  padding: 0;
+  box-shadow: none;
+  font-size: 0.875rem;
+}
+.caps-screen-cell[data-appearance="compact"]
+  + .caps-screen-cell[data-appearance="compact"] {
+  border-top: 1px solid color-mix(in oklab, currentcolor 12%, transparent);
+}
+.caps-screen-cell[data-appearance="compact"] > .caps-screen-cell-icon {
+  flex: 0 0 2.5rem;
+}
+.caps-screen-cell[data-appearance="compact"] > .caps-screen-cell-legend {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+.caps-screen-cell-controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-left: auto;
+}
+.caps-screen-cell-controls svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+@media (max-width: 540px) {
+  .caps-screen-cell[data-appearance="compact"] {
+    flex-wrap: wrap;
+  }
+  .caps-screen-cell-controls {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+}
+@media (max-width: 480px) {
+  .caps-screen-cell[data-appearance="compact"] {
+    padding-block: var(--spacing-sm);
+  }
+  .caps-screen-cell-controls {
+    width: 100%;
+  }
+}

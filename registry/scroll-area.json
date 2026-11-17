@@ -70,9 +70,9 @@
         "isolation": "isolate",
         "minWidth": "0",
         "minHeight": "0",
-        "border": "var(--caps-surface-rim) solid\n      color-mix(\n        in oklab,\n        transparent,\n        var(--stipe-linework) calc((1 - var(--depth)) * 100%)\n      )",
+        "border": "var(--caps-surface-rim) solid\n    color-mix(\n      in oklab,\n      transparent,\n      var(--stipe-linework) calc((1 - var(--depth)) * 100%)\n    )",
         "borderRadius": "calc(var(--radius-field) + var(--caps-surface-rim))",
-        "background": "linear-gradient(\n          var(--caps-surface-face, var(--color-base-100)),\n          var(--caps-surface-face, var(--color-base-100))\n        )\n        padding-box,\n      var(--stipe-surface-frame-image, var(--caps-surface-molding)) border-box",
+        "background": "linear-gradient(\n        var(--caps-surface-face, var(--color-base-100)),\n        var(--caps-surface-face, var(--color-base-100))\n      )\n      padding-box,\n    var(--stipe-surface-frame-image, var(--caps-surface-molding)) border-box",
         "boxShadow": "var(\n      --stipe-shadow-raised,\n      0 0 0 calc(var(--depth) * 1px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) 12%,\n          var(--color-base-200)\n        ),\n      0 0 0 calc(var(--depth) * 3px) var(--color-base-200),\n      0 calc(var(--depth) * 1px) 0 calc(var(--depth) * 4px)\n        oklch(100% 0 0 / calc(var(--depth) * 0.3))\n    )"
       },
       ".caps-surface[data-surface-size=\"sm\"]": {
@@ -100,24 +100,24 @@
       ".caps-surface::before": {
         "inset": "calc(-1 * var(--caps-surface-rim))",
         "borderRadius": "inherit",
-        "boxShadow": "var(\n      --stipe-shadow-edge,\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.48)),\n      inset 1px 0 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),\n      inset 0 -1px 0\n        color-mix(in oklab, var(--color-base-content) 10%, transparent)\n    )"
+        "boxShadow": "var(\n    --stipe-shadow-edge,\n    inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.48)),\n    inset 1px 0 0 oklch(100% 0 0 / calc(var(--depth) * 0.18)),\n    inset 0 -1px 0\n      color-mix(in oklab, var(--color-base-content) 10%, transparent)\n  )"
       },
       ".caps-surface::after": {
         "inset": "0",
         "borderRadius": "var(--radius-field)",
-        "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 1px 0\n        color-mix(in oklab, var(--color-base-content) 18%, transparent),\n      inset 0 var(--caps-surface-inset) var(--caps-surface-inset)\n        oklch(0% 0 0 / calc(var(--depth) * 0.16)),\n      inset 0 0 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n      inset -1px -1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.16))\n    )"
+        "boxShadow": "var(\n    --stipe-shadow-inset,\n    inset 0 1px 0\n      color-mix(in oklab, var(--color-base-content) 18%, transparent),\n    inset 0 var(--caps-surface-inset) var(--caps-surface-inset)\n      oklch(0% 0 0 / calc(var(--depth) * 0.16)),\n    inset 0 0 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.08)),\n    inset -1px -1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.16))\n  )"
       },
       ".caps-display-gasket": {
         "--caps-display-gasket-padding": "calc(var(--spacing-sm) * var(--depth))",
         "padding": "var(--caps-display-gasket-padding)",
         "borderRadius": "var(--radius-field)",
         "background": "var(--stipe-display-gasket-face, var(--color-base-300))",
-        "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 20%),\n          transparent\n        )\n    )"
+        "boxShadow": "var(\n    --stipe-shadow-inset,\n    inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 20%),\n        transparent\n      )\n  )"
       },
       ".caps-display-gasket[data-display-density=\"compact\"]": {
         "--caps-display-gasket-padding": "var(--spacing-2xs)"
       },
-      ".caps-surface[data-surface-size=\"sm\"][data-surface-placement=\"embedded\"]\n    > .caps-display-gasket[data-display-density=\"compact\"]": {
+      ".caps-surface[data-surface-size=\"sm\"][data-surface-placement=\"embedded\"]\n  > .caps-display-gasket[data-display-density=\"compact\"]": {
         "--caps-display-gasket-padding": "1px"
       },
       ".caps-display-gasket > .caps-screen": {
@@ -162,7 +162,7 @@
         "backgroundImage": "var(--stipe-display-texture-image)",
         "backgroundSize": "var(--caps-print-texture-size, auto)",
         "textShadow": "var(--stipe-display-text-shadow)",
-        "boxShadow": "var(\n      --stipe-shadow-inset,\n      inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        )\n    )"
+        "boxShadow": "var(\n    --stipe-shadow-inset,\n    inset 0 calc(var(--depth) * 1px) calc(var(--depth) * 2px)\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        transparent\n      )\n  )"
       },
       ".caps-screen-header": {
         "display": "flex",
@@ -170,7 +170,7 @@
         "gap": "var(--spacing-sm)",
         "minWidth": "0",
         "padding": "var(--spacing-sm) var(--spacing-md)",
-        "borderBottom": "var(--border) solid\n      var(--caps-control-line, var(--color-base-300))",
+        "borderBottom": "var(--border) solid\n    var(--caps-control-line, var(--color-base-300))",
         "fontFamily": "var(--caps-control-label-font, inherit)",
         "fontSize": "var(--text-sm)"
       },
@@ -197,7 +197,7 @@
       },
       ".caps-screen-cells": {
         "display": "grid",
-        "gridTemplateColumns": "repeat(\n      auto-fit,\n      minmax(min(100%, var(--caps-screen-cell-min, 12rem)), 1fr)\n    )",
+        "gridTemplateColumns": "repeat(\n    auto-fit,\n    minmax(min(100%, var(--caps-screen-cell-min, 12rem)), 1fr)\n  )",
         "overflow": "hidden"
       },
       ".caps-screen-cell": {
@@ -207,7 +207,7 @@
         "gap": "var(--spacing-xs)",
         "minWidth": "0",
         "padding": "var(--spacing-sm) var(--spacing-md) var(--spacing-md)",
-        "boxShadow": "calc(var(--border) * -1) calc(var(--border) * -1) 0 0\n      var(--caps-control-line, var(--color-base-300))"
+        "boxShadow": "calc(var(--border) * -1) calc(var(--border) * -1) 0 0\n    var(--caps-control-line, var(--color-base-300))"
       },
       ".caps-screen-cell[data-wide]": { "gridColumn": "1 / -1" },
       ".caps-screen-cell-legend,.caps-screen-cell-readout": {
@@ -240,7 +240,7 @@
         "boxShadow": "none",
         "fontSize": "0.875rem"
       },
-      ".caps-screen-cell[data-appearance=\"compact\"]\n    + .caps-screen-cell[data-appearance=\"compact\"]": {
+      ".caps-screen-cell[data-appearance=\"compact\"]\n  + .caps-screen-cell[data-appearance=\"compact\"]": {
         "borderTop": "1px solid color-mix(in oklab, currentcolor 12%, transparent)"
       },
       ".caps-screen-cell[data-appearance=\"compact\"] > .caps-screen-cell-icon": {
@@ -308,7 +308,7 @@
       },
       ".caps-scroll-area.caps-surface": {
         "--caps-scroll-frame-inset": "var(--caps-surface-rim)",
-        "background": "var(--stipe-surface-frame-image, var(--caps-surface-molding))\n      border-box"
+        "background": "var(--stipe-surface-frame-image, var(--caps-surface-molding))\n    border-box"
       },
       ".caps-scroll-area.caps-surface::after": {
         "insetInlineEnd": "var(--caps-scroll-gutter-width)"
@@ -344,11 +344,11 @@
         "inset": "0",
         "pointerEvents": "none",
         "borderRadius": "var(--radius-selector)",
-        "backgroundColor": "var(\n      --caps-scrollbar-thumb,\n      color-mix(in oklab, var(--color-base-content) 22%, transparent)\n    )",
+        "backgroundColor": "var(\n    --caps-scrollbar-thumb,\n    color-mix(in oklab, var(--color-base-content) 22%, transparent)\n  )",
         "transition": "background-color var(--stipe-motion-fast) ease-out"
       },
       ".caps-scroll-area:hover .caps-scroll-thumb-surface,.caps-scroll-thumb:active .caps-scroll-thumb-surface": {
-        "backgroundColor": "var(\n      --caps-scrollbar-thumb-active,\n      color-mix(in oklab, var(--color-base-content) 40%, transparent)\n    )"
+        "backgroundColor": "var(\n    --caps-scrollbar-thumb-active,\n    color-mix(in oklab, var(--color-base-content) 40%, transparent)\n  )"
       },
       "@media (prefers-reduced-motion: reduce)": {
         ".caps-scroll-thumb-surface": { "transform": "none !important" }

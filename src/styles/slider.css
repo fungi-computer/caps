@@ -1,0 +1,34 @@
+@layer utilities {
+  .caps-slider {
+    --caps-slider-depth: var(--depth);
+    --caps-slider-thumb: var(--range-thumb);
+    --range-progress: var(--caps-control-ink, currentColor);
+    mask-image: var(--caps-control-range-mask, none);
+  }
+  /* The mask hides an outline, so focus on the glass relights the level. */
+  .caps-slider:focus-visible {
+    --range-progress: var(--caps-control-range-focus, currentColor);
+  }
+  .caps-slider::-webkit-slider-runnable-track {
+    background-color: var(--caps-control-line, var(--range-bg));
+    height: var(
+      --caps-control-range-track,
+      calc(var(--range-thumb-size) * 0.5)
+    );
+  }
+  .caps-slider::-moz-range-track {
+    background-color: var(--caps-control-line, var(--range-bg));
+    height: var(
+      --caps-control-range-track,
+      calc(var(--range-thumb-size) * 0.5)
+    );
+  }
+  .caps-slider::-webkit-slider-thumb {
+    --depth: var(--caps-control-depth, var(--caps-slider-depth));
+    --range-thumb: var(--caps-control-range-thumb, var(--caps-slider-thumb));
+  }
+  .caps-slider::-moz-range-thumb {
+    --depth: var(--caps-control-depth, var(--caps-slider-depth));
+    --range-thumb: var(--caps-control-range-thumb, var(--caps-slider-thumb));
+  }
+}

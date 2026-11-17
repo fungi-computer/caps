@@ -1,0 +1,299 @@
+.caps-feedback-layer {
+  --caps-pixel-outline-ink: var(--caps-feedback-ink);
+  /* prettier-ignore */
+  --caps-feedback-ink: light-dark(
+      color-mix(in oklab, var(--color-base-content), black 45%),
+      var(--color-base-300)
+    );
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.caps-feedback-layer[data-paused="true"] .caps-feedback-mark,
+.caps-feedback-layer[data-paused="true"] .caps-feedback-mark * {
+  animation-play-state: paused;
+}
+.caps-feedback-mark {
+  --caps-feedback-tone: var(--color-success);
+
+  position: absolute;
+  top: var(--caps-feedback-y);
+  left: var(--caps-feedback-x);
+  width: 0;
+  height: 0;
+}
+.caps-feedback-mark[data-kind="deny"] {
+  --caps-feedback-tone: var(--color-error);
+}
+.caps-feedback-mark[data-kind="hit"] {
+  --caps-feedback-tone: var(--color-warning);
+}
+.caps-feedback-ring {
+  position: absolute;
+  top: -14px;
+  left: -14px;
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--caps-feedback-tone);
+  border-radius: var(--radius-full);
+  box-shadow:
+    0 0 0 2px var(--caps-feedback-ink),
+    inset 0 0 0 2px var(--caps-feedback-ink);
+  opacity: 0;
+  animation: caps-feedback-ring var(--stipe-motion-spring-duration)
+    steps(4, end);
+}
+.caps-feedback-mark[data-kind="deny"] .caps-feedback-ring {
+  border-radius: var(--radius-selector);
+  rotate: 45deg;
+}
+.caps-feedback-amount {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  translate: -50% -100%;
+  animation:
+    caps-feedback-pop var(--stipe-motion-normal) steps(3, end),
+    caps-feedback-rise var(--caps-feedback-life) steps(12, end) forwards;
+}
+.caps-feedback-note {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: max-content;
+  max-width: min(18rem, 70vw);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  color: var(--color-base-content);
+  background: var(--color-base-100);
+  border: 2px solid var(--caps-feedback-ink);
+  border-left: 6px solid var(--caps-feedback-tone);
+  border-radius: var(--radius-selector);
+  box-shadow: 2px 2px 0 var(--caps-feedback-ink);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  line-height: 1.3;
+  transform-origin: 0 0;
+  animation:
+    caps-feedback-pop var(--stipe-motion-normal) steps(3, end),
+    caps-feedback-out var(--caps-feedback-life) steps(8, end) forwards;
+}
+.caps-feedback-mark[data-kind="deny"] .caps-feedback-note {
+  animation:
+    caps-feedback-refuse var(--stipe-motion-slow) steps(4, end),
+    caps-feedback-out var(--caps-feedback-life) steps(8, end) forwards;
+}
+
+@keyframes caps-feedback-ring {
+  from {
+    opacity: 1;
+    scale: 0.4;
+  }
+  to {
+    opacity: 0;
+    scale: 1.6;
+  }
+}
+/* A two-frame squash as the mark lands. */
+@keyframes caps-feedback-pop {
+  0% {
+    scale: 1.25 0.75;
+  }
+  50% {
+    scale: 0.92 1.08;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes caps-feedback-rise {
+  0% {
+    translate: -50% -100%;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: -50% calc(-100% - 28px);
+  }
+}
+@keyframes caps-feedback-out {
+  0%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/* A refusal shakes its head: integer-pixel steps each way. */
+@keyframes caps-feedback-refuse {
+  0% {
+    translate: -4px 0;
+  }
+  25% {
+    translate: 4px 0;
+  }
+  50% {
+    translate: -2px 0;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+/* Comic sound words: a punchy pop-in label anchored bottom-centre above
+     its point (the word reads as coming from that point, not covering it). */
+/* Words are comic lettering: a light fill, a heavy ink stroke and a
+     drop, so they read over any ground, day or night. */
+.caps-feedback-word {
+  --caps-feedback-word-tone: var(--color-base-100);
+
+  position: absolute;
+  top: var(--caps-feedback-y);
+  left: var(--caps-feedback-x);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.caps-feedback-word[data-tone="gun"] {
+  --caps-feedback-word-tone: var(--color-warning);
+}
+.caps-feedback-word[data-tone="mech"] {
+  --caps-feedback-word-tone: var(--color-info, var(--color-primary));
+}
+.caps-feedback-word[data-tone="wet"] {
+  --caps-feedback-word-tone: var(--color-error);
+}
+.caps-feedback-word[data-tone="quiet"] {
+  --caps-feedback-word-tone: var(--color-base-200);
+}
+.caps-feedback-word[data-tone="bite"] {
+  --caps-feedback-word-tone: var(--color-error);
+}
+.caps-feedback-word-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  translate: -50% 0;
+  display: block;
+  width: max-content;
+  max-width: 12ch;
+  color: var(--caps-feedback-word-tone);
+  -webkit-text-stroke: 4px var(--caps-feedback-ink, black);
+  paint-order: stroke fill;
+  text-shadow: 0 3px 0 var(--caps-feedback-ink, black);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform-origin: 50% 100%;
+  animation:
+    caps-feedback-word-pop var(--stipe-motion-normal)
+      cubic-bezier(0.2, 1.6, 0.4, 1),
+    caps-feedback-word-drift var(--caps-feedback-life) ease-out forwards;
+}
+.caps-feedback-word[data-size="s"] .caps-feedback-word-text {
+  font-size: 0.9rem;
+}
+.caps-feedback-word[data-size="m"] .caps-feedback-word-text {
+  font-size: 1.3rem;
+}
+.caps-feedback-word[data-size="l"] .caps-feedback-word-text {
+  font-size: 1.8rem;
+}
+.caps-feedback-word[data-size="xl"] .caps-feedback-word-text {
+  font-size: 2.4rem;
+}
+@keyframes caps-feedback-word-pop {
+  0% {
+    scale: 0.2;
+    rotate: -6deg;
+  }
+  60% {
+    scale: 1.22;
+    rotate: 2deg;
+  }
+  80% {
+    scale: 0.94;
+  }
+  100% {
+    scale: 1;
+    rotate: 0deg;
+  }
+}
+@keyframes caps-feedback-word-drift {
+  0%,
+  65% {
+    opacity: 1;
+    translate: -50% 0;
+  }
+  100% {
+    opacity: 0;
+    translate: -50% -14px;
+  }
+}
+/* A two-phase jaw snap: two wedges clap shut once, then ease back open. */
+.caps-feedback-word-jaw {
+  position: absolute;
+  bottom: 0.2em;
+  left: 0;
+  translate: -50% 0;
+  width: 22px;
+  height: 22px;
+}
+.caps-feedback-word-jaw-top,
+.caps-feedback-word-jaw-bottom {
+  position: absolute;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  filter: drop-shadow(0 0 0 var(--caps-feedback-ink, black));
+}
+.caps-feedback-word-jaw-top {
+  top: 0;
+  border-top: 10px solid var(--caps-feedback-word-tone);
+  transform-origin: 50% 0%;
+  animation: caps-feedback-jaw-top var(--stipe-motion-spring-duration)
+    steps(6, end);
+}
+.caps-feedback-word-jaw-bottom {
+  bottom: 0;
+  border-bottom: 10px solid var(--caps-feedback-word-tone);
+  transform-origin: 50% 100%;
+  animation: caps-feedback-jaw-bottom var(--stipe-motion-spring-duration)
+    steps(6, end);
+}
+@keyframes caps-feedback-jaw-top {
+  0% {
+    rotate: -35deg;
+  }
+  35% {
+    rotate: 0deg;
+  }
+  55% {
+    rotate: -12deg;
+  }
+  100% {
+    rotate: -35deg;
+  }
+}
+@keyframes caps-feedback-jaw-bottom {
+  0% {
+    rotate: 35deg;
+  }
+  35% {
+    rotate: 0deg;
+  }
+  55% {
+    rotate: 12deg;
+  }
+  100% {
+    rotate: 35deg;
+  }
+}

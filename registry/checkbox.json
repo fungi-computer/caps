@@ -54,7 +54,7 @@
     "@import \"@fungi.computer/stipe/styles.css\"": {},
     "@plugin \"@tailwindcss/typography\"": {},
     "@layer utilities": {
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-checkbox": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-checkbox": {
         "width": "24px",
         "justifySelf": "start"
       }
@@ -67,7 +67,7 @@
         "height": "24px",
         "flex": "none",
         "verticalAlign": "middle",
-        "color": "var(\n      --caps-control-dim,\n      color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n    )",
+        "color": "var(\n    --caps-control-dim,\n    color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n  )",
         "borderRadius": "var(--radius-selector)",
         "transition": "color var(--stipe-motion-normal) ease",
         "--caps-checkbox-depth": "var(--depth)"
@@ -111,12 +111,12 @@
       ".caps-checkbox:has(input:disabled)": { "opacity": 0.4 },
       ".caps-checkbox-input:disabled": { "cursor": "not-allowed" },
       ".caps-checkbox[data-state=\"unchecked\"] .caps-checkbox-track": {
-        "stroke": "var(\n      --caps-control-dim,\n      color-mix(in oklab, var(--color-base-content) 70%, var(--color-base-200))\n    )"
+        "stroke": "var(\n    --caps-control-dim,\n    color-mix(in oklab, var(--color-base-content) 70%, var(--color-base-200))\n  )"
       },
       ".caps-checkbox:has(input[aria-invalid]:not([aria-invalid=\"false\"]))": {
         "color": "var(--color-error)"
       },
-      ".caps-checkbox:has(input[aria-invalid]:not([aria-invalid=\"false\"]))\n    .caps-checkbox-track": {
+      ".caps-checkbox:has(input[aria-invalid]:not([aria-invalid=\"false\"]))\n  .caps-checkbox-track": {
         "stroke": "var(--color-error)"
       },
       ".caps-checkbox[data-appearance=\"compact\"],.caps-checkbox[data-appearance=\"compact\"]:has(input:disabled)": {

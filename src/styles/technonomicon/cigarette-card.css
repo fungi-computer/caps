@@ -1,0 +1,546 @@
+/* A cigarette card set into running text or centered in a column. */
+.caps-inset {
+  display: grid;
+  justify-items: center;
+  width: min(100%, 15rem);
+  margin: var(--spacing-xl) auto;
+}
+@media (min-width: 48rem) {
+  .caps-inset[data-align="end"] {
+    float: inline-end;
+    clear: inline-end;
+    width: 12.5rem;
+    margin: var(--spacing-xs) 0 var(--spacing-lg) var(--spacing-xl);
+  }
+}
+
+/*
+   * Cigarette card at the playing-card ratio 63:88. All geometry is in cqi of
+   * the card's own width, so one card reads the same in an album slot, a
+   * margin inset or a phone column; content scales or clamps, never the card.
+   * Material comes from Stipe: --card-frame, --card-frame-ink, --card-accent,
+   * --card-window, --card-paper, --card-back-paper, --card-texture,
+   * --card-shadow and --font-display.
+   */
+.caps-cigarette-card {
+  display: block;
+  width: 100%;
+  max-width: 17rem;
+  aspect-ratio: 63 / 88;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--card-frame-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  perspective: 1200px;
+  container-type: inline-size;
+}
+.caps-cigarette-card:focus-visible {
+  outline: 2px solid var(--card-accent);
+  outline-offset: 6px;
+}
+.caps-cigarette-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform calc(var(--stipe-motion-slow) * 2)
+    cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.caps-cigarette-card[data-flipped="true"] .caps-cigarette-card-inner {
+  transform: rotateY(180deg);
+}
+.caps-cigarette-card-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4.5cqi;
+  border: var(--card-rule-width) solid
+    color-mix(in srgb, var(--card-accent) 55%, var(--card-frame));
+  border-radius: 2.2cqi;
+  background: var(--card-texture), var(--card-frame);
+  backface-visibility: hidden;
+  /* One card, one honest shadow: contact plus a soft lift. */
+  box-shadow:
+    0 0.4cqi 0.8cqi var(--card-shadow),
+    0 3cqi 6cqi -2.5cqi var(--card-shadow);
+}
+.caps-cigarette-card-head {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 2.4cqi;
+  min-height: 12cqi;
+  padding-inline-end: 13cqi;
+}
+.caps-cigarette-card-title {
+  font-family: var(--font-display);
+  font-size: 9cqi;
+  font-variation-settings:
+    "SOFT" 60,
+    "WONK" 1;
+  font-weight: var(--caps-heading-weight, 640);
+  line-height: var(--caps-heading-line-height, 1.05);
+  letter-spacing: var(--caps-heading-tracking, -0.01em);
+}
+.caps-cigarette-card-type {
+  color: color-mix(in srgb, var(--card-frame-ink) 72%, transparent);
+  font-family: var(--font-display);
+  font-size: 4.2cqi;
+  font-style: italic;
+}
+/* Series mark: a hexagonal roundel ruled in the accent pigment. */
+.caps-cigarette-card-mark {
+  position: absolute;
+  top: 3cqi;
+  right: 3cqi;
+  z-index: 2;
+  display: grid;
+  width: 12.5cqi;
+  aspect-ratio: 1 / 1.1;
+  place-items: center;
+  background: var(--card-accent);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.caps-cigarette-card-mark > span {
+  display: grid;
+  width: calc(100% - 0.7cqi);
+  height: calc(100% - 0.8cqi);
+  place-items: center;
+  background: var(--card-frame);
+  clip-path: inherit;
+  font-family: var(--font-display);
+  font-size: 4.6cqi;
+  font-weight: 700;
+  color: var(--card-accent);
+}
+.caps-cigarette-card-window {
+  position: relative;
+  display: grid;
+  flex: 1;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  min-height: 0;
+  margin-top: 1.5cqi;
+  overflow: hidden;
+  padding: 4cqi 4cqi 11cqi;
+  border: var(--card-rule-width) solid
+    color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame));
+  border-radius: 0.8cqi;
+  background: var(--card-texture), var(--card-window);
+  box-shadow:
+    inset 0 0.6cqi 1.8cqi -0.4cqi var(--card-shadow),
+    inset 0 0 0 0.6cqi color-mix(in srgb, var(--card-window) 70%, transparent);
+}
+.caps-cigarette-card-window img,
+.caps-cigarette-card-window svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  color: var(--card-ink);
+  filter: grayscale(1) contrast(1.08);
+}
+/* Stat plate: overlaps the foot of the drawing on a fine accent rule. */
+.caps-cigarette-card-plate {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: none;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2cqi;
+  margin: -9cqi 1.8cqi 0;
+  padding: 2.2cqi 3cqi 2.4cqi;
+  border: var(--card-rule-width) solid var(--card-accent);
+  border-radius: 0.8cqi;
+  background: color-mix(in srgb, var(--card-frame) 90%, transparent);
+  backdrop-filter: blur(2px);
+}
+.caps-cigarette-card-headline {
+  display: grid;
+  min-width: 0;
+}
+.caps-cigarette-card-label {
+  color: var(--card-accent);
+  font-size: max(0.625rem, 4.2cqi);
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+.caps-cigarette-card-figure {
+  display: flex;
+  align-items: baseline;
+  gap: 1.2cqi;
+  line-height: 1;
+}
+.caps-cigarette-card-figure .caps-cigarette-card-numeral {
+  font-family: var(--font-display);
+  font-size: 11cqi;
+  font-variant-numeric: lining-nums;
+  font-weight: 700;
+  line-height: 0.95;
+}
+.caps-cigarette-card-figure .caps-cigarette-card-not-measured {
+  padding-block: 1.4cqi 0.6cqi;
+  font-size: 5cqi;
+}
+.caps-cigarette-card-unit {
+  color: color-mix(in srgb, var(--card-frame-ink) 75%, transparent);
+  font-size: max(0.5625rem, 3.8cqi);
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+}
+.caps-cigarette-card-plate-list {
+  display: grid;
+  justify-items: end;
+  gap: 1.2cqi;
+  font-size: max(0.625rem, 4.2cqi);
+  line-height: 1.2;
+  text-align: right;
+}
+.caps-cigarette-card-plate-list > span {
+  display: grid;
+  justify-items: end;
+}
+.caps-cigarette-card-plate-list .caps-cigarette-card-numeral {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+.caps-cigarette-card-not-measured {
+  color: color-mix(in srgb, currentColor 72%, transparent);
+  font-family: var(--font-display);
+  font-style: italic;
+}
+.caps-cigarette-card-flavor {
+  display: -webkit-box;
+  flex: none;
+  overflow: hidden;
+  margin: 2.4cqi 1.8cqi 0;
+  color: color-mix(in srgb, var(--card-frame-ink) 88%, transparent);
+  font-family: var(--font-display);
+  font-size: max(0.6875rem, 4.7cqi);
+  font-style: italic;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.caps-cigarette-card-collector {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqi;
+  margin-top: auto;
+  padding-top: 2cqi;
+  border-top: var(--card-rule-width) solid
+    color-mix(in srgb, var(--card-accent) 45%, transparent);
+  color: color-mix(in srgb, var(--card-frame-ink) 70%, transparent);
+  font-size: max(0.5rem, 3.2cqi);
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+}
+.caps-cigarette-card-flavor + .caps-cigarette-card-collector {
+  margin-top: auto;
+}
+.caps-cigarette-card-set {
+  display: grid;
+  flex: none;
+  width: 5.5cqi;
+  height: 5.5cqi;
+  place-items: center;
+  color: var(--card-accent);
+}
+.caps-cigarette-card-set svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* The reverse: the same frame around a ruled paper ledger. */
+.caps-cigarette-card-back {
+  transform: rotateY(180deg);
+}
+.caps-cigarette-card-ledger {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 1.8cqi;
+  min-height: 0;
+  margin-block: 1.5cqi 2.4cqi;
+  overflow: hidden;
+  padding: 3.2cqi 3.6cqi;
+  border: var(--card-rule-width) solid
+    color-mix(in srgb, var(--card-frame-ink) 30%, var(--card-frame));
+  border-radius: 0.8cqi;
+  background: var(--card-texture), var(--card-window);
+  color: var(--card-window-ink);
+  /* The ledger is printed on the same stock as the art window. */
+  --card-rule: color-mix(in srgb, var(--card-window-ink) 60%, transparent);
+  /* prettier-ignore */
+  --marginalia-ink: color-mix(
+      in srgb,
+      var(--card-window-ink) 72%,
+      transparent
+    );
+}
+.caps-cigarette-card-ledger-title {
+  border-bottom: calc(var(--card-rule-width) * 3) double var(--card-rule);
+  padding-bottom: 1.4cqi;
+  color: var(--marginalia-ink, var(--card-ink));
+  font-size: max(0.5625rem, 3.8cqi);
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+.caps-cigarette-card-stats {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  font-size: max(0.625rem, 4.5cqi);
+  line-height: 1.25;
+}
+.caps-cigarette-card-stat {
+  display: flex;
+  align-items: baseline;
+  padding-block: 1.1cqi;
+  border-bottom: var(--card-rule-width) solid
+    color-mix(in srgb, var(--card-rule) 35%, transparent);
+}
+.caps-cigarette-card-stat-label {
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+}
+.caps-cigarette-card-leader {
+  flex: 1;
+  min-width: 1.5em;
+  margin-inline: var(--spacing-xs);
+  border-bottom: var(--card-rule-width) dotted
+    color-mix(in srgb, var(--card-rule) 60%, transparent);
+}
+.caps-cigarette-card-stat-value {
+  display: flex;
+  align-items: baseline;
+  gap: 1cqi;
+  text-align: right;
+}
+.caps-cigarette-card-stat-value .caps-cigarette-card-numeral {
+  font-family: var(--font-display);
+  font-size: 1.15em;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-weight: 700;
+}
+.caps-cigarette-card-stat-value .caps-cigarette-card-unit {
+  color: var(--marginalia-ink, var(--card-ink));
+}
+/* A small engraving of the front drawing fills the ledger's spare room. */
+.caps-cigarette-card-cameo {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0.75;
+}
+.caps-cigarette-card-cameo img,
+.caps-cigarette-card-cameo svg {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  max-width: 62%;
+  height: auto;
+  max-height: 100%;
+  margin: auto;
+  object-fit: contain;
+  filter: grayscale(1);
+}
+.caps-cigarette-card-note {
+  display: -webkit-box;
+  flex: none;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-family: var(--font-display);
+  font-size: max(0.6875rem, 4.5cqi);
+  font-style: italic;
+  line-height: 1.25;
+}
+.caps-cigarette-card-sources {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 0.8cqi;
+  max-height: 15cqi;
+  overflow: hidden;
+  border-top: var(--card-rule-width) solid
+    color-mix(in srgb, var(--card-rule) 35%, transparent);
+  padding-top: 1.8cqi;
+  color: var(--marginalia-ink, var(--card-ink));
+  font-size: max(0.5rem, 3.3cqi);
+  line-height: 1.3;
+}
+
+/* Full art: the rarer finish. The drawing runs under every panel, the
+     frame thins to an accent rule, and the text sits on paper panels. */
+.caps-cigarette-card[data-finish="full-art"] .caps-cigarette-card-front {
+  padding: 3cqi;
+  border: 0.9cqi solid var(--card-accent);
+  background: var(--card-texture), var(--card-window);
+  color: var(--card-window-ink);
+}
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-window {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 16cqi 3cqi 36cqi;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-window
+  img {
+  width: 125%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+}
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-head,
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-plate,
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-flavor,
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-collector {
+  position: relative;
+  z-index: 1;
+}
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-head {
+  margin: -3cqi -3cqi 0;
+  padding: 3cqi 16cqi 3cqi 4cqi;
+  background: linear-gradient(
+    var(--card-window) 55%,
+    color-mix(in srgb, var(--card-window) 0%, transparent)
+  );
+}
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-type,
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-collector {
+  color: color-mix(in srgb, var(--card-window-ink) 72%, transparent);
+}
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-plate {
+  margin: auto 0 0;
+  color: var(--card-frame-ink);
+}
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-flavor {
+  margin: 2cqi 0 0;
+  padding: 2.4cqi 3cqi;
+  border: var(--card-rule-width) solid
+    color-mix(in srgb, var(--card-rule) 40%, transparent);
+  border-radius: 0.8cqi;
+  background: color-mix(in srgb, var(--card-window) 88%, transparent);
+  color: var(--card-window-ink);
+}
+.caps-cigarette-card[data-finish="full-art"]
+  .caps-cigarette-card-front
+  .caps-cigarette-card-collector {
+  margin-top: 2.4cqi;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caps-cigarette-card[data-flipped="true"] .caps-cigarette-card-inner {
+    transform: none;
+  }
+  .caps-cigarette-card-inner {
+    transition: none;
+  }
+  .caps-cigarette-card-face {
+    transition: opacity var(--stipe-motion-normal) ease;
+  }
+  .caps-cigarette-card-back {
+    transform: none;
+    opacity: 0;
+  }
+  .caps-cigarette-card[data-flipped="true"] .caps-cigarette-card-front {
+    opacity: 0;
+  }
+  .caps-cigarette-card[data-flipped="true"] .caps-cigarette-card-back {
+    opacity: 1;
+  }
+}
+
+/* A numbered album page: every slot of a series, collected or not. */
+.caps-album {
+  display: grid;
+  gap: var(--spacing-xl);
+  color: var(--card-ink);
+}
+.caps-album-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-xs) var(--spacing-lg);
+  border-bottom: calc(var(--card-rule-width) * 3) double var(--card-rule);
+  padding-bottom: var(--spacing-sm);
+}
+.caps-album-head h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.caps-album-head p {
+  margin: 0;
+  color: var(--marginalia-ink);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.caps-album ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(13rem, 100%), 1fr));
+  justify-items: center;
+  gap: var(--spacing-2xl) var(--spacing-xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.caps-album li {
+  display: grid;
+  width: 100%;
+  max-width: 17rem;
+}
+.caps-album-empty {
+  display: grid;
+  aspect-ratio: 63 / 88;
+  place-content: center;
+  justify-items: center;
+  gap: var(--spacing-xs);
+  border: var(--card-rule-width) dashed var(--card-rule);
+  border-radius: var(--radius-box);
+  color: var(--marginalia-ink);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}

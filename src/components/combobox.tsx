@@ -59,6 +59,8 @@ export type ComboboxBaseProps<T> = {
   /** Native portal destination. Use an unclipped themed container for nested themes. */
   container?: BasePopover.Portal.Props["container"];
   contentClassName?: string;
+  /** Text the search input starts with; it already filters `items` and the person can edit it. */
+  defaultInputValue?: string;
   emptyMessage?: ReactNode;
   /** Returns the stable identity used to track and compare items. */
   getKey: (item: T) => string;
@@ -143,6 +145,7 @@ export type ComboboxValueProps<T> =
     };
 
 type ComboboxControllerOptions<T> = {
+  defaultInputValue: string;
   defaultOpen: boolean;
   defaultValue: null | string;
   /** Stable identity used to track an item across renders. */
@@ -166,6 +169,7 @@ type ComboboxGroup<T> = {
 };
 
 function useComboboxController<T>({
+  defaultInputValue,
   defaultOpen,
   defaultValue,
   getKey,
@@ -182,7 +186,7 @@ function useComboboxController<T>({
   trigger,
 }: ComboboxControllerOptions<T>) {
   const listboxId = `${id}-listbox`;
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(defaultInputValue);
   const [keyboardNavigation, setKeyboardNavigation] = useState(false);
   const [uncontrolledValue, setUncontrolledValue] = useState<null | string>(
     defaultValue,
@@ -311,6 +315,7 @@ export function Combobox<T>(props: ComboboxProps<T>) {
     activeTone = "neutral",
     container,
     contentClassName,
+    defaultInputValue = "",
     defaultOpen = false,
     defaultValue = null,
     emptyMessage = "No matches",
@@ -369,6 +374,7 @@ export function Combobox<T>(props: ComboboxProps<T>) {
     "aria-required": required ?? controlProps?.["aria-required"],
   };
   const controller = useComboboxController({
+    defaultInputValue,
     defaultOpen,
     defaultValue,
     getKey,

@@ -1,0 +1,317 @@
+/* Spec sheet: printed-manual parts for 1-bit pages. Ink is
+     base-content, paper is base-100; nothing else is read. */
+.caps-spec-ruler {
+  /* prettier-ignore */
+  --caps-spec-tick: color-mix(
+      in oklab,
+      var(--color-base-content) 55%,
+      transparent
+    );
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(var(--spacing-xl) + var(--spacing-xs));
+  border-block: var(--border) solid var(--color-base-content);
+  background:
+    repeating-linear-gradient(
+        to right,
+        var(--caps-spec-tick) 0 1px,
+        transparent 1px 64px
+      )
+      0 0 / 100% 100% no-repeat,
+    repeating-linear-gradient(
+        to right,
+        var(--caps-spec-tick) 0 1px,
+        transparent 1px 8px
+      )
+      0 100% / 100% 7px no-repeat,
+    var(--color-base-100);
+}
+.caps-spec-ruler-label {
+  padding-inline: var(--spacing-md);
+  background: var(--color-base-100);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.caps-spec-ruler::before,
+.caps-spec-ruler::after {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  background: var(--color-base-100);
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  line-height: 1;
+  transform: translate(-50%, -52%);
+}
+.caps-spec-ruler::before {
+  left: 0;
+}
+.caps-spec-ruler::after {
+  left: 100%;
+}
+
+.caps-spec-frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--spacing-sm);
+  min-width: 0;
+  margin: 0;
+}
+.caps-spec-frame-window {
+  padding: var(--spacing-sm);
+  border: var(--border) solid var(--color-base-content);
+  background:
+    repeating-linear-gradient(
+      45deg,
+      var(--color-base-content) 0 1px,
+      transparent 1px 5px
+    ),
+    var(--color-base-100);
+}
+.caps-spec-frame-window > * {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  height: auto;
+  margin: 0;
+  border: calc(var(--border) * 2) solid var(--color-base-content);
+  background: var(--color-base-100);
+}
+.caps-spec-frame-window > img {
+  image-rendering: pixelated;
+}
+.caps-spec-frame[data-surface="inverse"] .caps-spec-frame-window > * {
+  background: var(--color-base-content);
+  color: var(--color-base-100);
+}
+.caps-spec-frame-caption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--spacing-xs) var(--spacing-lg);
+  color: var(--stipe-fg-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.caps-spec-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  margin: 0;
+  border-top: var(--border) solid var(--color-base-content);
+}
+.caps-spec-fact {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: var(--border) solid var(--color-base-content);
+  box-shadow: inset calc(var(--border) * -1) 0 0 var(--stipe-hairline);
+}
+.caps-spec-fact-value {
+  margin: 0;
+  color: var(--stipe-figure-ink);
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  line-height: 1.1;
+}
+.caps-spec-fact-label {
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.caps-spec-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  margin: 0;
+  padding: 0;
+  border: calc(var(--border) * 2) solid var(--color-base-content);
+  list-style: none;
+}
+.caps-spec-step {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl);
+  box-shadow:
+    inset calc(var(--border) * -1) 0 0 var(--stipe-hairline),
+    inset 0 calc(var(--border) * -1) 0 var(--stipe-hairline);
+}
+.caps-spec-step-number {
+  justify-self: start;
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  background: var(--color-base-content);
+  color: var(--color-base-100);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+}
+.caps-spec-step-title {
+  margin: var(--spacing-sm) 0 0;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.25;
+}
+.caps-spec-step-body {
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.caps-spec-faq {
+  display: grid;
+  border-top: calc(var(--border) * 2) solid var(--color-base-content);
+}
+.caps-spec-faq-item {
+  border-bottom: var(--border) solid var(--stipe-hairline-quiet);
+}
+.caps-spec-faq-question {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg) 0;
+  cursor: pointer;
+  font-size: var(--text-lg);
+  font-weight: 500;
+  line-height: 1.4;
+  list-style: none;
+}
+.caps-spec-faq-question::-webkit-details-marker {
+  display: none;
+}
+.caps-spec-faq-question:hover .caps-spec-faq-text {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.caps-spec-faq-question:focus-visible {
+  outline: calc(var(--border) * 2) solid var(--color-base-content);
+  outline-offset: var(--spacing-xs);
+}
+.caps-spec-faq-number {
+  color: var(--stipe-fg-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+}
+.caps-spec-faq-mark {
+  display: grid;
+  place-items: center;
+  width: 1.5em;
+  height: 1.5em;
+  border: var(--border) solid var(--color-base-content);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1;
+}
+.caps-spec-faq-mark::before {
+  content: "+";
+}
+.caps-spec-faq-item[open] .caps-spec-faq-mark {
+  background: var(--color-base-content);
+  color: var(--color-base-100);
+}
+.caps-spec-faq-item[open] .caps-spec-faq-mark::before {
+  content: "−";
+}
+.caps-spec-faq-answer {
+  display: grid;
+  gap: var(--spacing-sm);
+  max-width: 68ch;
+  padding: 0 0 var(--spacing-xl) calc(var(--spacing-lg) + 2ch);
+  color: var(--stipe-fg-muted);
+  line-height: 1.65;
+}
+.caps-spec-faq-answer > * {
+  margin: 0;
+}
+
+.caps-spec-diagram {
+  display: grid;
+  gap: var(--spacing-lg);
+  min-width: 0;
+  margin: 0;
+}
+.caps-spec-diagram-art {
+  position: relative;
+  line-height: 0;
+}
+.caps-spec-diagram-art > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+  filter: var(--caps-print-filter, none);
+}
+.caps-spec-diagram-tag,
+.caps-spec-diagram-key {
+  display: inline-grid;
+  place-items: center;
+  width: 1.75em;
+  height: 1.75em;
+  background: var(--color-accent);
+  color: var(--color-accent-content);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1;
+}
+.caps-spec-diagram-tag {
+  position: absolute;
+  outline: calc(var(--border) * 2) solid var(--color-base-100);
+  transform: translate(-50%, -50%);
+}
+.caps-spec-diagram-legend ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--spacing-md) var(--spacing-lg);
+  margin: 0;
+  padding: var(--spacing-md) 0 0;
+  border-top: var(--border) solid var(--color-base-content);
+  list-style: none;
+}
+.caps-spec-diagram-legend li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-content: start;
+  align-items: start;
+  gap: var(--spacing-2xs) var(--spacing-sm);
+}
+.caps-spec-diagram-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.caps-spec-diagram-note {
+  grid-column: 2;
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+/* Two-ink print: SpecPrintFilter redraws 1-bit art in the theme's ink with
+     a misregistered second ink when the theme sets --caps-print-filter. */
+.caps-print {
+  filter: var(--caps-print-filter, none);
+}
+.caps-print-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.caps-print-filter-ink {
+  flood-color: var(--caps-print-ink, var(--color-base-content));
+}
+.caps-print-filter-offset {
+  flood-color: var(--caps-print-offset, transparent);
+}

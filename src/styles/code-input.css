@@ -1,0 +1,73 @@
+/* CodeInput: one native input under a row of input-styled slots. */
+.caps-code-input {
+  position: relative;
+  display: inline-grid;
+  justify-self: start;
+  width: max-content;
+}
+.caps-code-field {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  font-size: 1rem;
+  opacity: 0;
+  cursor: text;
+}
+.caps-code-slots {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: var(--spacing-xs);
+}
+.caps-code-slot {
+  position: relative;
+  width: var(--size);
+  justify-content: center;
+  padding-inline: 0;
+  font-family: var(--font-numeric, var(--font-mono));
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.caps-code-slot[data-active="true"] {
+  --caps-input-edge: var(--color-info);
+  --caps-input-edge-width: 2px;
+}
+.caps-code-input[data-status="invalid"] .caps-code-slot {
+  --caps-input-edge: var(--color-error);
+  --caps-input-edge-width: 1px;
+}
+.caps-code-input[data-status="accepted"] .caps-code-slot {
+  --caps-input-edge: var(--color-success);
+  --caps-input-edge-width: 1px;
+}
+.caps-code-input .caps-code-slot[data-active="true"] {
+  --caps-input-edge-width: 2px;
+}
+.caps-code-caret {
+  width: 2px;
+  height: 1.1em;
+  border-radius: var(--radius-selector);
+  background: currentColor;
+  animation: caps-code-caret calc(var(--stipe-motion-slow) * 4)
+    steps(2, jump-none) infinite;
+}
+@keyframes caps-code-caret {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (forced-colors: active) {
+  .caps-code-slot[data-active="true"] {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}

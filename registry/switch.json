@@ -54,7 +54,7 @@
     "@import \"@fungi.computer/stipe/styles.css\"": {},
     "@plugin \"@tailwindcss/typography\"": {},
     "@layer utilities": {
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-switch": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-switch": {
         "width": "40px",
         "justifySelf": "start"
       }
@@ -72,7 +72,7 @@
         "height": "24px",
         "flex": "none",
         "verticalAlign": "middle",
-        "color": "var(\n      --caps-control-dim,\n      color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n    )",
+        "color": "var(\n    --caps-control-dim,\n    color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))\n  )",
         "borderRadius": "var(--radius-full)",
         "transition": "color var(--stipe-motion-normal) ease",
         "--caps-switch-depth": "var(--depth)"

@@ -1,0 +1,15 @@
+/* Hold to confirm: a fill rises behind the label while the button is held. */
+.caps-hold-button {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.caps-hold-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in oklab, currentColor 36%, transparent);
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  pointer-events: none;
+}

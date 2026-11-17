@@ -1,0 +1,30 @@
+.caps-pixel-number {
+  display: inline-flex;
+  line-height: 0;
+  vertical-align: middle;
+}
+.caps-pixel-number > svg {
+  overflow: visible;
+  shape-rendering: crispEdges;
+}
+.caps-pixel-number-face {
+  fill: currentcolor;
+}
+.caps-pixel-number-outline {
+  fill: var(--caps-pixel-outline-ink, black);
+}
+.caps-pixel-number[data-tone="primary"] {
+  color: var(--color-primary);
+}
+.caps-pixel-number[data-tone="accent"] {
+  color: var(--color-accent);
+}
+.caps-pixel-number[data-tone="success"] {
+  color: var(--color-success);
+}
+.caps-pixel-number[data-tone="warning"] {
+  color: var(--color-warning);
+}
+.caps-pixel-number[data-tone="error"] {
+  color: var(--color-error);
+}

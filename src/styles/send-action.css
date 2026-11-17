@@ -1,0 +1,21 @@
+/* SendAction: the arrow and the working glyph share one cell. */
+/* The send key: one square keycap whose glyph changes, never a second key. */
+.caps-send-action {
+  --caps-keycap-width: auto;
+  --caps-keycap-justify: center;
+  --caps-keycap-padding: 0;
+  --caps-keycap-min-width: var(--caps-keycap-height, 2.5rem);
+  flex: none;
+}
+.caps-send-glyph {
+  display: inline-grid;
+  place-items: center;
+}
+.caps-send-glyph > * {
+  display: inline-flex;
+  grid-area: 1 / 1;
+}
+.caps-send-glyph[data-state="busy"] > [data-glyph="arrow"],
+.caps-send-glyph:not([data-state="busy"]) > [data-glyph="busy"] {
+  opacity: 0;
+}

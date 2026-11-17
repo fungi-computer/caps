@@ -35,7 +35,7 @@
     "@import \"@fungi.computer/stipe/styles.css\"": {},
     "@plugin \"@tailwindcss/typography\"": {},
     "@layer utilities": {
-      ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+      ".caps-fieldset[data-layout=\"columns\"]:has(\n    .caps-icon-choice:not([data-swatch])\n  )": {
         "--caps-fieldset-legend-line": "3.25rem"
       }
     },
@@ -67,7 +67,7 @@
         "height": "2rem",
         "filter": "var(--caps-control-icon-off, grayscale(1) contrast(0))",
         "opacity": 0.55,
-        "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n      opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
+        "transition": "filter var(--stipe-motion-fast) var(--stipe-motion-ease),\n    opacity var(--stipe-motion-fast) var(--stipe-motion-ease)"
       },
       ".caps-icon-choice-art > svg": { "width": "100%", "height": "100%" },
       ".caps-icon-choice-caption": {
@@ -92,11 +92,11 @@
         "background": "var(--caps-control-selected-face, var(--color-base-200))",
         "color": "var(--caps-control-ink, var(--color-base-content))"
       },
-      ".caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+      ".caps-icon-lamp[data-on=\"true\"] > .caps-icon-choice-mark .caps-icon-choice-art,.caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-art,.caps-icon-choice-input:indeterminate\n  + .caps-icon-choice-mark\n  .caps-icon-choice-art": {
         "filter": "none",
         "opacity": 1
       },
-      ".caps-icon-choice-input:checked\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n    > .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+      ".caps-icon-choice-input:checked + .caps-icon-choice-mark .caps-icon-choice-lamp,.caps-icon-lamp[data-on=\"true\"]\n  > .caps-icon-choice-mark\n  .caps-icon-choice-lamp": {
         "opacity": 1
       },
       ".caps-icon-lamp": {
@@ -112,13 +112,13 @@
         "padding": "0",
         "listStyle": "none"
       },
-      ".caps-icon-choice-input:indeterminate\n    + .caps-icon-choice-mark\n    .caps-icon-choice-lamp": {
+      ".caps-icon-choice-input:indeterminate\n  + .caps-icon-choice-mark\n  .caps-icon-choice-lamp": {
         "width": "7px",
         "height": "2px",
         "borderRadius": "0",
         "opacity": 1
       },
-      ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n    + .caps-icon-choice-mark\n    .caps-icon-choice-art": {
+      ".caps-icon-choice-input:hover:not(:checked, :indeterminate, :disabled)\n  + .caps-icon-choice-mark\n  .caps-icon-choice-art": {
         "opacity": 0.8
       },
       ".caps-icon-choice[data-appearance=\"compact\"]": {
@@ -155,7 +155,7 @@
         "width": "1.5rem",
         "height": "1.5rem"
       },
-      ".caps-icon-choice[data-appearance=\"compact\"]\n    .caps-icon-choice-input:not(:checked, :indeterminate)\n    + .caps-icon-choice-mark\n    svg": {
+      ".caps-icon-choice[data-appearance=\"compact\"]\n  .caps-icon-choice-input:not(:checked, :indeterminate)\n  + .caps-icon-choice-mark\n  svg": {
         "filter": "grayscale(1)",
         "opacity": 0.55
       },

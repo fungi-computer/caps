@@ -1,0 +1,8 @@
+/* Opaque, hard-edged manga copy panel for text placed over artwork. */
+.caps-manga-panel {
+  color: var(--color-base-content);
+  background: var(--color-base-100);
+  border: calc(var(--border) * 2) solid var(--color-base-content);
+  box-shadow: calc(var(--border) * 3) calc(var(--border) * 3) 0
+    var(--color-base-content);
+}

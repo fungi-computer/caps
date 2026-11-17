@@ -12,6 +12,7 @@ import process from "node:process";
 import { format } from "prettier";
 import postcss from "postcss";
 import postcssJs from "postcss-js";
+import valueParser from "postcss-value-parser";
 import tsModule from "typescript";
 
 import { renderCoverage, readCoverage } from "./workbench-coverage.mjs";
@@ -334,14 +335,37 @@ const adaptSourceImports = (content) =>
       "from '@/components/selectable'",
     );
 
-async function capsCssFor(name) {
-  const scopes = capsCssScopes.get(name);
-  if (scopes === undefined) return {};
+let authoredStyles;
+
+async function readAuthoredStyles() {
   const source = await readFile(
     await regularFile(capsStylePath, "Caps authored stylesheet"),
     "utf8",
   );
   const cssRoot = postcss.parse(source, { from: capsStylePath });
+  const imports = [];
+  cssRoot.walkAtRules("import", (rule) => {
+    const [path] = valueParser(rule.params).nodes;
+    // Only the extracted Caps modules replace the former inline rules.
+    // Companion sheets and the external Stipe import retain their old scope.
+    if (path?.type === "string" && path.value.startsWith("./styles/"))
+      imports.push({ rule, path: resolve(dirname(capsStylePath), path.value) });
+  });
+  for (const { rule, path } of imports) {
+    const content = await readFile(
+      await regularFile(path, "Caps component stylesheet"),
+      "utf8",
+    );
+    rule.replaceWith(...postcss.parse(content, { from: path }).nodes);
+  }
+  return cssRoot;
+}
+
+async function capsCssFor(name) {
+  const scopes = capsCssScopes.get(name);
+  if (scopes === undefined) return {};
+  authoredStyles ??= readAuthoredStyles();
+  const cssRoot = (await authoredStyles).clone();
   // Comments must not keep otherwise empty layers alive: repeated empty
   // layers objectify as arrays, which are not valid registry CSS objects.
   cssRoot.walkComments((comment) => comment.remove());

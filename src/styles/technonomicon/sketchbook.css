@@ -1,0 +1,322 @@
+/* The lead of an Issue opens on a three-line initial in the text face. */
+.caps-prose-dropcap > p:first-of-type::first-letter,
+.caps-spread[data-layout="lead"]
+  .caps-note-teaser-body
+  > p:first-of-type::first-letter {
+  float: left;
+  margin: var(--spacing-2xs) var(--spacing-xs) 0 0;
+  color: var(--card-ink);
+  font-family: var(--font-display);
+  font-size: 3.6em;
+  font-weight: 600;
+  line-height: 0.8;
+}
+
+/* Pencil layer drawn by `enhance/sketch`; static pages keep the CSS marks. */
+[data-sketch-root] {
+  position: relative;
+}
+[data-sketch] {
+  position: relative;
+  display: inline-block;
+}
+.caps-sketch-overlay {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+[data-sketch-drawn] .caps-specimen-label-plate,
+[data-sketch-drawn] .caps-specimen-label-detail {
+  border-color: transparent;
+}
+.caps-pencil-reveal {
+  animation: caps-pencil-reveal calc(var(--stipe-motion-slow) * 2) ease-out both;
+}
+@keyframes caps-pencil-reveal {
+  from {
+    filter: blur(0.7px);
+    opacity: 0.78;
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .caps-pencil-reveal {
+    animation: none;
+  }
+}
+
+/* Catalogue line: small ruled capitals for kickers, bylines and dates. */
+.caps-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xs) var(--spacing-md);
+  margin: 0;
+  color: var(--marginalia-ink, var(--stipe-fg-muted));
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* One row of a journal contents list. */
+.caps-entry-row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.2fr) 6.25rem minmax(0, 1fr);
+  gap: var(--spacing-xl);
+  padding: var(--spacing-lg) var(--spacing-xl);
+}
+.caps-entry-row[data-thumb="none"] {
+  grid-template-columns: minmax(7rem, 0.2fr) minmax(0, 1fr);
+}
+.caps-entry-row .caps-meta {
+  flex-direction: column;
+  align-items: start;
+  align-content: start;
+}
+.caps-entry-row-thumb {
+  align-self: start;
+  margin: 0;
+  overflow: hidden;
+}
+.caps-entry-row-thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+.caps-entry-row-body {
+  display: grid;
+  align-content: start;
+  gap: var(--spacing-sm);
+}
+.caps-entry-row-body > p {
+  margin: 0;
+}
+.caps-entry-row-title {
+  margin: 0;
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.caps-entry-row-title a {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0 var(--border, 1px);
+  transition: background-size var(--stipe-motion-normal) ease-out;
+}
+.caps-entry-row-title a:hover,
+.caps-entry-row-title a:focus-visible {
+  background-size: 100% var(--border, 1px);
+}
+@media (max-width: 38.75rem) {
+  .caps-entry-row,
+  .caps-entry-row[data-thumb="none"] {
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    gap: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-lg);
+  }
+  .caps-entry-row[data-thumb="none"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .caps-entry-row .caps-meta {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* In-page contents for a long note. */
+.caps-toc {
+  border-block: var(--border, 1px) solid
+    var(--newsprint-column-rule, var(--stipe-linework));
+  padding-block: var(--spacing-md);
+}
+.caps-toc > .caps-meta {
+  margin-bottom: var(--spacing-sm);
+}
+.caps-toc ol {
+  display: grid;
+  gap: var(--spacing-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9375rem;
+}
+.caps-toc a {
+  color: inherit;
+  text-decoration: none;
+}
+.caps-toc a:hover,
+.caps-toc a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.caps-toc li[data-depth="3"] {
+  padding-inline-start: var(--spacing-lg);
+}
+.caps-toc li[data-depth="4"],
+.caps-toc li[data-depth="5"],
+.caps-toc li[data-depth="6"] {
+  padding-inline-start: var(--spacing-2xl);
+}
+
+/* Notes that point at this one. */
+.caps-backlinks {
+  border-top: var(--border, 1px) solid
+    var(--newsprint-column-rule, var(--stipe-linework));
+  padding-top: var(--spacing-lg);
+}
+.caps-backlinks > h2 {
+  margin: 0 0 var(--spacing-sm);
+}
+.caps-backlinks a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--border, 1px);
+  text-underline-offset: 0.2em;
+}
+.caps-backlinks ul {
+  display: grid;
+  gap: var(--spacing-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A recorded tool call: request and response as a ruled field note. */
+.caps-tool-call {
+  display: grid;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+}
+.caps-tool-call-body {
+  display: grid;
+  gap: var(--spacing-md);
+}
+.caps-tool-call-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+}
+.caps-tool-call-name {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.caps-tool-call-io {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--spacing-md);
+}
+.caps-tool-call-io pre {
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
+}
+.caps-tool-call > figcaption {
+  color: var(--marginalia-ink, var(--stipe-fg-muted));
+  font-size: 0.875rem;
+}
+
+/* Specimens as one sketchbook page: stacked on phones, paired on tablets,
+     and pinned as an overlapping collage on desktops, where each note sits
+     in the whitespace and a sketch leader points back at its drawing. */
+.caps-collage {
+  position: relative;
+  display: grid;
+  gap: var(--spacing-2xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  container-type: inline-size;
+}
+.caps-collage-item {
+  min-width: 0;
+}
+.caps-collage-item > a {
+  display: grid;
+  gap: var(--spacing-md);
+  color: inherit;
+  text-decoration: none;
+}
+.caps-collage-item > a:focus-visible {
+  outline: none;
+}
+.caps-collage-item > a:focus-visible .caps-collage-note {
+  outline: 2px solid currentColor;
+  outline-offset: 6px;
+}
+.caps-collage-item > a:hover .caps-specimen-label-title {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.caps-collage-art {
+  width: min(100%, 26rem);
+  margin-inline: auto;
+}
+.caps-collage-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.caps-collage-note {
+  position: relative;
+  z-index: 2;
+  --caps-sketch-leader: off;
+}
+.caps-collage-note .caps-specimen-label-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+@media (min-width: 40.0625rem) and (max-width: 62.49rem) {
+  .caps-collage-item > a {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--spacing-2xl);
+  }
+  .caps-collage-item:nth-child(even) .caps-collage-art {
+    order: 2;
+  }
+}
+@media (min-width: 62.5rem) {
+  .caps-collage {
+    display: block;
+  }
+  /* The list is its own size container, so this spacer's cqw follows the
+       collage width and reserves room for the pinned drawings and notes. */
+  .caps-collage::after {
+    display: block;
+    height: calc(58cqw + var(--spacing-4xl) * 3.5);
+    content: "";
+  }
+  .caps-collage-item > a {
+    display: block;
+  }
+  .caps-collage-art {
+    position: absolute;
+    top: var(--art-y);
+    left: var(--art-x);
+    width: var(--art-w);
+    margin: 0;
+    transform: rotate(var(--tilt));
+  }
+  .caps-collage-note {
+    position: absolute;
+    top: var(--note-y);
+    left: var(--note-x);
+    width: var(--note-w);
+    --caps-sketch-leader: on;
+  }
+}

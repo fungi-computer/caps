@@ -1,0 +1,185 @@
+@layer components {
+  .caps-trading-card {
+    --caps-trading-card-sheen-x: 0%;
+    /* Slotted Caps controls print on the card stock, not the page theme. */
+    --color-base-100: var(--stipe-card-face);
+    --color-base-200: color-mix(
+      in oklab,
+      var(--stipe-card-face) 92%,
+      var(--stipe-card-ink)
+    );
+    --color-base-content: var(--stipe-card-ink);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    aspect-ratio: 63 / 88;
+    padding: var(--spacing-sm);
+    color: var(--stipe-card-ink);
+    background: var(--stipe-card-rim);
+    border: var(--border) solid var(--stipe-card-rim-edge);
+    border-radius: var(--radius-box);
+    box-shadow: var(--stipe-card-shadow);
+    isolation: isolate;
+  }
+  .caps-trading-card-face {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    background: var(--stipe-card-face);
+    border-radius: var(--radius-field);
+  }
+  .caps-trading-card-name-bar {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-sm);
+  }
+  .caps-trading-card-stage {
+    padding-inline: var(--spacing-xs);
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stipe-card-ink-muted);
+    border: var(--border) solid currentcolor;
+    border-radius: var(--radius-selector);
+  }
+  .caps-trading-card-name {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .caps-trading-card-stat {
+    margin-left: auto;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--stipe-card-accent);
+    white-space: nowrap;
+  }
+  .caps-trading-card-window {
+    display: grid;
+    flex: none;
+    aspect-ratio: 16 / 9;
+    place-items: center;
+    overflow: hidden;
+    background: var(--stipe-card-panel);
+    border: calc(var(--border) * 3) solid var(--stipe-card-rim);
+    border-radius: var(--radius-selector);
+    outline: var(--border) solid var(--stipe-card-rim-edge);
+  }
+  .caps-trading-card-type {
+    margin: 0;
+    font-size: 0.6875rem;
+    font-style: italic;
+    text-align: center;
+    color: var(--stipe-card-ink-muted);
+  }
+  .caps-trading-card-move {
+    display: grid;
+    gap: var(--spacing-xs);
+    padding-block: var(--spacing-xs);
+  }
+  .caps-trading-card-move-line {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+  .caps-trading-card-cost {
+    display: inline-flex;
+    gap: var(--spacing-2xs);
+  }
+  .caps-trading-card-move-name {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1.1;
+  }
+  .caps-trading-card-move-value {
+    margin-left: auto;
+    font-size: 1rem;
+    font-weight: 900;
+  }
+  .caps-trading-card-move-body {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
+  .caps-trading-card-flavor {
+    margin: 0;
+    padding-top: var(--spacing-xs);
+    font-size: 0.6875rem;
+    font-style: italic;
+    line-height: 1.35;
+    color: var(--stipe-card-ink-muted);
+    border-top: var(--border) solid var(--stipe-card-rim-edge);
+  }
+  .caps-trading-card-footer {
+    display: grid;
+    gap: var(--spacing-2xs);
+    margin-top: auto;
+    font-size: 0.625rem;
+  }
+  .caps-trading-card-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--spacing-xs);
+    margin: 0;
+  }
+  .caps-trading-card-facts dt {
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--stipe-card-ink-muted);
+  }
+  .caps-trading-card-facts dd {
+    margin: 0;
+    font-weight: 700;
+  }
+  .caps-trading-card-collector {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    font-family: var(--font-mono);
+    color: var(--stipe-card-ink-muted);
+  }
+  .caps-trading-card-rarity {
+    color: var(--stipe-card-accent);
+  }
+  .caps-trading-card[data-finish="holo"]::after {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    border-radius: inherit;
+    background: linear-gradient(
+      115deg,
+      transparent 20%,
+      var(--stipe-card-foil-highlight) 38%,
+      var(--stipe-card-foil-warm) 45%,
+      var(--stipe-card-foil-cool) 52%,
+      transparent 70%
+    );
+    background-position: var(--caps-trading-card-sheen-x) 0;
+    background-size: 250% 100%;
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transition:
+      opacity var(--stipe-motion-slow) var(--stipe-motion-ease),
+      background-position calc(var(--stipe-motion-slow) * 3)
+        var(--stipe-motion-ease);
+  }
+  .caps-trading-card[data-finish="holo"]:hover::after,
+  .caps-trading-card[data-finish="holo"]:focus-within::after {
+    --caps-trading-card-sheen-x: 100%;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .caps-trading-card[data-finish="holo"]::after {
+      transition: none;
+    }
+  }
+}

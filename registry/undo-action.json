@@ -58,7 +58,7 @@
         "insetInline": "0",
         "bottom": "0",
         "height": "var(--stipe-motion-fuse, 1px)",
-        "background": "linear-gradient(\n      to right,\n      color-mix(in oklab, currentColor 55%, transparent),\n      currentColor\n    )",
+        "background": "linear-gradient(\n    to right,\n    color-mix(in oklab, currentColor 55%, transparent),\n    currentColor\n  )",
         "transformOrigin": "left center",
         "pointerEvents": "none"
       },

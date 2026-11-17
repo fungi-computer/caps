@@ -61,7 +61,7 @@
         "height": "24px",
         "flex": "none",
         "verticalAlign": "middle",
-        "color": "color-mix(\n      in oklab,\n      var(--color-base-content) 35%,\n      var(--color-base-100)\n    )",
+        "color": "color-mix(\n    in oklab,\n    var(--color-base-content) 35%,\n    var(--color-base-100)\n  )",
         "borderRadius": "var(--radius-full)",
         "transition": "color var(--stipe-motion-normal) ease"
       },

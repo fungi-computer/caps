@@ -10,7 +10,7 @@
     "cn",
     "react"
   ],
-  "registryDependencies": [],
+  "registryDependencies": ["@shiit/status"],
   "files": [
     {
       "path": "../src/blocks/result-state.tsx",

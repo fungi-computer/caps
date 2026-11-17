@@ -1,0 +1,99 @@
+/* Base UI owns thumb position; only the inner plastic surface deforms. */
+/* One Caps-wide scrollbar: a thin, quiet bar. Themes or hosts may set
+     --caps-scrollbar-size, --caps-scrollbar-thumb and
+     --caps-scrollbar-thumb-active anywhere above the scroll area. */
+.caps-scroll-area {
+  --caps-scroll-track-width: var(--caps-scrollbar-size, 6px);
+  --caps-scroll-frame-inset: 0px;
+  /* A framed area already owns right-hand casing space: share it with the well. */
+  /* prettier-ignore */
+  --caps-scroll-gutter-width: calc(
+      var(--caps-scroll-track-width) + var(--spacing-xs) * 2 -
+        var(--caps-scroll-frame-inset)
+    );
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+}
+.caps-scroll-viewport {
+  height: 100%;
+  width: 100%;
+  overscroll-behavior: contain;
+}
+.caps-scroll-display {
+  height: 100%;
+  box-sizing: border-box;
+  padding: calc(var(--spacing-xs) / 2);
+}
+.caps-scroll-area.caps-surface:has(> .caps-scroll-display)::after {
+  /* The display owns its recess; do not stack a second shadow over it. */
+  display: none;
+}
+/* Keep the gutter stable: responsive content must not resize the viewport
+     that Base UI measures to decide whether it overflows. */
+.caps-scroll-area > .caps-scroll-viewport,
+.caps-scroll-area > .caps-scroll-display {
+  width: calc(100% - var(--caps-scroll-gutter-width));
+}
+.caps-scroll-area.caps-surface > .caps-scroll-viewport {
+  border-radius: var(--radius-field);
+}
+.caps-scroll-area.caps-surface {
+  --caps-scroll-frame-inset: var(--caps-surface-rim);
+  /* Continue the rim across the gutter; a flat padding-box face made a pale strip. */
+  background: var(--stipe-surface-frame-image, var(--caps-surface-molding))
+    border-box;
+}
+.caps-scroll-area.caps-surface::after {
+  inset-inline-end: var(--caps-scroll-gutter-width);
+}
+.caps-scroll-track-surface {
+  position: absolute;
+  inset-block: var(--spacing-sm);
+  inset-inline-end: calc(var(--spacing-xs) - var(--caps-scroll-frame-inset));
+  display: none;
+  width: var(--caps-scroll-track-width);
+  /* Borrow the enclosing housing instead of painting a second strip of casing. */
+  background: transparent;
+}
+.caps-scroll-track-surface::before {
+  /* Embedded scrollbar channels keep the inner recess, not an exterior lip. */
+  display: none;
+}
+.caps-scroll-area[data-has-overflow-y] > .caps-scroll-track-surface {
+  display: block;
+}
+.caps-scroll-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+}
+.caps-scroll-thumb {
+  position: relative;
+  width: 100%;
+  cursor: grab;
+}
+.caps-scroll-thumb:active {
+  cursor: grabbing;
+}
+.caps-scroll-thumb-surface {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--radius-selector);
+  background-color: var(
+    --caps-scrollbar-thumb,
+    color-mix(in oklab, var(--color-base-content) 22%, transparent)
+  );
+  transition: background-color var(--stipe-motion-fast) ease-out;
+}
+.caps-scroll-area:hover .caps-scroll-thumb-surface,
+.caps-scroll-thumb:active .caps-scroll-thumb-surface {
+  background-color: var(
+    --caps-scrollbar-thumb-active,
+    color-mix(in oklab, var(--color-base-content) 40%, transparent)
+  );
+}

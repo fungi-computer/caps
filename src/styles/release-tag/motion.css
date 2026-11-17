@@ -1,0 +1,7 @@
+@media (prefers-reduced-motion: reduce) {
+  .caps-keycap,
+  .caps-keycap-button,
+  .caps-button.btn-outline {
+    transition: none;
+  }
+}

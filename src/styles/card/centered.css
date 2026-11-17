@@ -1,0 +1,3 @@
+.caps-centered-card-wide {
+  width: min(100%, var(--container-3xl));
+}

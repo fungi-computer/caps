@@ -1,0 +1,22 @@
+.caps-select {
+  border-radius: var(--radius-field);
+  /* prettier-ignore */
+  border-color: color-mix(
+      in oklab,
+      var(--color-base-content) 14%,
+      transparent
+    );
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  font-weight: 650;
+  box-shadow: var(
+    --stipe-shadow-raised,
+    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.22)),
+    0 calc(var(--depth) * 1px) 0
+      color-mix(
+        in oklab,
+        var(--color-base-content) calc(var(--depth) * 16%),
+        transparent
+      )
+  );
+}

@@ -1,0 +1,60 @@
+/* ToolCallChip: a quiet fill wipes across while the call runs. */
+.caps-tool-call {
+  --caps-tool-call-tone: var(--color-base-content);
+
+  position: relative;
+  display: inline-flex;
+  min-height: 1.5rem;
+  max-width: 100%;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding-inline: var(--spacing-sm);
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--stipe-hairline);
+  border-radius: var(--radius-field);
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-xs);
+  vertical-align: middle;
+  transition: border-color var(--stipe-motion-normal) ease;
+}
+.caps-tool-call[data-state="done"] {
+  --caps-tool-call-tone: var(--color-success);
+}
+.caps-tool-call[data-state="failed"] {
+  --caps-tool-call-tone: var(--color-error);
+
+  border-color: color-mix(in oklab, var(--color-error) 45%, transparent);
+}
+.caps-tool-call-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: color-mix(
+    in oklab,
+    var(--caps-tool-call-tone) 12%,
+    transparent
+  );
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: background-color var(--stipe-motion-normal) ease;
+}
+.caps-tool-call-fill:dir(rtl) {
+  transform-origin: right center;
+}
+.caps-tool-call-name {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-base-content);
+  font-family: var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.caps-tool-call-time {
+  flex: none;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.caps-tool-call .caps-presence {
+  display: inline-flex;
+}

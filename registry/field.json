@@ -112,14 +112,14 @@
       ".caps-field[data-orientation=\"horizontal\"] > .caps-field-row": {
         "--caps-field-control-width": "16rem"
       },
-      ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-copy": {
+      ".caps-field[data-orientation=\"horizontal\"]\n  > .caps-field-row\n  > .caps-field-copy": {
         "minWidth": "6rem"
       },
-      ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-lead": {
+      ".caps-field[data-orientation=\"horizontal\"]\n  > .caps-field-row\n  > .caps-field-lead": {
         "minWidth": "calc(6rem + var(--caps-field-icon-size) + var(--spacing-sm))"
       },
       "@media (max-width: 480px)": {
-        ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+        ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row:has(\n      > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n    )": {
           "flexDirection": "column",
           "alignItems": "stretch",
           "gap": "var(--spacing-xs)",
@@ -137,10 +137,10 @@
       ".list.list-sm > .list-row > .caps-field .caps-field-icon": {
         "height": "calc(var(--caps-control-label-size, var(--text-sm)) * 1.5)"
       },
-      ".list.list-sm\n    > .list-row\n    > .caps-field:has(> .caps-field-row > .caps-field-lead)\n    > .caps-field-error-reveal": {
+      ".list.list-sm\n  > .list-row\n  > .caps-field:has(> .caps-field-row > .caps-field-lead)\n  > .caps-field-error-reveal": {
         "paddingInlineStart": "calc(var(--caps-field-icon-size) + var(--spacing-xs))"
       },
-      ".caps-field:has(> .caps-field-row > .caps-field-lead)\n    > .caps-field-error-reveal": {
+      ".caps-field:has(> .caps-field-row > .caps-field-lead)\n  > .caps-field-error-reveal": {
         "paddingInlineStart": "calc(var(--caps-field-icon-size) + var(--spacing-sm))"
       },
       ".caps-field > .caps-field-error-reveal .caps-field-error": {
@@ -205,7 +205,7 @@
       ":is(.caps-form, .caps-form-section, .caps-fieldset)[data-layout=\"columns\"]": {
         "--caps-form-label-col": "7rem"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )": {
         "display": "grid",
         "gridTemplateColumns": "var(--caps-form-label-col) minmax(0, 1fr)",
         "columnGap": "var(--spacing-md)",
@@ -214,10 +214,10 @@
         "justifyContent": "stretch",
         "--caps-field-control-width": "100%"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-copy": {
         "display": "contents"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > label": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-copy\n  > label": {
         "gridColumn": "1",
         "gridRow": "1",
         "minWidth": "0",
@@ -238,42 +238,42 @@
         "minHeight": "var(--caps-fieldset-legend-line, 2.25rem)",
         "alignContent": "center"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > .caps-field-description": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-copy\n  > .caps-field-description": {
         "gridColumn": "2",
         "gridRow": "2",
         "maxWidth": "30rem"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal)": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal)": {
         "gridColumn": "2",
         "gridRow": "1",
         "width": "100%",
         "maxWidth": "30rem"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-switch": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-switch": {
         "width": "40px",
         "justifySelf": "start"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-checkbox": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-checkbox": {
         "width": "24px",
         "justifySelf": "start"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"vertical\"]\n    > .caps-field-lead": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field[data-orientation=\"vertical\"]\n  > .caps-field-lead": {
         "gridColumn": "1",
         "gridRow": "1",
         "margin": "0"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"vertical\"]\n    > .caps-field-error-reveal": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field[data-orientation=\"vertical\"]\n  > .caps-field-error-reveal": {
         "gridColumn": "2",
         "gridRow": "2"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row\n    > .caps-field-lead": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field[data-orientation=\"horizontal\"]\n  > .caps-field-row\n  > .caps-field-lead": {
         "gridColumn": "1",
         "gridRow": "1"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-error-reveal": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field[data-orientation=\"horizontal\"]\n  > .caps-field-error-reveal": {
         "paddingInlineStart": "calc(var(--caps-form-label-col) + var(--spacing-md))"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field:has(> .caps-field-error-reveal[data-open=\"true\"])\n    .caps-field-description,.caps-fieldset[data-layout=\"columns\"]:has(\n      > .caps-field-error-reveal[data-open=\"true\"]\n    )\n    > .caps-fieldset-description": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field:has(> .caps-field-error-reveal[data-open=\"true\"])\n  .caps-field-description,.caps-fieldset[data-layout=\"columns\"]:has(\n    > .caps-field-error-reveal[data-open=\"true\"]\n  )\n  > .caps-fieldset-description": {
         "display": "none"
       },
       ".caps-fieldset[data-layout=\"columns\"]": {
@@ -283,7 +283,7 @@
         "rowGap": "var(--spacing-2xs)",
         "alignItems": "start"
       },
-      ".caps-fieldset[data-layout=\"columns\"]:has(\n      .caps-icon-choice:not([data-swatch])\n    )": {
+      ".caps-fieldset[data-layout=\"columns\"]:has(\n    .caps-icon-choice:not([data-swatch])\n  )": {
         "--caps-fieldset-legend-line": "3.25rem"
       },
       ".caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-fields": {
@@ -294,33 +294,33 @@
         "margin": "0",
         "maxWidth": "30rem"
       },
-      ".caps-fieldset[data-layout=\"columns\"]\n    > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
+      ".caps-fieldset[data-layout=\"columns\"]\n  > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
         "gridColumn": "2",
         "gridRow": "2"
       },
       "@container (min-width: 36rem)": {
-        ".caps-form[data-layout=\"columns\"]\n      .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))": {
+        ".caps-form[data-layout=\"columns\"]\n    .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))": {
           "display": "grid",
           "gridTemplateColumns": "minmax(0, 1fr) auto",
           "alignItems": "start"
         },
-        ".caps-form[data-layout=\"columns\"]\n      .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))\n      > .caps-form-footer": {
+        ".caps-form[data-layout=\"columns\"]\n    .caps-form-body:has(> .caps-field:first-child:nth-last-child(2))\n    > .caps-form-footer": {
           "paddingInlineStart": "0",
           "maxWidth": "none"
         }
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead": {
         "display": "contents"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead\n  > .caps-field-copy": {
         "display": "contents"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-icon": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead\n  > .caps-field-icon": {
         "gridColumn": "1",
         "gridRow": "1",
         "justifySelf": "start"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > label": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead\n  > .caps-field-copy\n  > label": {
         "gridColumn": "1",
         "gridRow": "1",
         "minWidth": "0",
@@ -329,7 +329,7 @@
         "textOverflow": "ellipsis",
         "whiteSpace": "nowrap"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > .caps-field-description": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  :is(\n    .caps-field[data-orientation=\"vertical\"],\n    .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n  )\n  > .caps-field-lead\n  > .caps-field-copy\n  > .caps-field-description": {
         "gridColumn": "2",
         "gridRow": "2",
         "maxWidth": "30rem"
@@ -337,40 +337,40 @@
       ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"] .caps-field,.caps-fieldset[data-layout=\"columns\"]": {
         "--caps-field-icon-size": "1rem"
       },
-      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field\n    :is(.caps-field-copy > label, .caps-field-icon),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
+      ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n  .caps-field\n  :is(.caps-field-copy > label, .caps-field-icon),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
         "color": "var(--stipe-fg-muted)",
         "fontWeight": 400
       },
       "@container (max-width: 24rem)": {
-        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      ),.caps-fieldset[data-layout=\"columns\"]": {
+        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    ),.caps-fieldset[data-layout=\"columns\"]": {
           "gridTemplateColumns": "minmax(0, 1fr)"
         },
-        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-fields": {
+        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > :not(.caps-field-copy, .caps-field-lead, .caps-field-error-reveal),.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-fields": {
           "gridColumn": "1",
           "gridRow": "2",
           "maxWidth": "none"
         },
-        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-copy\n      > .caps-field-description,:is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      .caps-field[data-orientation=\"vertical\"]\n      > .caps-field-error-reveal,.caps-fieldset[data-layout=\"columns\"]\n      > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
+        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > .caps-field-description,:is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"vertical\"]\n    > .caps-field-error-reveal,.caps-fieldset[data-layout=\"columns\"]\n    > :is(.caps-fieldset-description, .caps-field-error-reveal)": {
           "gridColumn": "1",
           "gridRow": "3"
         },
-        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-copy\n      > label,.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
+        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-copy\n    > label,.caps-fieldset[data-layout=\"columns\"] > .caps-fieldset-legend": {
           "overflow": "visible",
           "textOverflow": "clip",
           "whiteSpace": "normal",
           "minHeight": "0"
         },
-        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      .caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-error-reveal": {
+        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    .caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-error-reveal": {
           "paddingInlineStart": "0",
           "maxWidth": "none"
         },
-        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n      :is(\n        .caps-field[data-orientation=\"vertical\"],\n        .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n      )\n      > .caps-field-lead\n      > .caps-field-copy\n      > .caps-field-description": {
+        ":is(.caps-form, .caps-form-section)[data-layout=\"columns\"]\n    :is(\n      .caps-field[data-orientation=\"vertical\"],\n      .caps-field[data-orientation=\"horizontal\"] > .caps-field-row\n    )\n    > .caps-field-lead\n    > .caps-field-copy\n    > .caps-field-description": {
           "gridColumn": "1",
           "gridRow": "3"
         }
       },
       "@media (prefers-reduced-motion: reduce)": {
-        ".caps-field-error-reveal,.caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n      > .caps-collapse-clip": {
+        ".caps-field-error-reveal,.caps-field-error-reveal.caps-collapse:not([data-open=\"true\"])\n    > .caps-collapse-clip": {
           "transition": "none !important"
         }
       },

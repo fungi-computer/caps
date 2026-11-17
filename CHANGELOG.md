@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.12.0
+
+### Minor Changes
+
+- Changes since 0.11.7:
+
+  - feat(caps): let a Combobox start with a default input value
+  - fix(caps): preserve the typecheck build prerequisite
+
 ## 0.11.7
 
 ### Patch Changes

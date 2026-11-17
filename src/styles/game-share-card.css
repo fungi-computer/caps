@@ -1,0 +1,40 @@
+@layer components {
+  .caps-section-heading {
+    font-family: var(--caps-heading-font, inherit);
+    font-size: var(--text-2xl);
+    font-weight: var(--caps-heading-weight, 900);
+    line-height: var(--caps-heading-line-height, 1.25);
+    letter-spacing: var(--caps-heading-tracking, -0.025em);
+    text-transform: var(--caps-heading-case, none);
+  }
+  .caps-eyebrow {
+    font-family: var(--caps-label-font, inherit);
+    color: var(--stipe-fg-muted);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    text-transform: none;
+  }
+  .caps-eyebrow[data-tone="primary"] {
+    color: color-mix(
+      in oklab,
+      var(--color-primary) 30%,
+      var(--color-base-content)
+    );
+  }
+  .caps-eyebrow[data-tone="secondary"] {
+    color: color-mix(
+      in oklab,
+      var(--color-secondary) 15%,
+      var(--color-base-content)
+    );
+  }
+  .caps-eyebrow[data-tone="live"] {
+    color: color-mix(
+      in oklab,
+      var(--color-error) 55%,
+      var(--color-base-content)
+    );
+  }
+}

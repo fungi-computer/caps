@@ -90,7 +90,7 @@
         "height": "1.1em",
         "borderRadius": "var(--radius-selector)",
         "background": "currentColor",
-        "animation": "caps-code-caret calc(var(--stipe-motion-slow) * 4)\n      steps(2, jump-none) infinite"
+        "animation": "caps-code-caret calc(var(--stipe-motion-slow) * 4)\n    steps(2, jump-none) infinite"
       },
       "@media (forced-colors: active)": {
         ".caps-code-slot[data-active=\"true\"]": {

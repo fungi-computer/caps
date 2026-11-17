@@ -1,0 +1,22 @@
+@layer utilities {
+  .caps-button.btn-link:not(:disabled):not([aria-disabled="true"]) {
+    color: var(--caps-primary-text);
+  }
+  /* A disabled ghost keeps the enabled ghost's absent face and only dims. */
+  .caps-button.btn-ghost:is(:disabled, [aria-disabled="true"]) {
+    --btn-fg: var(--caps-disabled-ink);
+    color: var(--caps-disabled-ink);
+    background-color: transparent;
+    border-color: transparent;
+    outline: none;
+    box-shadow: none;
+  }
+  /* A busy ghost is pending, not disabled: it keeps its ink. */
+  .caps-button.btn-ghost[aria-busy="true"]:is(
+      :disabled,
+      [aria-disabled="true"]
+    ) {
+    --btn-fg: var(--color-base-content);
+    color: var(--color-base-content);
+  }
+}

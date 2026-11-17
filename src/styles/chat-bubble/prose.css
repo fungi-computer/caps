@@ -1,0 +1,8 @@
+@layer utilities {
+  .caps-chat-body :where(p, ul, ol, pre, blockquote):first-child {
+    margin-block-start: 0;
+  }
+  .caps-chat-body :where(p, ul, ol, pre, blockquote):last-child {
+    margin-block-end: 0;
+  }
+}

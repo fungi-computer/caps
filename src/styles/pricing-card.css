@@ -1,0 +1,108 @@
+/* Pricing card: banded layout with a theme-owned band and shadow. */
+.caps-pricing-card-banded {
+  --caps-pricing-card-offset: var(--spacing-xs);
+  display: flex;
+  flex-direction: column;
+  border: calc(var(--border) * 2) solid var(--color-base-content);
+  background: var(--color-base-100);
+  box-shadow: var(
+    --caps-pricing-shadow,
+    calc(var(--caps-pricing-card-offset) * 1.5)
+      calc(var(--caps-pricing-card-offset) * 1.5) 0
+      color-mix(in oklab, var(--color-base-content) 30%, transparent)
+  );
+}
+.caps-pricing-card-banded[data-featured="true"] {
+  box-shadow: var(
+    --caps-pricing-shadow-featured,
+    calc(var(--caps-pricing-card-offset) * 2)
+      calc(var(--caps-pricing-card-offset) * 2) 0 var(--color-base-content)
+  );
+}
+.caps-pricing-card-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--caps-pricing-band, var(--color-base-content));
+  color: var(--caps-pricing-band-ink, var(--color-base-100));
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.caps-pricing-card-band .caps-pricing-card-name {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+.caps-pricing-card-art {
+  margin: 0;
+  border-bottom: calc(var(--border) * 2) solid var(--color-base-content);
+  background: var(--color-base-100);
+  line-height: 0;
+}
+.caps-pricing-card-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  image-rendering: pixelated;
+  filter: var(--caps-print-filter, none);
+}
+.caps-pricing-card-price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--spacing-xs);
+}
+.caps-pricing-card-price strong {
+  font-size: var(--text-4xl);
+  font-weight: 400;
+  line-height: 1;
+}
+.caps-pricing-card-price span {
+  font-size: var(--text-sm);
+}
+.caps-pricing-card-banded .caps-pricing-card-price {
+  font-family: var(--font-mono);
+}
+.caps-pricing-card-banded .caps-pricing-card-description {
+  padding-bottom: var(--spacing-md);
+  border-bottom: var(--border) solid var(--stipe-hairline-quiet);
+  color: var(--color-base-content);
+  font-size: var(--text-base);
+}
+.caps-pricing-card-banded .caps-pricing-card-features ul {
+  display: grid;
+  align-content: start;
+  gap: var(--spacing-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+.caps-pricing-card-banded .caps-pricing-card-features li {
+  display: grid;
+  grid-template-columns: 1.1em 1fr;
+  gap: var(--spacing-xs);
+  line-height: 1.5;
+}
+.caps-pricing-card-banded .caps-pricing-card-features li::before {
+  content: "■";
+  font-size: 0.7em;
+  line-height: 2.1;
+}
+.caps-pricing-card-banded .caps-pricing-card-action {
+  margin-top: auto;
+  border-top: 0;
+  background: none;
+  padding-top: 0;
+}
+.caps-pricing-card-banded .caps-pricing-card-action > * {
+  flex: 1;
+}

@@ -1,0 +1,34 @@
+.caps-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  vertical-align: middle;
+  color: var(--color-base-content);
+}
+
+.caps-status-bead {
+  display: block;
+  flex: none;
+  overflow: visible;
+  /* Decorative material overflows the bead; only its status wrapper is a target. */
+  pointer-events: none;
+  transition: color var(--stipe-motion-normal) ease;
+}
+
+/* Task marks: a 16-unit glyph sized like a small icon. */
+.caps-status-mark {
+  display: block;
+  flex: none;
+  width: var(--stipe-icon-size-sm);
+  height: var(--stipe-icon-size-sm);
+  overflow: visible;
+  transition: color var(--stipe-motion-normal) ease;
+}
+.caps-status-compact .caps-status-mark {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+.caps-status-mark-spin {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}

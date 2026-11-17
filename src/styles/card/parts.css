@@ -1,0 +1,69 @@
+@layer components {
+  .caps-card-header {
+    display: grid;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xl);
+  }
+  .caps-card-header-centered {
+    justify-items: center;
+    text-align: center;
+  }
+  .caps-card-title {
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-size: var(--text-lg);
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .caps-card-description {
+    margin: 0;
+    color: var(--stipe-fg-muted);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  /* Card copy wraps unbreakable text (ids, URLs) instead of widening the card. */
+  .caps-card-content {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    overflow-wrap: anywhere;
+  }
+  .caps-card-compact > .caps-card-header {
+    gap: var(--spacing-2xs);
+    padding: var(--spacing-lg);
+  }
+  .caps-card-compact > .caps-card-content {
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+  }
+  .caps-card-compact > .caps-card-header + .caps-card-content {
+    padding-top: 0;
+  }
+  .caps-card-compact > .caps-card-footer {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+  .caps-card-header + .caps-card-content {
+    padding-top: 0;
+  }
+  .caps-card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    border-top: var(--border) solid var(--caps-card-edge);
+    border-end-start-radius: inherit;
+    border-end-end-radius: inherit;
+    background: color-mix(in oklab, var(--color-base-200) 45%, transparent);
+    color: var(--stipe-fg-muted);
+    font-size: var(--text-xs);
+    line-height: 1.5;
+  }
+}

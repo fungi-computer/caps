@@ -1,0 +1,19 @@
+/* The themed brand fill stays untouched. Link ink and focus rings keep the
+   primary's hue and chroma and only move lightness toward the ink side of
+   the theme's own color-scheme, so every Stipe theme, palette and accent is
+   covered without a per-theme list. test/contrast.browser.mjs measures it. */
+:root,
+[data-theme] {
+  --caps-primary-text: light-dark(
+    oklch(from var(--color-primary) clamp(0.2, l, 0.4) c h),
+    oklch(from var(--color-primary) clamp(0.9, l, 0.96) min(c, 0.1) h)
+  );
+  --caps-focus-ring: var(--caps-primary-text);
+  --caps-touch-target: 2.75rem;
+  /* Quiet ink for a disabled faceless control (ghost and icon buttons). */
+  --caps-disabled-ink: color-mix(
+    in oklab,
+    var(--color-base-content) 38%,
+    transparent
+  );
+}

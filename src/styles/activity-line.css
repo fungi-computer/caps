@@ -1,0 +1,26 @@
+/* ActivityLine: a one-line disclosure whose leading mark and summary settle. */
+/* A fixed slot, so the summary never shifts when the mark changes. */
+.caps-activity-line-leading {
+  width: var(--stipe-icon-size-lg);
+  justify-content: center;
+}
+.caps-activity-line-leading .caps-loader {
+  transform: scale(0.7);
+}
+/* The loader and the settled mark trade places on one centre. */
+.caps-activity-line-leading > .caps-swap {
+  width: 100%;
+  justify-items: center;
+}
+.caps-activity-line-leading .caps-swap-layer {
+  display: grid;
+  place-items: center;
+}
+.caps-activity-line-leading .caps-swap-layer[data-swap-leaving] {
+  inset: 0;
+}
+/* The loader stops where it is when the work settles: its wandering blob
+     never drifts beside the arriving mark. */
+.caps-activity-line-leading .caps-swap-layer[data-swap-leaving] .caps-loader {
+  visibility: hidden;
+}

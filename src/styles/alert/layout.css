@@ -1,0 +1,8 @@
+.caps-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  color: var(--color-base-content);
+  font-size: 0.875rem;
+}

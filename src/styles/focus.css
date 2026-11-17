@@ -1,0 +1,6 @@
+@utility caps-focus-color {
+  &:focus-visible {
+    --tw-ring-color: var(--caps-focus-ring);
+    outline-color: var(--caps-focus-ring);
+  }
+}

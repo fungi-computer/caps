@@ -1,0 +1,58 @@
+/* Keycap rows: a dock (horizontal) or a rail (vertical). */
+.caps-hud-keys {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+.caps-hud-keys[data-orientation="vertical"] {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+.caps-hud-keys {
+  --caps-keycap-context-face: var(--card-paper);
+  --caps-keycap-context-image: none;
+  --caps-keycap-context-border: 2px solid var(--card-ink);
+  --caps-keycap-context-shadow: 0 2px 0 var(--card-ink);
+  --caps-keycap-context-weight: 700;
+  /* prettier-ignore */
+  --caps-keycap-hover-face: color-mix(
+      in oklab,
+      var(--color-primary) 14%,
+      var(--card-paper)
+    );
+  --caps-keycap-hover-image: none;
+  --caps-keycap-active-shadow: none;
+  --caps-keycap-context-travel: 2px;
+  --caps-keycap-selected-ink: var(--color-primary-content);
+  --caps-keycap-selected-face: var(--color-primary);
+  --caps-keycap-focus-ink: var(--color-accent);
+  --caps-keycap-shortcut-ink: var(--color-base-content);
+  --caps-keycap-shortcut-face: var(--card-paper);
+  --caps-keycap-shortcut-border: 1px solid var(--card-ink);
+  --caps-keycap-shortcut-shadow: 0 1px 0 var(--card-ink);
+}
+.caps-hud-keys .caps-keycap-button {
+  width: auto;
+  min-height: 2.5rem;
+}
+/* A HUD key shows its open state in its own colour; no unlit lamp. */
+.caps-hud-keys .caps-keycap-led[data-lit="false"] {
+  display: none;
+}
+.caps-hud-keys[data-orientation="vertical"] .caps-keycap-button {
+  width: 100%;
+  justify-content: flex-start;
+}
+.caps-hud-keys .caps-keycap-button > .caps-keycap {
+  margin-left: auto;
+}
+.caps-hud-plate > .caps-hud-keys-heading {
+  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}

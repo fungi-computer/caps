@@ -1,0 +1,46 @@
+/* Checkbox shares the screen context without changing its native input. */
+.caps-checkbox {
+  --caps-checkbox-depth: var(--depth);
+  color: var(
+    --caps-control-dim,
+    color-mix(in oklab, var(--color-base-content) 35%, var(--color-base-100))
+  );
+}
+.caps-checkbox:not([data-state="unchecked"]) {
+  color: var(--caps-control-ink, var(--color-success));
+}
+.caps-checkbox-visual {
+  --depth: var(--caps-control-depth, var(--caps-checkbox-depth));
+}
+.caps-checkbox-track {
+  fill: var(--caps-control-face, var(--color-base-200));
+  stroke: var(--caps-control-dim, var(--color-base-300));
+  transition: stroke var(--stipe-motion-squish) ease;
+}
+.caps-checkbox[data-state="unchecked"] .caps-checkbox-track {
+  stroke: var(
+    --caps-control-dim,
+    color-mix(in oklab, var(--color-base-content) 70%, var(--color-base-200))
+  );
+}
+
+.caps-checkbox:has(input[aria-invalid]:not([aria-invalid="false"])) {
+  color: var(--color-error);
+}
+.caps-checkbox:has(input[aria-invalid]:not([aria-invalid="false"]))
+  .caps-checkbox-track {
+  stroke: var(--color-error);
+}
+
+.caps-checkbox[data-appearance="compact"],
+.caps-checkbox[data-appearance="compact"]:has(input:disabled) {
+  display: grid;
+  place-items: center;
+  color: inherit;
+  opacity: 1;
+}
+.caps-checkbox[data-appearance="compact"]:focus-within {
+  outline: 2px solid currentcolor;
+  outline-offset: 2px;
+  border-radius: calc(var(--radius-selector) / 2);
+}

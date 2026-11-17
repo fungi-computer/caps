@@ -139,6 +139,37 @@ function comboboxTypeProbes() {
 }
 void comboboxTypeProbes;
 
+it("starts with a default input value that already filters the options", () => {
+  const view = render(
+    <Combobox
+      defaultInputValue="ban"
+      getKey={(item) => item.id}
+      getLabel={(item) => item.label}
+      items={options}
+    />,
+  );
+  const input = requireValue(
+    view.container.querySelector<HTMLInputElement>('[role="combobox"]'),
+    "Combobox input",
+  );
+  expect(input.value).toBe("ban");
+  expect(
+    [...view.container.querySelectorAll('[role="option"]')].map(
+      (option) => option.textContent,
+    ),
+  ).toEqual(["Banana"]);
+  // It is only a start: typing replaces it as usual.
+  act(() => {
+    fireInput(input, "car");
+  });
+  expect(input.value).toBe("car");
+  expect(
+    [...view.container.querySelectorAll('[role="option"]')].map(
+      (option) => option.textContent,
+    ),
+  ).toEqual(["Carrot"]);
+});
+
 it("renders inline root props/ref, input ref, and listbox semantics", () => {
   const rootRef = createRef<HTMLDivElement>();
   const inputRef = createRef<HTMLInputElement>();

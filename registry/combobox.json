@@ -66,7 +66,7 @@
       }
     },
     "@layer utilities": {
-      ".caps-composer-toolbar\n    > .caps-status-tray\n    .caps-status-tray-row\n    :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
+      ".caps-composer-toolbar\n  > .caps-status-tray\n  .caps-status-tray-row\n  :is(.caps-keycap-button, .caps-status-tray-chip, .caps-select)": {
         "height": "var(--caps-status-tray-key-height)",
         "minHeight": "var(--caps-status-tray-key-height)"
       },
@@ -78,7 +78,7 @@
         "fontSize": "var(--text-xs)"
       },
       "@media (max-width: 480px)": {
-        ".caps-field[data-orientation=\"horizontal\"]\n      > .caps-field-row:has(\n        > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n      )": {
+        ".caps-field[data-orientation=\"horizontal\"]\n    > .caps-field-row:has(\n      > :is(.caps-select-shell, .caps-input, .textarea, .caps-input-group)\n    )": {
           "flexDirection": "column",
           "alignItems": "stretch",
           "gap": "var(--spacing-xs)",
@@ -87,7 +87,7 @@
       },
       ".caps-number-field-input.caps-input": {
         "--caps-input-floor": "var(\n      --caps-control-number-face,\n      color-mix(\n        in oklab,\n        var(--color-base-200) calc(100% - var(--depth) * 4%),\n        var(--color-base-content) calc(var(--depth) * 4%)\n      )\n    )",
-        "borderColor": "var(\n      --caps-control-number-line,\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      )\n    )"
+        "borderColor": "var(\n    --caps-control-number-line,\n    color-mix(\n      in oklab,\n      var(--stipe-linework),\n      transparent calc(var(--depth) * 100%)\n    )\n  )"
       },
       ".caps-input,.caps-input:disabled": {
         "--caps-input-floor": "color-mix(\n      in oklab,\n      var(--color-base-200) calc(100% - var(--depth) * 4%),\n      var(--color-base-content) calc(var(--depth) * 4%)\n    )",
@@ -95,10 +95,10 @@
         "--caps-input-edge-width": "0px",
         "background": "var(--caps-input-floor)",
         "color": "var(--color-base-content)",
-        "border": "var(--border) solid\n      light-dark(\n        color-mix(\n          in oklab,\n          var(--stipe-linework),\n          transparent calc(var(--depth) * 100%)\n        ),\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          var(--stipe-linework)\n        )\n      )",
+        "border": "var(--border) solid\n    light-dark(\n      color-mix(\n        in oklab,\n        var(--stipe-linework),\n        transparent calc(var(--depth) * 100%)\n      ),\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        var(--stipe-linework)\n      )\n    )",
         "paddingInline": "var(--spacing-lg)",
-        "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n      inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n      inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
-        "transition": "border-color var(--stipe-motion-fast) ease,\n      box-shadow var(--stipe-motion-fast) ease"
+        "boxShadow": "inset 0 0 0 var(--caps-input-edge-width) var(--caps-input-edge),\n    inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.07)),\n    inset 0 0 0 1px oklch(100% 0 0 / calc(var(--depth) * 0.02))",
+        "transition": "border-color var(--stipe-motion-fast) ease,\n    box-shadow var(--stipe-motion-fast) ease"
       },
       ".caps-input.caps-input-group-control": {
         "borderColor": "color-mix(\n      in oklab,\n      var(--color-base-content) 22%,\n      transparent\n    )"
@@ -109,7 +109,7 @@
         "backgroundColor": "var(--color-base-100)",
         "color": "var(--color-base-content)",
         "fontWeight": 650,
-        "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.22)),\n      0 calc(var(--depth) * 1px) 0\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        )\n    )"
+        "boxShadow": "var(\n    --stipe-shadow-raised,\n    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.22)),\n    0 calc(var(--depth) * 1px) 0\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 16%),\n        transparent\n      )\n  )"
       },
       ".caps-select-shell": {
         "display": "inline-grid",
@@ -168,10 +168,10 @@
         "display": "flex",
         "flexDirection": "column",
         "padding": "var(--spacing-xs)",
-        "border": "var(--border) solid\n      color-mix(in oklab, var(--color-base-content) 16%, transparent)",
+        "border": "var(--border) solid\n    color-mix(in oklab, var(--color-base-content) 16%, transparent)",
         "borderRadius": "var(--radius-box)",
         "background": "var(--color-base-200)",
-        "boxShadow": "var(\n      --stipe-shadow-raised,\n      inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.45)),\n      inset 0 -1px 0\n        color-mix(in oklab, var(--color-base-content) 12%, transparent),\n      0 calc(var(--depth) * 2px) 0\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 16%),\n          transparent\n        ),\n      0 calc(var(--depth) * 8px) calc(var(--depth) * 20px)\n        color-mix(\n          in oklab,\n          var(--color-base-content) calc(var(--depth) * 12%),\n          transparent\n        )\n    )"
+        "boxShadow": "var(\n    --stipe-shadow-raised,\n    inset 0 1px 0 rgb(255 255 255 / calc(var(--depth) * 0.45)),\n    inset 0 -1px 0\n      color-mix(in oklab, var(--color-base-content) 12%, transparent),\n    0 calc(var(--depth) * 2px) 0\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 16%),\n        transparent\n      ),\n    0 calc(var(--depth) * 8px) calc(var(--depth) * 20px)\n      color-mix(\n        in oklab,\n        var(--color-base-content) calc(var(--depth) * 12%),\n        transparent\n      )\n  )"
       },
       ".caps-combobox-popup": {
         "width": "max(14rem, var(--anchor-width))",
@@ -213,7 +213,7 @@
         "fontSize": "var(--text-sm)",
         "cursor": "pointer"
       },
-      ".caps-combobox-option[data-active=\"true\"]:not(:disabled),.caps-combobox-list[data-navigation=\"pointer\"]\n    .caps-combobox-option:hover:not(:disabled)": {
+      ".caps-combobox-option[data-active=\"true\"]:not(:disabled),.caps-combobox-list[data-navigation=\"pointer\"]\n  .caps-combobox-option:hover:not(:disabled)": {
         "--caps-shortcut-face": "var(\n      --caps-combobox-active-key-face,\n      var(--color-base-200)\n    )",
         "--caps-shortcut-ink": "var(\n      --caps-combobox-active-key-ink,\n      var(--color-base-content)\n    )",
         "background": "var(--caps-combobox-active-face, var(--color-base-300))",
@@ -239,7 +239,7 @@
         }
       },
       ".caps-input::placeholder": {
-        "color": "color-mix(\n      in oklab,\n      var(--color-base-content) 85%,\n      var(--color-base-100)\n    )",
+        "color": "color-mix(\n    in oklab,\n    var(--color-base-content) 85%,\n    var(--color-base-100)\n  )",
         "opacity": 1
       },
       ".caps-input:focus": {
@@ -265,7 +265,7 @@
         "scale": "none",
         "boxShadow": "inset 0 1px 0 oklch(100% 0 0 / calc(var(--depth) * 0.18))"
       },
-      ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n      [aria-disabled=\"true\"]\n    ):is(:active, .btn-active)": {
+      ".caps-button-filled.caps-input-group-control:not(:disabled):not(\n    [aria-disabled=\"true\"]\n  ):is(:active, .btn-active)": {
         "boxShadow": "inset 0 1px 0 oklch(0% 0 0 / calc(var(--depth) * 0.08))"
       }
     },

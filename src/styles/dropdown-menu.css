@@ -1,0 +1,28 @@
+@layer caps-dropdown {
+  .caps-dropdown-popup {
+    max-height: var(--available-height);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    /* A menu grows out of its own trigger's corner and folds back into it. */
+    transform-origin: var(--transform-origin);
+    transition:
+      opacity var(--stipe-motion-fast) var(--stipe-motion-ease),
+      scale var(--stipe-motion-normal) var(--stipe-motion-ease);
+  }
+  .caps-dropdown-popup[data-starting-style],
+  .caps-dropdown-popup[data-ending-style] {
+    opacity: 0;
+    scale: 0.94;
+  }
+  .caps-dropdown-popup[data-ending-style] {
+    transition-duration: var(--stipe-motion-fast);
+    transition-timing-function: var(--stipe-motion-ease-exit);
+  }
+  /* Reduced motion: Stipe keeps opacity-only fades; nothing grows. */
+  @media (prefers-reduced-motion: reduce) {
+    .caps-dropdown-popup[data-starting-style],
+    .caps-dropdown-popup[data-ending-style] {
+      scale: none;
+    }
+  }
+}

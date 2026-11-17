@@ -1,0 +1,13 @@
+.caps-label {
+  /* prettier-ignore */
+  font-family: var(
+      --caps-control-label-font,
+      var(--caps-label-font, inherit)
+    );
+  font-size: var(--caps-control-label-size, var(--text-sm));
+  letter-spacing: var(--caps-control-label-tracking, inherit);
+  text-transform: var(--caps-control-label-case, inherit);
+  padding-block: 0;
+  line-height: 1.5;
+  white-space: normal;
+}

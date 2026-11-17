@@ -1,0 +1,14 @@
+.caps-action-row-label {
+  font-weight: 600;
+}
+.caps-action-row-description {
+  color: var(--stipe-fg-muted);
+  font-size: var(--text-xs);
+}
+/* A trailing time is a quiet numeric readout, the size of a status. */
+.caps-action-row-trailing > time {
+  color: var(--stipe-fg-muted);
+  font-family: var(--font-numeric, inherit);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}

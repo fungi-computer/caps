@@ -9,13 +9,14 @@
       "description": "Swipeable Sonner notifications styled for Caps.",
       "dependencies": [
         "sonner",
+        "lucide-react",
         "@fungi.computer/stipe",
         "cn",
         "class-variance-authority",
         "react",
         "react-dom"
       ],
-      "registryDependencies": [],
+      "registryDependencies": ["@shiit/loader", "@shiit/status"],
       "files": [
         {
           "path": "../src/components/toaster.tsx",
@@ -489,9 +490,10 @@
         "@fungi.computer/stipe",
         "animejs",
         "lucide-react",
-        "react"
+        "react",
+        "zod"
       ],
-      "registryDependencies": [],
+      "registryDependencies": ["@shiit/input"],
       "files": [
         {
           "path": "../src/blocks/app-bar.tsx",
@@ -517,6 +519,11 @@
           "path": "../src/components/overlay-root.tsx",
           "type": "registry:ui",
           "target": "@ui/overlay-root.tsx"
+        },
+        {
+          "path": "../src/lib/ime.ts",
+          "type": "registry:lib",
+          "target": "@lib/ime.ts"
         }
       ],
       "css": {
@@ -785,7 +792,7 @@
         "cn",
         "react"
       ],
-      "registryDependencies": [],
+      "registryDependencies": ["@shiit/status"],
       "files": [
         {
           "path": "../src/blocks/result-state.tsx",

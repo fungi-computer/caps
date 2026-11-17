@@ -1,0 +1,17 @@
+/* Quiet badge: a soft tint with no outline or molding, so a label never
+     reads as a key. The tint carries the tone; the ink stays page text so
+     every tone stays legible in every theme. */
+.caps-badge.caps-badge-quiet {
+  height: auto;
+  min-height: 1.5rem;
+  color: var(--color-base-content);
+  background-color: color-mix(
+    in oklab,
+    var(--badge-color, var(--color-base-content)) 12%,
+    var(--color-base-100)
+  );
+  background-image: none;
+  border-color: transparent;
+  box-shadow: none;
+  line-height: 1.25;
+}

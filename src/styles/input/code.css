@@ -1,0 +1,8 @@
+@layer components {
+  .caps-hud-text-value[data-size="md"] {
+    font-size: 1rem;
+  }
+  .caps-hud-clock-time {
+    color: var(--color-primary);
+  }
+}

@@ -1,0 +1,26 @@
+@media (pointer: coarse) {
+  .caps-keycap[data-touch="hide"] {
+    display: none;
+  }
+}
+
+.caps-keycap {
+  display: inline-grid;
+  min-width: var(--caps-keycap-legend-min-size, 2rem);
+  min-height: var(--caps-keycap-legend-min-size, 2rem);
+  margin-inline: var(--caps-keycap-legend-margin, 0);
+  font-size: var(--caps-keycap-legend-font-size, inherit);
+  place-items: center;
+  /* A key legend is a hairline square a shade off the paper: no bevel. */
+  border: var(--card-rule-width) solid
+    var(
+      --caps-keycap-legend-edge,
+      color-mix(in oklab, var(--card-rule) 22%, transparent)
+    );
+  border-radius: var(--radius-selector);
+  padding-inline: var(--spacing-sm);
+  background: color-mix(in oklab, var(--card-ink) 5%, var(--card-paper));
+  color: var(--card-ink);
+  font-family: var(--font-mono);
+  line-height: 1;
+}

@@ -1,0 +1,44 @@
+/* Status appearance="chip": bead and label in a tone-tinted pill. */
+.caps-status-chip {
+  --caps-status-chip-tone: var(--color-base-content);
+
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: var(--spacing-2xs);
+  padding: var(--spacing-2xs) var(--spacing-sm) var(--spacing-2xs)
+    var(--spacing-xs);
+  border-radius: var(--radius-full);
+  background: color-mix(
+    in oklab,
+    var(--caps-status-chip-tone) 14%,
+    transparent
+  );
+  color: color-mix(
+    in oklab,
+    var(--caps-status-chip-tone) 70%,
+    var(--color-base-content)
+  );
+  font-weight: 650;
+}
+.caps-status-chip[data-tone="primary"] {
+  --caps-status-chip-tone: var(--color-primary);
+}
+.caps-status-chip[data-tone="secondary"] {
+  --caps-status-chip-tone: var(--color-secondary);
+}
+.caps-status-chip[data-tone="accent"] {
+  --caps-status-chip-tone: var(--color-accent);
+}
+.caps-status-chip[data-tone="success"] {
+  --caps-status-chip-tone: var(--color-success);
+}
+.caps-status-chip[data-tone="info"] {
+  --caps-status-chip-tone: var(--color-info);
+}
+.caps-status-chip[data-tone="warning"] {
+  --caps-status-chip-tone: var(--color-warning);
+}
+.caps-status-chip[data-tone="error"] {
+  --caps-status-chip-tone: var(--color-error);
+}

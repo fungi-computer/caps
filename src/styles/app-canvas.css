@@ -1,0 +1,14 @@
+.caps-app-canvas {
+  font-family: var(--font-sans);
+  color: var(--color-base-content);
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+}
+.caps-app-canvas::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background-color: var(--color-base-100);
+  content: "";
+}

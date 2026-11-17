@@ -1,0 +1,45 @@
+/* Collapse: content that opens and closes its own space. */
+.caps-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--stipe-motion-normal) ease-out,
+    opacity var(--stipe-motion-normal) ease-out;
+}
+.caps-collapse[data-open="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.caps-collapse-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+/* Closed content leaves the tab order once it has finished closing. */
+.caps-collapse:not([data-open="true"]) > .caps-collapse-clip {
+  visibility: hidden;
+  transition: visibility 0s linear var(--stipe-motion-normal);
+}
+/* Reduced motion: Stipe keeps opacity-only fades, so the space changes at
+     once; the closing content still hides only after its fade. */
+@media (prefers-reduced-motion: reduce) {
+  .caps-collapse:not([data-open="true"]) > .caps-collapse-clip {
+    transition-property: visibility !important;
+    transition-duration: 0s !important;
+    transition-delay: var(--stipe-motion-fast) !important;
+  }
+}
+/* Swap: the leaving content fades over the arriving content. */
+.caps-swap {
+  position: relative;
+  display: grid;
+}
+.caps-swap-layer[data-swap-leaving] {
+  position: absolute;
+  inset-inline: 0 auto;
+  top: 0;
+  pointer-events: none;
+}
+.caps-swap[data-anchor="end"] > .caps-swap-layer[data-swap-leaving] {
+  inset-inline: auto 0;
+}
