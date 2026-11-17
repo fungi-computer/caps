@@ -1,5 +1,75 @@
 # Caps (`@fungi.computer/caps`)
 
+Caps gives React developers ready-to-use buttons, forms and app layouts that
+share a theme.
+
+![Caps buttons running in the light-theme Ladle workbench](docs/media/readme-buttons-1280.png)
+
+## Quick start
+
+Install Caps in your React app:
+
+```sh
+npm install @fungi.computer/caps react react-dom
+```
+
+Mount this component in your existing React root. Click the button to count a
+note.
+
+```tsx
+import { useState } from "react";
+import { Button } from "@fungi.computer/caps/components/button";
+import "@fungi.computer/caps/styles.css";
+
+export function AddNote() {
+  const [count, setCount] = useState(0);
+  return (
+    <Button onClick={() => setCount(count + 1)}>Add note ({count})</Button>
+  );
+}
+```
+
+## Common tasks
+
+### Choose a theme
+
+Set `data-theme="latte"` on your page root for a light palette. Without a theme,
+the page follows the reader's light or dark setting.
+[Themes and CSS](#themes-and-css) lists the maintained palettes and the two
+stylesheet options.
+
+### Build a form
+
+Use [`SchemaForm`](#schema-forms) for a schema-backed form, or
+[`Field` and `FormFooter`](#forms) when you own the layout. Your app supplies
+validation and the save operation.
+
+### Add a dialog or menu
+
+Start with [`DialogContent` or `DropdownMenuContent`](#dialogs-and-menus). Keep
+a popup's portal inside the theme you want it to inherit.
+
+### Browse the components
+
+From the Fungi monorepo, run `pnpm workbench:serve` after setup. The Ladle
+workbench has interactive examples. The [API reference](docs/api/README.md)
+lists each component's props and import path.
+
+<details>
+<summary>See the buttons at phone width</summary>
+
+![The Caps button workbench at 390 pixels wide](docs/media/readme-buttons-390.png)
+
+</details>
+
+<!-- Capture: 2026-11-17, source 18c3145d6874aaf873cecb863c150da1b6e64ca0.
+Ladle buttons--button, light theme, 1280x720 and 390x844.
+Real components with local example data, captured with Playwright. -->
+
+## Reference
+
+### Overview
+
 Caps is a React component library: accessible primitives such as buttons,
 fields, dialogs, menus and comboboxes, plus presentation blocks such as a chat
 composer, an app bar, window frames, status trays, game HUD pieces and editorial
@@ -39,7 +109,7 @@ Pick one stylesheet route:
 With an asset bundler such as Vite, also import `@fungi.computer/caps/fonts.css`
 to load the bundled Nunito, Maple Mono and display fonts.
 
-## Quick start
+## Notes form
 
 A small notes form with a Caps button, the Composer block and a status bead.
 Mount `NoteComposer` from any React root.
