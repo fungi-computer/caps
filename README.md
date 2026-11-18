@@ -1,9 +1,24 @@
 # Caps (`@fungi.computer/caps`)
 
-Caps gives React developers ready-to-use buttons, forms and app layouts that
-share a theme.
+Caps gives React developers ready-to-use buttons, forms, dialogs, lists and app
+layouts that share a theme.
 
-![Caps buttons running in the light-theme Ladle workbench](docs/media/readme-buttons-1280.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/media/readme-hero-dark.png">
+  <img alt="A System Settings window built from Caps: a window header, a sidebar of Apps, a list of keys with Revoke buttons, choice cards and a form" src="docs/media/readme-hero-light.png">
+</picture>
+
+Every piece above is a Caps component. Tourtois's System Settings dialog
+composes the window, sidebar, data list, choice cards and form, and the theme
+alone switches it between light and dark.
+
+<table>
+  <tr>
+    <td width="33%"><img alt="Channels settings: status chips, buttons and a sidebar" src="docs/media/readme-grid-channels.png"></td>
+    <td width="33%"><img alt="Computers settings: switches, a select, a form and buttons" src="docs/media/readme-grid-computers.png"></td>
+    <td width="33%"><img alt="A desktop with a launcher grid, an empty state and a list with status chips" src="docs/media/readme-grid-desktop.png"></td>
+  </tr>
+</table>
 
 ## Quick start
 
@@ -55,16 +70,12 @@ From the Fungi monorepo, run `pnpm workbench:serve` after setup. The Ladle
 workbench has interactive examples. The [API reference](docs/api/README.md)
 lists each component's props and import path.
 
-<details>
-<summary>See the buttons at phone width</summary>
-
-![The Caps button workbench at 390 pixels wide](docs/media/readme-buttons-390.png)
-
-</details>
-
-<!-- Capture: 2026-11-17, source 18c3145d6874aaf873cecb863c150da1b6e64ca0.
-Ladle buttons--button, light theme, 1280x720 and 390x844.
-Real components with local example data, captured with Playwright. -->
+<!-- Capture: 2026-11-17, source 6442a3a1ba (integration at capture time).
+Real Ladle workbench stories, local fixture data, captured with Playwright at
+1280px wide, light and dark:
+hero = desktop--system-settings--keys-full (Tourtois, "Desktop / System Settings");
+grid = desktop--system-settings--channels-on-oyster, desktop--computers--hub
+and desktop--workspace. -->
 
 ## Reference
 
