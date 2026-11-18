@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.12.1
+
+### Patch Changes
+
+- Changes since 0.12.0:
+
+  - fix(trellis): keep the add-step button off the steps and the ghost on the
+    lit row
+
 ## 0.12.0
 
 ### Minor Changes

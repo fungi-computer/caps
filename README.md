@@ -3,22 +3,21 @@
 Caps gives React developers ready-to-use buttons, forms, dialogs, lists and app
 layouts that share a theme.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/media/readme-hero-dark.png">
-  <img alt="A System Settings window built from Caps: a window header, a sidebar of Apps, a list of keys with Revoke buttons, choice cards and a form" src="docs/media/readme-hero-light.png">
-</picture>
+![A System Settings window built from Caps: a window header, a sidebar of Apps, a list of keys with Revoke buttons, choice cards and a form](docs/media/readme-hero-light.png)
 
 Every piece above is a Caps component. Tourtois's System Settings dialog
 composes the window, sidebar, data list, choice cards and form, and the theme
 alone switches it between light and dark.
 
-<table>
-  <tr>
-    <td width="33%"><img alt="Channels settings: status chips, buttons and a sidebar" src="docs/media/readme-grid-channels.png"></td>
-    <td width="33%"><img alt="Computers settings: switches, a select, a form and buttons" src="docs/media/readme-grid-computers.png"></td>
-    <td width="33%"><img alt="A desktop with a launcher grid, an empty state and a list with status chips" src="docs/media/readme-grid-desktop.png"></td>
-  </tr>
-</table>
+<details>
+<summary>See it in the dark theme</summary>
+
+![The same System Settings window in the dark theme](docs/media/readme-hero-dark.png)
+
+</details>
+
+| ![Channels settings: status chips, buttons and a sidebar](docs/media/readme-grid-channels.png) | ![Computers settings: switches, a select, a form and buttons](docs/media/readme-grid-computers.png) | ![A desktop with a launcher grid, an empty state and a list with status chips](docs/media/readme-grid-desktop.png) |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 
 ## Quick start
 

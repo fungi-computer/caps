@@ -137,6 +137,12 @@ export const CommandMenu = forwardRef<HTMLUListElement, CommandMenuProps>(
               aria-keyshortcuts={item.shortcut}
               data-search-option={item.id}
               id={optionId(item.id)}
+              onPointerMove={() => {
+                // The row under the pointer is the lit row, so a caller that
+                // follows the active row (a preview) never disagrees with it.
+                if (!item.disabled && activeId !== item.id)
+                  collection.setActiveKey(item.id);
+              }}
               onClick={() => {
                 if (!item.disabled) onSelect(item.id);
               }}
