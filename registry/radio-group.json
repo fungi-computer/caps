@@ -105,7 +105,7 @@
       "initialValue": "black"
     },
     "@layer caps-touch-targets": {
-      "@media (max-width: 640px), (any-pointer: coarse)": {
+      "@media (pointer: coarse)": {
         ".caps-radio-input": {
           "placeSelf": "center stretch",
           "height": "max(100%, var(--caps-touch-target))"

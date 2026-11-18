@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.12.2
+
+### Patch Changes
+
+- Changes since 0.12.1:
+
+  - fix(caps): regenerate the registry for the window row rule
+  - fix(caps): keep window rows at 32px at every width
+
 ## 0.12.1
 
 ### Patch Changes

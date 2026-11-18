@@ -179,7 +179,7 @@
       "initialValue": "black"
     },
     "@layer caps-touch-targets": {
-      "@media (max-width: 640px), (any-pointer: coarse)": {
+      "@media (pointer: coarse)": {
         ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
           "placeSelf": "center",
           "width": "max(100%, var(--caps-touch-target))",

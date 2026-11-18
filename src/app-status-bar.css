@@ -3,8 +3,8 @@
  * window's Computer, say) comes first, the App's readouts follow, and one
  * group of readouts may hold the far end. The row is the window's ground,
  * not a control surface: legend-sized text on the base-200 plate with an
- * inset rule. Controls in it are ordinary Caps controls, so Caps keeps their
- * 44px touch targets.
+ * inset rule. Controls in it are ordinary Caps controls; only a touch-first
+ * device (`pointer: coarse`) grows them to 44px, never a narrow window.
  */
 @layer utilities {
   .caps-app-status-bar {
@@ -37,8 +37,8 @@
     margin-block: var(--spacing-xs);
   }
 
-  /* Touch keeps every key in the bar a full touch target. */
-  @media (max-width: 640px), (any-pointer: coarse) {
+  /* A touch-first device keeps every key in the bar a full touch target. */
+  @media (pointer: coarse) {
     .caps-app-status-bar {
       --caps-app-status-bar-key-height: var(--caps-touch-target);
     }

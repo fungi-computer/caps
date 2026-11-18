@@ -673,7 +673,7 @@
           ".caps-window-actions .caps-button:focus-visible": {
             "outlineOffset": "-2px"
           },
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-window-header\n      .caps-button:not(.caps-window-back, .caps-window-forward),.caps-icon-button-responsive:not(.caps-window-back, .caps-window-forward)": {
               "minWidth": "44px",
               "minHeight": "44px",
@@ -841,7 +841,7 @@
           }
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-window-back": {
               "marginLeft": "calc(var(--caps-touch-target) - var(--spacing-xl))"
             },
@@ -1114,7 +1114,7 @@
           ".caps-window-actions .caps-button:focus-visible": {
             "outlineOffset": "-2px"
           },
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-window-header\n      .caps-button:not(.caps-window-back, .caps-window-forward)": {
               "minWidth": "44px",
               "minHeight": "44px",
@@ -1151,7 +1151,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-button:not(.caps-icon-button)": {
               "minWidth": "var(--caps-touch-target)",
               "minHeight": "var(--caps-touch-target)"
@@ -1322,7 +1322,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-input": {
               "minWidth": "var(--caps-touch-target)",
               "minHeight": "var(--caps-touch-target)"
@@ -2423,7 +2423,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-app-bar-button,.caps-app-bar-primary,.caps-app-bar-close": {
               "minWidth": "var(--caps-touch-target)",
               "minHeight": "var(--caps-touch-target)"
@@ -2811,7 +2811,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-input,.caps-select": {
               "minWidth": "var(--caps-touch-target)",
               "minHeight": "var(--caps-touch-target)"
@@ -5131,7 +5131,7 @@
             "--caps-keycap-font-size": "var(--text-sm)",
             "--caps-keycap-font-weight": "600"
           },
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-keycap-button[data-density=\"compact\"]": {
               "--caps-keycap-height": "var(--caps-touch-target)"
             }
@@ -5278,7 +5278,7 @@
           }
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-navigation-rail-content > a": {
               "minWidth": "var(--caps-touch-target)",
               "minHeight": "var(--caps-touch-target)",
@@ -5578,7 +5578,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-select": {
               "minWidth": "var(--caps-touch-target)",
               "minHeight": "var(--caps-touch-target)"
@@ -5726,7 +5726,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-checkbox-input": {
               "placeSelf": "center stretch",
               "height": "max(100%, var(--caps-touch-target))"
@@ -5847,7 +5847,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-radio-input": {
               "placeSelf": "center stretch",
               "height": "max(100%, var(--caps-touch-target))"
@@ -5973,7 +5973,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-switch-input": {
               "placeSelf": "center",
               "height": "max(100%, var(--caps-touch-target))",
@@ -7146,7 +7146,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
               "placeSelf": "center",
               "width": "max(100%, var(--caps-touch-target))",
@@ -7346,7 +7346,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
               "placeSelf": "center",
               "width": "max(100%, var(--caps-touch-target))",
@@ -7533,7 +7533,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-icon-choice[data-swatch] .caps-icon-choice-input": {
               "placeSelf": "center",
               "width": "max(100%, var(--caps-touch-target))",
@@ -8012,7 +8012,7 @@
           "initialValue": "black"
         },
         "@layer caps-touch-targets": {
-          "@media (max-width: 640px), (any-pointer: coarse)": {
+          "@media (pointer: coarse)": {
             ".caps-dropdown-trigger,.caps-dropdown-item": {
               "minWidth": "var(--caps-touch-target)",
               "minHeight": "var(--caps-touch-target)"

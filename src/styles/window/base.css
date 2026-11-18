@@ -225,8 +225,9 @@
   .caps-window-actions .caps-button:focus-visible {
     outline-offset: -2px;
   }
-  /* Window chrome keeps small glyphs, with room for fingers on touch screens. */
-  @media (max-width: 640px), (any-pointer: coarse) {
+  /* Window chrome keeps small glyphs, with room for fingers on touch-first
+     devices. Width never grows a row: a narrow window is not a phone. */
+  @media (pointer: coarse) {
     .caps-window-header
       .caps-button:not(.caps-window-back, .caps-window-forward),
     .caps-icon-button-responsive:not(.caps-window-back, .caps-window-forward) {

@@ -8,7 +8,7 @@
   --caps-keycap-font-weight: 600;
 }
 /* On phones and touch screens the compact key keeps a thumb-sized height. */
-@media (max-width: 640px), (any-pointer: coarse) {
+@media (pointer: coarse) {
   .caps-keycap-button[data-density="compact"] {
     --caps-keycap-height: var(--caps-touch-target);
   }

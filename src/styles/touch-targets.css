@@ -1,5 +1,5 @@
 @layer caps-touch-targets {
-  @media (max-width: 640px), (any-pointer: coarse) {
+  @media (pointer: coarse) {
     .caps-button:not(.caps-icon-button),
     .caps-dropdown-trigger,
     .caps-dropdown-item,

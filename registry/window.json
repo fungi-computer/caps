@@ -174,7 +174,7 @@
       ".caps-window-actions .caps-button:focus-visible": {
         "outlineOffset": "-2px"
       },
-      "@media (max-width: 640px), (any-pointer: coarse)": {
+      "@media (pointer: coarse)": {
         ".caps-window-header\n      .caps-button:not(.caps-window-back, .caps-window-forward),.caps-icon-button-responsive:not(.caps-window-back, .caps-window-forward)": {
           "minWidth": "44px",
           "minHeight": "44px",
@@ -333,7 +333,7 @@
       }
     },
     "@layer caps-touch-targets": {
-      "@media (max-width: 640px), (any-pointer: coarse)": {
+      "@media (pointer: coarse)": {
         ".caps-window-back": {
           "marginLeft": "calc(var(--caps-touch-target) - var(--spacing-xl))"
         },

@@ -1333,7 +1333,7 @@
         "--caps-keycap-font-size": "var(--text-sm)",
         "--caps-keycap-font-weight": "600"
       },
-      "@media (max-width: 640px), (any-pointer: coarse)": {
+      "@media (pointer: coarse)": {
         ".caps-keycap-button[data-density=\"compact\"]": {
           "--caps-keycap-height": "var(--caps-touch-target)"
         }
@@ -1475,7 +1475,7 @@
       }
     },
     "@layer caps-touch-targets": {
-      "@media (max-width: 640px), (any-pointer: coarse)": {
+      "@media (pointer: coarse)": {
         ".caps-navigation-rail-content > a": {
           "minWidth": "var(--caps-touch-target)",
           "minHeight": "var(--caps-touch-target)",
