@@ -50,7 +50,7 @@ const CodeInput: ForwardRefExoticComponent<
   object &
     Omit<
       InputHTMLAttributes<HTMLInputElement>,
-      "defaultValue" | "onChange" | "size" | "value" | "maxLength"
+      "value" | "defaultValue" | "onChange" | "size" | "maxLength"
     > &
     RefAttributes<HTMLInputElement>
 >;

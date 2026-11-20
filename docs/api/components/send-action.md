@@ -57,8 +57,8 @@ const SendAction: ForwardRefExoticComponent<
   object &
     Omit<
       KeycapButtonProps,
-      | "aria-label"
       | "label"
+      | "aria-label"
       | "icon"
       | "readout"
       | "expanded"

@@ -101,6 +101,36 @@ export function readMotion(element: Element): Motion {
   };
 }
 
+/** The inline motion token declarations in a style attribute, by the browser's own CSS parser. */
+function motionDeclarations(document: Document, style: string | null) {
+  const probe = document.createElement("div");
+  probe.setAttribute("style", style ?? "");
+  const declarations = new Map<string, string>();
+  for (const name of probe.style) {
+    if (name.startsWith("--stipe-motion-") || name.startsWith("--stipe-press-"))
+      declarations.set(name, probe.style.getPropertyValue(name).trim());
+  }
+  return declarations;
+}
+
+/**
+ * Whether an observed ancestor change can move readMotion's result: a theme or
+ * class change can swap the cascade, but an inline style write matters only
+ * when it adds, removes or changes a motion token.
+ */
+function changesMotion(record: MutationRecord): boolean {
+  const target = record.target;
+  if (record.attributeName !== "style" || !(target instanceof Element))
+    return true;
+  const document = target.ownerDocument;
+  const before = motionDeclarations(document, record.oldValue);
+  const after = motionDeclarations(document, target.getAttribute("style"));
+  return (
+    before.size !== after.size ||
+    [...after].some(([name, value]) => before.get(name) !== value)
+  );
+}
+
 /** Live motion tokens for a mounted ref, including nested theme and OS changes. */
 export function useMotion(ref: RefObject<Element | null>): Motion {
   const [motion, setMotion] = useState<Motion>(() => ({
@@ -118,7 +148,11 @@ export function useMotion(ref: RefObject<Element | null>): Motion {
       );
     };
     update();
-    const observer = new view.MutationObserver(update);
+    // Layout and scroll lock write ancestor inline styles constantly; only a
+    // write that changes a motion token can change what readMotion returns.
+    const observer = new view.MutationObserver((records) => {
+      if (records.some(changesMotion)) update();
+    });
     // Observe ancestors only: animation writes to descendants must not trigger reads.
     for (
       let parent: Element | null = element;
@@ -128,6 +162,7 @@ export function useMotion(ref: RefObject<Element | null>): Motion {
       observer.observe(parent, {
         attributes: true,
         attributeFilter: ["data-theme", "class", "style"],
+        attributeOldValue: true,
       });
     }
     const browser: Partial<Pick<Window, "matchMedia">> = view;

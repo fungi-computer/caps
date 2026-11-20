@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.12.4
+
+### Patch Changes
+
+- Changes since 0.12.3:
+
+  - perf(caps): skip motion style reads on unrelated ancestor style writes
+
 ## 0.12.3
 
 ### Patch Changes

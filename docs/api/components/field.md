@@ -205,7 +205,7 @@ const NumberField: ForwardRefExoticComponent<
   object &
     Omit<
       InputHTMLAttributes<HTMLInputElement>,
-      "defaultValue" | "onChange" | "type" | "value" | "max" | "min" | "step"
+      "value" | "defaultValue" | "onChange" | "type" | "max" | "min" | "step"
     > &
     RefAttributes<HTMLInputElement>
 >;

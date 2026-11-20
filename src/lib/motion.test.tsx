@@ -72,3 +72,107 @@ test("live inline overrides update and the observer disconnects on unmount", asy
     root.unmount();
   });
 });
+
+function mountProbe() {
+  function Probe() {
+    const ref = useRef<HTMLDivElement>(null);
+    const motion = useMotion(ref);
+    return (
+      <div
+        ref={ref}
+        data-probe=""
+        data-reduced={String(motion.reduced)}
+        data-distance={motion.distance}
+      />
+    );
+  }
+  const outer = document.createElement("div");
+  const host = document.createElement("div");
+  outer.append(host);
+  document.body.append(outer);
+  const root = createRoot(host);
+  act(() => {
+    root.render(<Probe />);
+  });
+  const probe = host.querySelector<HTMLElement>("[data-probe]");
+  if (!probe) throw new Error("missing probe");
+  const unmount = () => {
+    act(() => {
+      root.unmount();
+    });
+  };
+  return { outer, probe, unmount };
+}
+
+test("layout writes on observed elements skip the style read; token writes still apply", async () => {
+  const { outer, probe, unmount } = mountProbe();
+  const reads = vi.spyOn(window, "getComputedStyle");
+  await act(async () => {
+    document.body.style.overflow = "hidden";
+    outer.style.height = "584px";
+    outer.style.setProperty("--stipe-other", "1");
+    probe.style.width = "10px";
+    await Promise.resolve();
+  });
+  expect(reads).not.toHaveBeenCalled();
+  await act(async () => {
+    probe.style.setProperty("--stipe-motion-distance", "9px");
+    await Promise.resolve();
+  });
+  expect(reads).toHaveBeenCalled();
+  expect(probe.dataset.distance).toBe("9");
+  await act(async () => {
+    probe.style.removeProperty("--stipe-motion-distance");
+    await Promise.resolve();
+  });
+  expect(probe.dataset.distance).toBe("4");
+  unmount();
+});
+
+test("a theme change on an ancestor still re-reads the tokens", async () => {
+  const { outer, unmount } = mountProbe();
+  const reads = vi.spyOn(window, "getComputedStyle");
+  await act(async () => {
+    outer.setAttribute("data-theme", "dark");
+    await Promise.resolve();
+  });
+  expect(reads).toHaveBeenCalled();
+  unmount();
+});
+
+test("switching the reduced-motion preference updates live motion", () => {
+  const listeners = new Set<() => void>();
+  let reduced = false;
+  vi.stubGlobal("matchMedia", (media: string) => ({
+    media,
+    get matches() {
+      return reduced;
+    },
+    addEventListener: (_type: string, listener: () => void) => {
+      listeners.add(listener);
+    },
+    removeEventListener: (_type: string, listener: () => void) => {
+      listeners.delete(listener);
+    },
+  }));
+  try {
+    const { probe, unmount } = mountProbe();
+    expect(probe.dataset.reduced).toBe("false");
+    expect(probe.dataset.distance).toBe("4");
+    act(() => {
+      reduced = true;
+      for (const listener of listeners) listener();
+    });
+    expect(probe.dataset.reduced).toBe("true");
+    expect(probe.dataset.distance).toBe("0");
+    act(() => {
+      reduced = false;
+      for (const listener of listeners) listener();
+    });
+    expect(probe.dataset.reduced).toBe("false");
+    unmount();
+    expect(listeners.size).toBe(0);
+  } finally {
+    vi.unstubAllGlobals();
+  }
+});

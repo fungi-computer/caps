@@ -98,7 +98,7 @@ const RadioGroupItem: ForwardRefExoticComponent<
   object &
     Omit<
       InputHTMLAttributes<HTMLInputElement>,
-      "name" | "defaultChecked" | "type" | "value" | "checked"
+      "name" | "value" | "defaultChecked" | "type" | "checked"
     > &
     RefAttributes<HTMLInputElement>
 >;
@@ -116,7 +116,7 @@ const RadioGroupCard: ForwardRefExoticComponent<
     object &
     Omit<
       InputHTMLAttributes<HTMLInputElement>,
-      "name" | "defaultChecked" | "type" | "value" | "checked"
+      "name" | "value" | "defaultChecked" | "type" | "checked"
     > &
     RefAttributes<HTMLInputElement>
 >;
