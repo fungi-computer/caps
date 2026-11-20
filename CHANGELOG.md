@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.12.5
+
+### Patch Changes
+
+- Changes since 0.12.4:
+
+  - fix(caps): keep the app bar open when new chat is pressed
+  - fix(caps): keep menu rows at 32px with a mouse
+
 ## 0.12.4
 
 ### Patch Changes

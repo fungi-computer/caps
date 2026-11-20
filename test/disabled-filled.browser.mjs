@@ -155,7 +155,13 @@ try {
       await page.mouse.move(0, 0);
       assert.equal(await submit.isDisabled(), true);
       await capture("pending");
-      sameFace(ready, await face(submit, "0.45"), `${theme}/pending submit`);
+      // Pending is not disabled (36e7123993): the busy submit keeps its full
+      // face and loader while it refuses a second save.
+      assert.deepEqual(
+        await face(submit),
+        ready,
+        `${theme}/pending submit keeps its full face`,
+      );
       await input.press("Enter");
       await page
         .getByRole("button", { name: "Finish save", exact: true })

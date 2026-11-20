@@ -47,6 +47,28 @@ async function visitStory(context, baseUrl, storyId) {
         "Could not load game ApiError: request failed (503)",
       ],
       "vishnu-portal--play-missing": [refused(404, "Not Found")],
+      // These stories stage a refused catalog: every template shows and Use
+      // says why not.
+      "trellis-first-run--template-cannot-save": [
+        "The installed Apps could not be read Error: not granted",
+      ],
+      "trellis-first-run--templates-blocked": [
+        "The installed Apps could not be read Error: not granted",
+      ],
+      // The story stages a Surface Gill whose App cannot mount.
+      "desktop--surface-gill-unavailable": [
+        "Surface Gill could not be mounted AppError: Fixture App could not be mounted",
+      ],
+      // The story stages a refused Session creation.
+      "grove--failed-start": [
+        "Grove conversation creation failed Error: Session creation request failed",
+      ],
+      // Only almanac.browser.mjs serves this story's Almanac door; here the
+      // door is absent and the conversation says it could not open.
+      "grove--recurring-asks": [
+        refused(404, "Not Found"),
+        "Chat Session opening failed Error",
+      ],
       "grove--conversation-unavailable": [
         "Chat Session opening failed Error: This conversation is temporarily unavailable. Try again when your Agent reconnects.",
       ],
@@ -63,9 +85,8 @@ async function visitStory(context, baseUrl, storyId) {
       "inkcap--file-read-failed": [
         "Inkcap file read failed Error: App file unavailable (503)",
       ],
-      "shed--terminal-failed": [
-        "Shed terminal operation failed Error: The Computer disconnected before the terminal could open.",
-      ],
+      // Shed logs a redacted cause and names it in a toast (1b1cfc85f9).
+      "shed--terminal-failed": ["Shed operation failed {}"],
     }[storyId] ?? [];
   let rejectOnError;
   const errored = new Promise((_, reject) => {

@@ -204,8 +204,10 @@ export const DropdownMenuContent = forwardRef<
   );
 });
 
+// A row is 32px with a mouse; touch-targets.css grows it to 44px under
+// `pointer: coarse` only.
 const itemClasses =
-  "caps-dropdown-item flex w-full items-center gap-sm rounded-field px-md py-sm text-left text-sm outline-none transition-colors hover:bg-base-200 focus-visible:bg-base-200 aria-[current=page]:bg-base-200 aria-[current=page]:font-semibold disabled:cursor-not-allowed disabled:text-base-content/40 data-disabled:cursor-not-allowed data-disabled:text-base-content/40";
+  "caps-dropdown-item flex min-h-2xl w-full items-center gap-sm rounded-field px-md py-xs text-left text-sm outline-none transition-colors hover:bg-base-200 focus-visible:bg-base-200 aria-[current=page]:bg-base-200 aria-[current=page]:font-semibold disabled:cursor-not-allowed disabled:text-base-content/40 data-disabled:cursor-not-allowed data-disabled:text-base-content/40";
 /** Props accepted by DropdownMenuItem. */
 export type DropdownMenuItemProps = Omit<BaseMenu.Item.Props, "onSelect"> & {
   /** Called when this item is selected. */

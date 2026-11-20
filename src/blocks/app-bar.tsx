@@ -419,10 +419,17 @@ export function AppBar({
     next: boolean,
     details: BasePopover.Root.ChangeEventDetails,
   ) => {
-    const target = details.event.target;
+    // The bar, the Apps panel and the primary action are one disclosure, so
+    // pressing or focusing one of them never closes the others. Focus-out names
+    // where focus went in relatedTarget: pressing New chat moves focus out of
+    // the panel's search, and closing then would drop the click.
+    const target =
+      details.reason === "focus-out" && details.event instanceof FocusEvent
+        ? details.event.relatedTarget
+        : details.event.target;
     if (
       !next &&
-      details.reason === "outside-press" &&
+      (details.reason === "outside-press" || details.reason === "focus-out") &&
       target instanceof Node &&
       (root.current?.contains(target) ||
         availableRef.current?.contains(target) ||
