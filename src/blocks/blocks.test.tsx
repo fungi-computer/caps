@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
-import { act, createRef } from "react";
+import { act, createRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { cleanup, fireKey, render, requireValue } from "../test-utils/index.js";
@@ -137,6 +138,90 @@ describe("product-neutral blocks", () => {
       fireKey(list, { key: "Enter" });
     });
     expect(onSelect).toHaveBeenCalledWith("three");
+  });
+
+  it("chooses the first match when Enter follows a filter in the same tick", () => {
+    const onSelect = vi.fn();
+    let filter: (
+      items: readonly { id: string; label: string }[],
+    ) => void = () => undefined;
+    function Filtered() {
+      const [items, setItems] = useState<
+        readonly { id: string; label: string }[]
+      >([
+        { id: "alpha", label: "Alpha" },
+        { id: "beta", label: "Beta" },
+        { id: "gamma", label: "Gamma" },
+      ]);
+      filter = setItems;
+      return <CommandMenu items={items} onSelect={onSelect} />;
+    }
+    const view = render(<Filtered />);
+    const list = requireValue(
+      view.container.querySelector<HTMLElement>('[role="listbox"]'),
+      "CommandMenu listbox",
+    );
+    // The lit row is Beta; the filter removes it and Enter comes at once.
+    act(() => {
+      fireKey(list, { key: "ArrowDown" });
+    });
+    expect(list.getAttribute("aria-activedescendant")).toContain("beta");
+    act(() => {
+      flushSync(() => {
+        filter([
+          { id: "gamma", label: "Gamma" },
+          { id: "delta", label: "Delta" },
+        ]);
+      });
+      fireKey(list, { key: "Enter" });
+    });
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith("gamma");
+    // From no matches to some, then Enter at once: the first match is chosen.
+    onSelect.mockClear();
+    act(() => {
+      flushSync(() => {
+        filter([]);
+      });
+    });
+    act(() => {
+      flushSync(() => {
+        filter([
+          { id: "one", label: "One" },
+          { id: "two", label: "Two" },
+        ]);
+      });
+      fireKey(list, { key: "Enter" });
+    });
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith("one");
+  });
+
+  it("moves from the first match, not past it, when the first arrow follows a filter", () => {
+    let filter: (
+      items: readonly { id: string; label: string }[],
+    ) => void = () => undefined;
+    function Filtered() {
+      const [items, setItems] = useState<
+        readonly { id: string; label: string }[]
+      >([{ id: "a", label: "A" }]);
+      filter = setItems;
+      return <CommandMenu items={items} onSelect={vi.fn()} />;
+    }
+    const view = render(<Filtered />);
+    const list = requireValue(
+      view.container.querySelector<HTMLElement>('[role="listbox"]'),
+      "CommandMenu listbox",
+    );
+    act(() => {
+      flushSync(() => {
+        filter([
+          { id: "x", label: "X" },
+          { id: "y", label: "Y" },
+          { id: "z", label: "Z" },
+        ]);
+      });
+      fireKey(list, { key: "ArrowDown" });
+    });
+    expect(list.getAttribute("aria-activedescendant")).toContain("y");
   });
 
   it("honours ResourceSelect disabled options, keyboard choice, native trigger props, and refs", () => {

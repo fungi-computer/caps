@@ -4,12 +4,19 @@ export type SelectableCollectionOptions<T> = {
   getKey: (item: T) => string;
   isDisabled?: (item: T) => boolean;
   items: readonly T[];
+  /**
+   * The row that is active while no enabled row has been chosen, worked out
+   * from the enabled rows during render. Without it nothing is active until a
+   * row is moved to or pointed at.
+   */
+  getFallbackKey?: (enabled: readonly T[]) => string | null;
 };
 
 export function useSelectableCollection<T>({
   getKey,
   isDisabled = () => false,
   items,
+  getFallbackKey,
 }: SelectableCollectionOptions<T>) {
   const enabledItems = useMemo(() => {
     const keys = items.map(getKey);
@@ -19,14 +26,26 @@ export function useSelectableCollection<T>({
       throw new Error("Selectable items require unique keys");
     return items.filter((item) => !isDisabled(item));
   }, [getKey, isDisabled, items]);
-  const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [chosenKey, setActiveKey] = useState<string | null>(null);
+  // The active row is decided now, from the rows now: a filter that removes
+  // the chosen row hands the lit row over in the same render, so a key pressed
+  // at once reads the row the person sees.
+  const fallbackKey = getFallbackKey?.(enabledItems) ?? null;
+  const activeKey =
+    chosenKey !== null &&
+    enabledItems.some((item) => getKey(item) === chosenKey)
+      ? chosenKey
+      : fallbackKey !== null &&
+          enabledItems.some((item) => getKey(item) === fallbackKey)
+        ? fallbackKey
+        : null;
   useEffect(() => {
     if (
-      activeKey !== null &&
-      !enabledItems.some((item) => getKey(item) === activeKey)
+      chosenKey !== null &&
+      !enabledItems.some((item) => getKey(item) === chosenKey)
     )
       setActiveKey(null);
-  }, [activeKey, enabledItems, getKey]);
+  }, [chosenKey, enabledItems, getKey]);
   const activeItem = enabledItems.find((item) => getKey(item) === activeKey);
   const activeIndex = activeItem
     ? enabledItems.findIndex((item) => getKey(item) === activeKey)

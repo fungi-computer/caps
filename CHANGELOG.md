@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.12.3
+
+### Patch Changes
+
+- Changes since 0.12.2:
+
+  - fix(caps): choose the first match when Enter follows a filter at once
+
 ## 0.12.2
 
 ### Patch Changes

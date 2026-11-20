@@ -1,6 +1,5 @@
 import {
   forwardRef,
-  useEffect,
   useId,
   useCallback,
   useImperativeHandle,
@@ -73,16 +72,14 @@ export const CommandMenu = forwardRef<HTMLUListElement, CommandMenuProps>(
       getKey: (item) => item.id,
       isDisabled: (item) => item.disabled === true,
       items,
+      // The lit row is the one chosen while it is still listed, else the
+      // caller's selection, else the first enabled row.
+      getFallbackKey: (rows) =>
+        selected !== undefined && rows.some((item) => item.id === selected)
+          ? selected
+          : (rows[0]?.id ?? null),
     });
     const { activeKey: activeId, enabledItems: enabled } = collection;
-    useEffect(() => {
-      if (activeId && enabled.some((item) => item.id === activeId)) return;
-      collection.setActiveKey(
-        selected && enabled.some((item) => item.id === selected)
-          ? selected
-          : (enabled[0]?.id ?? null),
-      );
-    }, [activeId, collection.setActiveKey, enabled, selected]);
     const optionId = (id: string) =>
       `${instanceId}-option-${encodeURIComponent(id)}`;
     return (
