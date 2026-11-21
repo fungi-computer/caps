@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.13.0
+
+### Minor Changes
+
+- Changes since 0.12.9:
+
+  - feat(hub): sign in a terminal with fungi login --device
+
 ## 0.12.9
 
 ### Patch Changes

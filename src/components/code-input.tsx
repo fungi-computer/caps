@@ -4,6 +4,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type CSSProperties,
   type InputHTMLAttributes,
 } from "react";
 
@@ -16,6 +17,13 @@ import {
 } from "../lib/motion.js";
 
 const graphemes = new Intl.Segmenter();
+
+/** The stylesheet sizes the slots from their count; the number stays unitless. */
+function slotCount(
+  length: number,
+): CSSProperties & Record<"--caps-code-length", number> {
+  return { "--caps-code-length": length };
+}
 
 /** What the caller has learned about the entered code. */
 export type CodeInputStatus = "idle" | "invalid" | "accepted";
@@ -164,7 +172,11 @@ export const CodeInput = forwardRef<HTMLInputElement, CodeInputProps>(
     }, [status]);
 
     return (
-      <div className={cn("caps-code-input", className)} data-status={status}>
+      <div
+        className={cn("caps-code-input", className)}
+        data-status={status}
+        style={slotCount(length)}
+      >
         <input
           autoComplete="one-time-code"
           inputMode="numeric"

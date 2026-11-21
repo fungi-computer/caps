@@ -3,7 +3,16 @@
   position: relative;
   display: inline-grid;
   justify-self: start;
-  width: max-content;
+  /* Full-size slots when they fit; a longer code (an 8-character device
+     code) shrinks its slots on a phone instead of overflowing. */
+  --caps-code-slot: calc(var(--size-field, 0.25rem) * 10);
+  width: min(
+    100%,
+    calc(
+      var(--caps-code-length) * var(--caps-code-slot) +
+        (var(--caps-code-length) - 1) * var(--spacing-xs)
+    )
+  );
 }
 .caps-code-field {
   position: absolute;
@@ -21,13 +30,13 @@
 }
 .caps-code-slots {
   display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
+  grid-template-columns: repeat(var(--caps-code-length), minmax(0, 1fr));
   gap: var(--spacing-xs);
 }
 .caps-code-slot {
   position: relative;
-  width: var(--size);
+  width: 100%;
+  min-width: 0;
   justify-content: center;
   padding-inline: 0;
   font-family: var(--font-numeric, var(--font-mono));
