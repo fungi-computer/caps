@@ -63,6 +63,10 @@ async function visitStory(context, baseUrl, storyId) {
       "grove--failed-start": [
         "Grove conversation creation failed Error: Session creation request failed",
       ],
+      // The chat Gill stages that same creation refusal (12325daf04).
+      "grove--chat-gill-start-failed": [
+        "Grove chat widget could not start a conversation Error: Session creation request failed",
+      ],
       // Only almanac.browser.mjs serves this story's Almanac door; here the
       // door is absent and the conversation says it could not open.
       "grove--recurring-asks": [

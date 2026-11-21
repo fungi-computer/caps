@@ -1,7 +1,15 @@
 import { Buffer } from "node:buffer";
 import { createServer } from "node:net";
 import { spawn } from "node:child_process";
-import { access, lstat, readFile, realpath } from "node:fs/promises";
+import {
+  access,
+  lstat,
+  mkdir,
+  mkdtemp,
+  readFile,
+  realpath,
+  writeFile,
+} from "node:fs/promises";
 import { constants } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -172,7 +180,8 @@ export function spawnBounded(
     stdio: ["ignore", discardStdout ? "ignore" : "pipe", "pipe"],
   });
   let stdout = "";
-  let stderr = "";
+  let stderrTail = Buffer.alloc(0);
+  let stderrBytes = 0;
   let timedOut = false;
   let outputError;
   let cleanupPromise;
@@ -192,11 +201,15 @@ export function spawnBounded(
     }
   });
   child.stderr.on("data", (chunk) => {
-    try {
-      stderr = appendBounded(stderr, chunk);
-    } catch (error) {
-      failAndCleanup(error);
-    }
+    // Keep draining through teardown: the final compiler/shutdown line can
+    // arrive after the chunk that crossed the failure cap.
+    stderrTail = Buffer.concat([
+      stderrTail,
+      chunk.subarray(-maxLogBytes),
+    ]).subarray(-maxLogBytes);
+    stderrBytes += chunk.length;
+    if (stderrBytes > maxLogBytes && !outputError)
+      failAndCleanup(new Error("workbench child output exceeded 64 KiB"));
   });
   const timeout =
     timeoutMs > 0
@@ -205,7 +218,33 @@ export function spawnBounded(
           failAndCleanup(new Error(`${label} exceeded ${timeoutMs / 1000}s`));
         }, timeoutMs)
       : undefined;
-  const completion = new Promise((resolvePromise, reject) => {
+  const completion = new Promise((resolvePromise, rejectPromise) => {
+    let failure;
+    const reject = (cause) => {
+      failure ??= (async () => {
+        const root = join(repositoryRoot, ".botanical/workbench-diagnostics");
+        await mkdir(root, { recursive: true, mode: 0o700 });
+        const directory = await mkdtemp(join(root, "child-"));
+        const stderrPath = join(directory, "stderr.log");
+        await writeFile(stderrPath, stderrTail, { mode: 0o600 });
+        const stdoutPath = join(directory, "stdout.log");
+        await writeFile(stdoutPath, stdout, { mode: 0o600 });
+        const error = new Error(
+          `${label} (pid ${child.pid ?? "not started"}): ${cause.message}; last 64 KiB of stderr: ${stderrPath}; stdout: ${stdoutPath}`,
+          { cause },
+        );
+        error.stderrPath = stderrPath;
+        return error;
+      })();
+      void failure.then(rejectPromise, (diagnosticCause) => {
+        rejectPromise(
+          new AggregateError(
+            [cause, diagnosticCause],
+            `${label} (pid ${child.pid ?? "not started"}): ${cause.message}; could not retain stderr tail`,
+          ),
+        );
+      });
+    };
     rejectCompletion = reject;
     child.once("error", (error) => {
       clearTimeout(timeout);
@@ -256,13 +295,11 @@ export function spawnBounded(
           code === 137);
       if (code !== 0 && !ownedStopExit) {
         reject(
-          new Error(
-            `${label} exited ${code ?? "null"}/${signal ?? "none"}\n${stderr || stdout}`,
-          ),
+          new Error(`${label} exited ${code ?? "null"}/${signal ?? "none"}`),
         );
         return;
       }
-      resolvePromise({ stdout, stderr });
+      resolvePromise({ stdout, stderr: stderrTail.toString("utf8") });
     });
   });
   // Record intent before signaling: Ladle may translate SIGTERM to exit143.

@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { Buffer } from "node:buffer";
 import { once } from "node:events";
+import { readFile, rm, stat } from "node:fs/promises";
+import { dirname, join } from "node:path";
 import { URL } from "node:url";
 import process from "node:process";
 import { test } from "node:test";
@@ -206,3 +209,73 @@ for (const [signal, number] of [
     }
   });
 }
+
+for (const stream of ["stdout", "stderr"]) {
+  test(`${stream} overflow names its child and retains a private bounded stderr tail after group teardown`, async () => {
+    const run = start(`
+      const { spawn } = require('node:child_process');
+      const child = spawn(process.execPath, ['--eval',
+        "process.on('SIGTERM', () => process.exit(0)); process.stdout.write('ready'); setInterval(() => {}, 1000)"
+      ], { stdio: ['ignore', 'pipe', 'ignore'] });
+      process.on('SIGTERM', () => {
+        child.once('exit', () => {
+          process.stderr.write('shutdown-tail', () => process.exit(143));
+        });
+      });
+      child.stdout.once('data', () => {
+        process.stderr.write('private-fixture-prefix\\n');
+        process.${stream}.write('x'.repeat(70 * 1024) + 'overflow-tail');
+      });
+    `);
+    let diagnostic;
+    try {
+      const outcome = await run.outcome;
+      assert.equal(outcome.kind, "failed");
+      assertGroupGone(run.child);
+      assert.match(outcome.cause.message, /process lifecycle fixture/u);
+      assert.match(outcome.cause.message, /output exceeded 64 KiB/u);
+      diagnostic = outcome.cause.stderrPath;
+      assert.match(diagnostic, /stderr\.log$/u);
+      assert.ok(outcome.cause.message.includes(diagnostic));
+      assert.equal((await stat(diagnostic)).mode & 0o777, 0o600);
+      assert.equal((await stat(dirname(diagnostic))).mode & 0o777, 0o700);
+      const tail = await readFile(diagnostic);
+      assert.ok(tail.length <= 64 * 1024);
+      assert.ok(tail.toString().endsWith("shutdown-tail"));
+      assert.ok(!outcome.cause.message.includes("private-fixture-prefix"));
+      if (stream === "stderr") {
+        assert.equal(tail.length, 64 * 1024);
+        assert.ok(tail.includes(Buffer.from("overflow-tail")));
+        assert.ok(!tail.includes(Buffer.from("private-fixture-prefix")));
+      }
+    } finally {
+      await terminateProcessGroup(run.child);
+      if (diagnostic) await rm(dirname(diagnostic), { recursive: true });
+    }
+  });
+}
+
+test("a compiler failure retains stderr privately instead of embedding it in the failure", async () => {
+  const run = start(
+    "process.stdout.write('private-compiler-summary'); process.stderr.write('private-compiler-detail'); process.exitCode = 1",
+  );
+  let diagnostic;
+  try {
+    const outcome = await run.outcome;
+    assert.equal(outcome.kind, "failed");
+    assert.match(outcome.cause.message, /process lifecycle fixture.*exited 1/u);
+    assert.ok(!outcome.cause.message.includes("private-compiler-detail"));
+    assert.ok(!outcome.cause.cause.message.includes("private-compiler-detail"));
+    diagnostic = outcome.cause.stderrPath;
+    assert.equal(await readFile(diagnostic, "utf8"), "private-compiler-detail");
+    assert.equal(
+      await readFile(join(dirname(diagnostic), "stdout.log"), "utf8"),
+      "private-compiler-summary",
+    );
+    assert.ok(!outcome.cause.message.includes("private-compiler-summary"));
+    assertGroupGone(run.child);
+  } finally {
+    await terminateProcessGroup(run.child);
+    if (diagnostic) await rm(dirname(diagnostic), { recursive: true });
+  }
+});

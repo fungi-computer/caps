@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.12.9
+
+### Patch Changes
+
+- Changes since 0.12.8:
+
+  - fix(caps): retain private stderr tails for workbench failures
+
 ## 0.12.8
 
 ### Patch Changes
