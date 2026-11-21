@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   type ReactNode,
 } from "react";
@@ -37,6 +38,28 @@ export function OverlayRoot({
       </DismissContext.Provider>
     </Context.Provider>
   );
+}
+
+/**
+ * Give overlays opened inside a host layer, such as a dialog, a popover root
+ * of their own inside that layer, so a menu or picker paints over the surface
+ * that opened it. The other layers stay the host's; standalone overlays use
+ * the document body and need no scope.
+ */
+export function OverlayPopoverScope({
+  container,
+  children,
+}: {
+  container: HTMLElement | null;
+  children?: ReactNode;
+}) {
+  const containers = useContext(Context);
+  const scoped = useMemo(
+    () => (containers === null ? null : { ...containers, popover: container }),
+    [containers, container],
+  );
+  if (scoped === null) return children;
+  return <Context.Provider value={scoped}>{children}</Context.Provider>;
 }
 
 /** Wait for a provided root; standalone overlays use the current document body. */

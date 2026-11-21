@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.12.6
+
+### Patch Changes
+
+- Changes since 0.12.5:
+
+  - fix(caps): keep a dialog opened inside a modal dialog reachable
+  - fix(caps): menus and pickers inside a dialog paint over it
+
 ## 0.12.5
 
 ### Patch Changes

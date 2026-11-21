@@ -158,6 +158,39 @@ it("appends a nested menu after its open dialog", async () => {
   ).not.toBe(0);
 });
 
+it("keeps a dialog opened inside a modal dialog in the accessibility tree", async () => {
+  render(
+    <Dialog defaultOpen>
+      <DialogContent>
+        <DialogTitle>Print settings</DialogTitle>
+        <Dialog>
+          <DialogTrigger>Delete print</DialogTrigger>
+          <DialogContent>
+            <DialogTitle>Delete this print?</DialogTitle>
+          </DialogContent>
+        </Dialog>
+      </DialogContent>
+    </Dialog>,
+  );
+  const trigger = requireValue(
+    [...document.querySelectorAll("button")].find(
+      (button) => button.textContent === "Delete print",
+    ),
+    "inner trigger",
+  );
+  await act(async () => {
+    trigger.click();
+    await Promise.resolve();
+  });
+  const title = requireValue(
+    [...document.querySelectorAll("h2")].find(
+      (heading) => heading.textContent === "Delete this print?",
+    ),
+    "inner dialog title",
+  );
+  expect(title.closest("[aria-hidden], [inert]")).toBeNull();
+});
+
 it.each(
   [
     {

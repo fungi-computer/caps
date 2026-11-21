@@ -4,10 +4,12 @@ import {
   forwardRef,
   type HTMLAttributes,
   useContext,
+  useImperativeHandle,
+  useState,
 } from "react";
 
 import { cn, resolveClassName } from "../lib/cn.js";
-import { useOverlayRoot } from "./overlay-root.js";
+import { OverlayPopoverScope, useOverlayRoot } from "./overlay-root.js";
 
 /** Details supplied to a Dialog open-change callback. */
 export type DialogChangeDetails = BaseDialog.Root.ChangeEventDetails;
@@ -18,6 +20,8 @@ export type DialogInteractionOwner = "host" | "local";
 type DialogContextValue = {
   interactionOwner: DialogInteractionOwner;
   modal: BaseDialog.Root.Props["modal"];
+  /** An enclosing Dialog hides what is outside it while open (modal or trap-focus). */
+  insideModal: boolean;
 };
 
 const DialogContext = createContext<DialogContextValue | null>(null);
@@ -34,8 +38,11 @@ export function Dialog<Payload = unknown>({
   onOpenChange,
   ...props
 }: DialogProps<Payload>) {
+  const parent = useContext(DialogContext);
+  const insideModal =
+    parent !== null && (parent.insideModal || parent.modal !== false);
   return (
-    <DialogContext.Provider value={{ interactionOwner, modal }}>
+    <DialogContext.Provider value={{ interactionOwner, modal, insideModal }}>
       <BaseDialog.Root
         {...props}
         modal={modal}
@@ -79,13 +86,32 @@ export const DialogTrigger = forwardRef<
   );
 });
 
-/** Shell dialog destination, with Base UI container and mount lifetime overrides. */
+/**
+ * Shell dialog destination, with Base UI container and mount lifetime overrides.
+ * Menus and pickers opened inside portal into the dialog's own portal node,
+ * after its popup, so a shell's popover root (ordered under its dialog root)
+ * never draws them behind the dialog. They join that node when they open, as
+ * they would join the document body, so a modal dialog's hiding of what was
+ * already outside it does not reach them.
+ */
 export const DialogPortal = forwardRef<HTMLDivElement, BaseDialog.Portal.Props>(
-  function DialogPortal({ container, ...props }, ref) {
+  function DialogPortal({ container, children, ...props }, ref) {
     const root = useOverlayRoot("dialog");
+    const [portal, setPortal] = useState<HTMLDivElement | null>(null);
+    useImperativeHandle<HTMLDivElement | null, HTMLDivElement | null>(
+      ref,
+      () => portal,
+      [portal],
+    );
     if (container == null && root === null) return null;
     return (
-      <BaseDialog.Portal {...props} container={container ?? root} ref={ref} />
+      <BaseDialog.Portal
+        {...props}
+        container={container ?? root}
+        ref={setPortal}
+      >
+        <OverlayPopoverScope container={portal}>{children}</OverlayPopoverScope>
+      </BaseDialog.Portal>
     );
   },
 );
@@ -158,12 +184,16 @@ export type DialogContentProps = DialogPopupProps &
 /**
  * The default portal, backdrop and popup composition for a Dialog.
  * Keeps child state across closes. Like Base UI, only full modal mode has a backdrop.
+ *
+ * Inside a modal Dialog it mounts on open instead: the enclosing modal
+ * marks every portal already beside it aria-hidden when it opens, and that mark
+ * stays on a closed portal that was kept mounted, after it opens too.
  */
 export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
   function DialogContent(
     {
       container,
-      keepMounted = true,
+      keepMounted,
       forceBackdrop = false,
       className,
       size = "default",
@@ -171,9 +201,12 @@ export const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(
     },
     ref,
   ) {
-    const { modal } = useDialogContext();
+    const { modal, insideModal } = useDialogContext();
     return (
-      <DialogPortal container={container} keepMounted={keepMounted}>
+      <DialogPortal
+        container={container}
+        keepMounted={keepMounted ?? !insideModal}
+      >
         {modal === true ? <DialogBackdrop forceRender={forceBackdrop} /> : null}
         <DialogPopup
           {...props}

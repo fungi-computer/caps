@@ -1,7 +1,11 @@
 import type { Story, StoryDefault } from "@ladle/react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { Button } from "@fungi.computer/caps/components/button";
+import {
+  Combobox,
+  ComboboxTrigger,
+} from "@fungi.computer/caps/components/combobox";
 import {
   Dialog,
   DialogClose,
@@ -20,6 +24,7 @@ import {
 } from "@fungi.computer/caps/components/dropdown-menu";
 import { Field } from "@fungi.computer/caps/components/field";
 import { Input } from "@fungi.computer/caps/components/input";
+import { OverlayRoot } from "@fungi.computer/caps/components/overlay-root";
 import {
   Tooltip,
   TooltipContent,
@@ -160,6 +165,99 @@ export const ConfirmDialog: Story = () => (
     </DialogContent>
   </Dialog>
 );
+
+const computers = [
+  { id: "workbench", name: "Workbench" },
+  { id: "studio", name: "Studio" },
+];
+
+/**
+ * A shell's ordered overlay roots, as the Hub mounts them: each is its own
+ * stacking context, popover under dialog under toast under tooltip. A menu or
+ * picker opened inside a dialog still paints over that dialog.
+ */
+export const ShellLayers: Story = () => {
+  const [popover, setPopover] = useState<HTMLElement | null>(null);
+  const [dialog, setDialog] = useState<HTMLElement | null>(null);
+  const [toast, setToast] = useState<HTMLElement | null>(null);
+  const [tooltip, setTooltip] = useState<HTMLElement | null>(null);
+  const containers = useMemo(
+    () => ({ popover, dialog, toast, tooltip }),
+    [popover, dialog, toast, tooltip],
+  );
+  const [computer, setComputer] = useState<string | null>("workbench");
+  return (
+    <OverlayRoot containers={containers}>
+      <section className="grid gap-lg p-lg">
+        <Dialog>
+          <DialogTrigger render={<Button variant="outline" size="sm" />}>
+            Move Agent
+          </DialogTrigger>
+          <DialogContent className="space-y-lg">
+            <DialogHeader>
+              <DialogTitle>Move Agent</DialogTitle>
+              <DialogDescription>
+                Choose where this Agent runs.
+              </DialogDescription>
+            </DialogHeader>
+            <Field label="Computer">
+              <Combobox
+                items={computers}
+                getKey={(item) => item.id}
+                getLabel={(item) => item.name}
+                inputProps={{ "aria-label": "Search Computers" }}
+                value={computer}
+                onValueChange={setComputer}
+                trigger={
+                  <ComboboxTrigger>
+                    {computers.find((item) => item.id === computer)?.name ??
+                      "Choose a Computer…"}
+                  </ComboboxTrigger>
+                }
+              />
+            </Field>
+            <DialogFooter>
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={<Button variant="ghost" size="sm" />}
+                >
+                  More
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start">
+                  <DropdownMenuItem>Duplicate</DropdownMenuItem>
+                  <DropdownMenuItem>Archive</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DialogClose render={<Button variant="outline" size="sm" />}>
+                Close
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </section>
+      <div
+        data-layer="popover"
+        className="relative isolate z-(--stipe-layer-popover)"
+        ref={setPopover}
+      />
+      <div
+        data-layer="dialog"
+        className="relative isolate z-(--stipe-layer-dialog)"
+        ref={setDialog}
+      />
+      <div
+        data-layer="toast"
+        className="relative isolate z-(--stipe-layer-toast)"
+        ref={setToast}
+      />
+      <div
+        data-layer="tooltip"
+        className="relative isolate z-(--stipe-layer-tooltip)"
+        ref={setTooltip}
+      />
+    </OverlayRoot>
+  );
+};
 
 export default {
   title: "Overlays",

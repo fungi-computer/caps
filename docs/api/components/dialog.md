@@ -117,6 +117,11 @@ const DialogPortal: ForwardRefExoticComponent<
 ```
 
 Shell dialog destination, with Base UI container and mount lifetime overrides.
+Menus and pickers opened inside portal into the dialog's own portal node, after
+its popup, so a shell's popover root (ordered under its dialog root) never draws
+them behind the dialog. They join that node when they open, as they would join
+the document body, so a modal dialog's hiding of what was already outside it
+does not reach them.
 
 ---
 
@@ -154,6 +159,10 @@ const DialogContent: ForwardRefExoticComponent<
 
 The default portal, backdrop and popup composition for a Dialog. Keeps child
 state across closes. Like Base UI, only full modal mode has a backdrop.
+
+Inside a modal Dialog it mounts on open instead: the enclosing modal marks every
+portal already beside it aria-hidden when it opens, and that mark stays on a
+closed portal that was kept mounted, after it opens too.
 
 ---
 

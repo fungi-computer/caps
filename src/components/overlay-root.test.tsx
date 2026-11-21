@@ -176,3 +176,51 @@ it("dismisses transient overlays on the host's shared dismissal without retiring
   cleanup();
   expect(listeners.size).toBe(0);
 });
+
+it("portals a menu and a picker opened inside a dialog into that dialog's layer", () => {
+  const shell = containers();
+  render(
+    <OverlayRoot containers={shell}>
+      <Dialog defaultOpen modal={false}>
+        <DialogContent>
+          <DialogTitle>Move Agent</DialogTitle>
+          <DropdownMenu defaultOpen modal={false}>
+            <DropdownMenuContent>
+              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Combobox
+            defaultOpen
+            items={["Workbench"]}
+            getKey={(item) => item}
+            getLabel={(item) => item}
+            defaultValue={null}
+            trigger={<ComboboxTrigger>Computer</ComboboxTrigger>}
+          />
+        </DialogContent>
+      </Dialog>
+    </OverlayRoot>,
+  );
+  const dialogLayer = requireValue(shell.dialog, "the dialog layer");
+  // A shell orders its popover root under its dialog root, so these must not
+  // land there: they would paint behind the dialog that opened them.
+  expect(shell.popover?.childElementCount).toBe(0);
+  expect(dialogLayer.querySelector('[role="menuitem"]')?.textContent).toBe(
+    "Duplicate",
+  );
+  expect(dialogLayer.querySelector('[role="option"]')?.textContent).toContain(
+    "Workbench",
+  );
+  const popup = requireValue(
+    dialogLayer.querySelector('[role="dialog"]'),
+    "the dialog popup",
+  );
+  const menu = requireValue(
+    dialogLayer.querySelector('[role="menu"]'),
+    "the menu popup",
+  );
+  // The menu follows the popup, so it paints after it.
+  expect(
+    popup.compareDocumentPosition(menu) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+});

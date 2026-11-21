@@ -12,6 +12,9 @@ const output = join(process.cwd(), ".botanical", "overlay-layer-shots");
 await mkdir(output, { recursive: true });
 const origin = process.env.CAPS_WORKBENCH_URL ?? "http://127.0.0.1:61004";
 const browser = await launchIsolatedChromium(chromium, portsOf(origin));
+async function expectText(locator, text) {
+  await locator.filter({ hasText: text }).waitFor();
+}
 async function hits(locator) {
   return locator.evaluate((element) => {
     const box = element.getBoundingClientRect();
@@ -106,6 +109,48 @@ try {
         path: join(output, `confirm-toast-${width}-${theme}.png`),
         fullPage: true,
       });
+
+      // A shell's ordered roots put popovers under dialogs; a menu and a
+      // picker opened inside a dialog must still paint over it.
+      await page.goto(
+        `${origin}/?story=overlays--shell-layers&mode=preview&theme=${theme}`,
+      );
+      await page
+        .getByRole("button", { name: "Move Agent", exact: true })
+        .click();
+      const shellDialog = page.getByRole("dialog", { name: "Move Agent" });
+      await shellDialog.waitFor();
+      await shellDialog
+        .getByRole("button", { name: "More", exact: true })
+        .click();
+      const shellMenu = page.getByRole("menu");
+      await shellMenu.waitFor();
+      for (const name of ["Duplicate", "Archive"])
+        assert.equal(
+          await hits(shellMenu.getByRole("menuitem", { name, exact: true })),
+          true,
+          `the dialog's menu row ${name} paints over the dialog`,
+        );
+      await page.screenshot({
+        path: join(output, `shell-menu-${width}-${theme}.png`),
+        animations: "disabled",
+      });
+      await page.keyboard.press("Escape");
+      await shellMenu.waitFor({ state: "hidden" });
+      await shellDialog.locator(".caps-combobox-trigger").click();
+      const option = page.getByRole("option", { name: "Studio", exact: true });
+      await option.waitFor();
+      assert.equal(
+        await hits(option),
+        true,
+        "the dialog's picker option paints over the dialog",
+      );
+      await page.screenshot({
+        path: join(output, `shell-picker-${width}-${theme}.png`),
+        animations: "disabled",
+      });
+      await option.click();
+      await expectText(shellDialog.locator(".caps-combobox-trigger"), "Studio");
       await page.close();
     }
   }

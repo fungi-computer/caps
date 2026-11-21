@@ -53,6 +53,41 @@ Supply shell portal roots without teaching Caps about the shell's layout.
 
 ---
 
+### OverlayPopoverScope()
+
+```ts
+function OverlayPopoverScope(
+  __namedParameters,
+):
+  | string
+  | number
+  | boolean
+  | Element
+  | Iterable<ReactNode, any, any>
+  | null
+  | undefined;
+```
+
+Give overlays opened inside a host layer, such as a dialog, a popover root of
+their own inside that layer, so a menu or picker paints over the surface that
+opened it. The other layers stay the host's; standalone overlays use the
+document body and need no scope.
+
+#### Parameters
+
+| Parameter                     | Type                                                                  |
+| ----------------------------- | --------------------------------------------------------------------- |
+| `__namedParameters`           | \{ `container`: `HTMLElement` \| `null`; `children?`: `ReactNode`; \} |
+| `__namedParameters.container` | `HTMLElement` \| `null`                                               |
+| `__namedParameters.children?` | `ReactNode`                                                           |
+
+#### Returns
+
+\| `string` \| `number` \| `boolean` \| `Element` \| `Iterable`\<`ReactNode`,
+`any`, `any`\> \| `null` \| `undefined`
+
+---
+
 ### useOverlayRoot()
 
 ```ts
