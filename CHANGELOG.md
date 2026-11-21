@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.12.8
+
+### Patch Changes
+
+- Changes since 0.12.7:
+
+  - fix(caps): keep toasts off the phone composer and clear the start failure
+
 ## 0.12.7
 
 ### Patch Changes

@@ -60,13 +60,14 @@ export function Toaster({ className, ...props }: ToasterProps) {
   if (!root) return null;
   return createPortal(
     <Sonner
-      // On a phone a top toast covers the header and tabs, so it rises from
-      // the bottom edge, above the safe area, and swipes away downward.
-      position={narrow ? "bottom-center" : "top-right"}
-      swipeDirections={narrow ? ["bottom"] : ["right", "top"]}
+      // The composer and a decision card sit at the bottom of a phone, so a
+      // toast there hides what the person must answer. On a phone it spans the
+      // top edge, below the safe area, and swipes away upward.
+      position={narrow ? "top-center" : "top-right"}
+      swipeDirections={narrow ? ["top"] : ["right", "top"]}
       mobileOffset={{
-        top: 16,
-        bottom: "max(16px, env(safe-area-inset-bottom))",
+        top: "max(8px, env(safe-area-inset-top))",
+        bottom: 16,
         left: 16,
         right: 16,
       }}

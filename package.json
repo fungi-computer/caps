@@ -1,6 +1,6 @@
 {
   "name": "@fungi.computer/caps",
-  "version": "0.12.7",
+  "version": "0.12.8",
   "author": "Levi <levi@technomancy.dev>",
   "description": "Product-neutral React primitives and blocks for Fungi interfaces",
   "type": "module",
