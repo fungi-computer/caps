@@ -141,6 +141,9 @@ const DropdownMenuPositioner: ForwardRefExoticComponent<
 ```
 
 Base UI owns placement; a shell's popover root supplies its collision boundary.
+The positioner sits on the popover layer, so a menu portaled into an App's own
+document paints over that App's raised content (a sticky header) instead of
+under it.
 
 ---
 

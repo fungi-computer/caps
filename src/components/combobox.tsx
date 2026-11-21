@@ -531,7 +531,12 @@ export function Combobox<T>(props: ComboboxProps<T>) {
         />
         {portalContainer !== null ? (
           <BasePopover.Portal container={portalContainer}>
-            <BasePopover.Positioner align="start" side="bottom" sideOffset={4}>
+            <BasePopover.Positioner
+              align="start"
+              side="bottom"
+              sideOffset={4}
+              className="z-(--stipe-layer-popover)"
+            >
               <BasePopover.Popup
                 data-active-tone={activeTone}
                 className={cn(

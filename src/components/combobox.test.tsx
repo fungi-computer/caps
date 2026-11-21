@@ -265,6 +265,8 @@ it("uses a dialog popup trigger ref and closes after a commit", () => {
     document.querySelector<HTMLInputElement>('[role="combobox"]'),
     "Combobox popup input",
   );
+  // The popup paints on the popover layer, above an App's raised content.
+  expect(input.closest('[class~="z-(--stipe-layer-popover)"]')).not.toBeNull();
   const option = requireValue(
     document.querySelector<HTMLElement>('[role="option"][id$="banana"]'),
     "Combobox banana option",

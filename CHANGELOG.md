@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.12.7
+
+### Patch Changes
+
+- Changes since 0.12.6:
+
+  - fix(caps): put menus and combobox popups on the popover layer
+
 ## 0.12.6
 
 ### Patch Changes

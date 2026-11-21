@@ -40,6 +40,9 @@ it("renders the native checked indicator and follows the item's checked state", 
     "checkable item",
   );
   expect(item.getAttribute("aria-checked")).toBe("true");
+  // The menu paints on the popover layer, above an App's raised content such
+  // as a sticky header, wherever it is portaled.
+  expect(menu.closest('[class~="z-(--stipe-layer-popover)"]')).not.toBeNull();
   expect(item.querySelector("span[data-checked]")?.textContent).toBe("✓");
   expect(
     item.querySelector("span[data-checked]")?.getAttribute("aria-hidden"),

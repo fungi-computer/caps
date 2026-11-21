@@ -113,15 +113,26 @@ export const DropdownMenuPortal = forwardRef<
   return <BaseMenu.Portal {...props} container={container ?? root} ref={ref} />;
 });
 
-/** Base UI owns placement; a shell's popover root supplies its collision boundary. */
+/**
+ * Base UI owns placement; a shell's popover root supplies its collision
+ * boundary. The positioner sits on the popover layer, so a menu portaled into
+ * an App's own document paints over that App's raised content (a sticky
+ * header) instead of under it.
+ */
 export const DropdownMenuPositioner = forwardRef<
   HTMLDivElement,
   BaseMenu.Positioner.Props
->(function DropdownMenuPositioner({ collisionBoundary, ...props }, ref) {
+>(function DropdownMenuPositioner(
+  { className, collisionBoundary, ...props },
+  ref,
+) {
   const root = useOverlayRoot("popover");
   return (
     <BaseMenu.Positioner
       {...props}
+      className={(state) =>
+        cn("z-(--stipe-layer-popover)", resolveClassName(className, state))
+      }
       collisionBoundary={
         collisionBoundary ?? (root && root !== document.body ? root : undefined)
       }
