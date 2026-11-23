@@ -15,6 +15,8 @@ import {
   DropdownMenuPopup,
   DropdownMenuPortal,
   DropdownMenuPositioner,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu.js";
@@ -225,6 +227,136 @@ it("exposes native close-animation lifetime without copying change details", asy
     requireValue(actions.current, "native menu actions").unmount();
   });
   expect(document.querySelector('[role="menu"]')).toBeNull();
+});
+
+it("chooses one of many with radio items that mark only the chosen one", async () => {
+  const onValueChange = vi.fn<(value: string) => void>();
+  const view = render(
+    <DropdownMenu>
+      <DropdownMenuTrigger>Open files</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuRadioGroup
+          defaultValue="readme"
+          onValueChange={(value: string) => {
+            onValueChange(value);
+          }}
+        >
+          <DropdownMenuRadioItem value="readme">
+            README.md
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="garden">
+            garden.ts
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>,
+  );
+  const menu = await openMenu(
+    requireValue(view.queryBySelector("button"), "menu trigger"),
+  );
+  const items = [
+    ...menu.querySelectorAll<HTMLElement>('[role="menuitemradio"]'),
+  ];
+  expect(items.map((item) => item.getAttribute("aria-checked"))).toEqual([
+    "true",
+    "false",
+  ]);
+  // The mark is drawn for sight only; the role and state carry the meaning.
+  const mark = requireValue(
+    items[0]?.querySelector("span[data-checked]"),
+    "chosen item mark",
+  );
+  expect(mark.textContent).toBe("✓");
+  expect(mark.getAttribute("aria-hidden")).toBe("true");
+  expect(items[1]?.textContent).not.toContain("✓");
+  await act(async () => {
+    items[1]?.click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  expect(onValueChange).toHaveBeenCalledWith("garden");
+  expect(items.map((item) => item.getAttribute("aria-checked"))).toEqual([
+    "false",
+    "true",
+  ]);
+});
+
+it("keeps a long choice on one row and offers its full name", async () => {
+  const name = "a-very-long-file-name-that-would-wrap-onto-a-second-row.ts";
+  const view = render(
+    <DropdownMenu>
+      <DropdownMenuTrigger>Open files</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuRadioGroup defaultValue="long">
+          <DropdownMenuRadioItem value="long" title={name}>
+            {name}
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+        <DropdownMenuCheckboxItem title={name}>{name}</DropdownMenuCheckboxItem>
+      </DropdownMenuContent>
+    </DropdownMenu>,
+  );
+  const menu = await openMenu(
+    requireValue(view.queryBySelector("button"), "menu trigger"),
+  );
+  const labels = [
+    ...menu.querySelectorAll<HTMLElement>(
+      '[role="menuitemradio"] > span:first-child, [role="menuitemcheckbox"] > span:first-child',
+    ),
+  ];
+  expect(labels).toHaveLength(2);
+  for (const label of labels) {
+    // One line, cut with an ellipsis; the whole name shows on hover.
+    expect(label.classList.contains("truncate")).toBe(true);
+    expect(label.parentElement?.title).toBe(name);
+  }
+});
+
+it("moves to a radio item with ArrowDown and chooses it with Enter", async () => {
+  const onValueChange = vi.fn<(value: string) => void>();
+  const view = render(
+    <DropdownMenu>
+      <DropdownMenuTrigger>Open files</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuRadioGroup
+          defaultValue="readme"
+          onValueChange={(value: string) => {
+            onValueChange(value);
+          }}
+        >
+          <DropdownMenuRadioItem value="readme">
+            README.md
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="garden">
+            garden.ts
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>,
+  );
+  const menu = await openMenu(
+    requireValue(view.queryBySelector("button"), "menu trigger"),
+  );
+  const items = [
+    ...menu.querySelectorAll<HTMLElement>('[role="menuitemradio"]'),
+  ];
+  const first = requireValue(items[0], "first radio item");
+  const second = requireValue(items[1], "second radio item");
+  await act(async () => {
+    first.focus();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  await act(async () => {
+    fireKey(first, { key: "ArrowDown" });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  expect(document.activeElement).toBe(second);
+  await act(async () => {
+    fireKey(second, { key: "Enter" });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  expect(onValueChange).toHaveBeenCalledWith("garden");
+  expect(second.getAttribute("aria-checked")).toBe("true");
+  expect(first.getAttribute("aria-checked")).toBe("false");
 });
 
 async function openMenu(trigger: HTMLElement): Promise<HTMLElement> {

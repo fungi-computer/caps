@@ -165,7 +165,9 @@ export const DropdownMenuPopup = forwardRef<
       {...props}
       className={(state) =>
         cn(
-          "caps-dropdown-popup min-w-40 rounded-box border border-base-300 bg-base-100 p-xs shadow-lg outline-none",
+          // Never wider than the room beside its trigger, so a long label is
+          // cut on screen instead of pushing the menu past the edge.
+          "caps-dropdown-popup min-w-40 max-w-(--available-width) rounded-box border border-base-300 bg-base-100 p-xs shadow-lg outline-none",
           resolveClassName(className, state),
         )
       }
@@ -276,11 +278,53 @@ export const DropdownMenuCheckboxItem = forwardRef<
       }}
       ref={ref}
     >
-      <span className="min-w-0 flex-1">{children}</span>
+      {/* One line, cut with an ellipsis: give the item a `title` so a cut
+          name shows whole on hover. */}
+      <span className="min-w-0 flex-1 truncate">{children}</span>
       <BaseMenu.CheckboxItemIndicator aria-hidden="true" className="shrink-0">
         ✓
       </BaseMenu.CheckboxItemIndicator>
     </BaseMenu.CheckboxItem>
+  );
+});
+
+/** A set of radio items in a DropdownMenu, of which one is chosen. */
+export const DropdownMenuRadioGroup = BaseMenu.RadioGroup;
+
+/** Props accepted by DropdownMenuRadioItem. */
+export type DropdownMenuRadioItemProps = Omit<
+  BaseMenu.RadioItem.Props,
+  "onSelect"
+> &
+  Pick<DropdownMenuItemProps, "onSelect">;
+/**
+ * One choice in a DropdownMenuRadioGroup: choosing one of many, such as which
+ * open file to show, where a checkbox item would mean an independent toggle.
+ */
+export const DropdownMenuRadioItem = forwardRef<
+  HTMLElement,
+  DropdownMenuRadioItemProps
+>(function DropdownMenuRadioItem(
+  { children, className, onClick, onSelect, ...props },
+  ref,
+) {
+  return (
+    <BaseMenu.RadioItem
+      {...props}
+      className={(state) => cn(itemClasses, resolveClassName(className, state))}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) onSelect?.(event);
+      }}
+      ref={ref}
+    >
+      {/* One line, cut with an ellipsis: give the item a `title` so a cut
+          name shows whole on hover. */}
+      <span className="min-w-0 flex-1 truncate">{children}</span>
+      <BaseMenu.RadioItemIndicator aria-hidden="true" className="shrink-0">
+        ✓
+      </BaseMenu.RadioItemIndicator>
+    </BaseMenu.RadioItem>
   );
 });
 

@@ -20,6 +20,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@fungi.computer/caps/components/dropdown-menu";
 import { Field } from "@fungi.computer/caps/components/field";
@@ -164,6 +166,30 @@ export const ConfirmDialog: Story = () => (
       </DialogFooter>
     </DialogContent>
   </Dialog>
+);
+
+const longNames = [
+  "README.md",
+  "notes/garden/a-very-long-file-name-from-the-garden-notes-folder-that-would-wrap.md",
+  "src/courtyard/planting-plan-for-the-courtyard-with-every-bed-and-path.ts",
+];
+
+/** Open files with long names: each row stays one line inside the screen. */
+export const LongNames: Story = () => (
+  <DropdownMenu>
+    <DropdownMenuTrigger render={<Button variant="outline" size="sm" />}>
+      Open files
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="start">
+      <DropdownMenuRadioGroup defaultValue={longNames[0]}>
+        {longNames.map((path) => (
+          <DropdownMenuRadioItem key={path} value={path} title={path}>
+            {path.split("/").at(-1)}
+          </DropdownMenuRadioItem>
+        ))}
+      </DropdownMenuRadioGroup>
+    </DropdownMenuContent>
+  </DropdownMenu>
 );
 
 const computers = [

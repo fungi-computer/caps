@@ -106,6 +106,17 @@ type DropdownMenuCheckboxItemProps = Omit<
 
 Props accepted by DropdownMenuCheckboxItem.
 
+---
+
+### DropdownMenuRadioItemProps
+
+```ts
+type DropdownMenuRadioItemProps = Omit<BaseMenu.RadioItem.Props, "onSelect"> &
+  Pick<DropdownMenuItemProps, "onSelect">;
+```
+
+Props accepted by DropdownMenuRadioItem.
+
 ## Variables
 
 ### DropdownMenuTrigger
@@ -192,6 +203,31 @@ const DropdownMenuCheckboxItem: ForwardRefExoticComponent<
 ```
 
 A checkable item in a DropdownMenu.
+
+---
+
+### DropdownMenuRadioGroup
+
+```ts
+const DropdownMenuRadioGroup: NamedExoticComponent<
+  Omit<MenuRadioGroupProps, "ref"> & RefAttributes<HTMLDivElement>
+> = BaseMenu.RadioGroup;
+```
+
+A set of radio items in a DropdownMenu, of which one is chosen.
+
+---
+
+### DropdownMenuRadioItem
+
+```ts
+const DropdownMenuRadioItem: ForwardRefExoticComponent<
+  Omit<DropdownMenuRadioItemProps, "ref"> & RefAttributes<HTMLElement>
+>;
+```
+
+One choice in a DropdownMenuRadioGroup: choosing one of many, such as which open
+file to show, where a checkbox item would mean an independent toggle.
 
 ---
 

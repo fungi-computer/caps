@@ -36,7 +36,7 @@ async function menuRows(page, name) {
 }
 
 try {
-  for (const width of [1440, 390]) {
+  for (const width of [1280, 390]) {
     const mouse = await browser.newContext({
       viewport: { width, height: 900 },
       reducedMotion: "reduce",
@@ -65,8 +65,48 @@ try {
       assert.ok(height >= 44, `${width} touch menu row ${height}`);
     await touch.close();
   }
+  // A long file name ends in an ellipsis on one row, and the menu stays
+  // inside a phone's screen instead of growing past its edge.
+  const narrow = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    reducedMotion: "reduce",
+  });
+  const page = await narrow.newPage();
+  await page.goto(`${origin}/?story=overlays--long-names&mode=preview`);
+  await page.getByRole("button", { name: "Open files", exact: true }).click();
+  const choices = page.getByRole("menu").getByRole("menuitemradio");
+  await choices.first().waitFor();
+  const long = await choices.evaluateAll((rows) =>
+    rows.map((row) => {
+      const label = row.querySelector("span");
+      return {
+        height: row.getBoundingClientRect().height,
+        right: row.getBoundingClientRect().right,
+        cut: label !== null && label.scrollWidth > label.clientWidth,
+      };
+    }),
+  );
+  if (shots) {
+    await page
+      .getByRole("menu")
+      .evaluate((menu) =>
+        Promise.all(menu.getAnimations().map((motion) => motion.finished)),
+      );
+    await page.screenshot({ path: join(shots, "long-names-390.png") });
+  }
+  assert.equal(long.length, 3);
+  for (const { height, right } of long) {
+    assert.ok(height <= 32, `long-name menu row ${height}`);
+    assert.ok(right <= 390, `long-name menu row ends at ${right}`);
+  }
+  assert.deepEqual(
+    long.map(({ cut }) => cut),
+    [false, true, true],
+    "only the long names are cut",
+  );
+  await narrow.close();
   globalThis.console.log(
-    "Menu rows: 32px or less with a mouse at 1440 and 390; 44px under pointer: coarse.",
+    "Menu rows: 32px or less with a mouse at 1280 and 390; 44px under pointer: coarse; long names stay on one row inside a phone.",
   );
 } finally {
   await browser.close();

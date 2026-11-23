@@ -1,5 +1,15 @@
 # @fungi.computer/caps
 
+## 0.14.0
+
+### Minor Changes
+
+- Changes since 0.13.0:
+
+  - fix(caps): keep a dropdown menu inside the room beside its trigger
+  - fix(caps): keep a long checkbox or radio menu label on one row
+  - feat(caps): menu radio items for choosing one of many
+
 ## 0.13.0
 
 ### Minor Changes

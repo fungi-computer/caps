@@ -32,6 +32,8 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@fungi.computer/caps/components/dropdown-menu";
@@ -862,6 +864,11 @@ export const DropdownMenu: Story = () => (
         <DropdownMenuCheckboxItem defaultChecked onCheckedChange={noop}>
           Pinned
         </DropdownMenuCheckboxItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup defaultValue="list" onValueChange={noop}>
+          <DropdownMenuRadioItem value="list">List view</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="grid">Grid view</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Close</DropdownMenuItem>
       </DropdownMenuContent>
