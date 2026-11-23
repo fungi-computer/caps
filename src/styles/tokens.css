@@ -10,6 +10,9 @@
   );
   --caps-focus-ring: var(--caps-primary-text);
   --caps-touch-target: 2.75rem;
+  /* Fallback for the App's header row when none is marked with
+     data-caps-app-header; the Toaster measures the marked one itself. */
+  --caps-app-header-height: 32px;
   /* Quiet ink for a disabled faceless control (ghost and icon buttons). */
   --caps-disabled-ink: color-mix(
     in oklab,

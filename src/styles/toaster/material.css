@@ -3,7 +3,8 @@
 /* Sonner paints from --normal-* and per-type variables; point them at the
    Stipe tokens so latte, mocha and any data-theme switch are followed. */
 .caps-toaster[data-sonner-toaster][data-sonner-theme] {
-  font-family: inherit;
+  /* The toast portals outside the App's own text, so it names its font. */
+  font-family: var(--font-sans);
   --border-radius: var(--radius-box);
   --normal-bg: var(--stipe-surface-raised);
   --normal-bg-hover: var(--color-base-200);

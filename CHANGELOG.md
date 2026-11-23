@@ -1,5 +1,17 @@
 # @fungi.computer/caps
 
+## 0.14.1
+
+### Patch Changes
+
+- Changes since 0.14.0:
+
+  - fix(caps): measure the toast header without ResizeObserver
+  - fix(caps): count a header within 8px of the top for toast clearance
+  - fix(caps): register app headers for toast clearance
+  - fix(caps): measure the app header for toast clearance
+  - fix(caps): open toasts below the app header
+
 ## 0.14.0
 
 ### Minor Changes

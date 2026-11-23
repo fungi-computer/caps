@@ -37,6 +37,7 @@
 | [components/action-row](components/action-row.md)                                   | -           |
 | [components/activity-line](components/activity-line.md)                             | -           |
 | [components/alert](components/alert.md)                                             | -           |
+| [components/app-header](components/app-header.md)                                   | -           |
 | [components/badge](components/badge.md)                                             | -           |
 | [components/button](components/button.md)                                           | -           |
 | [components/card](components/card.md)                                               | -           |

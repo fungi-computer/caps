@@ -110,6 +110,75 @@ try {
         fullPage: true,
       });
 
+      // A toast opens below the App's top header, not over its controls,
+      // whether the row stays at one line or wraps; a header that is not at
+      // the top, or has scrolled away, does not hold it down; and it speaks
+      // in the sans font. The default is the 32px fallback plus the 8px gap.
+      const fallbackTop = 40;
+      for (const [story, expectation] of [
+        ["app-root-overlays--header-clearance", "below"],
+        ["app-root-overlays--header-clearance-wrapped", "below"],
+        ["app-root-overlays--header-near-top", "below"],
+        ["app-root-overlays--header-not-at-top", "default"],
+        ["app-root-overlays--header-scrolled-away", "scrolls"],
+      ]) {
+        await page.goto(
+          `${origin}/?story=${story}&mode=preview&theme=${theme}`,
+        );
+        // The story's own padding would push the header off the top.
+        await page.addStyleTag({
+          content: ".caps-workbench-provider { padding: 0 !important; }",
+        });
+        await page.getByRole("button", { name: "Show notice" }).click();
+        const headerToast = page
+          .locator("[data-sonner-toast]")
+          .filter({ hasText: "Run started" });
+        await headerToast.waitFor();
+        await page.waitForTimeout(600);
+        const header = await page.locator("[data-app-header]").boundingBox();
+        let toastBox = await headerToast.boundingBox();
+        assert.ok(header && toastBox);
+        const label = `${story} ${width}/${theme}`;
+        if (expectation === "default")
+          assert.ok(
+            Math.abs(toastBox.y - fallbackTop) <= 1,
+            `${label}: a header away from the top is ignored (toast top ${toastBox.y})`,
+          );
+        else
+          assert.ok(
+            toastBox.y >= header.y + header.height,
+            `${label}: the toast (top ${toastBox.y}) stays below the header row (bottom ${header.y + header.height})`,
+          );
+        if (expectation === "scrolls") {
+          await page.evaluate(() => {
+            globalThis.scrollTo(0, 1200);
+          });
+          await page.waitForTimeout(600);
+          toastBox = await headerToast.boundingBox();
+          assert.ok(toastBox);
+          assert.ok(
+            Math.abs(toastBox.y - fallbackTop) <= 1,
+            `${label}: the clearance drops once the header scrolls away (toast top ${toastBox.y})`,
+          );
+        }
+        const fonts = await headerToast.evaluate((element) => ({
+          toast: globalThis.getComputedStyle(element).fontFamily,
+          sans: globalThis
+            .getComputedStyle(globalThis.document.documentElement)
+            .getPropertyValue("--font-sans")
+            .trim(),
+        }));
+        assert.ok(fonts.sans.length > 0, "the theme defines --font-sans");
+        assert.equal(
+          fonts.toast.replaceAll('"', ""),
+          fonts.sans.replaceAll('"', ""),
+          `${story}: toast font is the sans stack`,
+        );
+        await page.screenshot({
+          path: join(output, `${story}-${width}-${theme}.png`),
+        });
+      }
+
       // A shell's ordered roots put popovers under dialogs; a menu and a
       // picker opened inside a dialog must still paint over it.
       await page.goto(
