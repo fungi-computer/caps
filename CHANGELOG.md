@@ -1,5 +1,13 @@
 # @fungi.computer/caps
 
+## 0.14.2
+
+### Patch Changes
+
+- Changes since 0.14.1:
+
+  - fix(oyster): list the packed files the stranger proof found missing
+
 ## 0.14.1
 
 ### Patch Changes
