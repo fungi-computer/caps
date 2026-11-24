@@ -507,8 +507,8 @@
   },
   "devDependencies": {
     "@fungi.computer/maosaico": "0.1.2",
-    "@fungi.computer/sprite": "0.2.2",
-    "@fungi.computer/sprite-zdog": "0.3.2",
+    "@fungi.computer/sprite": "0.2.3",
+    "@fungi.computer/sprite-zdog": "0.3.3",
     "@ladle/react": "5.1.1",
     "@tailwindcss/cli": "4.2.1",
     "@types/react": "18.3.3",
