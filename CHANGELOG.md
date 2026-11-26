@@ -1,5 +1,15 @@
 # @fungi.computer/caps
 
+## 0.14.4
+
+### Patch Changes
+
+- Changes since 0.14.3:
+
+  - fix(trellis): say access is missing when the catalog read is refused
+  - fix(parakeet): navigate a question card by keyboard and center the failure
+    dot
+
 ## 0.14.3
 
 ### Patch Changes

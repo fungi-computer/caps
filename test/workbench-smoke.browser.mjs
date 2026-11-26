@@ -50,10 +50,10 @@ async function visitStory(context, baseUrl, storyId) {
       // These stories stage a refused catalog: every template shows and Use
       // says why not.
       "trellis-first-run--template-cannot-save": [
-        "The installed Apps could not be read Error: not granted",
+        "The installed Apps could not be read LoadFailure: Trellis could not read data (denied)",
       ],
       "trellis-first-run--templates-blocked": [
-        "The installed Apps could not be read Error: not granted",
+        "The installed Apps could not be read LoadFailure: Trellis could not read data (denied)",
       ],
       // The story stages a Surface Gill whose App cannot mount.
       "desktop--surface-gill-unavailable": [

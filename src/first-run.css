@@ -75,8 +75,14 @@
     color: var(--stipe-fg-muted);
     font-size: var(--text-xs);
   }
+  /* The dot sits in the first line's own height, so it centers on that line
+     whatever the font size, and stays put when the copy wraps. */
   .caps-failure-line > .caps-status {
-    margin-block-start: var(--spacing-2xs);
+    align-items: center;
+    /* Glyphs sit above the line box's middle (the descender room), so the box
+       is a little shorter than the line to center the dot on the letters. */
+    height: calc(1lh - 0.25em);
+    margin-block-start: 0;
   }
   .caps-failure-line-actions {
     display: flex;
