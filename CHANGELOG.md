@@ -1,5 +1,14 @@
 # @fungi.computer/caps
 
+## 0.14.3
+
+### Patch Changes
+
+- Changes since 0.14.2:
+
+  - fix(hub): never fail a page over its loader markup, and stop the server
+    render warning
+
 ## 0.14.2
 
 ### Patch Changes

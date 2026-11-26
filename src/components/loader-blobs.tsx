@@ -1,6 +1,8 @@
 import { useMotion, motionTime } from "../lib/motion.js";
 import { animate } from "animejs";
-import { useId, useLayoutEffect, useRef } from "react";
+import { useId, useRef } from "react";
+
+import { useIsomorphicLayoutEffect } from "../lib/layout-effect.js";
 
 import {
   GooeyFilterDefinition,
@@ -133,7 +135,7 @@ export function LoaderBlobs({
           ? 4
           : 3;
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!geometry.current || !visual.current) return;
     // Reduced motion keeps the formation still, but working feedback must stay
     // visibly alive. Pulse its alpha slowly rather than moving any beads.

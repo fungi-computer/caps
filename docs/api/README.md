@@ -131,6 +131,7 @@
 | [lib/format-money](lib/format-money.md)                                             | -           |
 | [lib/glide](lib/glide.md)                                                           | -           |
 | [lib/ime](lib/ime.md)                                                               | -           |
+| [lib/layout-effect](lib/layout-effect.md)                                           | -           |
 | [lib/motion-spring](lib/motion-spring.md)                                           | -           |
 | [lib/motion](lib/motion.md)                                                         | -           |
 | [lib/reorder-motion](lib/reorder-motion.md)                                         | -           |

@@ -1,9 +1,6 @@
-import {
-  useLayoutEffect,
-  useState,
-  useSyncExternalStore,
-  type RefObject,
-} from "react";
+import { useState, useSyncExternalStore, type RefObject } from "react";
+
+import { useIsomorphicLayoutEffect } from "./layout-effect.js";
 
 /** Resolved, element-scoped motion. Times are milliseconds and distances pixels. */
 export type Motion = Readonly<{
@@ -137,7 +134,7 @@ export function useMotion(ref: RefObject<Element | null>): Motion {
     ...defaults,
     reduced: true,
   }));
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const element = ref.current;
     const view = element?.ownerDocument.defaultView;
     if (!element || !view) return;
